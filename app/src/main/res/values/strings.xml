@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">Legato</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="title_activity_account">AccountActivity</string>
+    <string name="title_activity_splash_screen">SplashScreenActivity</string>
+    <string name="FACEBOOK_APP_ID">327330968033595</string>
+    <string name="ACCOUNT_KIT_CLIENT_TOKEN">82a98e56c036d1cae6a0babd9ba310ed</string>
+    <string name="ak_login_protocol_scheme">ak327330968033595</string>
+    <string name="login_email_label">Login with Email</string>
+    <string name="login_phone_label">Login with Phone Number</string>
+    <string name="account">Account</string>
+    <string name="id_label">Account ID</string>
+    <string name="phone_label">Phone Number</string>
+    <string name="email_label">Email</string>
+    <string name="name_label">Name</string>
+    <string name="logout_label">Log Out</string>
+
+    <string name="player_error">Error initializing YouTube player: %s</string>
+    <string name="seek_to">Jump To</string>
+    <string name="seek_to_hint">Seconds</string>
+    <string name="title_activity_youtube">Youtube</string>
+    <string name="search_video_msg">Searching Videos</string>
+    <string name="dialog_title">Loading</string>
+</resources>
