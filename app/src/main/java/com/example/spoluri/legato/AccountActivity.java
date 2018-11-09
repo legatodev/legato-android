@@ -123,6 +123,10 @@ public class AccountActivity extends AppCompatActivity {
         launchLoginActivity();
     }
 
+    public void onYoutube(View view) {
+        launchYoutubeActivity();
+    }
+
     private void displayProfileInfo(Profile profile) {
         // get Profile ID
         String profileId = profile.getId();
@@ -140,6 +144,12 @@ public class AccountActivity extends AppCompatActivity {
 
     private void launchLoginActivity() {
         Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    private void launchYoutubeActivity() {
+        Intent intent = new Intent(this, YoutubeActivity.class);
         startActivity(intent);
         finish();
     }

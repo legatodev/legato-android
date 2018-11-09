@@ -115,7 +115,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void launchAccountActivity() {
-        Intent intent = new Intent(this, YoutubeActivity.class);
+        Intent intent = new Intent(this, AccountActivity.class);
         startActivity(intent);
         finish();
     }
