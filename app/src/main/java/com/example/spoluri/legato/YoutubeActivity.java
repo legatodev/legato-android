@@ -2,29 +2,18 @@ package com.example.spoluri.legato;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-
-import android.content.Intent;
 import android.widget.Toast;
 
 import android.app.ProgressDialog;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import com.google.api.services.youtube.YouTube;
-import com.google.api.services.youtube.model.ResourceId;
-import com.google.api.services.youtube.model.SearchListResponse;
 import com.google.api.services.youtube.model.SearchResult;
-import com.google.api.services.youtube.model.Thumbnail;
 import com.google.android.youtube.player.YouTubePlayerView;
 
-import java.io.IOException;
-import java.util.Iterator;
 import java.util.List;
 
 import com.example.spoluri.legato.connections.*;
@@ -75,15 +64,13 @@ public class YoutubeActivity extends AppCompatActivity implements View.OnClickLi
                     mYtServiceTask.execute(new String[]{keyWord});
                 }
                 break;
-            case R.id.video_item:
-                Toast.makeText(getApplicationContext(), "Jesus", Toast.LENGTH_SHORT).show();;
-                break;
         }
     }
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
+        SearchResult result = (SearchResult) mYtAdapter.getItem(i);
+        Toast.makeText(getApplicationContext(), result.getId().getVideoId(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
