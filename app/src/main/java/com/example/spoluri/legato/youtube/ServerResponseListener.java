@@ -1,4 +1,4 @@
-package com.example.spoluri.legato.connections;
+package com.example.spoluri.legato.youtube;
 import com.example.spoluri.legato.AppConstants;
 
 /**

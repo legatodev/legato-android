@@ -16,7 +16,7 @@ import com.google.android.youtube.player.YouTubePlayerView;
 
 import java.util.List;
 
-import com.example.spoluri.legato.connections.*;
+import com.example.spoluri.legato.youtube.*;
 
 public class YoutubeActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener, ServerResponseListener {
 

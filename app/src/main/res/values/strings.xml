@@ -4,8 +4,8 @@
 
     <string name="title_activity_account">AccountActivity</string>
     <string name="title_activity_splash_screen">SplashScreenActivity</string>
-    <string name="FACEBOOK_APP_ID">327330968033595</string>
-    <string name="ACCOUNT_KIT_CLIENT_TOKEN">82a98e56c036d1cae6a0babd9ba310ed</string>
+    <string name="facebook_application_id">327330968033595</string>
+    <string name="facebook_login_protocol_scheme" translatable="false">fb327330968033595</string>
     <string name="ak_login_protocol_scheme">ak327330968033595</string>
     <string name="login_email_label">Login with Email</string>
     <string name="login_phone_label">Login with Phone Number</string>
@@ -22,4 +22,7 @@
     <string name="title_activity_youtube">Youtube</string>
     <string name="search_video_msg">Searching Videos</string>
     <string name="dialog_title">Loading</string>
+
+    <string name="send_button_label">Send</string>
+    <string name="title_activity_messenger">MessengerActivity</string>
 </resources>

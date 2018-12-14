@@ -1,20 +1,16 @@
-package com.example.spoluri.legato.connections;
+package com.example.spoluri.legato.youtube;
 
 import android.os.AsyncTask;
 
-import com.example.spoluri.legato.R;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.services.youtube.YouTube;
-import com.google.api.services.youtube.model.ResourceId;
 import com.google.api.services.youtube.model.SearchListResponse;
 import com.google.api.services.youtube.model.SearchResult;
-import com.google.api.services.youtube.model.Thumbnail;
 import com.example.spoluri.legato.AppConstants;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.List;
 
 public class ServiceTask extends AsyncTask<Object, Void, Object[]> implements

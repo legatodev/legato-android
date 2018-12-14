@@ -1,4 +1,4 @@
-package com.example.spoluri.legato.connections;
+package com.example.spoluri.legato.youtube;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.http.HttpTransport;

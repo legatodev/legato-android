@@ -12,6 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_application_id"/>
         <activity
             android:name=".SplashScreenActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -26,40 +27,19 @@
         <activity
             android:name=".AccountActivity"
             android:label="@string/title_activity_account"
-            android:theme="@style/AppTheme"></activity>
-
-        <meta-data
-            android:name="com.facebook.accountkit.ApplicationName"
-            android:value="@string/app_name" />
-        <meta-data
-            android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/FACEBOOK_APP_ID" />
-        <meta-data
-            android:name="com.facebook.accountkit.ClientToken"
-            android:value="@string/ACCOUNT_KIT_CLIENT_TOKEN" />
+            android:theme="@style/AppTheme" />
 
         <activity
-            android:name=".LoginActivity"
+            android:name=".authentication.LoginActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/FullscreenTheme"></activity>
-        <activity
-            android:name="com.facebook.accountkit.ui.AccountKitActivity"
-            android:theme="@style/AppLoginTheme"
-            tools:replace="android:theme" />
-        <activity android:name="com.facebook.accountkit.ui.AccountKitEmailRedirectActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:scheme="@string/ak_login_protocol_scheme" />
-            </intent-filter>
-        </activity>
+            android:theme="@style/FullscreenTheme" />
         <activity
             android:name=".YoutubeActivity"
             android:label="@string/title_activity_youtube"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".MessengerActivity"
+            android:label="@string/title_activity_messenger"
+            android:theme="@style/AppTheme" />
     </application>
-
 </manifest>
