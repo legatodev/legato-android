@@ -1,8 +1,9 @@
 package com.example.spoluri.legato;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.Toast;
 
 import android.app.ProgressDialog;
 import android.view.View;
@@ -70,7 +71,10 @@ public class YoutubeActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         SearchResult result = (SearchResult) mYtAdapter.getItem(i);
-        Toast.makeText(getApplicationContext(), result.getId().getVideoId(), Toast.LENGTH_SHORT).show();
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra("youtube_video", result.getId().getVideoId());
+        setResult(Activity.RESULT_OK, resultIntent);
+        finish();
     }
 
     @Override

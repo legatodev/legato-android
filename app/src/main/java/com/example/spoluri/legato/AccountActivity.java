@@ -13,31 +13,39 @@ import com.example.spoluri.legato.authentication.LoginActivity;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.i18n.phonenumbers.NumberParseException;
-import com.google.i18n.phonenumbers.PhoneNumberUtil;
-import com.google.i18n.phonenumbers.Phonenumber;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.Locale;
-import com.makeramen.roundedimageview.RoundedTransformationBuilder;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Transformation;
+import java.util.Dictionary;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Map;
 
 public class AccountActivity extends AppCompatActivity {
+    public static final String ANONYMOUS = "anonymous";
 
-    ImageView profilePic;
     TextView id;
     TextView infoLabel;
     TextView info;
+
+    private String mUserId = ANONYMOUS;
+
+    private FirebaseDatabase mFirebaseDatabase;
+    private DatabaseReference mMessagesDatabaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account);
 
-        profilePic = (ImageView) findViewById(R.id.profile_image);
         id = (TextView) findViewById(R.id.id);
         infoLabel = (TextView) findViewById(R.id.info_label);
         info = (TextView) findViewById(R.id.info);
+
+        mUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mMessagesDatabaseReference = mFirebaseDatabase.getReference().child("userprofiledata");
     }
 
     @Override
@@ -70,38 +78,21 @@ public class AccountActivity extends AppCompatActivity {
 
     private void launchYoutubeActivity() {
         Intent intent = new Intent(this, YoutubeActivity.class);
-        startActivity(intent);
-        finish();
+        startActivityForResult(intent, RequestCodes.YOUTUBE_VIDEO_FLOW);
     }
 
-    private String formatPhoneNumber(String phoneNumber) {
-        // helper method to format the phone number for display
-        try {
-            PhoneNumberUtil pnu = PhoneNumberUtil.getInstance();
-            Phonenumber.PhoneNumber pn = pnu.parse(phoneNumber, Locale.getDefault().getCountry());
-            phoneNumber = pnu.format(pn, PhoneNumberUtil.PhoneNumberFormat.NATIONAL);
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == RequestCodes.YOUTUBE_VIDEO_FLOW && resultCode == RESULT_OK && data != null) {
+            Map<String, Object> youtube = new HashMap<String, Object>();
+            // put() method
+            youtube.put("youtube_video", data.getStringExtra("youtube_video"));
+            mMessagesDatabaseReference.child(mUserId).updateChildren(youtube);
         }
-        catch (NumberParseException e) {
-            e.printStackTrace();
-        }
-        return phoneNumber;
-    }
-
-    private void displayProfilePic(Uri uri) {
-        // helper method to load the profile pic in a circular imageview
-        Transformation transformation = new RoundedTransformationBuilder()
-                .cornerRadiusDp(30)
-                .oval(false)
-                .build();
-        Picasso.with(AccountActivity.this)
-                .load(uri)
-                .transform(transformation)
-                .into(profilePic);
     }
 
     public void onMessengerLaunch(View view) {
         Intent intent = new Intent(this, MessengerActivity.class);
         startActivity(intent);
-        finish();
     }
 }

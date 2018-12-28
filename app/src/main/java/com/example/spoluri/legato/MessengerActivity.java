@@ -56,13 +56,12 @@ public class MessengerActivity extends AppCompatActivity {
         // Initialize references to views
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         mMessageListView = (ListView) findViewById(R.id.messageListView);
-        mPhotoPickerButton = (ImageButton) findViewById(R.id.photoPickerButton);
         mMessageEditText = (EditText) findViewById(R.id.messageEditText);
         mSendButton = (Button) findViewById(R.id.sendButton);
 
         // Initialize message ListView and its adapter
-        List<MessageCreator> friendlyMessages = new ArrayList<>();
-        mMessageAdapter = new MessageAdapter(this, R.layout.item_message, friendlyMessages);
+        List<MessageCreator> messagesList = new ArrayList<>();
+        mMessageAdapter = new MessageAdapter(this, R.layout.item_message, messagesList);
         mMessageListView.setAdapter(mMessageAdapter);
 
         // Initialize progress bar
@@ -94,8 +93,8 @@ public class MessengerActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // TODO: Send messages on click
-                MessageCreator friendlyMessage = new MessageCreator(mMessageEditText.getText().toString(), mUsername, null);
-                mMessagesDatabaseReference.push().setValue(friendlyMessage);
+                MessageCreator chatMessage = new MessageCreator(mMessageEditText.getText().toString(), mUsername, null);
+                mMessagesDatabaseReference.push().setValue(chatMessage);
                 // Clear input box
                 mMessageEditText.setText("");
             }
@@ -104,8 +103,8 @@ public class MessengerActivity extends AppCompatActivity {
         mChildEventListener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                MessageCreator friendlyMessage = dataSnapshot.getValue(MessageCreator.class);
-                mMessageAdapter.add(friendlyMessage);
+                MessageCreator chatMessage = dataSnapshot.getValue(MessageCreator.class);
+                mMessageAdapter.add(chatMessage);
             }
 
             @Override

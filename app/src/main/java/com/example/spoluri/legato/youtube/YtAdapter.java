@@ -1,4 +1,4 @@
-package com.example.spoluri.legato;
+package com.example.spoluri.legato.youtube;
 
 import android.app.Activity;
 import android.util.Log;
@@ -9,15 +9,12 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.spoluri.legato.R;
 import com.google.api.services.youtube.model.SearchResult;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-/**
- * This is the simple class that inflates ListView with the video data from keyword search
- * Created by ravikumar on 10/20/2014.
- */
 public class YtAdapter extends BaseAdapter {
 
     private Activity mActivity = null;
