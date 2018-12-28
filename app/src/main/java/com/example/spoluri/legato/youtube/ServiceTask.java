@@ -72,7 +72,7 @@ public class ServiceTask extends AsyncTask<Object, Void, Object[]> implements
             // initialized when the HttpRequest is initialized, we override
             // the interface and provide a no-op function.
             YouTube youtube = new YouTube.Builder(transport, jsonFactory, new HttpRequestInitializer() {
-                public void initialize(HttpRequest request) throws IOException {
+                public void initialize(HttpRequest request) {
                 }
             }).setApplicationName("Legato").build(); //Todo: access app name string rather than hard code
 

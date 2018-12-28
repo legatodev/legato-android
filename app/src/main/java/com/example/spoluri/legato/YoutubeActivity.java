@@ -44,9 +44,9 @@ public class YoutubeActivity extends AppCompatActivity implements View.OnClickLi
      * Method that initializes views from the activity's content layout
      */
     private void initializeViews() {
-        mYtVideoEdt = (EditText) findViewById(R.id.yt_video_edt);
-        mYtVideoBtn = (Button) findViewById(R.id.yt_video_btn);
-        mYtVideoLsv = (ListView) findViewById(R.id.yt_video_lsv);
+        mYtVideoEdt = findViewById(R.id.yt_video_edt);
+        mYtVideoBtn = findViewById(R.id.yt_video_btn);
+        mYtVideoLsv = findViewById(R.id.yt_video_lsv);
 
         mYtVideoBtn.setOnClickListener(this);
         mYtVideoLsv.setOnItemClickListener(this);

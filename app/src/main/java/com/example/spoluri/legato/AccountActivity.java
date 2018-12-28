@@ -3,15 +3,18 @@ package com.example.spoluri.legato;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
 import com.example.spoluri.legato.authentication.LoginActivity;
+import com.example.spoluri.legato.messaging.MessageCreator;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -34,7 +37,8 @@ public class AccountActivity extends YouTubeBaseActivity implements YouTubePlaye
     private String mUserId = ANONYMOUS;
 
     private FirebaseDatabase mFirebaseDatabase;
-    private DatabaseReference mMessagesDatabaseReference;
+    private DatabaseReference mUserProfileDatabaseReference;
+    ChildEventListener mChildEventListener;
 
     private YouTubePlayerView youTubeView;
     private String mYoutubeVideo = "";
@@ -44,15 +48,50 @@ public class AccountActivity extends YouTubeBaseActivity implements YouTubePlaye
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account);
 
-        youTubeView = (YouTubePlayerView) findViewById(R.id.youtube_view);
+        youTubeView = findViewById(R.id.youtube_view);
 
-        id = (TextView) findViewById(R.id.id);
-        infoLabel = (TextView) findViewById(R.id.info_label);
-        info = (TextView) findViewById(R.id.info);
+        id = findViewById(R.id.id);
+        infoLabel = findViewById(R.id.info_label);
+        info = findViewById(R.id.info);
 
         mUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mMessagesDatabaseReference = mFirebaseDatabase.getReference().child("userprofiledata");
+        mUserProfileDatabaseReference = mFirebaseDatabase.getReference().child("userprofiledata");
+
+        mChildEventListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                if (dataSnapshot.getKey().equals("youtube_video")) {
+                    mYoutubeVideo = dataSnapshot.getValue(String.class);
+                    InitializeYoutubeView();
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+        mUserProfileDatabaseReference.child(mUserId).addChildEventListener(mChildEventListener);
+    }
+
+    private void InitializeYoutubeView() {
+        youTubeView.initialize(AppConstants.YOUTUBE_API_KEY, this);
     }
 
     @Override
@@ -95,8 +134,8 @@ public class AccountActivity extends YouTubeBaseActivity implements YouTubePlaye
             // put() method
             mYoutubeVideo = data.getStringExtra("youtube_video");
             youtube.put("youtube_video", mYoutubeVideo);
-            mMessagesDatabaseReference.child(mUserId).updateChildren(youtube);
-            youTubeView.initialize(AppConstants.YOUTUBE_API_KEY, this);
+            mUserProfileDatabaseReference.child(mUserId).updateChildren(youtube);
+            InitializeYoutubeView();
         }
     }
 

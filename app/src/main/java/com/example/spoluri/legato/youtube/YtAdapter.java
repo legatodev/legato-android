@@ -54,9 +54,9 @@ public class YtAdapter extends BaseAdapter {
         } else {
             mHolder = new ViewHolder();
             view  = mLayoutInflater.inflate(R.layout.view_video_item, null);
-            mHolder.mVideoThumbnail = (ImageView)view.findViewById(R.id.video_thumbnail_imv);
-            mHolder.mVideoTitleTxv = (TextView)view.findViewById(R.id.video_title_txv);
-            mHolder.mVideoDescTxv = (TextView)view.findViewById(R.id.video_desc_txv);
+            mHolder.mVideoThumbnail = view.findViewById(R.id.video_thumbnail_imv);
+            mHolder.mVideoTitleTxv = view.findViewById(R.id.video_title_txv);
+            mHolder.mVideoDescTxv = view.findViewById(R.id.video_desc_txv);
             view.setTag(mHolder);
         }
 
