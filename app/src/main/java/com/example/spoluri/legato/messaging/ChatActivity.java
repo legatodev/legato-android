@@ -1,22 +1,19 @@
-package com.example.spoluri.legato;
+package com.example.spoluri.legato.messaging;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
+import com.example.spoluri.legato.AppConstants;
 import com.example.spoluri.legato.R;
-
 import com.example.spoluri.legato.messaging.MessageAdapter;
 import com.example.spoluri.legato.messaging.MessageCreator;
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,8 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MessengerActivity extends AppCompatActivity {
-    public static final String ANONYMOUS = "anonymous";
+public class ChatActivity extends AppCompatActivity {
     public static final int DEFAULT_MSG_LENGTH_LIMIT = 1000;
 
     private ListView mMessageListView;
@@ -39,20 +35,27 @@ public class MessengerActivity extends AppCompatActivity {
     private EditText mMessageEditText;
     private Button mSendButton;
 
-    private String mUsername = ANONYMOUS;
+    private String mUserId = AppConstants.ANONYMOUS;
+    private String mParticipants = "";
 
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mMessagesDatabaseReference;
     ChildEventListener mChildEventListener;
+    String chattingWith = AppConstants.ANONYMOUS;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_messenger);
 
-        mUsername = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        Intent intent = getIntent();
+        mParticipants = intent.getStringExtra("participants");
+        chattingWith = intent.getStringExtra("chattingWith");
+
+        mUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mMessagesDatabaseReference = mFirebaseDatabase.getReference().child("messages");
+        mMessagesDatabaseReference = mFirebaseDatabase.getReference().child("messages").child(mParticipants);
         // Initialize references to views
         mProgressBar = findViewById(R.id.progressBar);
         mMessageListView = findViewById(R.id.messageListView);
@@ -93,7 +96,7 @@ public class MessengerActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // TODO: Send messages on click
-                MessageCreator chatMessage = new MessageCreator(mMessageEditText.getText().toString(), mUsername, null);
+                MessageCreator chatMessage = new MessageCreator(mMessageEditText.getText().toString(), mUserId, null);
                 mMessagesDatabaseReference.push().setValue(chatMessage);
                 // Clear input box
                 mMessageEditText.setText("");
@@ -104,6 +107,7 @@ public class MessengerActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 MessageCreator chatMessage = dataSnapshot.getValue(MessageCreator.class);
+                chatMessage.setUserId(chatMessage.getUserId().equals(mUserId)?"You":chattingWith);
                 mMessageAdapter.add(chatMessage);
             }
 

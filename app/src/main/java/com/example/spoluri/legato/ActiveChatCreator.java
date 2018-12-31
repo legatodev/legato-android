@@ -13,36 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.spoluri.legato.messaging;
+package com.example.spoluri.legato;
 
-public class MessageCreator {
+public class ActiveChatCreator {
 
-    private String text;
     private String userId;
     private String photoUrl;
+    private String participants;
 
-    public MessageCreator() {
+    public ActiveChatCreator() {
     }
 
-    public MessageCreator(String text, String userId, String photoUrl) {
-        this.text = text;
+    public ActiveChatCreator(String userId, String photoUrl, String participants) {
         this.userId = userId;
         this.photoUrl = photoUrl;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
+        this.participants = participants;
     }
 
     public String getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(String name) {
         this.userId = userId;
     }
 
@@ -52,5 +44,13 @@ public class MessageCreator {
 
     public void setPhotoUrl(String photoUrl) {
         this.photoUrl = photoUrl;
+    }
+
+    public String getParticipants() {
+        return participants;
+    }
+
+    public void setParticipants(String participants) {
+        this.participants = participants;
     }
 }

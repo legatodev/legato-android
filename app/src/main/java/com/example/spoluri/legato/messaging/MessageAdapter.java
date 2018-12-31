@@ -38,7 +38,7 @@ public class MessageAdapter extends ArrayAdapter<MessageCreator> {
             photoImageView.setVisibility(View.GONE);
             messageTextView.setText(message.getText());
         }
-        authorTextView.setText(message.getName());
+        authorTextView.setText(message.getUserId());
 
         return convertView;
     }

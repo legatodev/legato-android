@@ -7,4 +7,5 @@ public interface AppConstants
     long NUMBER_OF_VIDEOS_RETURNED = 25;
     String SEARCH_VIDEO_MSG = "Searching Videos";
     String DIALOG_TITLE = "Loading";
+    String ANONYMOUS = "anonymous";
 }

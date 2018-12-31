@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.spoluri.legato.authentication.LoginActivity;
-import com.example.spoluri.legato.messaging.MessageCreator;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -28,13 +27,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class AccountActivity extends YouTubeBaseActivity implements YouTubePlayer.OnInitializedListener{
-    public static final String ANONYMOUS = "anonymous";
-
     TextView id;
     TextView infoLabel;
     TextView info;
 
-    private String mUserId = ANONYMOUS;
+    private String mUserId = AppConstants.ANONYMOUS;
 
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mUserProfileDatabaseReference;
@@ -140,7 +137,7 @@ public class AccountActivity extends YouTubeBaseActivity implements YouTubePlaye
     }
 
     public void onMessengerLaunch(View view) {
-        Intent intent = new Intent(this, MessengerActivity.class);
+        Intent intent = new Intent(this, ActiveChatActivity.class);
         startActivity(intent);
     }
 

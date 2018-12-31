@@ -12,7 +12,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_application_id"/>
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_application_id" />
+
         <activity
             android:name=".SplashScreenActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -28,7 +31,6 @@
             android:name=".AccountActivity"
             android:label="@string/title_activity_account"
             android:theme="@style/AppTheme" />
-
         <activity
             android:name=".authentication.LoginActivity"
             android:screenOrientation="portrait"
@@ -38,8 +40,10 @@
             android:label="@string/title_activity_youtube"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".MessengerActivity"
+            android:name=".messaging.ChatActivity"
             android:label="@string/title_activity_messenger"
             android:theme="@style/AppTheme" />
+        <activity android:name=".ActiveChatActivity"></activity>
     </application>
+
 </manifest>
