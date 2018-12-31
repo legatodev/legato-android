@@ -1,6 +1,5 @@
-package com.example.spoluri.legato;
+package com.example.spoluri.legato.messaging;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,8 +7,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.example.spoluri.legato.messaging.ChatActivity;
-import com.google.api.services.youtube.model.SearchResult;
+import com.example.spoluri.legato.AppConstants;
+import com.example.spoluri.legato.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;

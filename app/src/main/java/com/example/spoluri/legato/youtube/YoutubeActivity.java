@@ -1,4 +1,4 @@
-package com.example.spoluri.legato;
+package com.example.spoluri.legato.youtube;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.example.spoluri.legato.R;
 import com.google.api.services.youtube.model.SearchResult;
 import com.google.android.youtube.player.YouTubePlayerView;
 

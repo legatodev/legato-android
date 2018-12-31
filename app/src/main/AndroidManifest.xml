@@ -36,14 +36,14 @@
             android:screenOrientation="portrait"
             android:theme="@style/FullscreenTheme" />
         <activity
-            android:name=".YoutubeActivity"
+            android:name=".youtube.YoutubeActivity"
             android:label="@string/title_activity_youtube"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".messaging.ChatActivity"
             android:label="@string/title_activity_messenger"
             android:theme="@style/AppTheme" />
-        <activity android:name=".ActiveChatActivity"></activity>
+        <activity android:name=".messaging.ActiveChatActivity"></activity>
     </application>
 
 </manifest>

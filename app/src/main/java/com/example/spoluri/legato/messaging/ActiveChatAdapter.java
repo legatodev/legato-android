@@ -1,4 +1,4 @@
-package com.example.spoluri.legato;
+package com.example.spoluri.legato.messaging;
 
 import android.app.Activity;
 import android.content.Context;
@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.example.spoluri.legato.R;
 
 import java.util.List;
 

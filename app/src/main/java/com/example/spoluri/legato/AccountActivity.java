@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.spoluri.legato.authentication.LoginActivity;
+import com.example.spoluri.legato.messaging.ActiveChatActivity;
+import com.example.spoluri.legato.youtube.YoutubeActivity;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
