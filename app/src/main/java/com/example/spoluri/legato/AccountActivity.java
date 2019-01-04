@@ -1,16 +1,22 @@
 package com.example.spoluri.legato;
 
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.TextView;
+import android.support.v4.content.ContextCompat;
 
 import com.example.spoluri.legato.authentication.LoginActivity;
 import com.example.spoluri.legato.messaging.ActiveChatActivity;
 import com.example.spoluri.legato.youtube.YoutubeActivity;
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
@@ -41,6 +47,7 @@ public class AccountActivity extends YouTubeBaseActivity implements YouTubePlaye
 
     private YouTubePlayerView youTubeView;
     private String mYoutubeVideo = "";
+    private GeofireHelper geofireHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +63,8 @@ public class AccountActivity extends YouTubeBaseActivity implements YouTubePlaye
         mUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mUserProfileDatabaseReference = mFirebaseDatabase.getReference().child("userprofiledata");
+        geofireHelper = new GeofireHelper();
+        getLastLocation();
 
         mChildEventListener = new ChildEventListener() {
             @Override
@@ -150,5 +159,36 @@ public class AccountActivity extends YouTubeBaseActivity implements YouTubePlaye
 
     @Override
     public void onInitializationFailure(Provider provider, YouTubeInitializationResult errorReason) {
+    }
+
+    public void getLastLocation() {
+        //TODO: ask for location permission from user
+        // Get last known recent location using new Google Play Services SDK (v11+)
+        FusedLocationProviderClient locationClient = LocationServices.getFusedLocationProviderClient(this);
+
+        if (locationClient != null) {
+            locationClient.getLastLocation()
+                    .addOnSuccessListener(new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            // GPS location can be null if GPS is switched off
+                            if (location != null) {
+                                onLocationChanged(location);
+                            }
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            System.out.println("Failure");
+                        }
+                    });
+        }
+    }
+
+    public void onLocationChanged(Location location) {
+        geofireHelper.setLocation(location);
+        //TODO: get the search radius from the user
+        geofireHelper.queryNeighbors(10);
     }
 }

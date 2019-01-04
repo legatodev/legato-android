@@ -4,6 +4,7 @@
     package="com.example.spoluri.legato">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -15,6 +16,9 @@
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_application_id" />
+        <uses-library
+            android:name="com.google.android.maps"
+            android:required="true" />
 
         <activity
             android:name=".SplashScreenActivity"
