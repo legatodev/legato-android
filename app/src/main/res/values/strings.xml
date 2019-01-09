@@ -4,6 +4,12 @@
 
     <string name="title_activity_account">AccountActivity</string>
     <string name="title_activity_splash_screen">SplashScreenActivity</string>
+    <string name="title_activity_chat">ChatActivity</string>
+    <string name="title_activity_youtube">YoutubeActivity</string>
+    <string name="title_active_chats">ActiveChatsActivity</string>
+    <string name="title_nearby_users">NearbyUsersActivity</string>
+
+
     <string name="facebook_application_id">327330968033595</string>
     <string name="facebook_login_protocol_scheme" translatable="false">fb327330968033595</string>
     <string name="ak_login_protocol_scheme">ak327330968033595</string>
@@ -19,10 +25,9 @@
     <string name="player_error">Error initializing YouTube player: %s</string>
     <string name="seek_to">Jump To</string>
     <string name="seek_to_hint">Seconds</string>
-    <string name="title_activity_youtube">Youtube</string>
     <string name="search_video_msg">Searching Videos</string>
     <string name="dialog_title">Loading</string>
 
     <string name="send_button_label">Send</string>
-    <string name="title_activity_messenger">MessengerActivity</string>
+    <string name="title_activity_profile">ProfileActivity</string>
 </resources>

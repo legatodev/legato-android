@@ -1,12 +1,12 @@
 package com.example.spoluri.legato;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.TextView;
-import android.support.v4.content.ContextCompat;
 
 import com.example.spoluri.legato.authentication.LoginActivity;
 import com.example.spoluri.legato.messaging.ActiveChatActivity;
@@ -31,10 +31,13 @@ import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayer.Provider;
 import com.google.android.youtube.player.YouTubePlayerView;
 
+import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AppCompatActivity;
+
 import java.util.HashMap;
 import java.util.Map;
 
-public class AccountActivity extends YouTubeBaseActivity implements YouTubePlayer.OnInitializedListener{
+public class AccountActivity extends YouTubeBaseActivity implements YouTubePlayer.OnInitializedListener {
     TextView id;
     TextView infoLabel;
     TextView info;
@@ -152,6 +155,12 @@ public class AccountActivity extends YouTubeBaseActivity implements YouTubePlaye
         startActivity(intent);
     }
 
+    public void onNearbyUsers(View view) {
+        Intent intent = new Intent(this, NearbyUsersActivity.class);
+        intent.putExtra("nearby_users", geofireHelper.getNearbyUsersList());
+        startActivity(intent);
+    }
+
     @Override
     public void onInitializationSuccess(Provider provider, YouTubePlayer player, boolean wasRestored) {
         player.cueVideo(mYoutubeVideo);
@@ -164,6 +173,8 @@ public class AccountActivity extends YouTubeBaseActivity implements YouTubePlaye
     public void getLastLocation() {
         //TODO: ask for location permission from user
         // Get last known recent location using new Google Play Services SDK (v11+)
+        checkPermissions();
+
         FusedLocationProviderClient locationClient = LocationServices.getFusedLocationProviderClient(this);
 
         if (locationClient != null) {
@@ -189,6 +200,22 @@ public class AccountActivity extends YouTubeBaseActivity implements YouTubePlaye
     public void onLocationChanged(Location location) {
         geofireHelper.setLocation(location);
         //TODO: get the search radius from the user
-        geofireHelper.queryNeighbors(10);
+        geofireHelper.queryNeighbors(1600);
+    }
+
+    private boolean checkPermissions() {
+        if (ActivityCompat.checkSelfPermission(this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            return true;
+        } else {
+            requestPermissions();
+            return false;
+        }
+    }
+
+    private void requestPermissions() {
+        final int REQUEST_FINE_LOCATION=0;
+        ActivityCompat.requestPermissions(this,
+                new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_FINE_LOCATION);
     }
 }

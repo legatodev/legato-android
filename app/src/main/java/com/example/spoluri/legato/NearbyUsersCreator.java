@@ -13,37 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.spoluri.legato.messaging;
+package com.example.spoluri.legato;
 
-public class MessageCreator {
+import java.io.Serializable;
 
-    private String text;
-    private String userId;
+public class NearbyUsersCreator implements Serializable {
+
+    private String userName;
     private String photoUrl;
+    private String distance;
 
-    public MessageCreator() {
+    public NearbyUsersCreator() {
     }
 
-    public MessageCreator(String text, String userId, String photoUrl) {
-        this.text = text;
-        this.userId = userId;
+    public NearbyUsersCreator(String userName, String photoUrl, String distance) {
+        this.userName = userName;
         this.photoUrl = photoUrl;
+        this.distance = distance;
     }
 
-    public String getText() {
-        return text;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setUserName(String name) {
+        this.userName = userName;
     }
 
     public String getPhotoUrl() {
@@ -52,5 +46,13 @@ public class MessageCreator {
 
     public void setPhotoUrl(String photoUrl) {
         this.photoUrl = photoUrl;
+    }
+
+    public String getDistance() {
+        return distance;
+    }
+
+    public void setDistance(String distance) {
+        this.distance = distance;
     }
 }

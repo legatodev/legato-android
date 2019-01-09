@@ -12,8 +12,8 @@ import com.example.spoluri.legato.R;
 
 import java.util.List;
 
-public class MessageAdapter extends ArrayAdapter<MessageCreator> {
-    public MessageAdapter(Context context, int resource, List<MessageCreator> objects) {
+public class ChatAdapter extends ArrayAdapter<ChatCreator> {
+    public ChatAdapter(Context context, int resource, List<ChatCreator> objects) {
         super(context, resource, objects);
     }
 
@@ -27,7 +27,7 @@ public class MessageAdapter extends ArrayAdapter<MessageCreator> {
         TextView messageTextView = convertView.findViewById(R.id.messageTextView);
         TextView authorTextView = convertView.findViewById(R.id.nameTextView);
 
-        MessageCreator message = getItem(position);
+        ChatCreator message = getItem(position);
 
         boolean isPhoto = message.getPhotoUrl() != null;
         if (isPhoto) {

@@ -16,6 +16,7 @@
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_application_id" />
+
         <uses-library
             android:name="com.google.android.maps"
             android:required="true" />
@@ -45,9 +46,20 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".messaging.ChatActivity"
-            android:label="@string/title_activity_messenger"
+            android:label="@string/title_activity_chat"
             android:theme="@style/AppTheme" />
-        <activity android:name=".messaging.ActiveChatActivity"></activity>
+        <activity
+            android:name=".messaging.ActiveChatActivity"
+            android:label="@string/title_active_chats"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".NearbyUsersActivity"
+            android:label="@string/title_nearby_users"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".ProfileActivity"
+            android:label="@string/title_activity_profile"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

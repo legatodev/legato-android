@@ -14,8 +14,6 @@ import android.widget.ProgressBar;
 
 import com.example.spoluri.legato.AppConstants;
 import com.example.spoluri.legato.R;
-import com.example.spoluri.legato.messaging.MessageAdapter;
-import com.example.spoluri.legato.messaging.MessageCreator;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -30,7 +28,7 @@ public class ChatActivity extends AppCompatActivity {
     public static final int DEFAULT_MSG_LENGTH_LIMIT = 1000;
 
     private ListView mMessageListView;
-    private MessageAdapter mMessageAdapter;
+    private ChatAdapter mChatAdapter;
     private ProgressBar mProgressBar;
     private EditText mMessageEditText;
     private Button mSendButton;
@@ -46,7 +44,7 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_messenger);
+        setContentView(R.layout.activity_chat);
 
         Intent intent = getIntent();
         mParticipants = intent.getStringExtra("participants");
@@ -63,9 +61,9 @@ public class ChatActivity extends AppCompatActivity {
         mSendButton = findViewById(R.id.sendButton);
 
         // Initialize message ListView and its adapter
-        List<MessageCreator> messagesList = new ArrayList<>();
-        mMessageAdapter = new MessageAdapter(this, R.layout.item_message, messagesList);
-        mMessageListView.setAdapter(mMessageAdapter);
+        List<ChatCreator> messagesList = new ArrayList<>();
+        mChatAdapter = new ChatAdapter(this, R.layout.item_message, messagesList);
+        mMessageListView.setAdapter(mChatAdapter);
 
         // Initialize progress bar
         mProgressBar.setVisibility(ProgressBar.INVISIBLE);
@@ -96,7 +94,7 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // TODO: Send messages on click
-                MessageCreator chatMessage = new MessageCreator(mMessageEditText.getText().toString(), mUserId, null);
+                ChatCreator chatMessage = new ChatCreator(mMessageEditText.getText().toString(), mUserId, null);
                 mMessagesDatabaseReference.push().setValue(chatMessage);
                 // Clear input box
                 mMessageEditText.setText("");
@@ -106,9 +104,9 @@ public class ChatActivity extends AppCompatActivity {
         mChildEventListener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                MessageCreator chatMessage = dataSnapshot.getValue(MessageCreator.class);
+                ChatCreator chatMessage = dataSnapshot.getValue(ChatCreator.class);
                 chatMessage.setUserId(chatMessage.getUserId().equals(mUserId)?"You":chattingWith);
-                mMessageAdapter.add(chatMessage);
+                mChatAdapter.add(chatMessage);
             }
 
             @Override

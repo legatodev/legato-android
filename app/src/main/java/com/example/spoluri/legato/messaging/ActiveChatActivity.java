@@ -88,12 +88,13 @@ public class ActiveChatActivity extends AppCompatActivity implements AdapterView
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mChattingWithUserName = dataSnapshot.getValue(String.class);
-                ActiveChatCreator chatMessage = new ActiveChatCreator(mChattingWithUserName, null, participants);
-                mActiveChatAdapter.add(chatMessage);
+                ActiveChatCreator activeChat = new ActiveChatCreator(mChattingWithUserName, null, participants);
+                mActiveChatAdapter.add(activeChat);
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
+
             }
         });
     }
