@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 class ChatActivity extends AppCompatActivity {
+    private static final String TAG = "ChatActivity";
     private static final int DEFAULT_MSG_LENGTH_LIMIT = 1000;
 
     private ListView mMessageListView;
@@ -90,7 +92,6 @@ class ChatActivity extends AppCompatActivity {
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO: Send messages on click
                 ChatCreator chatMessage = new ChatCreator(mMessageEditText.getText().toString(), mUserId, null);
                 mMessagesDatabaseReference.push().setValue(chatMessage);
                 // Clear input box
@@ -123,7 +124,7 @@ class ChatActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                Log.w(TAG, databaseError.toException());
             }
         };
         mMessagesDatabaseReference.addChildEventListener(childEventListener);

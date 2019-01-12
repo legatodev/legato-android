@@ -1,9 +1,15 @@
 package com.example.spoluri.legato.authentication;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Layout;
+import android.view.LayoutInflater;
+import android.view.View;
 
 import com.example.spoluri.legato.AccountActivity;
 import com.example.spoluri.legato.R;
@@ -19,13 +25,14 @@ import java.util.List;
 public class LoginActivity extends AppCompatActivity{
 
     private static final int RC_SIGN_IN = 100;
-    public static int APP_REQUEST_CODE = 1;
-    CallbackManager callbackManager;
+    View mRootView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mRootView = findViewById(R.id.root);
         createLoginPage();
+
     }
 
     private void createLoginPage() {
@@ -71,12 +78,16 @@ public class LoginActivity extends AppCompatActivity{
             // Sign in failed
             if (response == null) {
                 // User pressed back button
+                showSnackbar(R.string.sign_in_cancelled);
                 return;
             }
 
             if (response.getError().getErrorCode() == ErrorCodes.NO_NETWORK) {
+                showSnackbar(R.string.no_internet_connection);
                 return;
             }
+
+            showSnackbar(R.string.unknown_error);
         }
     }
 
@@ -85,4 +96,7 @@ public class LoginActivity extends AppCompatActivity{
         startActivity(intent);
     }
 
+    private void showSnackbar(@StringRes int errorMessageRes) {
+        Snackbar.make(mRootView, errorMessageRes, Snackbar.LENGTH_LONG).show();
+    }
 }

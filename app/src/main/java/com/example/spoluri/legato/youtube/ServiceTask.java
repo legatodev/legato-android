@@ -2,6 +2,7 @@ package com.example.spoluri.legato.youtube;
 
 import android.os.AsyncTask;
 
+import com.example.spoluri.legato.R;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
@@ -73,7 +74,7 @@ class ServiceTask extends AsyncTask<Object, Void, Object[]> implements
             YouTube youtube = new YouTube.Builder(transport, jsonFactory, new HttpRequestInitializer() {
                 public void initialize(HttpRequest request) {
                 }
-            }).setApplicationName("Legato").build(); //Todo: access app name string rather than hard code
+            }).setApplicationName("Legato").build();
 
             // Define the API request for retrieving search results.
             YouTube.Search.List search = youtube.search().list("id,snippet");

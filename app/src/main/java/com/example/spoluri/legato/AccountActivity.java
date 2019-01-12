@@ -5,6 +5,9 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
+import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -38,6 +41,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class AccountActivity extends YouTubeBaseActivity implements YouTubePlayer.OnInitializedListener {
+    private static final String TAG = "AccountActivity";
+
     private TextView id;
     private TextView infoLabel;
     private TextView info;
@@ -48,6 +53,7 @@ public class AccountActivity extends YouTubeBaseActivity implements YouTubePlaye
     private YouTubePlayerView youTubeView;
     private String mYoutubeVideo = "";
     private GeofireHelper geofireHelper;
+    private View mRootView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +66,7 @@ public class AccountActivity extends YouTubeBaseActivity implements YouTubePlaye
         infoLabel = findViewById(R.id.info_label);
         info = findViewById(R.id.info);
 
+        mRootView = findViewById(R.id.account_root);
         mUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
@@ -93,9 +100,10 @@ public class AccountActivity extends YouTubeBaseActivity implements YouTubePlaye
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                Log.w(TAG, databaseError.toException());
             }
         };
+
         mUserProfileDatabaseReference.child(mUserId).addChildEventListener(childEventListener);
     }
 
@@ -166,10 +174,11 @@ public class AccountActivity extends YouTubeBaseActivity implements YouTubePlaye
 
     @Override
     public void onInitializationFailure(Provider provider, YouTubeInitializationResult errorReason) {
+        showSnackbar(R.string.youtube_initialization_failure);
+        Log.e(TAG, "Youtube Initialization Failed: " + errorReason.toString());
     }
 
     public void getLastLocation() {
-        //TODO: ask for location permission from user
         // Get last known recent location using new Google Play Services SDK (v11+)
         boolean havePermission = checkPermissions();
 
@@ -190,7 +199,7 @@ public class AccountActivity extends YouTubeBaseActivity implements YouTubePlaye
                         .addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                System.out.println("Failure");
+                                showSnackbar(R.string.location_failure);
                             }
                         });
             }
@@ -217,5 +226,9 @@ public class AccountActivity extends YouTubeBaseActivity implements YouTubePlaye
         final int REQUEST_FINE_LOCATION=0;
         ActivityCompat.requestPermissions(this,
                 new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_FINE_LOCATION);
+    }
+
+    private void showSnackbar(@StringRes int errorMessageRes) {
+        Snackbar.make(mRootView, errorMessageRes, Snackbar.LENGTH_LONG).show();
     }
 }

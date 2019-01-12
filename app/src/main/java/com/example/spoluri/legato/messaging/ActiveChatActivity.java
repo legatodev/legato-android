@@ -3,6 +3,7 @@ package com.example.spoluri.legato.messaging;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ActiveChatActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
+    private static final String TAG = "ActiveChatActivity";
 
     private ListView mActiveChatListView;
     private ActiveChatAdapter mActiveChatAdapter;
@@ -72,7 +74,7 @@ public class ActiveChatActivity extends AppCompatActivity implements AdapterView
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                Log.w(TAG, databaseError.toException());
             }
         };
         messagesDatabaseReference.addChildEventListener(childEventListener);
@@ -92,7 +94,7 @@ public class ActiveChatActivity extends AppCompatActivity implements AdapterView
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                Log.w(TAG, databaseError.toException());
             }
         });
     }
