@@ -28,7 +28,7 @@ public class LoginActivity extends AppCompatActivity{
         createLoginPage();
     }
 
-    public void createLoginPage() {
+    private void createLoginPage() {
         List<AuthUI.IdpConfig> providers = Arrays.asList(
                 new AuthUI.IdpConfig.EmailBuilder().build(),
                 new AuthUI.IdpConfig.GoogleBuilder().build(),

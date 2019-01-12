@@ -15,23 +15,19 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.List;
 
-public class GeofireHelper {
-    private String mUserId = AppConstants.ANONYMOUS;
-
-    private FirebaseDatabase mFirebaseDatabase;
-    private DatabaseReference mUserLocationDatabaseReference;
-    private GeoFire mGeoFire;
+class GeofireHelper {
+    private final String mUserId;
+    private final GeoFire mGeoFire;
     private Location mCurrentLocation;
-    private ArrayList<NearbyUsersCreator> mNearbyUsersList;
+    private final ArrayList<NearbyUsersCreator> mNearbyUsersList;
 
     public GeofireHelper() {
         mUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mUserLocationDatabaseReference = mFirebaseDatabase.getReference().child("geofire");
-        mGeoFire = new GeoFire(mUserLocationDatabaseReference);
-        mNearbyUsersList = new ArrayList();
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference userLocationDatabaseReference = firebaseDatabase.getReference().child("geofire");
+        mGeoFire = new GeoFire(userLocationDatabaseReference);
+        mNearbyUsersList = new ArrayList<NearbyUsersCreator>();
     }
 
     public void setLocation(Location location) {

@@ -24,8 +24,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChatActivity extends AppCompatActivity {
-    public static final int DEFAULT_MSG_LENGTH_LIMIT = 1000;
+class ChatActivity extends AppCompatActivity {
+    private static final int DEFAULT_MSG_LENGTH_LIMIT = 1000;
 
     private ListView mMessageListView;
     private ChatAdapter mChatAdapter;
@@ -34,12 +34,9 @@ public class ChatActivity extends AppCompatActivity {
     private Button mSendButton;
 
     private String mUserId = AppConstants.ANONYMOUS;
-    private String mParticipants = "";
 
-    private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mMessagesDatabaseReference;
-    ChildEventListener mChildEventListener;
-    String chattingWith = AppConstants.ANONYMOUS;
+    private String chattingWith = AppConstants.ANONYMOUS;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,13 +44,13 @@ public class ChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chat);
 
         Intent intent = getIntent();
-        mParticipants = intent.getStringExtra("participants");
+        String participants = intent.getStringExtra("participants");
         chattingWith = intent.getStringExtra("chattingWith");
 
         mUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mMessagesDatabaseReference = mFirebaseDatabase.getReference().child("messages").child(mParticipants);
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        mMessagesDatabaseReference = firebaseDatabase.getReference().child("messages").child(participants);
         // Initialize references to views
         mProgressBar = findViewById(R.id.progressBar);
         mMessageListView = findViewById(R.id.messageListView);
@@ -101,7 +98,7 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
-        mChildEventListener = new ChildEventListener() {
+        ChildEventListener childEventListener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 ChatCreator chatMessage = dataSnapshot.getValue(ChatCreator.class);
@@ -129,7 +126,7 @@ public class ChatActivity extends AppCompatActivity {
 
             }
         };
-        mMessagesDatabaseReference.addChildEventListener(mChildEventListener);
+        mMessagesDatabaseReference.addChildEventListener(childEventListener);
     }
 
 }

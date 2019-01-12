@@ -2,6 +2,8 @@ package com.example.spoluri.legato.messaging;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -12,13 +14,14 @@ import com.example.spoluri.legato.R;
 
 import java.util.List;
 
-public class ChatAdapter extends ArrayAdapter<ChatCreator> {
+class ChatAdapter extends ArrayAdapter<ChatCreator> {
     public ChatAdapter(Context context, int resource, List<ChatCreator> objects) {
         super(context, resource, objects);
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    @NonNull
+    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         if (convertView == null) {
             convertView = ((Activity) getContext()).getLayoutInflater().inflate(R.layout.item_message, parent, false);
         }

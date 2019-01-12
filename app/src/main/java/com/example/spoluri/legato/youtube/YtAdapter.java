@@ -1,7 +1,6 @@
 package com.example.spoluri.legato.youtube;
 
 import android.app.Activity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +14,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class YtAdapter extends BaseAdapter {
+class YtAdapter extends BaseAdapter {
 
     private Activity mActivity = null;
     private List<SearchResult> mVideoList = null;
@@ -26,7 +25,7 @@ public class YtAdapter extends BaseAdapter {
         mLayoutInflater = LayoutInflater.from(mActivity);
     }
 
-    public void setmVideoList(List<SearchResult> mVideoList) {
+    public void setVideoList(List<SearchResult> mVideoList) {
         this.mVideoList = mVideoList;
     }
 

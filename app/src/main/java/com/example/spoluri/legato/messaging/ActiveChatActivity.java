@@ -26,8 +26,6 @@ public class ActiveChatActivity extends AppCompatActivity implements AdapterView
     private ActiveChatAdapter mActiveChatAdapter;
 
     private FirebaseDatabase mFirebaseDatabase;
-    private DatabaseReference mMessagesDatabaseReference;
-    ChildEventListener mChildEventListener;
     private String mUserId = AppConstants.ANONYMOUS;
     private String mChattingWithUserName = AppConstants.ANONYMOUS;
 
@@ -37,7 +35,7 @@ public class ActiveChatActivity extends AppCompatActivity implements AdapterView
         setContentView(R.layout.activity_active_chats);
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mMessagesDatabaseReference = mFirebaseDatabase.getReference().child("messages");
+        DatabaseReference messagesDatabaseReference = mFirebaseDatabase.getReference().child("messages");
         mUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         // Initialize references to views
         mActiveChatListView = findViewById(R.id.activeChatListView);
@@ -48,7 +46,7 @@ public class ActiveChatActivity extends AppCompatActivity implements AdapterView
         mActiveChatAdapter = new ActiveChatAdapter(this, R.layout.item_message, activeChatList);
         mActiveChatListView.setAdapter(mActiveChatAdapter);
 
-        mChildEventListener = new ChildEventListener() {
+        ChildEventListener childEventListener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 final String participants = dataSnapshot.getKey();
@@ -77,7 +75,7 @@ public class ActiveChatActivity extends AppCompatActivity implements AdapterView
 
             }
         };
-        mMessagesDatabaseReference.addChildEventListener(mChildEventListener);
+        messagesDatabaseReference.addChildEventListener(childEventListener);
     }
 
     private void SetChattingWithUserName(final String participants) {

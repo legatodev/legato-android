@@ -18,13 +18,7 @@ import com.google.android.youtube.player.YouTubePlayerView;
 
 import java.util.List;
 
-import com.example.spoluri.legato.youtube.*;
-
 public class YoutubeActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener, ServerResponseListener {
-
-    private static final int RECOVERY_REQUEST = 1;
-    private YouTubePlayerView youTubeView;
-
     private EditText mYtVideoEdt = null;
     private Button mYtVideoBtn = null;
     private ListView mYtVideoLsv = null;
@@ -62,7 +56,7 @@ public class YoutubeActivity extends AppCompatActivity implements View.OnClickLi
 
                     // Service to search video
                     mYtServiceTask = new ServiceTask(SEARCH_VIDEO);
-                    mYtServiceTask.setmServerResponseListener(this);
+                    mYtServiceTask.setServerResponseListener(this);
                     mYtServiceTask.execute(new String[]{keyWord});
                 }
                 break;
@@ -119,10 +113,10 @@ public class YoutubeActivity extends AppCompatActivity implements View.OnClickLi
 
                 if (mYtAdapter == null) {
                     mYtAdapter = new YtAdapter(this);
-                    mYtAdapter.setmVideoList((List<SearchResult>) objects[1]);
+                    mYtAdapter.setVideoList((List<SearchResult>) objects[1]);
                     mYtVideoLsv.setAdapter(mYtAdapter);
                 } else {
-                    mYtAdapter.setmVideoList((List<SearchResult>) objects[1]);
+                    mYtAdapter.setVideoList((List<SearchResult>) objects[1]);
                     mYtAdapter.notifyDataSetChanged();
                 }
 

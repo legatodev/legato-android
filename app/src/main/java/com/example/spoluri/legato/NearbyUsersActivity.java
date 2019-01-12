@@ -13,7 +13,6 @@ public class NearbyUsersActivity extends AppCompatActivity implements AdapterVie
 
     private NearbyUsersAdapter mNearbyUsersAdapter;
     private ListView mNearbyUserListView;
-    private ArrayList<NearbyUsersCreator> mNearbyUserList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,8 +24,8 @@ public class NearbyUsersActivity extends AppCompatActivity implements AdapterVie
         mNearbyUserListView.setOnItemClickListener(this);
 
         // Initialize message ListView and its adapter
-        mNearbyUserList = (ArrayList<NearbyUsersCreator>) getIntent().getSerializableExtra("nearby_users");
-        mNearbyUsersAdapter = new NearbyUsersAdapter(this, R.layout.item_nearbyuser, mNearbyUserList);
+        ArrayList<NearbyUsersCreator> nearbyUserList = (ArrayList<NearbyUsersCreator>) getIntent().getSerializableExtra("nearby_users");
+        mNearbyUsersAdapter = new NearbyUsersAdapter(this, R.layout.item_nearbyuser, nearbyUserList);
         mNearbyUserListView.setAdapter(mNearbyUsersAdapter);
     }
 

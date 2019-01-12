@@ -37,7 +37,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:gravity="left"
-                    android:text="Video Title"
+                    android:text="@string/video_title"
                     android:padding="5dp"
                     android:singleLine="true"
                     android:ellipsize="end"
@@ -49,7 +49,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="left"
                     android:padding="5dp"
-                    android:text="Video Description"
+                    android:text="@string/video_description"
                     android:maxLines="2"
                     android:ellipsize="end"
                     android:textColor="@android:color/darker_gray" />

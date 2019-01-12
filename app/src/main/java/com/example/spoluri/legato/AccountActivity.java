@@ -38,16 +38,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class AccountActivity extends YouTubeBaseActivity implements YouTubePlayer.OnInitializedListener {
-    TextView id;
-    TextView infoLabel;
-    TextView info;
+    private TextView id;
+    private TextView infoLabel;
+    private TextView info;
 
     private String mUserId = AppConstants.ANONYMOUS;
 
-    private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mUserProfileDatabaseReference;
-    ChildEventListener mChildEventListener;
-
     private YouTubePlayerView youTubeView;
     private String mYoutubeVideo = "";
     private GeofireHelper geofireHelper;
@@ -64,12 +61,13 @@ public class AccountActivity extends YouTubeBaseActivity implements YouTubePlaye
         info = findViewById(R.id.info);
 
         mUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mUserProfileDatabaseReference = mFirebaseDatabase.getReference().child("userprofiledata");
+
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        mUserProfileDatabaseReference = firebaseDatabase.getReference().child("userprofiledata");
         geofireHelper = new GeofireHelper();
         getLastLocation();
 
-        mChildEventListener = new ChildEventListener() {
+        ChildEventListener childEventListener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 if (dataSnapshot.getKey().equals("youtube_video")) {
@@ -98,7 +96,7 @@ public class AccountActivity extends YouTubeBaseActivity implements YouTubePlaye
 
             }
         };
-        mUserProfileDatabaseReference.child(mUserId).addChildEventListener(mChildEventListener);
+        mUserProfileDatabaseReference.child(mUserId).addChildEventListener(childEventListener);
     }
 
     private void InitializeYoutubeView() {
@@ -141,7 +139,7 @@ public class AccountActivity extends YouTubeBaseActivity implements YouTubePlaye
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == RequestCodes.YOUTUBE_VIDEO_FLOW && resultCode == RESULT_OK && data != null) {
-            Map<String, Object> youtube = new HashMap<String, Object>();
+            Map<String, Object> youtube = new HashMap<>();
             // put() method
             mYoutubeVideo = data.getStringExtra("youtube_video");
             youtube.put("youtube_video", mYoutubeVideo);
@@ -173,27 +171,29 @@ public class AccountActivity extends YouTubeBaseActivity implements YouTubePlaye
     public void getLastLocation() {
         //TODO: ask for location permission from user
         // Get last known recent location using new Google Play Services SDK (v11+)
-        checkPermissions();
+        boolean havePermission = checkPermissions();
 
-        FusedLocationProviderClient locationClient = LocationServices.getFusedLocationProviderClient(this);
+        if (havePermission) {
+            FusedLocationProviderClient locationClient = LocationServices.getFusedLocationProviderClient(this);
 
-        if (locationClient != null) {
-            locationClient.getLastLocation()
-                    .addOnSuccessListener(new OnSuccessListener<Location>() {
-                        @Override
-                        public void onSuccess(Location location) {
-                            // GPS location can be null if GPS is switched off
-                            if (location != null) {
-                                onLocationChanged(location);
+            if (locationClient != null) {
+                locationClient.getLastLocation()
+                        .addOnSuccessListener(new OnSuccessListener<Location>() {
+                            @Override
+                            public void onSuccess(Location location) {
+                                // GPS location can be null if GPS is switched off
+                                if (location != null) {
+                                    onLocationChanged(location);
+                                }
                             }
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            System.out.println("Failure");
-                        }
-                    });
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                System.out.println("Failure");
+                            }
+                        });
+            }
         }
     }
 
@@ -208,7 +208,7 @@ public class AccountActivity extends YouTubeBaseActivity implements YouTubePlaye
                 android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             return true;
         } else {
-            requestPermissions();
+            requestPermissions(); //TODO: need to implement a callback to know what the result is
             return false;
         }
     }

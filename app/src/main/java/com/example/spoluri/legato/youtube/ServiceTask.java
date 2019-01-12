@@ -13,13 +13,12 @@ import com.example.spoluri.legato.AppConstants;
 import java.io.IOException;
 import java.util.List;
 
-public class ServiceTask extends AsyncTask<Object, Void, Object[]> implements
+class ServiceTask extends AsyncTask<Object, Void, Object[]> implements
         ServiceTaskInterface {
-    private static final String TAG = ServiceTask.class.getSimpleName();
     private ServerResponseListener mServerResponseListener = null;
     private int mRequestCode = 0;
 
-    public void setmServerResponseListener(
+    public void setServerResponseListener(
             ServerResponseListener mServerResponseListener) {
         this.mServerResponseListener = mServerResponseListener;
     }
