@@ -1,4 +1,4 @@
-package com.example.spoluri.legato.authentication;
+package com.example.spoluri.legato;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -7,13 +7,11 @@ import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Layout;
-import android.view.LayoutInflater;
 import android.view.View;
 
 import com.example.spoluri.legato.AccountActivity;
 import com.example.spoluri.legato.R;
-import com.facebook.CallbackManager;
+import com.example.spoluri.legato.RequestCodes;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
@@ -24,7 +22,6 @@ import java.util.List;
 
 public class LoginActivity extends AppCompatActivity{
 
-    private static final int RC_SIGN_IN = 100;
     View mRootView;
 
     @Override
@@ -32,7 +29,6 @@ public class LoginActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         mRootView = findViewById(R.id.root);
         createLoginPage();
-
     }
 
     private void createLoginPage() {
@@ -46,13 +42,13 @@ public class LoginActivity extends AppCompatActivity{
                 .setLogo(R.drawable.legato_logo)
                 .setIsSmartLockEnabled(true);
 
-        startActivityForResult(builder.build(), RC_SIGN_IN);
+        startActivityForResult(builder.build(), RequestCodes.RC_SIGN_IN);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_SIGN_IN) {
+        if (requestCode == RequestCodes.RC_SIGN_IN) {
             handleSignInResponse(resultCode, data);
         }
     }

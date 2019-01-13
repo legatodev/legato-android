@@ -24,7 +24,8 @@ public class NearbyUsersActivity extends AppCompatActivity implements AdapterVie
         mNearbyUserListView.setOnItemClickListener(this);
 
         // Initialize message ListView and its adapter
-        ArrayList<NearbyUsersCreator> nearbyUserList = (ArrayList<NearbyUsersCreator>) getIntent().getSerializableExtra("nearby_users");
+        Intent intent = getIntent();
+        ArrayList<NearbyUsersCreator> nearbyUserList = (ArrayList<NearbyUsersCreator>) intent.getSerializableExtra("nearby_users");
         mNearbyUsersAdapter = new NearbyUsersAdapter(this, R.layout.item_nearbyuser, nearbyUserList);
         mNearbyUserListView.setAdapter(mNearbyUsersAdapter);
     }

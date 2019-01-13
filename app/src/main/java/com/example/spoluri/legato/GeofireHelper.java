@@ -1,6 +1,7 @@
 package com.example.spoluri.legato;
 
 import android.location.Location;
+import android.util.Log;
 
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
@@ -13,8 +14,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import android.util.Log;
-
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -23,11 +22,12 @@ class GeofireHelper {
     private final GeoFire mGeoFire;
     private Location mCurrentLocation;
     private final ArrayList<NearbyUsersCreator> mNearbyUsersList;
+    private final FirebaseDatabase mFirebaseDatabase;
 
     public GeofireHelper() {
         mUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference userLocationDatabaseReference = firebaseDatabase.getReference().child("geofire");
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference userLocationDatabaseReference = mFirebaseDatabase.getReference().child("geofire");
         mGeoFire = new GeoFire(userLocationDatabaseReference);
         mNearbyUsersList = new ArrayList<NearbyUsersCreator>();
     }
@@ -46,21 +46,24 @@ class GeofireHelper {
         });
     }
 
+    //This function needs a unit test
     public void queryNeighbors(double searchRadius) {
-        GeoQuery geoQuery = mGeoFire.queryAtLocation(new GeoLocation(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()), searchRadius);
-        geoQuery.addGeoQueryDataEventListener(new GeoQueryDataEventListener() {
-            @Override
-            public void onDataEntered(DataSnapshot dataSnapshot, GeoLocation geoLocation) {
-                //Every point within the radius will call this function including the origin
-                Location location = new Location("");
-                location.setLatitude(geoLocation.latitude);
-                location.setLongitude(geoLocation.longitude);
-                final DecimalFormat df = new DecimalFormat( "#.#");
-                final String distanceTo = df.format(mCurrentLocation.distanceTo(location)/1000.0);
-                if (!dataSnapshot.getKey().equals(mUserId)) {
-                    DatabaseReference userProfileDataDatabaseReference = FirebaseDatabase.getInstance().getReference().child("userprofiledata");
-                    DatabaseReference reference = userProfileDataDatabaseReference.child(dataSnapshot.getKey()).child("username");
-                    reference.addValueEventListener(new ValueEventListener() {
+        mNearbyUsersList.clear();
+        if (mCurrentLocation != null) {
+            GeoQuery geoQuery = mGeoFire.queryAtLocation(new GeoLocation(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()), searchRadius);
+            geoQuery.addGeoQueryDataEventListener(new GeoQueryDataEventListener() {
+                @Override
+                public void onDataEntered(DataSnapshot dataSnapshot, GeoLocation geoLocation) {
+                    //Every point within the radius will call this function including the origin
+                    Location location = new Location("");
+                    location.setLatitude(geoLocation.latitude);
+                    location.setLongitude(geoLocation.longitude);
+                    final DecimalFormat df = new DecimalFormat("#.#");
+                    final String distanceTo = df.format(mCurrentLocation.distanceTo(location) / 1000.0);
+                    if (!dataSnapshot.getKey().equals(mUserId)) {
+                        DatabaseReference userProfileDataDatabaseReference = mFirebaseDatabase.getReference().child("userprofiledata");
+                        DatabaseReference usernameReference = userProfileDataDatabaseReference.child(dataSnapshot.getKey()).child("username");
+                        usernameReference.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 mNearbyUsersList.add(new NearbyUsersCreator(dataSnapshot.getValue(String.class), "", distanceTo));
@@ -70,35 +73,39 @@ class GeofireHelper {
                             public void onCancelled(DatabaseError databaseError) {
 
                             }
-                    });
+                        });
 
+                    }
                 }
-            }
 
-            @Override
-            public void onDataExited(DataSnapshot dataSnapshot) {
-                System.out.println(String.format("Key %s is no longer in the search area", dataSnapshot.getKey()));
-            }
+                @Override
+                public void onDataExited(DataSnapshot dataSnapshot) {
+                    System.out.println(String.format("Key %s is no longer in the search area", dataSnapshot.getKey()));
+                }
 
-            @Override
-            public void onDataMoved(DataSnapshot dataSnapshot, GeoLocation location) {
-            }
+                @Override
+                public void onDataMoved(DataSnapshot dataSnapshot, GeoLocation location) {
+                }
 
-            @Override
-            public void onDataChanged(DataSnapshot dataSnapshot, GeoLocation location) {
-                System.out.println(String.format("Key %s changed within the search area to [%f,%f]", dataSnapshot.getKey(), location.latitude, location.longitude));
-            }
+                @Override
+                public void onDataChanged(DataSnapshot dataSnapshot, GeoLocation location) {
+                    System.out.println(String.format("Key %s changed within the search area to [%f,%f]", dataSnapshot.getKey(), location.latitude, location.longitude));
+                }
 
-            @Override
-            public void onGeoQueryReady() {
-                System.out.println("All initial data has been loaded and events have been fired!");
-            }
+                @Override
+                public void onGeoQueryReady() {
+                    System.out.println("All initial data has been loaded and events have been fired!");
+                }
 
-            @Override
-            public void onGeoQueryError(DatabaseError error) {
-                System.err.println("There was an error with this query: " + error);
-            }
-        });
+                @Override
+                public void onGeoQueryError(DatabaseError error) {
+                    System.err.println("There was an error with this query: " + error);
+                }
+            });
+        }
+        else {
+            Log.e("GeofireHelper", "Current Location is not set. Nothing to query.");
+        }
     }
 
     public ArrayList<NearbyUsersCreator> getNearbyUsersList() {

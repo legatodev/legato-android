@@ -36,7 +36,7 @@
             android:label="@string/title_activity_account"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".authentication.LoginActivity"
+            android:name=".LoginActivity"
             android:screenOrientation="portrait"
             android:theme="@style/FullscreenTheme" />
         <activity

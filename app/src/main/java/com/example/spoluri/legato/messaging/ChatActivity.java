@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 
 import com.example.spoluri.legato.AppConstants;
 import com.example.spoluri.legato.R;
@@ -25,47 +24,26 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
-class ChatActivity extends AppCompatActivity {
+public class ChatActivity extends AppCompatActivity {
     private static final String TAG = "ChatActivity";
     private static final int DEFAULT_MSG_LENGTH_LIMIT = 1000;
 
     private ListView mMessageListView;
-    private ChatAdapter mChatAdapter;
-    private ProgressBar mProgressBar;
     private EditText mMessageEditText;
     private Button mSendButton;
 
     private String mUserId = AppConstants.ANONYMOUS;
 
     private DatabaseReference mMessagesDatabaseReference;
-    private String chattingWith = AppConstants.ANONYMOUS;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-        Intent intent = getIntent();
-        String participants = intent.getStringExtra("participants");
-        chattingWith = intent.getStringExtra("chattingWith");
-
-        mUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        mMessagesDatabaseReference = firebaseDatabase.getReference().child("messages").child(participants);
         // Initialize references to views
-        mProgressBar = findViewById(R.id.progressBar);
         mMessageListView = findViewById(R.id.messageListView);
         mMessageEditText = findViewById(R.id.messageEditText);
         mSendButton = findViewById(R.id.sendButton);
-
-        // Initialize message ListView and its adapter
-        List<ChatCreator> messagesList = new ArrayList<>();
-        mChatAdapter = new ChatAdapter(this, R.layout.item_message, messagesList);
-        mMessageListView.setAdapter(mChatAdapter);
-
-        // Initialize progress bar
-        mProgressBar.setVisibility(ProgressBar.INVISIBLE);
 
         // Enable Send button when there's text to send
         mMessageEditText.addTextChangedListener(new TextWatcher() {
@@ -88,6 +66,14 @@ class ChatActivity extends AppCompatActivity {
         });
         mMessageEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(DEFAULT_MSG_LENGTH_LIMIT)});
 
+        Intent intent = getIntent();
+        final String participants = intent.getStringExtra("participants");
+        final String chattingWith = intent.getStringExtra("chattingWith");
+
+        mUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        mMessagesDatabaseReference = firebaseDatabase.getReference().child("messages").child(participants);
+
         // Send button sends a message and clears the EditText
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,6 +84,11 @@ class ChatActivity extends AppCompatActivity {
                 mMessageEditText.setText("");
             }
         });
+
+        // Initialize message ListView and its adapter
+        List<ChatCreator> messagesList = new ArrayList<>();
+        final ChatAdapter mChatAdapter = new ChatAdapter(this, R.layout.item_message, messagesList);
+        mMessageListView.setAdapter(mChatAdapter);
 
         ChildEventListener childEventListener = new ChildEventListener() {
             @Override

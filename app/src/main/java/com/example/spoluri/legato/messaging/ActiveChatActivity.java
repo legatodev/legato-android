@@ -39,6 +39,7 @@ public class ActiveChatActivity extends AppCompatActivity implements AdapterView
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference messagesDatabaseReference = mFirebaseDatabase.getReference().child("messages");
         mUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
         // Initialize references to views
         mActiveChatListView = findViewById(R.id.activeChatListView);
         mActiveChatListView.setOnItemClickListener(this);

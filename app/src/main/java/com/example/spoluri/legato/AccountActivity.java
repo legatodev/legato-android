@@ -1,5 +1,6 @@
 package com.example.spoluri.legato;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -11,7 +12,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.example.spoluri.legato.authentication.LoginActivity;
 import com.example.spoluri.legato.messaging.ActiveChatActivity;
 import com.example.spoluri.legato.youtube.YoutubeActivity;
 import com.firebase.ui.auth.AuthUI;
@@ -30,7 +30,6 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
-import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayer.Provider;
 import com.google.android.youtube.player.YouTubePlayerView;
 
@@ -48,31 +47,28 @@ public class AccountActivity extends YouTubeBaseActivity implements YouTubePlaye
     private TextView info;
 
     private String mUserId = AppConstants.ANONYMOUS;
-
-    private DatabaseReference mUserProfileDatabaseReference;
-    private YouTubePlayerView youTubeView;
+    private View mRootView;
+    private YouTubePlayerView mYouTubeView;
     private String mYoutubeVideo = "";
     private GeofireHelper geofireHelper;
-    private View mRootView;
+    private DatabaseReference mUserProfileDatabaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account);
 
-        youTubeView = findViewById(R.id.youtube_view);
-
         id = findViewById(R.id.id);
         infoLabel = findViewById(R.id.info_label);
         info = findViewById(R.id.info);
 
         mRootView = findViewById(R.id.account_root);
-        mUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        mYouTubeView = findViewById(R.id.youtube_view);
+        geofireHelper = new GeofireHelper();
 
+        mUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         mUserProfileDatabaseReference = firebaseDatabase.getReference().child("userprofiledata");
-        geofireHelper = new GeofireHelper();
-        getLastLocation();
 
         ChildEventListener childEventListener = new ChildEventListener() {
             @Override
@@ -105,10 +101,12 @@ public class AccountActivity extends YouTubeBaseActivity implements YouTubePlaye
         };
 
         mUserProfileDatabaseReference.child(mUserId).addChildEventListener(childEventListener);
+
+        getLastLocation();
     }
 
     private void InitializeYoutubeView() {
-        youTubeView.initialize(AppConstants.YOUTUBE_API_KEY, this);
+        mYouTubeView.initialize(AppConstants.YOUTUBE_API_KEY, this);
     }
 
     @Override
@@ -129,30 +127,26 @@ public class AccountActivity extends YouTubeBaseActivity implements YouTubePlaye
                 });
     }
 
-    public void onYoutube(View view) {
-        launchYoutubeActivity();
-    }
-
     private void launchLoginActivity() {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
         finish();
     }
 
-    private void launchYoutubeActivity() {
+    public void onYoutube(View view) {
         Intent intent = new Intent(this, YoutubeActivity.class);
-        startActivityForResult(intent, RequestCodes.YOUTUBE_VIDEO_FLOW);
+        startActivityForResult(intent, RequestCodes.RC_YOUTUBE_SEARCH);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == RequestCodes.YOUTUBE_VIDEO_FLOW && resultCode == RESULT_OK && data != null) {
+        if (requestCode == RequestCodes.RC_YOUTUBE_SEARCH && resultCode == RESULT_OK && data != null) {
             Map<String, Object> youtube = new HashMap<>();
             // put() method
             mYoutubeVideo = data.getStringExtra("youtube_video");
             youtube.put("youtube_video", mYoutubeVideo);
             mUserProfileDatabaseReference.child(mUserId).updateChildren(youtube);
-            InitializeYoutubeView();
+                InitializeYoutubeView();
         }
     }
 
@@ -206,12 +200,6 @@ public class AccountActivity extends YouTubeBaseActivity implements YouTubePlaye
         }
     }
 
-    public void onLocationChanged(Location location) {
-        geofireHelper.setLocation(location);
-        //TODO: get the search radius from the user
-        geofireHelper.queryNeighbors(1600);
-    }
-
     private boolean checkPermissions() {
         if (ActivityCompat.checkSelfPermission(this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -225,7 +213,13 @@ public class AccountActivity extends YouTubeBaseActivity implements YouTubePlaye
     private void requestPermissions() {
         final int REQUEST_FINE_LOCATION=0;
         ActivityCompat.requestPermissions(this,
-                new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_FINE_LOCATION);
+                new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_FINE_LOCATION);
+    }
+
+    public void onLocationChanged(Location location) {
+        geofireHelper.setLocation(location);
+        //TODO: get the search radius from the user
+        geofireHelper.queryNeighbors(1600);
     }
 
     private void showSnackbar(@StringRes int errorMessageRes) {
