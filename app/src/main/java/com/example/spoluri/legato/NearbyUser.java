@@ -2,16 +2,16 @@ package com.example.spoluri.legato;
 
 import java.io.Serializable;
 
-class NearbyUsersCreator implements Serializable {
+class NearbyUser implements Serializable {
 
     private String userName;
     private String photoUrl;
     private String distance;
 
-    public NearbyUsersCreator() {
+    public NearbyUser() {
     }
 
-    public NearbyUsersCreator(String userName, String photoUrl, String distance) {
+    public NearbyUser(String userName, String photoUrl, String distance) {
         this.userName = userName;
         this.photoUrl = photoUrl;
         this.distance = distance;

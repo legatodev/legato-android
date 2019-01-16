@@ -1,15 +1,15 @@
 package com.example.spoluri.legato.messaging;
 
-class ChatCreator {
+class Chat {
 
     private String text;
     private String userId;
     private String photoUrl;
 
-    public ChatCreator() {
+    public Chat() {
     }
 
-    public ChatCreator(String text, String userId, String photoUrl) {
+    public Chat(String text, String userId, String photoUrl) {
         this.text = text;
         this.userId = userId;
         this.photoUrl = photoUrl;

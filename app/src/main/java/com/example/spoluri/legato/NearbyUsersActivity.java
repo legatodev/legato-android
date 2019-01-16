@@ -5,14 +5,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ListView;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.LinearLayoutManager;
 
 import java.util.ArrayList;
 
-public class NearbyUsersActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+public class NearbyUsersActivity extends AppCompatActivity {
 
     private NearbyUsersAdapter mNearbyUsersAdapter;
-    private ListView mNearbyUserListView;
+    private RecyclerView mNearbyUserListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,22 +21,18 @@ public class NearbyUsersActivity extends AppCompatActivity implements AdapterVie
         setContentView(R.layout.activity_nearby_users);
 
         // Initialize references to views
-        mNearbyUserListView = findViewById(R.id.nearbyUserListView);
-        mNearbyUserListView.setOnItemClickListener(this);
+        mNearbyUserListView = (RecyclerView)findViewById(R.id.nearbyUserListView);
 
         // Initialize message ListView and its adapter
         Intent intent = getIntent();
-        ArrayList<NearbyUsersCreator> nearbyUserList = (ArrayList<NearbyUsersCreator>) intent.getSerializableExtra("nearby_users");
+        ArrayList<NearbyUser> nearbyUserList = (ArrayList<NearbyUser>) intent.getSerializableExtra("nearby_users");
         mNearbyUsersAdapter = new NearbyUsersAdapter(this, R.layout.item_nearbyuser, nearbyUserList);
         mNearbyUserListView.setAdapter(mNearbyUsersAdapter);
-    }
 
-    @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        //Open profile activity
-        NearbyUsersCreator nearbyUser = mNearbyUsersAdapter.getItem(i);
-        Intent intent = new Intent(this, ProfileActivity.class);
-        intent.putExtra("nearby_user", nearbyUser);
-        startActivity(intent);
+        // 4. Initialize ItemAnimator, LayoutManager and ItemDecorators
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+
+        // 7. Set the LayoutManager
+        mNearbyUserListView.setLayoutManager(layoutManager);
     }
 }

@@ -78,7 +78,7 @@ public class ChatActivity extends AppCompatActivity {
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ChatCreator chatMessage = new ChatCreator(mMessageEditText.getText().toString(), mUserId, null);
+                Chat chatMessage = new Chat(mMessageEditText.getText().toString(), mUserId, null);
                 mMessagesDatabaseReference.push().setValue(chatMessage);
                 // Clear input box
                 mMessageEditText.setText("");
@@ -86,14 +86,14 @@ public class ChatActivity extends AppCompatActivity {
         });
 
         // Initialize message ListView and its adapter
-        List<ChatCreator> messagesList = new ArrayList<>();
+        List<Chat> messagesList = new ArrayList<>();
         final ChatAdapter mChatAdapter = new ChatAdapter(this, R.layout.item_message, messagesList);
         mMessageListView.setAdapter(mChatAdapter);
 
         ChildEventListener childEventListener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                ChatCreator chatMessage = dataSnapshot.getValue(ChatCreator.class);
+                Chat chatMessage = dataSnapshot.getValue(Chat.class);
                 chatMessage.setUserId(chatMessage.getUserId().equals(mUserId)?"You":chattingWith);
                 mChatAdapter.add(chatMessage);
             }

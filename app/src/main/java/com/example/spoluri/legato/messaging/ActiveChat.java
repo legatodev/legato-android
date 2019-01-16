@@ -1,15 +1,15 @@
 package com.example.spoluri.legato.messaging;
 
-class ActiveChatCreator {
+class ActiveChat {
 
     private String userId;
     private String photoUrl;
     private String participants;
 
-    public ActiveChatCreator() {
+    public ActiveChat() {
     }
 
-    public ActiveChatCreator(String userId, String photoUrl, String participants) {
+    public ActiveChat(String userId, String photoUrl, String participants) {
         this.userId = userId;
         this.photoUrl = photoUrl;
         this.participants = participants;

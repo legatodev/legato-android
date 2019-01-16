@@ -14,8 +14,8 @@ import com.example.spoluri.legato.R;
 
 import java.util.List;
 
-class ActiveChatAdapter extends ArrayAdapter<ActiveChatCreator> {
-    public ActiveChatAdapter(Context context, int resource, List<ActiveChatCreator> objects) {
+class ActiveChatAdapter extends ArrayAdapter<ActiveChat> {
+    public ActiveChatAdapter(Context context, int resource, List<ActiveChat> objects) {
         super(context, resource, objects);
     }
 
@@ -29,7 +29,7 @@ class ActiveChatAdapter extends ArrayAdapter<ActiveChatCreator> {
         ImageView photoImageView = convertView.findViewById(R.id.activeChatPhotoImageView);
         TextView authorTextView = convertView.findViewById(R.id.activeChatNameTextView);
 
-        ActiveChatCreator activeChat = getItem(position);
+        ActiveChat activeChat = getItem(position);
 
         boolean isPhoto = activeChat.getPhotoUrl() != null;
         if (isPhoto) {

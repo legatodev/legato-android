@@ -21,7 +21,7 @@ class GeofireHelper {
     private final String mUserId;
     private final GeoFire mGeoFire;
     private Location mCurrentLocation;
-    private final ArrayList<NearbyUsersCreator> mNearbyUsersList;
+    private final ArrayList<NearbyUser> mNearbyUsersList;
     private final FirebaseDatabase mFirebaseDatabase;
 
     public GeofireHelper() {
@@ -29,7 +29,7 @@ class GeofireHelper {
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference userLocationDatabaseReference = mFirebaseDatabase.getReference().child("geofire");
         mGeoFire = new GeoFire(userLocationDatabaseReference);
-        mNearbyUsersList = new ArrayList<NearbyUsersCreator>();
+        mNearbyUsersList = new ArrayList<NearbyUser>();
     }
 
     public void setLocation(Location location) {
@@ -66,7 +66,7 @@ class GeofireHelper {
                         usernameReference.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                mNearbyUsersList.add(new NearbyUsersCreator(dataSnapshot.getValue(String.class), "", distanceTo));
+                                mNearbyUsersList.add(new NearbyUser(dataSnapshot.getValue(String.class), "", distanceTo));
                             }
 
                             @Override
@@ -108,7 +108,7 @@ class GeofireHelper {
         }
     }
 
-    public ArrayList<NearbyUsersCreator> getNearbyUsersList() {
+    public ArrayList<NearbyUser> getNearbyUsersList() {
         return mNearbyUsersList;
     }
 }

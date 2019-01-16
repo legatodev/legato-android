@@ -45,7 +45,7 @@ public class ActiveChatActivity extends AppCompatActivity implements AdapterView
         mActiveChatListView.setOnItemClickListener(this);
 
         // Initialize message ListView and its adapter
-        List<ActiveChatCreator> activeChatList = new ArrayList<>();
+        List<ActiveChat> activeChatList = new ArrayList<>();
         mActiveChatAdapter = new ActiveChatAdapter(this, R.layout.item_message, activeChatList);
         mActiveChatListView.setAdapter(mActiveChatAdapter);
 
@@ -89,7 +89,7 @@ public class ActiveChatActivity extends AppCompatActivity implements AdapterView
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mChattingWithUserName = dataSnapshot.getValue(String.class);
-                ActiveChatCreator activeChat = new ActiveChatCreator(mChattingWithUserName, null, participants);
+                ActiveChat activeChat = new ActiveChat(mChattingWithUserName, null, participants);
                 mActiveChatAdapter.add(activeChat);
             }
 
@@ -102,7 +102,7 @@ public class ActiveChatActivity extends AppCompatActivity implements AdapterView
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        ActiveChatCreator chatCreator = mActiveChatAdapter.getItem(i);
+        ActiveChat chatCreator = mActiveChatAdapter.getItem(i);
         Intent intent = new Intent(this, ChatActivity.class);
         intent.putExtra("participants", chatCreator.getParticipants());
         intent.putExtra("chattingWith", mChattingWithUserName);
