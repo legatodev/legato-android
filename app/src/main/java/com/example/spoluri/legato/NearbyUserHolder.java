@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class NearbyUsersHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
     private final ImageView nearbyUserPhoto;
     private final TextView nearbyUserName;
@@ -17,7 +17,7 @@ public class NearbyUsersHolder extends RecyclerView.ViewHolder implements View.O
     private NearbyUser nearbyUser;
     private Context context;
 
-    public NearbyUsersHolder(Context context, View itemView) {
+    public NearbyUserHolder(Context context, View itemView) {
         super(itemView);
 
         // 1. Set the context

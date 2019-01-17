@@ -41,7 +41,7 @@ class ChatAdapter extends ArrayAdapter<Chat> {
             photoImageView.setVisibility(View.GONE);
             messageTextView.setText(message.getText());
         }
-        authorTextView.setText(message.getUserId());
+        authorTextView.setText(message.getUserName());
 
         return convertView;
     }

@@ -94,7 +94,7 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Chat chatMessage = dataSnapshot.getValue(Chat.class);
-                chatMessage.setUserId(chatMessage.getUserId().equals(mUserId)?"You":chattingWith);
+                chatMessage.setUserName(chatMessage.getUserName().equals(mUserId)?"You":chattingWith);
                 mChatAdapter.add(chatMessage);
             }
 

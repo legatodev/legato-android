@@ -5,8 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.LinearLayoutManager;
 
 import com.example.spoluri.legato.AppConstants;
 import com.example.spoluri.legato.R;
@@ -21,15 +21,15 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ActiveChatActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
+public class ActiveChatActivity extends AppCompatActivity {
     private static final String TAG = "ActiveChatActivity";
 
-    private ListView mActiveChatListView;
+    private RecyclerView mActiveChatListView;
     private ActiveChatAdapter mActiveChatAdapter;
 
     private FirebaseDatabase mFirebaseDatabase;
     private String mUserId = AppConstants.ANONYMOUS;
-    private String mChattingWithUserName = AppConstants.ANONYMOUS;
+    private List<ActiveChat> activeChatList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,12 +42,17 @@ public class ActiveChatActivity extends AppCompatActivity implements AdapterView
 
         // Initialize references to views
         mActiveChatListView = findViewById(R.id.activeChatListView);
-        mActiveChatListView.setOnItemClickListener(this);
 
         // Initialize message ListView and its adapter
-        List<ActiveChat> activeChatList = new ArrayList<>();
-        mActiveChatAdapter = new ActiveChatAdapter(this, R.layout.item_message, activeChatList);
+        activeChatList = new ArrayList<>();
+        mActiveChatAdapter = new ActiveChatAdapter(this, R.layout.item_activechat, activeChatList);
         mActiveChatListView.setAdapter(mActiveChatAdapter);
+
+        // 4. Initialize ItemAnimator, LayoutManager and ItemDecorators
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+
+        // 7. Set the LayoutManager
+        mActiveChatListView.setLayoutManager(layoutManager);
 
         ChildEventListener childEventListener = new ChildEventListener() {
             @Override
@@ -88,9 +93,11 @@ public class ActiveChatActivity extends AppCompatActivity implements AdapterView
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                mChattingWithUserName = dataSnapshot.getValue(String.class);
-                ActiveChat activeChat = new ActiveChat(mChattingWithUserName, null, participants);
-                mActiveChatAdapter.add(activeChat);
+                String chattingWithUserName = dataSnapshot.getValue(String.class);
+                ActiveChat activeChat = new ActiveChat(chattingWithUserName, null, participants);
+                //add activeChat to the list of items that activechatadapter holds.
+                activeChatList.add(activeChat);
+                mActiveChatAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -98,14 +105,5 @@ public class ActiveChatActivity extends AppCompatActivity implements AdapterView
                 Log.w(TAG, databaseError.toException());
             }
         });
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        ActiveChat chatCreator = mActiveChatAdapter.getItem(i);
-        Intent intent = new Intent(this, ChatActivity.class);
-        intent.putExtra("participants", chatCreator.getParticipants());
-        intent.putExtra("chattingWith", mChattingWithUserName);
-        startActivity(intent);
     }
 }

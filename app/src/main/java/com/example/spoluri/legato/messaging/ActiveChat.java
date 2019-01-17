@@ -2,25 +2,25 @@ package com.example.spoluri.legato.messaging;
 
 class ActiveChat {
 
-    private String userId;
+    private String userName;
     private String photoUrl;
     private String participants;
 
     public ActiveChat() {
     }
 
-    public ActiveChat(String userId, String photoUrl, String participants) {
-        this.userId = userId;
+    public ActiveChat(String userName, String photoUrl, String participants) {
+        this.userName = userName;
         this.photoUrl = photoUrl;
         this.participants = participants;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getPhotoUrl() {

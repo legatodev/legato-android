@@ -3,15 +3,15 @@ package com.example.spoluri.legato.messaging;
 class Chat {
 
     private String text;
-    private String userId;
+    private String userName;
     private String photoUrl;
 
     public Chat() {
     }
 
-    public Chat(String text, String userId, String photoUrl) {
+    public Chat(String text, String userName, String photoUrl) {
         this.text = text;
-        this.userId = userId;
+        this.userName = userName;
         this.photoUrl = photoUrl;
     }
 
@@ -23,12 +23,12 @@ class Chat {
         this.text = text;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getPhotoUrl() {
