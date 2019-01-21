@@ -1,36 +1,131 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:orientation="vertical">
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/nearbyUserPhotoImageView"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:adjustViewBounds="true" />
+    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:layout_gravity="center"
+        card_view:cardCornerRadius="4dp"
+        card_view:cardElevation="2dp"
+        card_view:cardUseCompatPadding="true">
 
-    <TextView
-        android:id="@+id/nearbyUserNameTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/nearbyUserPhotoImageView"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        tools:text="Name" />
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/nearbyUserDistanceTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="200dp"
-        android:layout_toRightOf="@id/nearbyUserNameTextView"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        tools:text="Name" />
-    </RelativeLayout>
+            <ImageView
+                android:id="@+id/nearbyUserPhotoImageView"
+                android:layout_width="0dp"
+                android:layout_height="72dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="3dp"
+                android:layout_marginRight="3dp"
+                android:adjustViewBounds="true"
+                android:elevation="16dp"
+                app:layout_constraintHorizontal_bias="0.01"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                card_view:layout_constraintEnd_toStartOf="@+id/nearbyUserGenresTextView"
+                card_view:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/nearbyUserNameTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="8dp"
+                android:elevation="16dp"
+                android:textSize="16sp"
+                app:layout_constraintTop_toBottomOf="@+id/nearbyUserPhotoImageView"
+                card_view:layout_constraintBottom_toBottomOf="parent"
+                card_view:layout_constraintStart_toStartOf="parent"
+                tools:text="Name" />
+
+            <TextView
+                android:id="@+id/nearbyUserDistanceTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="46dp"
+                android:layout_marginRight="46dp"
+                android:elevation="16dp"
+                android:textSize="16sp"
+                card_view:layout_constraintEnd_toEndOf="parent"
+                card_view:layout_constraintHorizontal_bias="0.99"
+                card_view:layout_constraintStart_toEndOf="@+id/nearbyUserGenresTextView"
+                card_view:layout_constraintTop_toTopOf="parent"
+                tools:ignore="MissingConstraints"
+                tools:text="Distance" />
+
+            <TextView
+                android:id="@+id/nearbyUserYoutube"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="46dp"
+                android:layout_marginRight="46dp"
+                android:elevation="16dp"
+                android:textSize="16sp"
+                card_view:layout_constraintEnd_toEndOf="parent"
+                card_view:layout_constraintHorizontal_bias="0.5"
+                card_view:layout_constraintStart_toEndOf="@+id/nearbyUserGenresTextView"
+                card_view:layout_constraintTop_toTopOf="parent"
+                tools:ignore="MissingConstraints"
+                tools:text="Youtube" />
+
+            <TextView
+                android:id="@+id/nearbyUserSoundCloud"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="108dp"
+                android:layout_marginRight="108dp"
+                android:elevation="16dp"
+                android:textSize="16sp"
+                card_view:layout_constraintEnd_toEndOf="parent"
+                card_view:layout_constraintHorizontal_bias="1.0"
+                card_view:layout_constraintStart_toStartOf="@+id/nearbyUserYoutube"
+                tools:ignore="MissingConstraints"
+                tools:layout_editor_absoluteY="25dp"
+                tools:text="SoundCloud" />
+
+            <TextView
+                android:id="@+id/nearbyUserGenresTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="81dp"
+                android:layout_marginLeft="81dp"
+                android:elevation="16dp"
+                android:textSize="16sp"
+                card_view:layout_constraintStart_toStartOf="parent"
+                card_view:layout_constraintTop_toTopOf="@+id/nearbyUserPhotoImageView"
+                tools:ignore="MissingConstraints"
+                tools:text="Genres" />
+
+            <TextView
+                android:id="@+id/nearbyUserSkillsTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="154dp"
+                android:layout_marginRight="154dp"
+                android:elevation="16dp"
+                android:textSize="16sp"
+                card_view:layout_constraintBottom_toBottomOf="@+id/nearbyUserPhotoImageView"
+                card_view:layout_constraintEnd_toStartOf="@+id/nearbyUserDistanceTextView"
+                card_view:layout_constraintStart_toEndOf="@+id/nearbyUserPhotoImageView"
+                tools:ignore="MissingConstraints"
+                tools:text="Skills" />
+
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.v7.widget.CardView>
 
 </LinearLayout>

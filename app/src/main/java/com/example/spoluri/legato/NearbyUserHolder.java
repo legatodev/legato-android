@@ -13,6 +13,8 @@ public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.On
     private final ImageView nearbyUserPhoto;
     private final TextView nearbyUserName;
     private final TextView nearbyUserDistance;
+    private final TextView nearbyUserGenres;
+    private final TextView nearbyUserSkills;
 
     private NearbyUser nearbyUser;
     private Context context;
@@ -27,6 +29,8 @@ public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.On
         this.nearbyUserPhoto = (ImageView) itemView.findViewById(R.id.nearbyUserPhotoImageView);
         this.nearbyUserName = (TextView) itemView.findViewById(R.id.nearbyUserNameTextView);
         this.nearbyUserDistance = (TextView) itemView.findViewById(R.id.nearbyUserDistanceTextView);
+        this.nearbyUserGenres = (TextView) itemView.findViewById(R.id.nearbyUserGenresTextView);
+        this.nearbyUserSkills = (TextView) itemView.findViewById(R.id.nearbyUserSkillsTextView);
 
         // 3. Set the "onClick" listener of the holder
         itemView.setOnClickListener(this);
@@ -37,13 +41,15 @@ public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.On
         this.nearbyUser = nearbyUser;
         this.nearbyUserPhoto.setImageURI(Uri.parse(nearbyUser.getPhotoUrl()));
         this.nearbyUserName.setText(nearbyUser.getUserName());
-        this.nearbyUserDistance.setText(nearbyUser.getDistance());
+        this.nearbyUserDistance.setText(nearbyUser.getDistance() + " miles away");
+        this.nearbyUserGenres.setText(nearbyUser.getGenres());
+        this.nearbyUserSkills.setText(nearbyUser.getSkills());
     }
 
     @Override
     public void onClick(View v) {
             //Open profile activity
-            Intent intent = new Intent(this.context, ProfileActivity.class);
+            Intent intent = new Intent(this.context, SkillsActivity.class);
             intent.putExtra("nearby_user", this.nearbyUser);
             context.startActivity(intent);
     }

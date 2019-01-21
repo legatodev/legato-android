@@ -3,6 +3,7 @@ package com.example.spoluri.legato;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
 import android.view.View;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,6 +28,8 @@ public class NearbyUsersActivity extends AppCompatActivity {
         ArrayList<NearbyUser> nearbyUserList = (ArrayList<NearbyUser>) intent.getSerializableExtra("nearby_users");
         mNearbyUsersAdapter = new NearbyUsersAdapter(this, R.layout.item_nearbyuser, nearbyUserList);
         mNearbyUserListView.setAdapter(mNearbyUsersAdapter);
+        DividerItemDecoration itemDecor = new DividerItemDecoration(mNearbyUserListView.getContext(), DividerItemDecoration.HORIZONTAL);
+        mNearbyUserListView.addItemDecoration(itemDecor);
 
         // 4. Initialize ItemAnimator, LayoutManager and ItemDecorators
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
