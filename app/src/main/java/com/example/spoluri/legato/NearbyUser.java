@@ -4,37 +4,31 @@ import java.io.Serializable;
 
 class NearbyUser implements Serializable {
 
-    private String userName;
-    private String photoUrl;
+    private UserProfileData userProfileData;
     private String distance;
-    private String genres;
-    private String skills;
 
     public NearbyUser() {
     }
 
-    public NearbyUser(String userName, String photoUrl, String distance, String genres, String skills) {
-        this.userName = userName;
-        this.photoUrl = photoUrl;
+    public NearbyUser(UserProfileData userProfileData, String distance) {
+        this.userProfileData = userProfileData;
         this.distance = distance;
-        this.genres = genres;
-        this.skills = skills;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return userProfileData.getUsername();
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String username) {
+        this.userProfileData.setUsername(username);
     }
 
-    public String getPhotoUrl() {
-        return photoUrl;
+    public String getPhotourl() {
+        return userProfileData.getPhotourl();
     }
 
-    public void setPhotoUrl(String photoUrl) {
-        this.photoUrl = photoUrl;
+    public void setPhotourl(String photourl) {
+        this.userProfileData.setUsername(photourl);
     }
 
     public String getDistance() {
@@ -46,16 +40,16 @@ class NearbyUser implements Serializable {
     }
 
     public String getGenres() {
-        return genres;
+        return userProfileData.getGenres();
     }
 
-    public void setGenres(String genres) {        this.genres = genres;    }
+    public void setGenres(String genres) {    this.userProfileData.setGenres(genres);    }
 
     public String getSkills() {
-        return skills;
+        return userProfileData.getSkills();
     }
 
     public void setSkills(String skills) {
-        this.skills = skills;
+        this.userProfileData.setSkills(skills);
     }
 }

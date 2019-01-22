@@ -1,26 +1,30 @@
 package com.example.spoluri.legato;
 
-public class UserProfileData {
-    private String userName;
+import java.io.Serializable;
+
+public class UserProfileData implements Serializable {
+    private String username;
     private String skills;
     private String genres;
     private String youtube_video;
+    private String photourl;
 
     UserProfileData(){}
 
-    UserProfileData(String userName, String skills, String genres, String youtube_video) {
-        this.userName = userName;
+    UserProfileData(String username, String skills, String genres, String youtube_video, String photourl) {
+        this.username = username;
         this.skills = skills;
         this.genres = genres;
         this.youtube_video = youtube_video;
+        this.photourl = photourl;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getSkills() {
@@ -45,5 +49,13 @@ public class UserProfileData {
 
     public void setYoutube_video(String youtube_video) {
         this.youtube_video = youtube_video;
+    }
+
+    public String getPhotourl() {
+        return photourl;
+    }
+
+    public void setPhotourl(String photourl) {
+        this.photourl = photourl;
     }
 }

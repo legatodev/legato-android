@@ -61,18 +61,15 @@ class GeofireHelper {
                     final DecimalFormat df = new DecimalFormat("#.#");
                     final String distanceTo = df.format(mCurrentLocation.distanceTo(location) / 1000.0);
                     if (!dataSnapshot.getKey().equals(mUserId)) {
-                        DatabaseReference userProfileDataDatabaseReference = mFirebaseDatabase.getReference().child("userprofiledata").child(mUserId);
+                        DatabaseReference userProfileDataDatabaseReference = mFirebaseDatabase.getReference().child("userprofiledata").child(dataSnapshot.getKey());
                         userProfileDataDatabaseReference.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 UserProfileData userProfileData = dataSnapshot.getValue(UserProfileData.class);
 
                                 mNearbyUsersList.add(new NearbyUser(
-                                        userProfileData.getUserName(),
-                                        "",
-                                        distanceTo,
-                                        userProfileData.getGenres(),
-                                        userProfileData.getSkills()));
+                                        userProfileData,
+                                        distanceTo));
                             }
 
                             @Override
@@ -80,20 +77,6 @@ class GeofireHelper {
 
                             }
                         });
-//                        DatabaseReference usernameReference = userProfileDataDatabaseReference.child(dataSnapshot.getKey()).child("username");
-//                        usernameReference.addValueEventListener(new ValueEventListener() {
-//                            @Override
-//                            public void onDataChange(DataSnapshot dataSnapshot) {
-//                                mNearbyUsersList.add(new NearbyUser(dataSnapshot.getValue(String.class), "", distanceTo));
-//                            }
-//
-//                            @Override
-//                            public void onCancelled(DatabaseError databaseError) {
-//
-//                            }
-//                        });
-
-
                     }
                 }
 

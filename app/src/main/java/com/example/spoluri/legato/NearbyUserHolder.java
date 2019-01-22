@@ -39,8 +39,9 @@ public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.On
     public void bindNearbyUser(NearbyUser nearbyUser) {
         // 4. Bind the data to the ViewHolder
         this.nearbyUser = nearbyUser;
-        this.nearbyUserPhoto.setImageURI(Uri.parse(nearbyUser.getPhotoUrl()));
-        this.nearbyUserName.setText(nearbyUser.getUserName());
+        this.nearbyUserPhoto.setImageURI(Uri.parse(nearbyUser.getPhotourl()));
+        this.nearbyUserPhoto.invalidate();
+        this.nearbyUserName.setText(nearbyUser.getUsername());
         this.nearbyUserDistance.setText(nearbyUser.getDistance() + " miles away");
         this.nearbyUserGenres.setText(nearbyUser.getGenres());
         this.nearbyUserSkills.setText(nearbyUser.getSkills());
