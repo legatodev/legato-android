@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.spoluri.legato.registration.solo.SkillsActivity;
+
 public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
     private final ImageView nearbyUserPhoto;

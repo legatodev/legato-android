@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="skills_array">
+        <item>Piano</item>
+        <item>Guitar</item>
+        <item>Flute</item>
+        <item>Trumpet</item>
+        <item>Saxophone Rock</item>
+        <item>Drums</item>
+        <item>Bass</item>
+        <item>Harmonica</item>
+        <item>Violin</item>
+        <item>Cello</item>
+    </string-array>
+</resources>

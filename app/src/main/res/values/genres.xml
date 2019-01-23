@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="genres_array">
+        <item>Rock</item>
+        <item>Rap/Hip-Hop</item>
+        <item>Classical</item>
+        <item>Jazz</item>
+        <item>Punk Rock</item>
+        <item>Indie Rock</item>
+        <item>Alternative</item>
+        <item>Pop</item>
+        <item>Metal</item>
+        <item>Reggae</item>
+        <item>Country</item>
+        <item>Blues</item>
+    </string-array>
+</resources>

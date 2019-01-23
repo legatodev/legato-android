@@ -38,6 +38,4 @@
     <string name="youtube_initialization_failure">Youtube Initialization Failed</string>
 
     <string name="send_button_label">Send</string>
-    <string name="title_activity_registration">RegistrationActivity</string>
-    <string name="section_format">Hello World from section: %1$d</string>
 </resources>
