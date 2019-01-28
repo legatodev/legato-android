@@ -6,4 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".registration.GenresActivity">
 
+    <ListView
+        android:id="@+id/genresListView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:choiceMode="multipleChoice"
+        />
+
 </android.support.constraint.ConstraintLayout>

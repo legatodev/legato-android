@@ -5,7 +5,8 @@
     <string name="title_activity_youtube">YoutubeActivity</string>
     <string name="title_active_chats">ActiveChatsActivity</string>
     <string name="title_nearby_users">NearbyUsersActivity</string>
-    <string name="title_activity_profile">ProfileActivity</string>
+    <string name="title_activity_skills">SkillsActivity</string>
+    <string name="title_activity_genres">GenresActivity</string>
 
     <string name="app_name">Legato</string>
     <string name="action_settings">Settings</string>
