@@ -12,6 +12,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity
+            android:name=".SoloRegistrationActivity"
+            android:label="@string/title_activity_solo_registration_tab"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".registration.RegistrationActivity" />
+
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_application_id" />
@@ -54,13 +60,6 @@
         <activity
             android:name=".NearbyUsersActivity"
             android:label="@string/title_nearby_users"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".registration.solo.SkillsActivity"
-            android:label="@string/title_activity_skills"
-            android:theme="@style/AppTheme" />
-        <activity android:name=".registration.GenresActivity"
-            android:label="@string/title_activity_genres"
             android:theme="@style/AppTheme" />
     </application>
 

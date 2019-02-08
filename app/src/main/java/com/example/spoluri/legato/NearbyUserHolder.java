@@ -8,8 +8,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.spoluri.legato.registration.solo.SkillsActivity;
-
 public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
     private final ImageView nearbyUserPhoto;
@@ -52,8 +50,8 @@ public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.On
     @Override
     public void onClick(View v) {
             //Open profile activity
-            Intent intent = new Intent(this.context, SkillsActivity.class);
-            intent.putExtra("nearby_user", this.nearbyUser);
-            context.startActivity(intent);
+            //Intent intent = new Intent(this.context, SkillsFragment.class);
+            //intent.putExtra("nearby_user", this.nearbyUser);
+            //context.startActivity(intent);
     }
 }

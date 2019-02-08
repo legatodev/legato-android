@@ -1,28 +1,36 @@
 package com.example.spoluri.legato.registration;
 
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.SparseBooleanArray;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.spoluri.legato.R;
 
-import java.util.ArrayList;
-
-public class GenresActivity extends AppCompatActivity {
+public class GenresFragment extends Fragment {
     ListView genresListView;
     ArrayAdapter<CharSequence> adapter;
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_genres);
 
-        adapter = ArrayAdapter.createFromResource(this,
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        return inflater.inflate(R.layout.fragment_genres, container, false);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        View view = getView();
+        adapter = ArrayAdapter.createFromResource(view.getContext(),
                 R.array.genres_array, android.R.layout.simple_list_item_multiple_choice);
 
         // Getting the reference to the listview object of the layout
-        genresListView = (ListView) findViewById(R.id.genresListView);
+        genresListView = (ListView) view.findViewById(R.id.genresListView);
 
         // Setting adapter to the listview
         genresListView.setAdapter(adapter);
