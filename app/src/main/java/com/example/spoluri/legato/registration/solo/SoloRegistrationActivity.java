@@ -1,4 +1,4 @@
-package com.example.spoluri.legato;
+package com.example.spoluri.legato.registration.solo;
 
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -18,6 +18,8 @@ import android.view.ViewGroup;
 
 import android.widget.TextView;
 
+import com.example.spoluri.legato.R;
+import com.example.spoluri.legato.registration.BasicInfoFragment;
 import com.example.spoluri.legato.registration.GenresFragment;
 import com.example.spoluri.legato.registration.solo.SkillsFragment;
 
@@ -89,9 +91,11 @@ public class SoloRegistrationActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             switch(position) {
                 case 0:
+                    return BasicInfoFragment.newInstance("Sarat", "Poluri");
+                case 1:
                     SkillsFragment skillsFragment = new SkillsFragment();
                     return skillsFragment;
-                case 1:
+                case 2:
                     GenresFragment genresFragment = new GenresFragment();
                     return genresFragment;
             }
@@ -101,7 +105,7 @@ public class SoloRegistrationActivity extends AppCompatActivity {
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 2;
+            return 3;
         }
     }
 }

@@ -81,7 +81,7 @@
         app:srcCompat="@android:drawable/ic_menu_add" />
 
     <CheckBox
-        android:id="@+id/checkBox"
+        android:id="@+id/vocalsCheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -90,19 +90,19 @@
         tools:layout_editor_absoluteX="16dp" />
 
     <CheckBox
-        android:id="@+id/checkBox2"
+        android:id="@+id/writingCheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Writing"
-        app:layout_constraintTop_toBottomOf="@+id/checkBox"
+        app:layout_constraintTop_toBottomOf="@+id/vocalsCheckBox"
         tools:layout_editor_absoluteX="16dp" />
 
     <CheckBox
-        android:id="@+id/checkBox3"
+        android:id="@+id/rapperCheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Rapper/MC"
-        app:layout_constraintTop_toBottomOf="@+id/checkBox2"
+        app:layout_constraintTop_toBottomOf="@+id/writingCheckBox"
         tools:layout_editor_absoluteX="16dp" />
 
 </android.support.constraint.ConstraintLayout>

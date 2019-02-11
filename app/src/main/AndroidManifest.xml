@@ -13,9 +13,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".SoloRegistrationActivity"
+            android:name=".registration.solo.SoloRegistrationActivity"
             android:label="@string/title_activity_solo_registration_tab"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan" />
         <activity android:name=".registration.RegistrationActivity" />
 
         <meta-data

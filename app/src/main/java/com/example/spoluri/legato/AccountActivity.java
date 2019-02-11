@@ -13,6 +13,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.spoluri.legato.messaging.ActiveChatActivity;
+import com.example.spoluri.legato.registration.RegistrationActivity;
+import com.example.spoluri.legato.registration.solo.SoloRegistrationActivity;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -133,7 +135,7 @@ public class AccountActivity extends YouTubeBaseActivity implements YouTubePlaye
     }
 
     public void onYoutube(View view) {
-        Intent intent = new Intent(this, SoloRegistrationActivity.class);
+        Intent intent = new Intent(this, RegistrationActivity.class);
         startActivity(intent);
         //Intent intent = new Intent(this, YoutubeActivity.class);
         //startActivityForResult(intent, RequestCodes.RC_YOUTUBE_SEARCH);

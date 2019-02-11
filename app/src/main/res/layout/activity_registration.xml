@@ -10,18 +10,22 @@
         android:id="@+id/solo_artist_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="247dp"
+        android:background="@drawable/rounded_button"
         android:text="Solo Artist"
-        tools:layout_editor_absoluteX="161dp"
-        tools:layout_editor_absoluteY="247dp"
-        android:background="@drawable/rounded_button"/>
+        android:onClick="onSolo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/band"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/rounded_button"
         android:text="Band"
-        tools:layout_editor_absoluteX="161dp"
-        tools:layout_editor_absoluteY="319dp"
-        android:background="@drawable/rounded_button"/>
+        app:layout_constraintStart_toStartOf="@+id/solo_artist_button"
+        app:layout_constraintTop_toBottomOf="@+id/solo_artist_button" />
 
 </android.support.constraint.ConstraintLayout>
