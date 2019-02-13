@@ -5,8 +5,14 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.SeekBar;
+import android.widget.Switch;
+import android.widget.TextView;
 
 import com.example.spoluri.legato.R;
+
+import javax.annotation.Nullable;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -20,11 +26,9 @@ public class BasicInfoFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
-    private String mParam2;
 
     public BasicInfoFragment() {
         // Required empty public constructor
@@ -43,7 +47,6 @@ public class BasicInfoFragment extends Fragment {
         BasicInfoFragment fragment = new BasicInfoFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -53,7 +56,6 @@ public class BasicInfoFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
@@ -61,6 +63,68 @@ public class BasicInfoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_basic_info, container, false);
+        View view = inflater.inflate(R.layout.fragment_basic_info, container, false);
+
+        final TextView proximityRadiusValue = (TextView) view.findViewById(R.id.proximityRadiusValue);
+        final SeekBar seekBarProximity = (SeekBar)view.findViewById(R.id.proximityRadiusSeekBar);
+        seekBarProximity.setEnabled(false);
+        seekBarProximity.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                proximityRadiusValue.setText(progress + "ft");
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                //write custom code to on start progress
+            }
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+
+        final TextView searchRadiusValue = (TextView) view.findViewById(R.id.searchRadiusValue);
+        final SeekBar seekBarSearch = (SeekBar)view.findViewById(R.id.searchRadiusSeekBar);
+        seekBarSearch.setEnabled(false);
+        seekBarSearch.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                searchRadiusValue.setText(progress + "mi");
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                //write custom code to on start progress
+            }
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+
+        Switch proximitySwitch = (Switch)view.findViewById(R.id.proximityAlertSwitch);
+        proximitySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    seekBarProximity.setEnabled(true);
+                }
+                else {
+                    seekBarProximity.setEnabled(false);
+                }
+            }
+        });
+
+        Switch locationSwitch = (Switch)view.findViewById(R.id.enableCurrentLocationSwitch);
+        locationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    seekBarSearch.setEnabled(true);
+                }
+                else {
+                    seekBarSearch.setEnabled(false);
+                }
+            }
+        });
+
+        return view;
     }
 }

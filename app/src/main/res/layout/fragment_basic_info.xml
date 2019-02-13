@@ -76,15 +76,6 @@
         app:layout_constraintTop_toBottomOf="@+id/collaborateCheckBox" />
 
     <Switch
-        android:id="@+id/enableCurrentLocationSwitch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="21dp"
-        android:text="Enable Current Location"
-        app:layout_constraintStart_toStartOf="@+id/proximityAlertSwitch"
-        app:layout_constraintTop_toBottomOf="@+id/proximityAlertSwitch" />
-
-    <Switch
         android:id="@+id/proximityAlertSwitch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -95,5 +86,55 @@
         app:layout_constraintStart_toStartOf="@+id/startBandCheckBox"
         app:layout_constraintTop_toBottomOf="@+id/startBandCheckBox"
         app:layout_constraintVertical_bias="0.19" />
+
+    <SeekBar
+        android:id="@+id/proximityRadiusSeekBar"
+        android:layout_width="186dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="8dp"
+        android:max="100"
+        android:min="10"
+        app:layout_constraintStart_toStartOf="@+id/proximityAlertSwitch"
+        app:layout_constraintTop_toBottomOf="@+id/proximityAlertSwitch" />
+
+    <Switch
+        android:id="@+id/enableCurrentLocationSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Enable Current Location"
+        app:layout_constraintStart_toStartOf="@+id/proximityRadiusSeekBar"
+        app:layout_constraintTop_toBottomOf="@+id/proximityRadiusSeekBar" />
+
+    <SeekBar
+        android:id="@+id/searchRadiusSeekBar"
+        android:layout_width="194dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="@+id/enableCurrentLocationSwitch"
+        app:layout_constraintTop_toBottomOf="@+id/enableCurrentLocationSwitch"
+        android:max="100"/>
+
+    <TextView
+        android:id="@+id/proximityRadiusValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginTop="8dp"
+        android:text=""
+        app:layout_constraintStart_toEndOf="@+id/proximityRadiusSeekBar"
+        app:layout_constraintTop_toBottomOf="@+id/proximityAlertSwitch" />
+
+    <TextView
+        android:id="@+id/searchRadiusValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginTop="8dp"
+        android:text=""
+        app:layout_constraintStart_toEndOf="@+id/searchRadiusSeekBar"
+        app:layout_constraintTop_toBottomOf="@+id/enableCurrentLocationSwitch" />
 
 </android.support.constraint.ConstraintLayout>
