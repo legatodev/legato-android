@@ -66,7 +66,8 @@ class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> implemen
 
                         // name match condition. this might differ depending on your requirement
                         // here we are looking for name or phone number match
-                        if (row.getSkills().toLowerCase().contains(charString.toLowerCase())) {
+                        if (row.getSkills().toLowerCase().contains(charString.toLowerCase()) ||
+                                row.getGenres().toLowerCase().contains(charString.toLowerCase())) {
                             filteredList.add(row);
                         }
                     }

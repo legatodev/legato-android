@@ -8,6 +8,8 @@ import android.support.v7.widget.SearchView;
 import android.view.View;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.LinearLayoutManager;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import java.util.ArrayList;
 
@@ -59,5 +61,14 @@ public class NearbyUsersActivity extends AppCompatActivity {
 
         // 7. Set the LayoutManager
         mNearbyUserListView.setLayoutManager(layoutManager);
+
+        Spinner spinner = (Spinner) findViewById(R.id.lookingForSpinner);
+        // Creating ArrayAdapter using the string array and default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.looking_for, android.R.layout.simple_spinner_item);
+        // Specify layout to be used when list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Applying the adapter to our spinner
+        spinner.setAdapter(adapter);
     }
 }
