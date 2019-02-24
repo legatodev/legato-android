@@ -24,6 +24,7 @@ public class SkillsFragment extends Fragment implements View.OnClickListener {
     private SkillsAdapter mSkillsAdapter;
     private RecyclerView mSkillsListView;
     private ArrayList<Skills> mSkillsArrayList;
+    private static final int MAX_SKILLS = 6;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -37,12 +38,12 @@ public class SkillsFragment extends Fragment implements View.OnClickListener {
         View view = getView();
 
         // Initialize references to views
-        mSkillsListView = (RecyclerView) view.findViewById(R.id.skillsRecyclerView);
+        mSkillsListView = view.findViewById(R.id.skillsRecyclerView);
 
         // Initialize message ListView and its adapter
 
         mSkillsArrayList = new ArrayList<Skills>();
-        Skills skill = new Skills("Guitar", 5);
+        Skills skill = new Skills("Guitar", 0);
         mSkillsArrayList.add(skill);
         mSkillsAdapter = new SkillsAdapter(view.getContext(), R.layout.item_skills, mSkillsArrayList);
         mSkillsListView.setAdapter(mSkillsAdapter);
@@ -55,13 +56,15 @@ public class SkillsFragment extends Fragment implements View.OnClickListener {
         // 7. Set the LayoutManager
         mSkillsListView.setLayoutManager(layoutManager);
 
-        FloatingActionButton addButton = (FloatingActionButton) view.findViewById(R.id.addSkillButton);
+        FloatingActionButton addButton = view.findViewById(R.id.addSkillButton);
         addButton.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
-        mSkillsArrayList.add(new Skills("Piano", 10));
-        mSkillsAdapter.notifyDataSetChanged();
+        if (mSkillsArrayList.size() < MAX_SKILLS) {
+            mSkillsArrayList.add(new Skills("Piano", 0));
+            mSkillsAdapter.notifyDataSetChanged();
+        }
     }
 }

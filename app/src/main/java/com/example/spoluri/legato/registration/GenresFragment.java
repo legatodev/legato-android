@@ -30,7 +30,7 @@ public class GenresFragment extends Fragment {
                 R.array.genres_array, android.R.layout.simple_list_item_multiple_choice);
 
         // Getting the reference to the listview object of the layout
-        genresListView = (ListView) view.findViewById(R.id.genresListView);
+        genresListView = view.findViewById(R.id.genresListView);
 
         // Setting adapter to the listview
         genresListView.setAdapter(adapter);

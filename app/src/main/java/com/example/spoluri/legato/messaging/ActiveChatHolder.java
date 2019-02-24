@@ -25,8 +25,8 @@ public class ActiveChatHolder extends RecyclerView.ViewHolder implements View.On
         this.context = context;
 
         // 2. Set up the UI widgets of the holder
-        this.activeChatPhoto = (ImageView) itemView.findViewById(R.id.activeChatPhotoImageView);
-        this.activeChatUserName = (TextView) itemView.findViewById(R.id.activeChatNameTextView);
+        this.activeChatPhoto = itemView.findViewById(R.id.activeChatPhotoImageView);
+        this.activeChatUserName = itemView.findViewById(R.id.activeChatNameTextView);
 
         // 3. Set the "onClick" listener of the holder
         itemView.setOnClickListener(this);

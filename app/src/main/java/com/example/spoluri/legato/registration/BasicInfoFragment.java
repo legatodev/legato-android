@@ -65,8 +65,8 @@ public class BasicInfoFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_basic_info, container, false);
 
-        final TextView proximityRadiusValue = (TextView) view.findViewById(R.id.proximityRadiusValue);
-        final SeekBar seekBarProximity = (SeekBar)view.findViewById(R.id.proximityRadiusSeekBar);
+        final TextView proximityRadiusValue = view.findViewById(R.id.proximityRadiusValue);
+        final SeekBar seekBarProximity = view.findViewById(R.id.proximityRadiusSeekBar);
         seekBarProximity.setEnabled(false);
         seekBarProximity.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -82,8 +82,8 @@ public class BasicInfoFragment extends Fragment {
             }
         });
 
-        final TextView searchRadiusValue = (TextView) view.findViewById(R.id.searchRadiusValue);
-        final SeekBar seekBarSearch = (SeekBar)view.findViewById(R.id.searchRadiusSeekBar);
+        final TextView searchRadiusValue = view.findViewById(R.id.searchRadiusValue);
+        final SeekBar seekBarSearch = view.findViewById(R.id.searchRadiusSeekBar);
         seekBarSearch.setEnabled(false);
         seekBarSearch.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -99,7 +99,7 @@ public class BasicInfoFragment extends Fragment {
             }
         });
 
-        Switch proximitySwitch = (Switch)view.findViewById(R.id.proximityAlertSwitch);
+        Switch proximitySwitch = view.findViewById(R.id.proximityAlertSwitch);
         proximitySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -112,7 +112,7 @@ public class BasicInfoFragment extends Fragment {
             }
         });
 
-        Switch locationSwitch = (Switch)view.findViewById(R.id.enableCurrentLocationSwitch);
+        Switch locationSwitch = view.findViewById(R.id.enableCurrentLocationSwitch);
         locationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

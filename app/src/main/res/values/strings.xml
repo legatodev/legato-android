@@ -43,9 +43,6 @@
     <string name="title_activity_solo_registration_tab">SoloRegistrationTabActivity</string>
     <string name="action_settings">Settings</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_example">ExampleActivity</string>
     <string name="search_hint">search skills</string>
     <string-array name="looking_for">
         <item>Jam Session</item>

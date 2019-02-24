@@ -26,11 +26,11 @@ public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.On
         this.context = context;
 
         // 2. Set up the UI widgets of the holder
-        this.nearbyUserPhoto = (ImageView) itemView.findViewById(R.id.nearbyUserPhotoImageView);
-        this.nearbyUserName = (TextView) itemView.findViewById(R.id.nearbyUserNameTextView);
-        this.nearbyUserDistance = (TextView) itemView.findViewById(R.id.nearbyUserDistanceTextView);
-        this.nearbyUserGenres = (TextView) itemView.findViewById(R.id.nearbyUserGenresTextView);
-        this.nearbyUserSkills = (TextView) itemView.findViewById(R.id.nearbyUserSkillsTextView);
+        this.nearbyUserPhoto = itemView.findViewById(R.id.nearbyUserPhotoImageView);
+        this.nearbyUserName = itemView.findViewById(R.id.nearbyUserNameTextView);
+        this.nearbyUserDistance = itemView.findViewById(R.id.nearbyUserDistanceTextView);
+        this.nearbyUserGenres = itemView.findViewById(R.id.nearbyUserGenresTextView);
+        this.nearbyUserSkills = itemView.findViewById(R.id.nearbyUserSkillsTextView);
 
         // 3. Set the "onClick" listener of the holder
         itemView.setOnClickListener(this);

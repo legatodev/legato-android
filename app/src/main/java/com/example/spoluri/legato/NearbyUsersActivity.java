@@ -24,7 +24,7 @@ public class NearbyUsersActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nearby_users);
 
-        searchSkills = (SearchView) findViewById(R.id.searchView);
+        searchSkills = findViewById(R.id.searchView);
         searchSkills.setActivated(true);
         searchSkills.setIconified(false);
         searchSkills.clearFocus();
@@ -45,7 +45,7 @@ public class NearbyUsersActivity extends AppCompatActivity {
         });
 
         // Initialize references to views
-        mNearbyUserListView = (RecyclerView)findViewById(R.id.nearbyUserListView);
+        mNearbyUserListView = findViewById(R.id.nearbyUserListView);
 
         // Initialize message ListView and its adapter
 
@@ -62,7 +62,7 @@ public class NearbyUsersActivity extends AppCompatActivity {
         // 7. Set the LayoutManager
         mNearbyUserListView.setLayoutManager(layoutManager);
 
-        Spinner spinner = (Spinner) findViewById(R.id.lookingForSpinner);
+        Spinner spinner = findViewById(R.id.lookingForSpinner);
         // Creating ArrayAdapter using the string array and default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.looking_for, android.R.layout.simple_spinner_item);
