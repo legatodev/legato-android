@@ -1,18 +1,29 @@
 package com.example.spoluri.legato.registration.solo;
 
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 
 import com.example.spoluri.legato.R;
 
-public class SkillsFragment extends Fragment implements AdapterView.OnItemSelectedListener{
+import java.util.ArrayList;
+
+public class SkillsFragment extends Fragment implements View.OnClickListener {
+
+    private SkillsAdapter mSkillsAdapter;
+    private RecyclerView mSkillsListView;
+    private ArrayList<Skills> mSkillsArrayList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -24,29 +35,33 @@ public class SkillsFragment extends Fragment implements AdapterView.OnItemSelect
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         View view = getView();
-        Spinner spinner = (Spinner) view.findViewById(R.id.skillsSpinner1);
-        // Creating ArrayAdapter using the string array and default spinner layout
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(view.getContext(),
-                R.array.skills_array, android.R.layout.simple_spinner_item);
-        // Specify layout to be used when list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Applying the adapter to our spinner
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(this);
 
-        SeekBar skillLevelSlider = (SeekBar) view.findViewById(R.id.skillLevelSlider1);
-        //Do get progress at the end
-        final int progress = skillLevelSlider.getProgress();
+        // Initialize references to views
+        mSkillsListView = (RecyclerView) view.findViewById(R.id.skillsRecyclerView);
+
+        // Initialize message ListView and its adapter
+
+        mSkillsArrayList = new ArrayList<Skills>();
+        Skills skill = new Skills("Guitar", 5);
+        mSkillsArrayList.add(skill);
+        mSkillsAdapter = new SkillsAdapter(view.getContext(), R.layout.item_skills, mSkillsArrayList);
+        mSkillsListView.setAdapter(mSkillsAdapter);
+        DividerItemDecoration itemDecor = new DividerItemDecoration(mSkillsListView.getContext(), DividerItemDecoration.HORIZONTAL);
+        mSkillsListView.addItemDecoration(itemDecor);
+
+        // 4. Initialize ItemAnimator, LayoutManager and ItemDecorators
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(view.getContext());
+
+        // 7. Set the LayoutManager
+        mSkillsListView.setLayoutManager(layoutManager);
+
+        FloatingActionButton addButton = (FloatingActionButton) view.findViewById(R.id.addSkillButton);
+        addButton.setOnClickListener(this);
     }
 
     @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
+    public void onClick(View view) {
+        mSkillsArrayList.add(new Skills("Piano", 10));
+        mSkillsAdapter.notifyDataSetChanged();
     }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
-    }
-
 }
