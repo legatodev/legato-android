@@ -2,11 +2,18 @@ package com.example.spoluri.legato;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.example.spoluri.legato.messaging.ChatActivity;
+
+import java.io.InputStream;
+import java.net.URL;
 
 public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
@@ -36,10 +43,36 @@ public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.On
         itemView.setOnClickListener(this);
     }
 
+    public void LoadImageFromWebOperations(String url) {
+        new AsyncTask<String, Void, Drawable>() {
+
+            @Override
+            protected Drawable doInBackground(String... strings) {
+                if (strings == null)
+                    throw new NullPointerException("Parameters to the async task can never be null");
+
+                try {
+                    InputStream is = (InputStream) new URL(strings[0]).getContent();
+                    Drawable d = Drawable.createFromStream(is, "src name");
+                    return d;
+                } catch (Exception e) {
+                    return null;
+                }
+            }
+
+            @Override
+            protected void onPostExecute(Drawable drawable) {
+                super.onPostExecute(drawable);
+                nearbyUserPhoto.setImageDrawable(drawable);
+            }
+        }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url);
+    }
+
     public void bindNearbyUser(NearbyUser nearbyUser) {
         // 4. Bind the data to the ViewHolder
         this.nearbyUser = nearbyUser;
-        this.nearbyUserPhoto.setImageURI(Uri.parse(nearbyUser.getPhotourl()));
+
+        LoadImageFromWebOperations(nearbyUser.getPhotourl());
         this.nearbyUserPhoto.invalidate();
         this.nearbyUserName.setText(nearbyUser.getUsername());
         this.nearbyUserDistance.setText(nearbyUser.getDistance() + " miles away");
@@ -50,8 +83,8 @@ public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.On
     @Override
     public void onClick(View v) {
             //Open profile activity
-            //Intent intent = new Intent(this.context, SkillsFragment.class);
-            //intent.putExtra("nearby_user", this.nearbyUser);
-            //context.startActivity(intent);
+            Intent intent = new Intent(this.context, ChatActivity.class);
+            //send participants. Should remove chattingwith. we should get the username in the chat activity.
+            context.startActivity(intent);
     }
 }

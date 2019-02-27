@@ -72,53 +72,56 @@ public class ChatActivity extends AppCompatActivity {
 
         mUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        mMessagesDatabaseReference = firebaseDatabase.getReference().child("messages").child(participants);
 
-        // Send button sends a message and clears the EditText
-        mSendButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Chat chatMessage = new Chat(mMessageEditText.getText().toString(), mUserId, null);
-                mMessagesDatabaseReference.push().setValue(chatMessage);
-                // Clear input box
-                mMessageEditText.setText("");
-            }
-        });
+        if (participants != null) {
+            mMessagesDatabaseReference = firebaseDatabase.getReference().child("messages").child(participants);
 
-        // Initialize message ListView and its adapter
-        List<Chat> messagesList = new ArrayList<>();
-        final ChatAdapter mChatAdapter = new ChatAdapter(this, R.layout.item_message, messagesList);
-        mMessageListView.setAdapter(mChatAdapter);
+            // Send button sends a message and clears the EditText
+            mSendButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Chat chatMessage = new Chat(mMessageEditText.getText().toString(), mUserId, null);
+                    mMessagesDatabaseReference.push().setValue(chatMessage);
+                    // Clear input box
+                    mMessageEditText.setText("");
+                }
+            });
 
-        ChildEventListener childEventListener = new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Chat chatMessage = dataSnapshot.getValue(Chat.class);
-                chatMessage.setUserName(chatMessage.getUserName().equals(mUserId)?"You":chattingWith);
-                mChatAdapter.add(chatMessage);
-            }
+            // Initialize message ListView and its adapter
+            List<Chat> messagesList = new ArrayList<>();
+            final ChatAdapter mChatAdapter = new ChatAdapter(this, R.layout.item_message, messagesList);
+            mMessageListView.setAdapter(mChatAdapter);
 
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+            ChildEventListener childEventListener = new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    Chat chatMessage = dataSnapshot.getValue(Chat.class);
+                    chatMessage.setUserName(chatMessage.getUserName().equals(mUserId) ? "You" : chattingWith);
+                    mChatAdapter.add(chatMessage);
+                }
 
-            }
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                }
 
-            }
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
 
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                }
 
-            }
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w(TAG, databaseError.toException());
-            }
-        };
-        mMessagesDatabaseReference.addChildEventListener(childEventListener);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Log.w(TAG, databaseError.toException());
+                }
+            };
+            mMessagesDatabaseReference.addChildEventListener(childEventListener);
+        }
     }
 
 }

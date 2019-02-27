@@ -43,7 +43,7 @@ public class SkillsFragment extends Fragment implements View.OnClickListener {
         // Initialize message ListView and its adapter
 
         mSkillsArrayList = new ArrayList<Skills>();
-        Skills skill = new Skills("Guitar", 0);
+        Skills skill = new Skills("Choose Skill", 0);
         mSkillsArrayList.add(skill);
         mSkillsAdapter = new SkillsAdapter(view.getContext(), R.layout.item_skills, mSkillsArrayList);
         mSkillsListView.setAdapter(mSkillsAdapter);
@@ -63,7 +63,7 @@ public class SkillsFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         if (mSkillsArrayList.size() < MAX_SKILLS) {
-            mSkillsArrayList.add(new Skills("Piano", 0));
+            mSkillsArrayList.add(new Skills("Choose Skill", 0));
             mSkillsAdapter.notifyDataSetChanged();
         }
     }
