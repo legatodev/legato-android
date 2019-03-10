@@ -52,4 +52,12 @@ class NearbyUser implements Serializable {
     public void setSkills(String skills) {
         this.userProfileData.setSkills(skills);
     }
+
+    public String getLookingfor() {
+        return this.userProfileData.getLookingfor();
+    }
+
+    public void setLookingfor(String lookingfor) {
+        this.userProfileData.setLookingfor(lookingfor);
+    }
 }

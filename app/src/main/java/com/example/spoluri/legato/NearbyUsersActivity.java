@@ -5,9 +5,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.SearchView;
-import android.view.View;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.LinearLayoutManager;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
@@ -15,7 +17,7 @@ import java.util.ArrayList;
 
 public class NearbyUsersActivity extends AppCompatActivity {
 
-    private SearchView searchSkills;
+    private SearchView mSearchSkills;
     private NearbyUsersAdapter mNearbyUsersAdapter;
     private RecyclerView mNearbyUserListView;
 
@@ -24,12 +26,12 @@ public class NearbyUsersActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nearby_users);
 
-        searchSkills = findViewById(R.id.searchView);
-        searchSkills.setActivated(true);
-        searchSkills.setIconified(false);
-        searchSkills.clearFocus();
-        searchSkills.onActionViewExpanded();
-        searchSkills.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        mSearchSkills = findViewById(R.id.searchView);
+        mSearchSkills.setActivated(true);
+        mSearchSkills.setIconified(false);
+        mSearchSkills.clearFocus();
+        mSearchSkills.onActionViewExpanded();
+        mSearchSkills.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 return false;
@@ -64,11 +66,23 @@ public class NearbyUsersActivity extends AppCompatActivity {
 
         Spinner spinner = findViewById(R.id.lookingForSpinner);
         // Creating ArrayAdapter using the string array and default spinner layout
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+        final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.looking_for, android.R.layout.simple_spinner_item);
         // Specify layout to be used when list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Applying the adapter to our spinner
         spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new OnItemSelectedListener(){
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                mNearbyUsersAdapter.getFilter().filter(adapter.getItem(position));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 }

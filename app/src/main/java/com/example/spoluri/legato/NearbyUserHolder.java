@@ -83,8 +83,7 @@ public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.On
     @Override
     public void onClick(View v) {
             //Open profile activity
-            Intent intent = new Intent(this.context, ChatActivity.class);
-            //send participants. Should remove chattingwith. we should get the username in the chat activity.
+            Intent intent = new Intent(this.context, UserProfileActivity.class);
             context.startActivity(intent);
     }
 }

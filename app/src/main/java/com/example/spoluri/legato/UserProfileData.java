@@ -8,15 +8,17 @@ public class UserProfileData implements Serializable {
     private String genres;
     private String youtube_video;
     private String photourl;
+    private String lookingfor;
 
     UserProfileData(){}
 
-    UserProfileData(String username, String skills, String genres, String youtube_video, String photourl) {
+    UserProfileData(String username, String skills, String genres, String youtube_video, String photourl, String lookingfor) {
         this.username = username;
         this.skills = skills;
         this.genres = genres;
         this.youtube_video = youtube_video;
         this.photourl = photourl;
+        this.setLookingfor(lookingfor);
     }
 
     public String getUsername() {
@@ -57,5 +59,13 @@ public class UserProfileData implements Serializable {
 
     public void setPhotourl(String photourl) {
         this.photourl = photourl;
+    }
+
+    public String getLookingfor() {
+        return lookingfor;
+    }
+
+    public void setLookingfor(String lookingfor) {
+        this.lookingfor = lookingfor;
     }
 }
