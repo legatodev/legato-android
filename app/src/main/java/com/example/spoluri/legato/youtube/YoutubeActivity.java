@@ -14,7 +14,6 @@ import android.widget.ListView;
 
 import com.example.spoluri.legato.R;
 import com.google.api.services.youtube.model.SearchResult;
-import com.google.android.youtube.player.YouTubePlayerView;
 
 import java.util.List;
 

@@ -1,4 +1,5 @@
 <resources>
+    <string name="legato_website">www.legato.com</string>
     <string name="title_activity_account">AccountActivity</string>
     <string name="title_activity_splash_screen">SplashScreenActivity</string>
     <string name="title_activity_chat">ChatActivity</string>
@@ -49,4 +50,15 @@
         <item>Collaboration</item>
         <item>Join a band</item>
     </string-array>
+
+    <!--Registration-->
+    <string name="solo_artist">Solo Artist</string>
+    <string name="band">Band</string>
+    <string name="username">Username</string>
+
+    <string name="vocals">Vocals</string>
+    <string name="writing">Writing</string>
+    <string name="rapper">Rapper/MC</string>
+
+    <string name="skill_level">Skill Level</string>
 </resources>

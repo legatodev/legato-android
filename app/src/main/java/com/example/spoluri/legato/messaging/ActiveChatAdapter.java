@@ -1,24 +1,18 @@
 package com.example.spoluri.legato.messaging;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.support.v7.widget.RecyclerView;
-
-import com.example.spoluri.legato.R;
 
 import java.util.List;
 
 class ActiveChatAdapter extends RecyclerView.Adapter<ActiveChatHolder> {
     private final List<ActiveChat> activeChats;
-    private Context context;
-    private int itemResource;
+    private final Context context;
+    private final int itemResource;
 
     public ActiveChatAdapter(Context context, int itemResource, List<ActiveChat> activeChats) {
 
@@ -28,8 +22,9 @@ class ActiveChatAdapter extends RecyclerView.Adapter<ActiveChatHolder> {
     }
 
     // 2. Override the onCreateViewHolder method
+    @NonNull
     @Override
-    public ActiveChatHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ActiveChatHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         // 3. Inflate the view and return the new ViewHolder
         View view = LayoutInflater.from(parent.getContext())
@@ -40,7 +35,7 @@ class ActiveChatAdapter extends RecyclerView.Adapter<ActiveChatHolder> {
 
     // 4. Override the onBindViewHolder method
     @Override
-    public void onBindViewHolder(ActiveChatHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ActiveChatHolder holder, int position) {
 
         // 5. Use position to access the correct Bakery object
         ActiveChat activeChat = this.activeChats.get(position);

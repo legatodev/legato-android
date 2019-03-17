@@ -1,6 +1,5 @@
 package com.example.spoluri.legato;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -22,7 +21,7 @@ import java.util.List;
 
 public class LoginActivity extends AppCompatActivity{
 
-    View mRootView;
+    private View mRootView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -29,7 +29,7 @@ class GeofireHelper {
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference userLocationDatabaseReference = mFirebaseDatabase.getReference().child("geofire");
         mGeoFire = new GeoFire(userLocationDatabaseReference);
-        mNearbyUsersList = new ArrayList<NearbyUser>();
+        mNearbyUsersList = new ArrayList<>();
     }
 
     public void setLocation(Location location) {
@@ -91,17 +91,17 @@ class GeofireHelper {
 
                 @Override
                 public void onDataChanged(DataSnapshot dataSnapshot, GeoLocation location) {
-                    System.out.println(String.format("Key %s changed within the search area to [%f,%f]", dataSnapshot.getKey(), location.latitude, location.longitude));
+                    //Key %s changed within the search area to [%f,%f]", dataSnapshot.getKey(), location.latitude, location.longitude
                 }
 
                 @Override
                 public void onGeoQueryReady() {
-                    System.out.println("All initial data has been loaded and events have been fired!");
+                    //All initial data has been loaded and events have been fired!
                 }
 
                 @Override
                 public void onGeoQueryError(DatabaseError error) {
-                    System.err.println("There was an error with this query: " + error);
+                    //There was an error with this query
                 }
             });
         }

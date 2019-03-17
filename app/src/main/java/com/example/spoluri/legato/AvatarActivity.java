@@ -1,6 +1,5 @@
 package com.example.spoluri.legato;
 
-import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -20,9 +19,9 @@ public class AvatarActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_avatar);
 
-        mProfilePic = (ImageView) findViewById(R.id.profile_image);
+        mProfilePic = findViewById(R.id.profile_image);
 
-        GridView gridView = (GridView) findViewById(R.id.avatarGridView);
+        GridView gridView = findViewById(R.id.avatarGridView);
         // Instance of ImageAdapter Class
         final AvatarImageAdapter avatarImageAdapter = new AvatarImageAdapter(this);
         gridView.setAdapter(avatarImageAdapter);

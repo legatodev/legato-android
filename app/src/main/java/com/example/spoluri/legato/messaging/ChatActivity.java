@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.example.spoluri.legato.AppConstants;
@@ -31,6 +32,7 @@ public class ChatActivity extends AppCompatActivity {
     private ListView mMessageListView;
     private EditText mMessageEditText;
     private Button mSendButton;
+    private ImageView mActiveChatPhotoImageView;
 
     private String mUserId = AppConstants.ANONYMOUS;
 
@@ -96,8 +98,10 @@ public class ChatActivity extends AppCompatActivity {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                     Chat chatMessage = dataSnapshot.getValue(Chat.class);
-                    chatMessage.setUserName(chatMessage.getUserName().equals(mUserId) ? "You" : chattingWith);
-                    mChatAdapter.add(chatMessage);
+                    if (chatMessage != null) {
+                        chatMessage.setUserName(chatMessage.getUserId().equals(mUserId) ? "You" : chattingWith);
+                        mChatAdapter.add(chatMessage);
+                    }
                 }
 
                 @Override

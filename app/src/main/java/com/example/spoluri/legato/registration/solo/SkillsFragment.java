@@ -1,6 +1,7 @@
 package com.example.spoluri.legato.registration.solo;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
@@ -9,11 +10,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ScrollView;
-import android.widget.SeekBar;
-import android.widget.Spinner;
 
 import com.example.spoluri.legato.R;
 
@@ -27,7 +23,7 @@ public class SkillsFragment extends Fragment implements View.OnClickListener {
     private static final int MAX_SKILLS = 6;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_skills, container, false);
     }
@@ -37,27 +33,28 @@ public class SkillsFragment extends Fragment implements View.OnClickListener {
         super.onActivityCreated(savedInstanceState);
         View view = getView();
 
-        // Initialize references to views
-        mSkillsListView = view.findViewById(R.id.skillsRecyclerView);
+        if (view != null) {
+            // Initialize references to views
+            mSkillsListView = view.findViewById(R.id.skillsRecyclerView);
 
-        // Initialize message ListView and its adapter
+            // Initialize message ListView and its adapter
+            mSkillsArrayList = new ArrayList<>();
+            Skills skill = new Skills("Choose Skill", 0);
+            mSkillsArrayList.add(skill);
+            mSkillsAdapter = new SkillsAdapter(view.getContext(), R.layout.item_skills, mSkillsArrayList);
+            mSkillsListView.setAdapter(mSkillsAdapter);
+            DividerItemDecoration itemDecor = new DividerItemDecoration(mSkillsListView.getContext(), DividerItemDecoration.HORIZONTAL);
+            mSkillsListView.addItemDecoration(itemDecor);
 
-        mSkillsArrayList = new ArrayList<Skills>();
-        Skills skill = new Skills("Choose Skill", 0);
-        mSkillsArrayList.add(skill);
-        mSkillsAdapter = new SkillsAdapter(view.getContext(), R.layout.item_skills, mSkillsArrayList);
-        mSkillsListView.setAdapter(mSkillsAdapter);
-        DividerItemDecoration itemDecor = new DividerItemDecoration(mSkillsListView.getContext(), DividerItemDecoration.HORIZONTAL);
-        mSkillsListView.addItemDecoration(itemDecor);
+            // 4. Initialize ItemAnimator, LayoutManager and ItemDecorators
+            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(view.getContext());
 
-        // 4. Initialize ItemAnimator, LayoutManager and ItemDecorators
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(view.getContext());
+            // 7. Set the LayoutManager
+            mSkillsListView.setLayoutManager(layoutManager);
 
-        // 7. Set the LayoutManager
-        mSkillsListView.setLayoutManager(layoutManager);
-
-        FloatingActionButton addButton = view.findViewById(R.id.addSkillButton);
-        addButton.setOnClickListener(this);
+            FloatingActionButton addButton = view.findViewById(R.id.addSkillButton);
+            addButton.setOnClickListener(this);
+        }
     }
 
     @Override

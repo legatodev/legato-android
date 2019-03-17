@@ -13,8 +13,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.spoluri.legato.messaging.ActiveChatActivity;
-import com.example.spoluri.legato.registration.RegistrationActivity;
-import com.example.spoluri.legato.registration.solo.SoloRegistrationActivity;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -175,7 +173,7 @@ public class AccountActivity extends YouTubeBaseActivity implements YouTubePlaye
         Log.e(TAG, "Youtube Initialization Failed: " + errorReason.toString());
     }
 
-    public void getLastLocation() {
+    private void getLastLocation() {
         // Get last known recent location using new Google Play Services SDK (v11+)
         boolean havePermission = checkPermissions();
 
@@ -219,7 +217,7 @@ public class AccountActivity extends YouTubeBaseActivity implements YouTubePlaye
                 new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_FINE_LOCATION);
     }
 
-    public void onLocationChanged(Location location) {
+    private void onLocationChanged(Location location) {
         geofireHelper.setLocation(location);
         //TODO: get the search radius from the user
         geofireHelper.queryNeighbors(1600);

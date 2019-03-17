@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="247dp"
         android:background="@drawable/rounded_button"
-        android:text="Solo Artist"
+        android:text="@string/solo_artist"
         android:onClick="onSolo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -2,7 +2,6 @@ package com.example.spoluri.legato.youtube;
 
 import android.os.AsyncTask;
 
-import com.example.spoluri.legato.R;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
@@ -17,7 +16,7 @@ import java.util.List;
 class ServiceTask extends AsyncTask<Object, Void, Object[]> implements
         ServiceTaskInterface {
     private ServerResponseListener mServerResponseListener = null;
-    private int mRequestCode = 0;
+    private final int mRequestCode;
 
     public void setServerResponseListener(
             ServerResponseListener mServerResponseListener) {

@@ -20,6 +20,7 @@
         android:layout_marginLeft="164dp"
         android:layout_marginTop="8dp"
         android:clickable="true"
+        android:focusable="true"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/skillsRecyclerView"
         app:srcCompat="@android:drawable/ic_menu_add"/>
@@ -29,7 +30,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Vocals"
+        android:text="@string/vocals"
         app:layout_constraintHorizontal_bias="1"
         app:layout_constraintTop_toBottomOf="@+id/addSkillButton"
         tools:layout_editor_absoluteX="16dp" />
@@ -38,7 +39,7 @@
         android:id="@+id/writingCheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Writing"
+        android:text="@string/writing"
         app:layout_constraintHorizontal_bias="1"
         app:layout_constraintTop_toBottomOf="@+id/vocalsCheckBox"
         tools:layout_editor_absoluteX="16dp" />
@@ -47,7 +48,7 @@
         android:id="@+id/rapperCheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Rapper/MC"
+        android:text="@string/rapper"
         app:layout_constraintHorizontal_bias="1"
         app:layout_constraintTop_toBottomOf="@+id/writingCheckBox"
         tools:layout_editor_absoluteX="16dp" />

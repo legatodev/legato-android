@@ -2,7 +2,6 @@ package com.example.spoluri.legato.messaging;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -16,7 +15,7 @@ public class ActiveChatHolder extends RecyclerView.ViewHolder implements View.On
     private final TextView activeChatUserName;
 
     private ActiveChat activeChat;
-    private Context context;
+    private final Context context;
 
     public ActiveChatHolder(Context context, View itemView) {
         super(itemView);
@@ -35,9 +34,7 @@ public class ActiveChatHolder extends RecyclerView.ViewHolder implements View.On
     public void bindActiveChat(ActiveChat activeChat) {
         // 4. Bind the data to the ViewHolder
         this.activeChat = activeChat;
-        if (activeChat.getPhotoUrl() != null) {
-            this.activeChatPhoto.setImageURI(Uri.parse(activeChat.getPhotoUrl()));
-        }
+        this.activeChatPhoto.setImageResource(R.drawable.pic_1);
         this.activeChatUserName.setText(activeChat.getUserName());
     }
 

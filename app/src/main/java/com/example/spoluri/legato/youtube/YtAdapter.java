@@ -16,9 +16,9 @@ import java.util.List;
 
 class YtAdapter extends BaseAdapter {
 
-    private Activity mActivity = null;
-    private List<SearchResult> mVideoList = null;
-    private LayoutInflater mLayoutInflater = null;
+    private final Activity mActivity;
+    private List<SearchResult> mVideoList;
+    private final LayoutInflater mLayoutInflater;
 
     public YtAdapter(Activity iActivity) {
         mActivity = iActivity;
@@ -47,7 +47,7 @@ class YtAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        ViewHolder mHolder = null;
+        ViewHolder mHolder;
         if (view != null) {
             mHolder = (ViewHolder)view.getTag();
         } else {

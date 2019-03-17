@@ -1,6 +1,7 @@
 package com.example.spoluri.legato;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +16,8 @@ class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> implemen
 
     private final List<NearbyUser> nearbyUsers;
     private List<NearbyUser> nearbyUsersFiltered;
-    private Context context;
-    private int itemResource;
+    private final Context context;
+    private final int itemResource;
 
     public NearbyUsersAdapter(Context context, int itemResource, List<NearbyUser> nearbyUsers) {
         this.nearbyUsers = nearbyUsers;
@@ -26,8 +27,9 @@ class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> implemen
     }
 
     // 2. Override the onCreateViewHolder method
+    @NonNull
     @Override
-    public NearbyUserHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public NearbyUserHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         // 3. Inflate the view and return the new ViewHolder
         View view = LayoutInflater.from(parent.getContext())
@@ -37,7 +39,7 @@ class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> implemen
 
     // 4. Override the onBindViewHolder method
     @Override
-    public void onBindViewHolder(NearbyUserHolder holder, int position) {
+    public void onBindViewHolder(@NonNull NearbyUserHolder holder, int position) {
 
         // 5. Use position to access the correct NearbyUser object
         NearbyUser nearbyUser = this.nearbyUsersFiltered.get(position);

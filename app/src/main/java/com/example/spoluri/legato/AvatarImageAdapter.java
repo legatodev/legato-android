@@ -7,11 +7,11 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 
-public class AvatarImageAdapter extends BaseAdapter {
-    private Context mContext;
+class AvatarImageAdapter extends BaseAdapter {
+    private final Context mContext;
 
     // Keep all Images in array
-    public Integer[] mThumbIds = {
+    private final Integer[] mThumbIds = {
             R.drawable.pic_1, R.drawable.pic_2,
             R.drawable.pic_1, R.drawable.pic_2,
             R.drawable.pic_1, R.drawable.pic_2

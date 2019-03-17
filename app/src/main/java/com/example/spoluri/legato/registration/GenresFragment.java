@@ -1,5 +1,6 @@
 package com.example.spoluri.legato.registration;
 
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.SparseBooleanArray;
@@ -12,11 +13,11 @@ import android.widget.ListView;
 import com.example.spoluri.legato.R;
 
 public class GenresFragment extends Fragment {
-    ListView genresListView;
-    ArrayAdapter<CharSequence> adapter;
+    private ListView genresListView;
+    private ArrayAdapter<CharSequence> adapter;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         return inflater.inflate(R.layout.fragment_genres, container, false);
@@ -26,14 +27,16 @@ public class GenresFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         View view = getView();
-        adapter = ArrayAdapter.createFromResource(view.getContext(),
-                R.array.genres_array, android.R.layout.simple_list_item_multiple_choice);
+        if (view != null) {
+            adapter = ArrayAdapter.createFromResource(view.getContext(),
+                    R.array.genres_array, android.R.layout.simple_list_item_multiple_choice);
 
-        // Getting the reference to the listview object of the layout
-        genresListView = view.findViewById(R.id.genresListView);
+            // Getting the reference to the listview object of the layout
+            genresListView = view.findViewById(R.id.genresListView);
 
-        // Setting adapter to the listview
-        genresListView.setAdapter(adapter);
+            // Setting adapter to the listview
+            genresListView.setAdapter(adapter);
+        }
     }
 
     //call this function when proceeding to the next screen

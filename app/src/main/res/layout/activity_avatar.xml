@@ -13,7 +13,8 @@
         app:srcCompat="@drawable/legato_logo"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="Selected Avatar"/>
 
     <GridView
         android:id="@+id/avatarGridView"

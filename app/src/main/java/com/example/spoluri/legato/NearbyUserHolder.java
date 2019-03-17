@@ -3,14 +3,11 @@ package com.example.spoluri.legato;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.example.spoluri.legato.messaging.ChatActivity;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -24,7 +21,7 @@ public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.On
     private final TextView nearbyUserSkills;
 
     private NearbyUser nearbyUser;
-    private Context context;
+    private final Context context;
 
     public NearbyUserHolder(Context context, View itemView) {
         super(itemView);
@@ -43,7 +40,7 @@ public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.On
         itemView.setOnClickListener(this);
     }
 
-    public void LoadImageFromWebOperations(String url) {
+    private void LoadImageFromWebOperations(String url) {
         new AsyncTask<String, Void, Drawable>() {
 
             @Override
@@ -53,8 +50,7 @@ public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.On
 
                 try {
                     InputStream is = (InputStream) new URL(strings[0]).getContent();
-                    Drawable d = Drawable.createFromStream(is, "src name");
-                    return d;
+                    return Drawable.createFromStream(is, "src name");
                 } catch (Exception e) {
                     return null;
                 }

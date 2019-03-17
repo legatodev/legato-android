@@ -2,7 +2,7 @@ package com.example.spoluri.legato;
 
 import java.io.Serializable;
 
-public class UserProfileData implements Serializable {
+class UserProfileData implements Serializable {
     private String username;
     private String skills;
     private String genres;

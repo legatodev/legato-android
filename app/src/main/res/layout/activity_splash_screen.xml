@@ -8,10 +8,11 @@
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:layout_gravity="center"
-        android:src="@drawable/legato_logo" />
+        android:src="@drawable/legato_logo"
+        android:contentDescription="Splash Screen Logo"/>
 
     <TextView android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="www.legato.com"/>
+        android:text="@string/legato_website"/>
 
 </LinearLayout>

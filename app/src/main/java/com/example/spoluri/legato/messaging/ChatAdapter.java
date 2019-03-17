@@ -30,18 +30,13 @@ class ChatAdapter extends ArrayAdapter<Chat> {
         TextView messageTextView = convertView.findViewById(R.id.messageTextView);
         TextView authorTextView = convertView.findViewById(R.id.nameTextView);
 
-        Chat message = getItem(position);
+        photoImageView.setImageResource(R.drawable.pic_1);
 
-        boolean isPhoto = message.getPhotoUrl() != null;
-        if (isPhoto) {
-            messageTextView.setVisibility(View.GONE);
-            photoImageView.setVisibility(View.VISIBLE);
-        } else {
-            messageTextView.setVisibility(View.VISIBLE);
-            photoImageView.setVisibility(View.GONE);
+        Chat message = getItem(position);
+        if (message != null) {
             messageTextView.setText(message.getText());
+            authorTextView.setText(message.getUserName());
         }
-        authorTextView.setText(message.getUserName());
 
         return convertView;
     }

@@ -16,9 +16,9 @@ public class SkillsHolder extends RecyclerView.ViewHolder {
     private final Spinner mSkillSpinner;
     private final SeekBar mSkillLevelSeekBar;
 
-    private String[] mSkillsArray;
+    private final String[] mSkillsArray;
     private Skills mSkill;
-    private Context context;
+    private final Context context;
 
     public SkillsHolder(Context context, View itemView) {
         super(itemView);
