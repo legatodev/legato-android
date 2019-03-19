@@ -34,13 +34,10 @@ public class AvatarActivity extends AppCompatActivity {
 
     private void displayProfilePic(Integer imageId) {
             // helper method to load the profile pic in a circular imageview
-            Transformation transformation = new RoundedTransformationBuilder()
-                    .cornerRadiusDp(1)
-                    .oval(true)
-                    .build();
             Picasso.with(AvatarActivity.this)
                     .load(imageId)
-                    .transform(transformation)
+                    .fit()
+                    .transform(new CircleTransform())
                     .into(mProfilePic);
     }
 }

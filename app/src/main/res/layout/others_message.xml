@@ -11,12 +11,13 @@
         android:adjustViewBounds="true"
         android:contentDescription="User Image"/>
 
+
     <TextView
-        android:id="@+id/timeTextView"
+        android:id="@+id/nameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        tools:text="Time"
+        tools:text="Name"
         android:layout_toRightOf="@+id/photoImageView"/>
 
     <TextView
@@ -26,16 +27,10 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         tools:text="Message"
         android:layout_toRightOf="@+id/photoImageView"
-        android:layout_below="@id/timeTextView"/>
-
-    <TextView
-        android:id="@+id/nameTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        tools:text="Name"
-        android:layout_toRightOf="@+id/messageTextView"
-        android:layout_below="@id/timeTextView"
-        android:layout_marginLeft="30dp"/>
+        android:layout_below="@id/nameTextView"
+        android:background="@drawable/others_message"
+        android:padding="8dp"
+        android:elevation="2dp"
+        android:textSize="18dp"/>
 
 </RelativeLayout>

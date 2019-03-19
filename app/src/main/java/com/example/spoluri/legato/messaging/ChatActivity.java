@@ -91,7 +91,7 @@ public class ChatActivity extends AppCompatActivity {
 
             // Initialize message ListView and its adapter
             List<Chat> messagesList = new ArrayList<>();
-            final ChatAdapter mChatAdapter = new ChatAdapter(this, R.layout.item_message, messagesList);
+            final ChatAdapter mChatAdapter = new ChatAdapter(this, R.layout.others_message, messagesList);
             mMessageListView.setAdapter(mChatAdapter);
 
             ChildEventListener childEventListener = new ChildEventListener() {

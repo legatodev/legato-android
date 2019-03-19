@@ -7,7 +7,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.spoluri.legato.CircleTransform;
 import com.example.spoluri.legato.R;
+import com.squareup.picasso.Picasso;
 
 public class ActiveChatHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
@@ -34,8 +36,17 @@ public class ActiveChatHolder extends RecyclerView.ViewHolder implements View.On
     public void bindActiveChat(ActiveChat activeChat) {
         // 4. Bind the data to the ViewHolder
         this.activeChat = activeChat;
-        this.activeChatPhoto.setImageResource(R.drawable.pic_1);
+        displayProfilePic(R.drawable.pic_1, this.activeChatPhoto);
         this.activeChatUserName.setText(activeChat.getUserName());
+    }
+
+    private void displayProfilePic(Integer imageId, ImageView profilePic) {
+        // helper method to load the profile pic in a circular imageview
+        Picasso.with(this.context)
+                .load(imageId)
+                .fit()
+                .transform(new CircleTransform())
+                .into(profilePic);
     }
 
     @Override
