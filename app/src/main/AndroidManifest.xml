@@ -55,7 +55,8 @@
         <activity
             android:name=".messaging.ChatActivity"
             android:label="@string/title_activity_chat"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".messaging.ActiveChatActivity"
             android:label="@string/title_active_chats"

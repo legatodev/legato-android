@@ -1,62 +1,57 @@
 package com.example.spoluri.legato.messaging;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
 
-import com.example.spoluri.legato.AvatarActivity;
-import com.example.spoluri.legato.CircleTransform;
 import com.example.spoluri.legato.R;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-class ChatAdapter extends ArrayAdapter<Chat> {
-    private Context context;
+class ChatAdapter extends RecyclerView.Adapter<ChatHolder> {
+    private final List<Chat> chats;
+    private final Context context;
 
-    public ChatAdapter(Context context, int resource, List<Chat> objects) {
-        super(context, resource, objects);
+    public ChatAdapter(Context context, List<Chat> chats) {
         this.context = context;
+        this.chats = chats;
     }
 
     @Override
-    @NonNull
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-
-        Chat message = getItem(position);
-        if (message != null) {
-            if (convertView == null) {
-                if (message.getUserName() == "You") {
-                    convertView = ((Activity) getContext()).getLayoutInflater().inflate(R.layout.my_message, parent, false);
-                } else {
-                    convertView = ((Activity) getContext()).getLayoutInflater().inflate(R.layout.others_message, parent, false);
-                    ImageView photoImageView = convertView.findViewById(R.id.photoImageView);
-                    displayProfilePic(R.drawable.pic_1, photoImageView);
-                    TextView authorTextView = convertView.findViewById(R.id.nameTextView);
-                    authorTextView.setText(message.getUserName());
-                }
-            }
-
-            TextView messageTextView = convertView.findViewById(R.id.messageTextView);
-            messageTextView.setText(message.getText());
-        }
-
-        return convertView;
+    public int getItemViewType(int position) {
+        if (this.chats.get(position).getUserName().equals("You"))
+            return R.layout.my_message;
+        else
+            return R.layout.others_message;
     }
 
-    private void displayProfilePic(Integer imageId, ImageView profilePic) {
-        // helper method to load the profile pic in a circular imageview
-        Picasso.with(this.context)
-                .load(imageId)
-                .fit()
-                .transform(new CircleTransform())
-                .into(profilePic);
+    // 2. Override the onCreateViewHolder method
+    @NonNull
+    @Override
+    public ChatHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        // 3. Inflate the view and return the new ViewHolder
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(viewType, parent, false);
+
+        return new ChatHolder(this.context, view);
+    }
+
+    // 4. Override the onBindViewHolder method
+    @Override
+    public void onBindViewHolder(@NonNull ChatHolder holder, int position) {
+
+        // 5. Use position to access the correct Bakery object
+        Chat chat = this.chats.get(position);
+
+        // 6. Bind the bakery object to the holder
+        holder.bindChat(chat);
+    }
+
+    @Override
+    public int getItemCount() {
+        return this.chats.size();
     }
 }

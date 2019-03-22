@@ -5,15 +5,13 @@ class Chat {
     private String text;
     private String userId;
     private String userName;
-    private String photoUrl;
 
     public Chat() {
     }
 
-    public Chat(String text, String userId, String photoUrl) {
+    public Chat(String text, String userId) {
         this.text = text;
         this.userId = userId;
-        this.photoUrl = photoUrl;
     }
 
     public String getText() {
@@ -38,13 +36,5 @@ class Chat {
 
     public void setUserName(String userName) {
         this.userName = userName;
-    }
-
-    public String getPhotoUrl() {
-        return photoUrl;
-    }
-
-    public void setPhotoUrl(String photoUrl) {
-        this.photoUrl = photoUrl;
     }
 }

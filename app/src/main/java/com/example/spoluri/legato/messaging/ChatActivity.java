@@ -3,6 +3,8 @@ package com.example.spoluri.legato.messaging;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
@@ -29,10 +31,11 @@ public class ChatActivity extends AppCompatActivity {
     private static final String TAG = "ChatActivity";
     private static final int DEFAULT_MSG_LENGTH_LIMIT = 1000;
 
-    private ListView mMessageListView;
+    private RecyclerView mMessageListView;
+    private ChatAdapter mChatAdapter;
+    private List<Chat> mChatList;
     private EditText mMessageEditText;
     private Button mSendButton;
-    private ImageView mActiveChatPhotoImageView;
 
     private String mUserId = AppConstants.ANONYMOUS;
 
@@ -78,29 +81,26 @@ public class ChatActivity extends AppCompatActivity {
         if (participants != null) {
             mMessagesDatabaseReference = firebaseDatabase.getReference().child("messages").child(participants);
 
-            // Send button sends a message and clears the EditText
-            mSendButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Chat chatMessage = new Chat(mMessageEditText.getText().toString(), mUserId, null);
-                    mMessagesDatabaseReference.push().setValue(chatMessage);
-                    // Clear input box
-                    mMessageEditText.setText("");
-                }
-            });
-
-            // Initialize message ListView and its adapter
-            List<Chat> messagesList = new ArrayList<>();
-            final ChatAdapter mChatAdapter = new ChatAdapter(this, R.layout.others_message, messagesList);
+            mChatList = new ArrayList<>();
+            mChatAdapter = new ChatAdapter(this, mChatList);
             mMessageListView.setAdapter(mChatAdapter);
+
+            // 4. Initialize ItemAnimator, LayoutManager and ItemDecorators
+            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+            ((LinearLayoutManager) layoutManager).setStackFromEnd(true);
+
+            // 7. Set the LayoutManager
+            mMessageListView.setLayoutManager(layoutManager);
 
             ChildEventListener childEventListener = new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                     Chat chatMessage = dataSnapshot.getValue(Chat.class);
                     if (chatMessage != null) {
+                        //add activeChat to the list of items that activechatadapter holds.
                         chatMessage.setUserName(chatMessage.getUserId().equals(mUserId) ? "You" : chattingWith);
-                        mChatAdapter.add(chatMessage);
+                        mChatList.add(chatMessage);
+                        mChatAdapter.notifyDataSetChanged();
                     }
                 }
 
@@ -125,7 +125,29 @@ public class ChatActivity extends AppCompatActivity {
                 }
             };
             mMessagesDatabaseReference.addChildEventListener(childEventListener);
+
+            // Send button sends a message and clears the EditText
+            mSendButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Chat chatMessage = new Chat(mMessageEditText.getText().toString(), mUserId);
+                    mMessagesDatabaseReference.push().setValue(chatMessage);
+                    // Clear input box
+                    mMessageEditText.setText("");
+                }
+            });
         }
+
+        mMessageListView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+
+            public void onLayoutChange(View v, int left, int top, int right,int bottom, int oldLeft, int oldTop,int oldRight, int oldBottom)
+            {
+
+                mMessageListView.scrollToPosition(mChatAdapter.getItemCount()-1);
+
+            }
+        });
     }
 
 }
