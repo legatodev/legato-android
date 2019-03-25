@@ -14,10 +14,16 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ActiveChatActivity extends AppCompatActivity {
     private static final String TAG = "ActiveChatActivity";
@@ -91,11 +97,29 @@ public class ActiveChatActivity extends AppCompatActivity {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                String chattingWithUserName = dataSnapshot.getValue(String.class);
-                ActiveChat activeChat = new ActiveChat(chattingWithUserName, null, participants);
-                //add activeChat to the list of items that activechatadapter holds.
-                activeChatList.add(activeChat);
-                mActiveChatAdapter.notifyDataSetChanged();
+                final String chattingWithUserName = dataSnapshot.getValue(String.class);
+                DatabaseReference lastReference = mFirebaseDatabase.getReference().child("messages").child(participants);
+                Query lastQuery = lastReference.limitToLast(1);
+                lastQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Map<String, Object> chatHashMap = (Map<String, Object>) dataSnapshot.getValue();
+                        Map<String, Object> chat = (Map<String, Object>) chatHashMap.get(chatHashMap.keySet().toArray()[0]);
+                        ActiveChat activeChat = new ActiveChat(chattingWithUserName,
+                                null,
+                                participants,
+                                (String)chat.get("text"),
+                                convertTime(chat.get("timeStamp")));
+                        //add activeChat to the list of items that activechatadapter holds.
+                        activeChatList.add(activeChat);
+                        mActiveChatAdapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        //Handle possible errors.
+                    }
+                });
             }
 
             @Override
@@ -103,5 +127,16 @@ public class ActiveChatActivity extends AppCompatActivity {
                 Log.w(TAG, databaseError.toException());
             }
         });
+    }
+
+    public String convertTime(Object timeObject){
+        if (timeObject != null) {
+            long time = ((Number) timeObject).longValue();
+            Date date = new Date(time);
+            Format format = new SimpleDateFormat("MMM dd yyyy HH:mm");
+            return format.format(date);
+        }
+
+        return null;
     }
 }

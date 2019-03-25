@@ -23,8 +23,10 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class ChatActivity extends AppCompatActivity {
@@ -130,7 +132,7 @@ public class ChatActivity extends AppCompatActivity {
             mSendButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Chat chatMessage = new Chat(mMessageEditText.getText().toString(), mUserId);
+                    Chat chatMessage = new Chat(mMessageEditText.getText().toString(), mUserId, ServerValue.TIMESTAMP);
                     mMessagesDatabaseReference.push().setValue(chatMessage);
                     // Clear input box
                     mMessageEditText.setText("");

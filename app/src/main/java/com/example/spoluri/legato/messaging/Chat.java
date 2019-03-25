@@ -5,13 +5,15 @@ class Chat {
     private String text;
     private String userId;
     private String userName;
+    private Object timeStamp;
 
     public Chat() {
     }
 
-    public Chat(String text, String userId) {
+    public Chat(String text, String userId, Object timestamp) {
         this.text = text;
         this.userId = userId;
+        this.timeStamp = timestamp;
     }
 
     public String getText() {
@@ -36,5 +38,9 @@ class Chat {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public Object getTimeStamp() {
+        return timeStamp;
     }
 }

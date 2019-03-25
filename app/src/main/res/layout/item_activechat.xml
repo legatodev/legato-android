@@ -36,6 +36,6 @@
         tools:text="Time"
         android:layout_toRightOf="@+id/activeChatMessageTextView"
         android:layout_below="@id/activeChatNameTextView"
-        android:layout_marginLeft="90dp"/>
+        android:layout_marginLeft="40dp"/>
 
 </RelativeLayout>

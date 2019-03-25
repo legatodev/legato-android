@@ -11,6 +11,13 @@
         android:adjustViewBounds="true"
         android:contentDescription="User Image"/>
 
+    <TextView
+        android:id="@+id/timeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:layout_centerHorizontal="true"
+        android:text="Time"/>
 
     <TextView
         android:id="@+id/nameTextView"

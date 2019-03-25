@@ -8,6 +8,14 @@
     android:clipToPadding="false">
 
     <TextView
+        android:id="@+id/timeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:layout_centerHorizontal="true"
+        android:text="Time"/>
+
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/messageTextView"
@@ -17,6 +25,7 @@
         android:elevation="2dp"
         android:textSize="18dp"
         android:layout_alignParentRight="true"
+        android:layout_below="@+id/timeTextView"
         android:text="Placeholder message"
         />
 

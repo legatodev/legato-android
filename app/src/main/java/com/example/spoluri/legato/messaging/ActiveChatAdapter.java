@@ -46,7 +46,6 @@ class ActiveChatAdapter extends RecyclerView.Adapter<ActiveChatHolder> {
 
     @Override
     public int getItemCount() {
-
         return this.activeChats.size();
     }
 }
