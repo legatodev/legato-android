@@ -7,7 +7,7 @@
     tools:context=".messaging.ActiveChatActivity">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/activeChatListView"
+        android:id="@+id/activeChatRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:divider="@android:color/transparent"

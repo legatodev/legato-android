@@ -12,8 +12,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.ListView;
 
 import com.example.spoluri.legato.AppConstants;
 import com.example.spoluri.legato.R;
@@ -26,14 +24,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class ChatActivity extends AppCompatActivity {
     private static final String TAG = "ChatActivity";
     private static final int DEFAULT_MSG_LENGTH_LIMIT = 1000;
 
-    private RecyclerView mMessageListView;
+    private RecyclerView mMessageRecyclerView;
     private ChatAdapter mChatAdapter;
     private List<Chat> mChatList;
     private EditText mMessageEditText;
@@ -48,7 +45,7 @@ public class ChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chat);
 
         // Initialize references to views
-        mMessageListView = findViewById(R.id.messageListView);
+        mMessageRecyclerView = findViewById(R.id.messageRecyclerView);
         mMessageEditText = findViewById(R.id.messageEditText);
         mSendButton = findViewById(R.id.sendButton);
 
@@ -85,14 +82,14 @@ public class ChatActivity extends AppCompatActivity {
 
             mChatList = new ArrayList<>();
             mChatAdapter = new ChatAdapter(this, mChatList);
-            mMessageListView.setAdapter(mChatAdapter);
+            mMessageRecyclerView.setAdapter(mChatAdapter);
 
             // 4. Initialize ItemAnimator, LayoutManager and ItemDecorators
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
             ((LinearLayoutManager) layoutManager).setStackFromEnd(true);
 
             // 7. Set the LayoutManager
-            mMessageListView.setLayoutManager(layoutManager);
+            mMessageRecyclerView.setLayoutManager(layoutManager);
 
             ChildEventListener childEventListener = new ChildEventListener() {
                 @Override
@@ -140,13 +137,13 @@ public class ChatActivity extends AppCompatActivity {
             });
         }
 
-        mMessageListView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+        mMessageRecyclerView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
 
             public void onLayoutChange(View v, int left, int top, int right,int bottom, int oldLeft, int oldTop,int oldRight, int oldBottom)
             {
 
-                mMessageListView.scrollToPosition(mChatAdapter.getItemCount()-1);
+                mMessageRecyclerView.scrollToPosition(mChatAdapter.getItemCount()-1);
 
             }
         });

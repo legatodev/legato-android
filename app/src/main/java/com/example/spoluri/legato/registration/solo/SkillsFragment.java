@@ -18,7 +18,7 @@ import java.util.ArrayList;
 public class SkillsFragment extends Fragment implements View.OnClickListener {
 
     private SkillsAdapter mSkillsAdapter;
-    private RecyclerView mSkillsListView;
+    private RecyclerView mSkillsRecyclerView;
     private ArrayList<Skills> mSkillsArrayList;
     private static final int MAX_SKILLS = 6;
 
@@ -35,22 +35,22 @@ public class SkillsFragment extends Fragment implements View.OnClickListener {
 
         if (view != null) {
             // Initialize references to views
-            mSkillsListView = view.findViewById(R.id.skillsRecyclerView);
+            mSkillsRecyclerView = view.findViewById(R.id.skillsRecyclerView);
 
             // Initialize message ListView and its adapter
             mSkillsArrayList = new ArrayList<>();
             Skills skill = new Skills("Choose Skill", 0);
             mSkillsArrayList.add(skill);
             mSkillsAdapter = new SkillsAdapter(view.getContext(), R.layout.item_skills, mSkillsArrayList);
-            mSkillsListView.setAdapter(mSkillsAdapter);
-            DividerItemDecoration itemDecor = new DividerItemDecoration(mSkillsListView.getContext(), DividerItemDecoration.HORIZONTAL);
-            mSkillsListView.addItemDecoration(itemDecor);
+            mSkillsRecyclerView.setAdapter(mSkillsAdapter);
+            DividerItemDecoration itemDecor = new DividerItemDecoration(mSkillsRecyclerView.getContext(), DividerItemDecoration.HORIZONTAL);
+            mSkillsRecyclerView.addItemDecoration(itemDecor);
 
             // 4. Initialize ItemAnimator, LayoutManager and ItemDecorators
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(view.getContext());
 
             // 7. Set the LayoutManager
-            mSkillsListView.setLayoutManager(layoutManager);
+            mSkillsRecyclerView.setLayoutManager(layoutManager);
 
             FloatingActionButton addButton = view.findViewById(R.id.addSkillButton);
             addButton.setOnClickListener(this);

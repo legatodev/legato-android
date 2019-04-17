@@ -21,14 +21,13 @@ import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class ActiveChatActivity extends AppCompatActivity {
     private static final String TAG = "ActiveChatActivity";
 
-    private RecyclerView mActiveChatListView;
+    private RecyclerView mActiveChatRecyclerView;
     private ActiveChatAdapter mActiveChatAdapter;
 
     private FirebaseDatabase mFirebaseDatabase;
@@ -45,18 +44,17 @@ public class ActiveChatActivity extends AppCompatActivity {
         mUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         // Initialize references to views
-        mActiveChatListView = findViewById(R.id.activeChatListView);
+        mActiveChatRecyclerView = findViewById(R.id.activeChatRecyclerView);
 
-        // Initialize message ListView and its adapter
         activeChatList = new ArrayList<>();
         mActiveChatAdapter = new ActiveChatAdapter(this, R.layout.item_activechat, activeChatList);
-        mActiveChatListView.setAdapter(mActiveChatAdapter);
+        mActiveChatRecyclerView.setAdapter(mActiveChatAdapter);
 
         // 4. Initialize ItemAnimator, LayoutManager and ItemDecorators
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
 
         // 7. Set the LayoutManager
-        mActiveChatListView.setLayoutManager(layoutManager);
+        mActiveChatRecyclerView.setLayoutManager(layoutManager);
 
         ChildEventListener childEventListener = new ChildEventListener() {
             @Override

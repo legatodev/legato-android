@@ -19,7 +19,7 @@ public class NearbyUsersActivity extends AppCompatActivity {
 
     private SearchView mSearchSkills;
     private NearbyUsersAdapter mNearbyUsersAdapter;
-    private RecyclerView mNearbyUserListView;
+    private RecyclerView mNearbyUserRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,23 +46,20 @@ public class NearbyUsersActivity extends AppCompatActivity {
             }
         });
 
-        // Initialize references to views
-        mNearbyUserListView = findViewById(R.id.nearbyUserListView);
-
-        // Initialize message ListView and its adapter
+        mNearbyUserRecyclerView = findViewById(R.id.nearbyUserRecylerView);
 
         Intent intent = getIntent();
         ArrayList<NearbyUser> nearbyUserList = (ArrayList<NearbyUser>) intent.getSerializableExtra("nearby_users");
         mNearbyUsersAdapter = new NearbyUsersAdapter(this, R.layout.item_nearbyuser, nearbyUserList);
-        mNearbyUserListView.setAdapter(mNearbyUsersAdapter);
-        DividerItemDecoration itemDecor = new DividerItemDecoration(mNearbyUserListView.getContext(), DividerItemDecoration.HORIZONTAL);
-        mNearbyUserListView.addItemDecoration(itemDecor);
+        mNearbyUserRecyclerView.setAdapter(mNearbyUsersAdapter);
+        DividerItemDecoration itemDecor = new DividerItemDecoration(mNearbyUserRecyclerView.getContext(), DividerItemDecoration.HORIZONTAL);
+        mNearbyUserRecyclerView.addItemDecoration(itemDecor);
 
         // 4. Initialize ItemAnimator, LayoutManager and ItemDecorators
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
 
         // 7. Set the LayoutManager
-        mNearbyUserListView.setLayoutManager(layoutManager);
+        mNearbyUserRecyclerView.setLayoutManager(layoutManager);
 
         Spinner spinner = findViewById(R.id.lookingForSpinner);
         // Creating ArrayAdapter using the string array and default spinner layout
