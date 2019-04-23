@@ -1,9 +1,10 @@
 package com.example.spoluri.legato.registration;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.spoluri.legato.R;
 import com.example.spoluri.legato.registration.solo.SoloRegistrationActivity;

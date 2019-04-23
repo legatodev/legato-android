@@ -1,7 +1,7 @@
 package com.example.spoluri.legato.registration;
 
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import android.os.Bundle;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
@@ -42,7 +42,7 @@ public class GenresFragment extends Fragment {
     //call this function when proceeding to the next screen
     private void sendSelectedGenres(){
         SparseBooleanArray checked = genresListView.getCheckedItemPositions();
-        CharSequence selectedItems[] = new CharSequence[checked.size()];
+        CharSequence[] selectedItems = new CharSequence[checked.size()];
         for (int i = 0; i < checked.size(); i++) {
             // Item position in adapter
             int position = checked.keyAt(i);

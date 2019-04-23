@@ -1,10 +1,11 @@
 package com.example.spoluri.legato.messaging;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.LinearLayoutManager;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import 	androidx.recyclerview.widget.RecyclerView;
 
 import com.example.spoluri.legato.AppConstants;
 import com.example.spoluri.legato.R;
