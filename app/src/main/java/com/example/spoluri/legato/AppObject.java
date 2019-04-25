@@ -6,6 +6,7 @@ import android.content.Context;
 import androidx.multidex.MultiDex;
 
 import com.google.firebase.auth.EmailAuthProvider;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.GoogleAuthProvider;
 
 import co.chatsdk.core.error.ChatSDKException;
@@ -13,7 +14,7 @@ import co.chatsdk.core.session.ChatSDK;
 import co.chatsdk.core.session.Configuration;
 import co.chatsdk.firebase.FirebaseNetworkAdapter;
 import co.chatsdk.firebase.file_storage.FirebaseFileStorageModule;
-import co.chatsdk.firebase.ui.FirebaseUIModule;
+import co.chatsdk.firebase.social_login.FirebaseSocialLoginModule;
 import co.chatsdk.ui.manager.BaseInterfaceAdapter;
 
 public class AppObject extends Application {
@@ -38,6 +39,8 @@ public class AppObject extends Application {
             // The root path is an optional setting that allows you to run multiple Chat SDK instances on one Realtime database.
             // For example, you could have one root path for "test" and another for "production"
             config.firebaseRootPath("prod");
+            config.logoDrawableResourceID(R.drawable.legato_logo);
+
 
             // Start the Chat SDK and pass in the interface adapter and network adapter. By subclassing either
             // of these classes you could modify deep functionality withing the Chat SDK
@@ -48,9 +51,11 @@ public class AppObject extends Application {
 
         // File storage is needed for profile image upload and image messages
         FirebaseFileStorageModule.activate();
+        FirebaseSocialLoginModule.activate(getApplicationContext());
 
         // Uncomment this to enable Firebase UI
-        //FirebaseUIModule.activate(EmailAuthProvider.PROVIDER_ID, GoogleAuthProvider.PROVIDER_ID);
+        FirebaseUIModule.activate(EmailAuthProvider.PROVIDER_ID, GoogleAuthProvider.PROVIDER_ID, FacebookAuthProvider.PROVIDER_ID);
+        ChatSDK.ui().setMainActivity(AccountActivity.class);
     }
 
     @Override

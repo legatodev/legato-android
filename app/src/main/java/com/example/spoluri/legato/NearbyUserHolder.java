@@ -78,8 +78,8 @@ public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.On
 
     @Override
     public void onClick(View v) {
-            //Open profile activity
-            Intent intent = new Intent(this.context, UserProfileActivity.class);
-            context.startActivity(intent);
+        //Open profile activity
+        Intent intent = new Intent(this.context, UserProfileActivity.class);
+        context.startActivity(intent);
     }
 }

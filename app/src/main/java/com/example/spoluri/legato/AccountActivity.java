@@ -11,17 +11,14 @@ import com.google.android.material.snackbar.Snackbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.spoluri.legato.messaging.ActiveChatActivity;
-import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.youtube.player.YouTubePlayer;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -37,6 +34,10 @@ import androidx.core.app.ActivityCompat;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import co.chatsdk.core.session.ChatSDK;
+import co.chatsdk.core.types.AuthKeys;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public class AccountActivity extends YouTubeBaseActivity implements YouTubePlayer.OnInitializedListener {
     private static final String TAG = "AccountActivity";
@@ -63,9 +64,9 @@ public class AccountActivity extends YouTubeBaseActivity implements YouTubePlaye
 
         mRootView = findViewById(R.id.account_root);
         mYouTubeView = findViewById(R.id.youtube_view);
-        geofireHelper = new GeofireHelper();
 
-        mUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        mUserId = (String)ChatSDK.auth().getLoginInfo().get(AuthKeys.CurrentUserID);
+        geofireHelper = new GeofireHelper(mUserId);
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         mUserProfileDatabaseReference = firebaseDatabase.getReference().child("userprofiledata");
 
@@ -114,22 +115,12 @@ public class AccountActivity extends YouTubeBaseActivity implements YouTubePlaye
     }
 
     public void onLogout(View view) {
-        AuthUI.getInstance()
-                .signOut(this)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            launchLoginActivity();
-                        }
-                    }
+        ChatSDK.auth().logout()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(() -> ChatSDK.ui().startSplashScreenActivity(getApplicationContext()), throwable -> {
+                    ChatSDK.logError(throwable);
+                    Toast.makeText(AccountActivity.this, throwable.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                 });
-    }
-
-    private void launchLoginActivity() {
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
-        finish();
     }
 
     public void onYoutube(View view) {

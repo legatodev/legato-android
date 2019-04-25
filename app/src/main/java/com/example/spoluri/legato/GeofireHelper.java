@@ -17,6 +17,9 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
+import co.chatsdk.core.session.ChatSDK;
+import co.chatsdk.core.types.AuthKeys;
+
 class GeofireHelper {
     private final String mUserId;
     private final GeoFire mGeoFire;
@@ -24,8 +27,8 @@ class GeofireHelper {
     private final ArrayList<NearbyUser> mNearbyUsersList;
     private final FirebaseDatabase mFirebaseDatabase;
 
-    public GeofireHelper() {
-        mUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+    public GeofireHelper(String userId) {
+        mUserId = userId;
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference userLocationDatabaseReference = mFirebaseDatabase.getReference().child("geofire");
         mGeoFire = new GeoFire(userLocationDatabaseReference);
