@@ -158,7 +158,6 @@ public class AccountActivity extends YouTubeBaseActivity implements YouTubePlaye
 
     public void onNearbyUsers(View view) {
         Intent intent = new Intent(this, NearbyUsersActivity.class);
-        intent.putExtra("nearby_users", geofireHelper.getNearbyUsersList());
         startActivity(intent);
     }
 

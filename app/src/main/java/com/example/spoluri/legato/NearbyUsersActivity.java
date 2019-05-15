@@ -48,10 +48,8 @@ public class NearbyUsersActivity extends AppCompatActivity {
         });
 
         mNearbyUserRecyclerView = findViewById(R.id.nearbyUserRecylerView);
-
         Intent intent = getIntent();
-        ArrayList<NearbyUser> nearbyUserList = (ArrayList<NearbyUser>) intent.getSerializableExtra("nearby_users");
-        mNearbyUsersAdapter = new NearbyUsersAdapter(this, R.layout.item_nearbyuser, nearbyUserList);
+        mNearbyUsersAdapter = new NearbyUsersAdapter(this, R.layout.item_nearbyuser);
         mNearbyUserRecyclerView.setAdapter(mNearbyUsersAdapter);
         DividerItemDecoration itemDecor = new DividerItemDecoration(mNearbyUserRecyclerView.getContext(), DividerItemDecoration.HORIZONTAL);
         mNearbyUserRecyclerView.addItemDecoration(itemDecor);
