@@ -24,17 +24,27 @@ class GeofireHelper {
     private final ArrayList<NearbyUser> mNearbyUsersList;
     private final FirebaseDatabase mFirebaseDatabase;
 
-    public GeofireHelper() {
+    private static GeofireHelper sGeofireInstance;
+
+    private GeofireHelper() {
         mUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference userLocationDatabaseReference = mFirebaseDatabase.getReference().child("geofire");
         mGeoFire = new GeoFire(userLocationDatabaseReference);
         mNearbyUsersList = new ArrayList<>();
     }
+     public static GeofireHelper getInstance(){
+        if(sGeofireInstance == null){
+            sGeofireInstance = new GeofireHelper();
+        }
+
+        return  sGeofireInstance;
+     }
 
     public void setLocation(Location location) {
         mCurrentLocation = location;
-        mGeoFire.setLocation(mUserId, new GeoLocation(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()), new GeoFire.CompletionListener() {
+        mGeoFire.setLocation(mUserId, new GeoLocation(mCurrentLocation.getLatitude(),
+                mCurrentLocation.getLongitude()), new GeoFire.CompletionListener() {
             @Override
             public void onComplete(String key, DatabaseError error) {
                 if (error != null) {
