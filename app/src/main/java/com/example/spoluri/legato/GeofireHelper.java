@@ -16,25 +16,38 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 class GeofireHelper {
     private final String mUserId;
     private final GeoFire mGeoFire;
     private Location mCurrentLocation;
-    private final ArrayList<NearbyUser> mNearbyUsersList;
+    private ArrayList<NearbyUser> mNearbyUsersList;
     private final FirebaseDatabase mFirebaseDatabase;
+    private final HashMap<String,NearbyUser> mNearHashMap;
 
-    public GeofireHelper() {
+    private static GeofireHelper sGeofireInstance;
+
+    private GeofireHelper() {
         mUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference userLocationDatabaseReference = mFirebaseDatabase.getReference().child("geofire");
         mGeoFire = new GeoFire(userLocationDatabaseReference);
         mNearbyUsersList = new ArrayList<>();
+        mNearHashMap = new HashMap<String,NearbyUser>();
     }
+     public static GeofireHelper getInstance(){
+        if(sGeofireInstance == null){
+            sGeofireInstance = new GeofireHelper();
+        }
+
+        return  sGeofireInstance;
+     }
 
     public void setLocation(Location location) {
         mCurrentLocation = location;
-        mGeoFire.setLocation(mUserId, new GeoLocation(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()), new GeoFire.CompletionListener() {
+        mGeoFire.setLocation(mUserId, new GeoLocation(mCurrentLocation.getLatitude(),
+                mCurrentLocation.getLongitude()), new GeoFire.CompletionListener() {
             @Override
             public void onComplete(String key, DatabaseError error) {
                 if (error != null) {
@@ -48,9 +61,9 @@ class GeofireHelper {
 
     //This function needs a unit test
     public void queryNeighbors(double searchRadius) {
-        mNearbyUsersList.clear();
         if (mCurrentLocation != null) {
-            GeoQuery geoQuery = mGeoFire.queryAtLocation(new GeoLocation(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()), searchRadius);
+            GeoQuery geoQuery = mGeoFire.queryAtLocation(new GeoLocation(mCurrentLocation.getLatitude(),
+                    mCurrentLocation.getLongitude()), searchRadius);
             geoQuery.addGeoQueryDataEventListener(new GeoQueryDataEventListener() {
                 @Override
                 public void onDataEntered(DataSnapshot dataSnapshot, GeoLocation geoLocation) {
@@ -66,10 +79,9 @@ class GeofireHelper {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 UserProfileData userProfileData = dataSnapshot.getValue(UserProfileData.class);
-
-                                mNearbyUsersList.add(new NearbyUser(
-                                        userProfileData,
-                                        distanceTo));
+                                NearbyUser user = new NearbyUser(userProfileData,distanceTo);
+                                String id = dataSnapshot.getKey();
+                                mNearHashMap.put(id,user);
                             }
 
                             @Override
@@ -111,6 +123,8 @@ class GeofireHelper {
     }
 
     public ArrayList<NearbyUser> getNearbyUsersList() {
+        mNearbyUsersList = null;
+        mNearbyUsersList = new ArrayList<NearbyUser>(mNearHashMap.values());
         return mNearbyUsersList;
     }
 }

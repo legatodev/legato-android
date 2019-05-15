@@ -19,9 +19,9 @@ class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> implemen
     private final Context context;
     private final int itemResource;
 
-    public NearbyUsersAdapter(Context context, int itemResource, List<NearbyUser> nearbyUsers) {
-        this.nearbyUsers = nearbyUsers;
-        this.nearbyUsersFiltered = nearbyUsers;
+    public NearbyUsersAdapter(Context context, int itemResource) {
+        this.nearbyUsers = GeofireHelper.getInstance().getNearbyUsersList();
+        this.nearbyUsersFiltered = GeofireHelper.getInstance().getNearbyUsersList();
         this.context = context;
         this.itemResource = itemResource;
     }
