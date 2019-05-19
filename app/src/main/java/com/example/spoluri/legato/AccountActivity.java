@@ -35,9 +35,15 @@ import androidx.core.app.ActivityCompat;
 import java.util.HashMap;
 import java.util.Map;
 
+import co.chatsdk.core.dao.Keys;
+import co.chatsdk.core.dao.User;
 import co.chatsdk.core.session.ChatSDK;
 import co.chatsdk.core.types.AuthKeys;
+import co.chatsdk.core.types.ConnectionType;
+import co.chatsdk.core.utils.DisposableList;
+import co.chatsdk.ui.utils.ToastHelper;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 
 public class AccountActivity extends YouTubeBaseActivity implements YouTubePlayer.OnInitializedListener {
     private static final String TAG = "AccountActivity";
@@ -52,6 +58,11 @@ public class AccountActivity extends YouTubeBaseActivity implements YouTubePlaye
     private String mYoutubeVideo = "";
     private GeofireHelper geofireHelper;
     private DatabaseReference mUserProfileDatabaseReference;
+
+    protected User user;
+    protected boolean startingChat = false;
+
+    private DisposableList disposableList = new DisposableList();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,9 +154,49 @@ public class AccountActivity extends YouTubeBaseActivity implements YouTubePlaye
     }
 
     public void onMessengerLaunch(View view) {
-        Intent intent = new Intent(this, ActiveChatActivity.class);
-        startActivity(intent);
+        //Intent intent = new Intent(this, ActiveChatActivity.class);
+        //startActivity(intent);
+        String userEntityID = "MZW9VySBWJcjKDqdj8O7W6EDur12";
+
+        if (userEntityID != null && !userEntityID.isEmpty()) {
+            user = ChatSDK.db().fetchUserWithEntityID(userEntityID);
+            Disposable d = ChatSDK.core().userOn(user).subscribe(() -> {
+                disposableList.add(ChatSDK.contact().addContact(user, ConnectionType.Contact)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(() -> {
+                        }, throwable -> {
+                            ChatSDK.logError(throwable);
+                        }));
+
+                // User object has now been populated and is ready to use
+                startChat();
+
+            }, throwable -> {
+
+            });
+        }
     }
+
+    public void startChat () {
+
+        if (startingChat) {
+            return;
+        }
+
+        startingChat = true;
+
+        disposableList.add(ChatSDK.thread().createThread("", user, ChatSDK.currentUser())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doFinally(() -> {
+                    startingChat = false;
+                })
+                .subscribe(thread -> {
+                    ChatSDK.ui().startChatActivityForID(getApplicationContext(), thread.getEntityID());
+                }, throwable -> {
+                    ToastHelper.show(getApplicationContext(), throwable.getLocalizedMessage());
+                }));
+    }
+
 
     public void onNearbyUsers(View view) {
         Intent intent = new Intent(this, NearbyUsersActivity.class);
