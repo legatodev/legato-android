@@ -7,6 +7,8 @@ import android.location.Location;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
+
+import com.example.spoluri.legato.youtube.YoutubeActivity;
 import com.google.android.material.snackbar.Snackbar;
 import android.util.Log;
 import android.view.View;
@@ -31,6 +33,7 @@ import com.google.android.youtube.player.YouTubePlayer.Provider;
 import com.google.android.youtube.player.YouTubePlayerView;
 
 import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -135,10 +138,8 @@ public class AccountActivity extends YouTubeBaseActivity implements YouTubePlaye
     }
 
     public void onYoutube(View view) {
-        Intent intent = new Intent(this, AvatarActivity.class);
-        startActivity(intent);
-        //Intent intent = new Intent(this, YoutubeActivity.class);
-        //startActivityForResult(intent, RequestCodes.RC_YOUTUBE_SEARCH);
+        Intent intent = new Intent(this, YoutubeActivity.class);
+        startActivityForResult(intent, RequestCodes.RC_YOUTUBE_SEARCH);
     }
 
     @Override
@@ -154,49 +155,9 @@ public class AccountActivity extends YouTubeBaseActivity implements YouTubePlaye
     }
 
     public void onMessengerLaunch(View view) {
-        //Intent intent = new Intent(this, ActiveChatActivity.class);
-        //startActivity(intent);
-        String userEntityID = "MZW9VySBWJcjKDqdj8O7W6EDur12";
-
-        if (userEntityID != null && !userEntityID.isEmpty()) {
-            user = ChatSDK.db().fetchUserWithEntityID(userEntityID);
-            Disposable d = ChatSDK.core().userOn(user).subscribe(() -> {
-                disposableList.add(ChatSDK.contact().addContact(user, ConnectionType.Contact)
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(() -> {
-                        }, throwable -> {
-                            ChatSDK.logError(throwable);
-                        }));
-
-                // User object has now been populated and is ready to use
-                startChat();
-
-            }, throwable -> {
-
-            });
-        }
+        Intent intent = new Intent(this, ActiveChatActivity.class);
+        startActivity(intent);
     }
-
-    public void startChat () {
-
-        if (startingChat) {
-            return;
-        }
-
-        startingChat = true;
-
-        disposableList.add(ChatSDK.thread().createThread("", user, ChatSDK.currentUser())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doFinally(() -> {
-                    startingChat = false;
-                })
-                .subscribe(thread -> {
-                    ChatSDK.ui().startChatActivityForID(getApplicationContext(), thread.getEntityID());
-                }, throwable -> {
-                    ToastHelper.show(getApplicationContext(), throwable.getLocalizedMessage());
-                }));
-    }
-
 
     public void onNearbyUsers(View view) {
         Intent intent = new Intent(this, NearbyUsersActivity.class);
