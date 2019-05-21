@@ -62,9 +62,6 @@ public class AccountActivity extends YouTubeBaseActivity implements YouTubePlaye
     private GeofireHelper geofireHelper;
     private DatabaseReference mUserProfileDatabaseReference;
 
-    protected User user;
-    protected boolean startingChat = false;
-
     private DisposableList disposableList = new DisposableList();
 
     @Override
@@ -81,7 +78,6 @@ public class AccountActivity extends YouTubeBaseActivity implements YouTubePlaye
         geofireHelper = GeofireHelper.getInstance();
 
         mUserId = (String)ChatSDK.auth().getLoginInfo().get(AuthKeys.CurrentUserID);
-        geofireHelper = new GeofireHelper(mUserId);
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         mUserProfileDatabaseReference = firebaseDatabase.getReference().child("userprofiledata");
 

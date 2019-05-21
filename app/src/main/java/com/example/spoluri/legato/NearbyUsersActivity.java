@@ -69,7 +69,6 @@ public class NearbyUsersActivity extends AppCompatActivity {
         // Applying the adapter to our spinner
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(new OnItemSelectedListener(){
-
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 mNearbyUsersAdapter.getFilter().filter(adapter.getItem(position));
