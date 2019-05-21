@@ -78,6 +78,7 @@ public class AccountActivity extends YouTubeBaseActivity implements YouTubePlaye
 
         mRootView = findViewById(R.id.account_root);
         mYouTubeView = findViewById(R.id.youtube_view);
+        geofireHelper = GeofireHelper.getInstance();
 
         mUserId = (String)ChatSDK.auth().getLoginInfo().get(AuthKeys.CurrentUserID);
         geofireHelper = new GeofireHelper(mUserId);
@@ -161,7 +162,6 @@ public class AccountActivity extends YouTubeBaseActivity implements YouTubePlaye
 
     public void onNearbyUsers(View view) {
         Intent intent = new Intent(this, NearbyUsersActivity.class);
-        intent.putExtra("nearby_users", geofireHelper.getNearbyUsersList());
         startActivity(intent);
     }
 
