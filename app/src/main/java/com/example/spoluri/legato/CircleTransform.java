@@ -7,6 +7,7 @@ import android.graphics.Paint;
 
 import com.squareup.picasso.Transformation;
 
+//TODO: should switch to Fresco image library
 public class CircleTransform implements Transformation {
     @Override
     public Bitmap transform(Bitmap source) {

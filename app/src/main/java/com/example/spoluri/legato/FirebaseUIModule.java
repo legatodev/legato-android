@@ -17,9 +17,6 @@ import co.chatsdk.core.events.NetworkEvent;
 import co.chatsdk.core.session.ChatSDK;
 import io.reactivex.disposables.Disposable;
 
-/**
- * Created by ben on 1/2/18.
- */
 
 public class FirebaseUIModule {
 

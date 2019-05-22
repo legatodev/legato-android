@@ -12,9 +12,9 @@ class AvatarImageAdapter extends BaseAdapter {
 
     // Keep all Images in array
     private final Integer[] mThumbIds = {
-            R.drawable.pic_1, R.drawable.pic_2,
-            R.drawable.pic_1, R.drawable.pic_2,
-            R.drawable.pic_1, R.drawable.pic_2
+            R.drawable.electric_guitar, R.drawable.piano,
+            R.drawable.electric_guitar, R.drawable.piano,
+            R.drawable.electric_guitar, R.drawable.piano
     };
 
     // Constructor

@@ -1,14 +1,14 @@
 package com.example.spoluri.legato;
 
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
-import com.makeramen.roundedimageview.RoundedTransformationBuilder;
+
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Transformation;
 
 public class AvatarActivity extends AppCompatActivity {
 
