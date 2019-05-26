@@ -35,6 +35,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.HashMap;
 import java.util.Map;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import co.chatsdk.core.session.ChatSDK;
 import co.chatsdk.core.types.AuthKeys;
 import co.chatsdk.core.utils.DisposableList;
@@ -43,13 +45,23 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 public class AccountActivity extends YouTubeBaseActivity implements YouTubePlayer.OnInitializedListener {
     private static final String TAG = "AccountActivity";
 
-    private TextView id;
-    private TextView infoLabel;
-    private TextView info;
+    @BindView(R.id.id)
+    TextView id;
+
+    @BindView(R.id.info_label)
+    TextView infoLabel;
+
+    @BindView(R.id.info)
+    TextView info;
+
+    @BindView(R.id.account_root)
+    View mRootView;
+
+    @BindView(R.id.youtube_view)
+    YouTubePlayerView mYouTubeView;
+
 
     private String mUserId = AppConstants.ANONYMOUS;
-    private View mRootView;
-    private YouTubePlayerView mYouTubeView;
     private String mYoutubeVideo = "";
     private GeofireHelper geofireHelper;
     private DatabaseReference mUserProfileDatabaseReference;
@@ -60,13 +72,8 @@ public class AccountActivity extends YouTubeBaseActivity implements YouTubePlaye
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account);
+        ButterKnife.bind(this);
 
-        id = findViewById(R.id.id);
-        infoLabel = findViewById(R.id.info_label);
-        info = findViewById(R.id.info);
-
-        mRootView = findViewById(R.id.account_root);
-        mYouTubeView = findViewById(R.id.youtube_view);
         geofireHelper = GeofireHelper.getInstance();
 
         mUserId = (String)ChatSDK.auth().getLoginInfo().get(AuthKeys.CurrentUserID);

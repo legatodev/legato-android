@@ -17,10 +17,19 @@ import com.google.api.services.youtube.model.SearchResult;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class YoutubeActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener, ServerResponseListener {
-    private EditText mYtVideoEdt = null;
-    private Button mYtVideoBtn = null;
-    private ListView mYtVideoLsv = null;
+
+    @BindView(R.id.yt_video_edt)
+    EditText mYtVideoEdt;
+
+    @BindView(R.id.yt_video_btn)
+    Button mYtVideoBtn;
+
+    @BindView(R.id.yt_video_lsv)
+    ListView mYtVideoLsv;
 
     private YtAdapter mYtAdapter = null;
     private ServiceTask mYtServiceTask = null;
@@ -30,6 +39,7 @@ public class YoutubeActivity extends AppCompatActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_youtube);
+        ButterKnife.bind(this);
 
         initializeViews();
     }
@@ -38,10 +48,6 @@ public class YoutubeActivity extends AppCompatActivity implements View.OnClickLi
      * Method that initializes views from the activity's content layout
      */
     private void initializeViews() {
-        mYtVideoEdt = findViewById(R.id.yt_video_edt);
-        mYtVideoBtn = findViewById(R.id.yt_video_btn);
-        mYtVideoLsv = findViewById(R.id.yt_video_lsv);
-
         mYtVideoBtn.setOnClickListener(this);
         mYtVideoLsv.setOnItemClickListener(this);
     }
