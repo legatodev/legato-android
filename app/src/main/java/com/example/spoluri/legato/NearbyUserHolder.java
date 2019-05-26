@@ -12,29 +12,36 @@ import android.widget.TextView;
 import java.io.InputStream;
 import java.net.URL;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    private final ImageView nearbyUserPhoto;
-    private final TextView nearbyUserName;
-    private final TextView nearbyUserDistance;
-    private final TextView nearbyUserGenres;
-    private final TextView nearbyUserSkills;
+    @BindView(R.id.nearbyUserPhotoImageView)
+    ImageView nearbyUserPhoto;
+
+    @BindView(R.id.nearbyUserNameTextView)
+    TextView nearbyUserName;
+
+    @BindView(R.id.nearbyUserDistanceTextView)
+    TextView nearbyUserDistance;
+
+    @BindView(R.id.nearbyUserGenresTextView)
+    TextView nearbyUserGenres;
+
+    @BindView(R.id.nearbyUserSkillsTextView)
+    TextView nearbyUserSkills;
 
     private NearbyUser nearbyUser;
     private final Context context;
 
     public NearbyUserHolder(Context context, View itemView) {
         super(itemView);
-
         // 1. Set the context
         this.context = context;
 
         // 2. Set up the UI widgets of the holder
-        this.nearbyUserPhoto = itemView.findViewById(R.id.nearbyUserPhotoImageView);
-        this.nearbyUserName = itemView.findViewById(R.id.nearbyUserNameTextView);
-        this.nearbyUserDistance = itemView.findViewById(R.id.nearbyUserDistanceTextView);
-        this.nearbyUserGenres = itemView.findViewById(R.id.nearbyUserGenresTextView);
-        this.nearbyUserSkills = itemView.findViewById(R.id.nearbyUserSkillsTextView);
+        ButterKnife.bind(this, itemView);
 
         // 3. Set the "onClick" listener of the holder
         itemView.setOnClickListener(this);
@@ -65,6 +72,7 @@ public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.On
     }
 
     public void bindNearbyUser(NearbyUser nearbyUser) {
+
         // 4. Bind the data to the ViewHolder
         this.nearbyUser = nearbyUser;
 

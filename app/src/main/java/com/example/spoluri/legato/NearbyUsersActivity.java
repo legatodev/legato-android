@@ -14,18 +14,28 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class NearbyUsersActivity extends AppCompatActivity {
 
-    private SearchView mSearchSkills;
+    @BindView(R.id.searchView)
+    SearchView mSearchSkills;
+
+    @BindView(R.id.nearbyUserRecylerView)
+    RecyclerView mNearbyUserRecyclerView;
+
+    @BindView(R.id.lookingForSpinner)
+    Spinner spinner;
+
     private NearbyUsersAdapter mNearbyUsersAdapter;
-    private RecyclerView mNearbyUserRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nearby_users);
+        ButterKnife.bind(this);
 
-        mSearchSkills = findViewById(R.id.searchView);
         mSearchSkills.setActivated(true);
         mSearchSkills.setIconified(false);
         mSearchSkills.clearFocus();
@@ -45,7 +55,6 @@ public class NearbyUsersActivity extends AppCompatActivity {
             }
         });
 
-        mNearbyUserRecyclerView = findViewById(R.id.nearbyUserRecylerView);
         Intent intent = getIntent();
         mNearbyUsersAdapter = new NearbyUsersAdapter(this, R.layout.item_nearbyuser);
         mNearbyUserRecyclerView.setAdapter(mNearbyUsersAdapter);
@@ -58,7 +67,6 @@ public class NearbyUsersActivity extends AppCompatActivity {
         // 7. Set the LayoutManager
         mNearbyUserRecyclerView.setLayoutManager(layoutManager);
 
-        Spinner spinner = findViewById(R.id.lookingForSpinner);
         // Creating ArrayAdapter using the string array and default spinner layout
         final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.looking_for, android.R.layout.simple_spinner_item);
