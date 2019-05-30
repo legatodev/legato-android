@@ -10,7 +10,12 @@ import android.widget.Filter;
 import android.widget.Filterable;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+
+import co.chatsdk.core.dao.User;
+import co.chatsdk.core.session.ChatSDK;
 
 class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> implements Filterable {
 
@@ -20,10 +25,21 @@ class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> implemen
     private final int itemResource;
 
     public NearbyUsersAdapter(Context context, int itemResource) {
-        this.nearbyUsers = GeofireHelper.getInstance().getNearbyUsersList();
-        this.nearbyUsersFiltered = GeofireHelper.getInstance().getNearbyUsersList();
         this.context = context;
         this.itemResource = itemResource;
+        this.nearbyUsers = new ArrayList<>();
+        Iterator it = GeofireHelper.getInstance().getNearbyUsers().entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry)it.next();
+            User user = ChatSDK.db().fetchOrCreateEntityWithEntityID(User.class, (String)pair.getKey());
+            ChatSDK.core().userOn(user);
+            // User object has now been populated and is ready to use
+            if (!user.isMe()) {
+                this.nearbyUsers.add(new NearbyUser(user, (String) pair.getValue()));
+            }
+        }
+
+        this.nearbyUsersFiltered = this.nearbyUsers;
     }
 
     // 2. Override the onCreateViewHolder method
@@ -50,7 +66,6 @@ class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> implemen
 
     @Override
     public int getItemCount() {
-
         return this.nearbyUsersFiltered.size();
     }
 
@@ -68,9 +83,12 @@ class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> implemen
 
                         // name match condition. this might differ depending on your requirement
                         // here we are looking for name or phone number match
-                        if (row.getSkills().toLowerCase().contains(charString.toLowerCase()) ||
-                                row.getGenres().toLowerCase().contains(charString.toLowerCase()) ||
-                                row.getLookingfor().contentEquals(charSequence)) {
+                        String skills = row.getSkills();
+                        String genres = row.getGenres();
+                        String lookingfor = row.getLookingfor();
+                        if (skills != null && skills.toLowerCase().contains(charString.toLowerCase()) ||
+                                genres != null && genres.toLowerCase().contains(charString.toLowerCase()) ||
+                                lookingfor != null && lookingfor.contentEquals(charSequence)) {
                             filteredList.add(row);
                         }
                     }
@@ -86,8 +104,10 @@ class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> implemen
 
             @Override
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-                nearbyUsersFiltered = (ArrayList<NearbyUser>) filterResults.values;
-                notifyDataSetChanged();
+                if (filterResults.values != null) {
+                    nearbyUsersFiltered = (ArrayList<NearbyUser>) filterResults.values;
+                    notifyDataSetChanged();
+                }
             }
         };
     }

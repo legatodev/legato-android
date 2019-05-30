@@ -1,34 +1,40 @@
 package com.example.spoluri.legato;
 
-import java.io.Serializable;
+import co.chatsdk.core.dao.User;
+import co.chatsdk.core.session.ChatSDK;
 
-class NearbyUser implements Serializable {
+class NearbyUser {
 
-    private UserProfileData userProfileData;
     private String distance;
+    private User user;
 
     public NearbyUser() {
     }
 
-    public NearbyUser(UserProfileData userProfileData, String distance) {
-        this.userProfileData = userProfileData;
+    public NearbyUser(User user, String distance) {
         this.distance = distance;
+        this.user = user;
+    }
+
+    public NearbyUser(String userId, String distance) {
+        this.distance = distance;
+        this.user = ChatSDK.db().fetchOrCreateEntityWithEntityID(User.class, userId);
     }
 
     public String getUsername() {
-        return userProfileData.getUsername();
+        return user.getName();
     }
 
     public void setUsername(String username) {
-        this.userProfileData.setUsername(username);
+        this.user.setName(username);
     }
 
     public String getPhotourl() {
-        return userProfileData.getPhotourl();
+        return user.getAvatarURL();
     }
 
     public void setPhotourl(String photourl) {
-        this.userProfileData.setUsername(photourl);
+        this.user.setAvatarURL(photourl);
     }
 
     public String getDistance() {
@@ -40,24 +46,24 @@ class NearbyUser implements Serializable {
     }
 
     public String getGenres() {
-        return userProfileData.getGenres();
+        return user.metaStringForKey(Keys.genres);
     }
 
-    public void setGenres(String genres) {    this.userProfileData.setGenres(genres);    }
+    public void setGenres(String genres) {    this.user.setMetaString(Keys.genres, genres);   }
 
     public String getSkills() {
-        return userProfileData.getSkills();
+        return user.metaStringForKey(Keys.skills);
     }
 
     public void setSkills(String skills) {
-        this.userProfileData.setSkills(skills);
+        this.user.setMetaString(Keys.skills, skills);
     }
 
     public String getLookingfor() {
-        return this.userProfileData.getLookingfor();
+        return this.user.metaStringForKey(Keys.lookingfor);
     }
 
     public void setLookingfor(String lookingfor) {
-        this.userProfileData.setLookingfor(lookingfor);
+        this.user.setMetaString(Keys.lookingfor, lookingfor);
     }
 }

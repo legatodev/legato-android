@@ -21,4 +21,7 @@ public class RegistrationActivity extends AppCompatActivity {
         Intent intent = new Intent(this, SoloRegistrationActivity.class);
         startActivity(intent);
     }
+    public void onBand(View view) {
+        //Start band registration activity
+    }
 }

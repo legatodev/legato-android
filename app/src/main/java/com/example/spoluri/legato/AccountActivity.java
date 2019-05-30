@@ -15,6 +15,7 @@ import androidx.annotation.StringRes;
 import androidx.core.app.ActivityCompat;
 
 import com.example.spoluri.legato.messaging.ActiveChatActivity;
+import com.example.spoluri.legato.registration.RegistrationActivity;
 import com.example.spoluri.legato.youtube.YoutubeActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -26,20 +27,12 @@ import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayer.Provider;
 import com.google.android.youtube.player.YouTubePlayerView;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import co.chatsdk.core.dao.User;
 import co.chatsdk.core.session.ChatSDK;
 import co.chatsdk.core.types.AuthKeys;
-import co.chatsdk.core.utils.DisposableList;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public class AccountActivity extends YouTubeBaseActivity implements YouTubePlayer.OnInitializedListener {
@@ -64,9 +57,8 @@ public class AccountActivity extends YouTubeBaseActivity implements YouTubePlaye
     private String mUserId = AppConstants.ANONYMOUS;
     private String mYoutubeVideo = "";
     private GeofireHelper geofireHelper;
-    private DatabaseReference mUserProfileDatabaseReference;
 
-    private DisposableList disposableList = new DisposableList();
+    private User mUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,44 +67,13 @@ public class AccountActivity extends YouTubeBaseActivity implements YouTubePlaye
         ButterKnife.bind(this);
 
         geofireHelper = GeofireHelper.getInstance();
-
         mUserId = (String)ChatSDK.auth().getLoginInfo().get(AuthKeys.CurrentUserID);
-        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        mUserProfileDatabaseReference = firebaseDatabase.getReference().child("userprofiledata");
-
-        ChildEventListener childEventListener = new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                if (dataSnapshot.getKey().equals("youtube_video")) {
-                    mYoutubeVideo = dataSnapshot.getValue(String.class);
-                    InitializeYoutubeView();
-                }
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w(TAG, databaseError.toException());
-            }
-        };
-
-        mUserProfileDatabaseReference.child(mUserId).addChildEventListener(childEventListener);
-
+        mUser = ChatSDK.db().fetchOrCreateEntityWithEntityID(User.class, mUserId);
+        ChatSDK.core().userOn(mUser);
+        mYoutubeVideo = mUser.metaStringForKey(Keys.youtube);
+        InitializeYoutubeView();
         getLastLocation();
+
     }
 
     private void InitializeYoutubeView() {
@@ -136,17 +97,17 @@ public class AccountActivity extends YouTubeBaseActivity implements YouTubePlaye
     public void onYoutube(View view) {
         Intent intent = new Intent(this, YoutubeActivity.class);
         startActivityForResult(intent, RequestCodes.RC_YOUTUBE_SEARCH);
+        //Intent intent = new Intent(this, RegistrationActivity.class);
+        //startActivity(intent);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == RequestCodes.RC_YOUTUBE_SEARCH && resultCode == RESULT_OK && data != null) {
-            Map<String, Object> youtube = new HashMap<>();
             // put() method
             mYoutubeVideo = data.getStringExtra("youtube_video");
-            youtube.put("youtube_video", mYoutubeVideo);
-            mUserProfileDatabaseReference.child(mUserId).updateChildren(youtube);
-                InitializeYoutubeView();
+            mUser.setMetaString(Keys.youtube, mYoutubeVideo);
+            InitializeYoutubeView();
         }
     }
 

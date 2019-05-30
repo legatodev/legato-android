@@ -14,6 +14,9 @@ import com.example.spoluri.legato.R;
 import com.example.spoluri.legato.registration.BasicInfoFragment;
 import com.example.spoluri.legato.registration.GenresFragment;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class SoloRegistrationActivity extends AppCompatActivity {
 
     /**
@@ -29,19 +32,20 @@ public class SoloRegistrationActivity extends AppCompatActivity {
     /**
      * The {@link ViewPager} that will host the section contents.
      */
-    private ViewPager mViewPager;
+    @BindView(R.id.container)
+    ViewPager mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_solo_registration_tab);
+        ButterKnife.bind(this);
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
     }
 

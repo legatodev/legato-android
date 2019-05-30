@@ -11,22 +11,27 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 import com.example.spoluri.legato.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
 public class SkillsFragment extends Fragment implements View.OnClickListener {
-
+    @BindView(R.id.skillsRecyclerView)
+    RecyclerView mSkillsRecyclerView;
     private SkillsAdapter mSkillsAdapter;
-    private RecyclerView mSkillsRecyclerView;
     private ArrayList<Skills> mSkillsArrayList;
     private static final int MAX_SKILLS = 6;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_skills, container, false);
+        View view = inflater.inflate(R.layout.fragment_skills, container, false);
+        ButterKnife.bind(this, view);
+        return view;
     }
 
     @Override
@@ -35,9 +40,6 @@ public class SkillsFragment extends Fragment implements View.OnClickListener {
         View view = getView();
 
         if (view != null) {
-            // Initialize references to views
-            mSkillsRecyclerView = view.findViewById(R.id.skillsRecyclerView);
-
             // Initialize message ListView and its adapter
             mSkillsArrayList = new ArrayList<>();
             Skills skill = new Skills("Choose Skill", 0);

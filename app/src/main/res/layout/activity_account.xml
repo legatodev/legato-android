@@ -5,7 +5,6 @@
     android:id="@+id/account_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/accountBackground"
     tools:context="com.example.spoluri.legato.AccountActivity">
 
     <ImageView
@@ -34,7 +33,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="88dp"
-        android:textColor="@color/accountLabel"
         android:textSize="14sp"
         android:text="@string/id_label"
         app:layout_constraintRight_toRightOf="parent"
@@ -46,7 +44,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:textColor="@color/accountText"
         android:textSize="16sp"
         android:text="1234567890"
         app:layout_constraintRight_toRightOf="parent"
@@ -58,7 +55,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:textColor="@color/accountLabel"
         android:textSize="14sp"
         android:text="@string/phone_label"
         app:layout_constraintRight_toRightOf="parent"
@@ -70,7 +66,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:textColor="@color/accountText"
         android:textSize="16sp"
         android:text="(123) 456-7890"
         app:layout_constraintRight_toRightOf="parent"
@@ -89,7 +84,6 @@
         android:layout_marginBottom="16dp"
         android:text="@string/logout_label"
         style="@style/Base.Widget.AppCompat.Button.Borderless"
-        android:textColor="@color/accountLogoutLabel"
         android:textSize="16sp"
         android:textAllCaps="false"
         android:onClick="onLogout"

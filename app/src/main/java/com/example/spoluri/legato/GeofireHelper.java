@@ -25,9 +25,8 @@ class GeofireHelper {
     private final String mUserId;
     private final GeoFire mGeoFire;
     private Location mCurrentLocation;
-    private ArrayList<NearbyUser> mNearbyUsersList;
     private final FirebaseDatabase mFirebaseDatabase;
-    private final HashMap<String,NearbyUser> mNearHashMap;
+    private final HashMap<String, String> mNearHashMap; //TODO: maybe use sortedmap in order of distance.
 
     private static GeofireHelper sGeofireInstance;
 
@@ -36,8 +35,7 @@ class GeofireHelper {
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference userLocationDatabaseReference = mFirebaseDatabase.getReference().child("geofire");
         mGeoFire = new GeoFire(userLocationDatabaseReference);
-        mNearbyUsersList = new ArrayList<>();
-        mNearHashMap = new HashMap<String,NearbyUser>();
+        mNearHashMap = new HashMap<String, String>();
     }
      public static GeofireHelper getInstance(){
         if(sGeofireInstance == null){
@@ -70,34 +68,19 @@ class GeofireHelper {
             geoQuery.addGeoQueryDataEventListener(new GeoQueryDataEventListener() {
                 @Override
                 public void onDataEntered(DataSnapshot dataSnapshot, GeoLocation geoLocation) {
-                    //Every point within the radius will call this function including the origin
-                    Location location = new Location("");
-                    location.setLatitude(geoLocation.latitude);
-                    location.setLongitude(geoLocation.longitude);
-                    final DecimalFormat df = new DecimalFormat("#.#");
-                    final String distanceTo = df.format(mCurrentLocation.distanceTo(location) / 1000.0);
                     if (!dataSnapshot.getKey().equals(mUserId)) {
-                        DatabaseReference userProfileDataDatabaseReference = mFirebaseDatabase.getReference().child("userprofiledata").child(dataSnapshot.getKey());
-                        userProfileDataDatabaseReference.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                UserProfileData userProfileData = dataSnapshot.getValue(UserProfileData.class);
-                                NearbyUser user = new NearbyUser(userProfileData,distanceTo);
-                                String id = dataSnapshot.getKey();
-                                mNearHashMap.put(id,user);
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-
-                            }
-                        });
+                        //Every point within the radius will call this function including the origin
+                        Location location = new Location("");
+                        location.setLatitude(geoLocation.latitude);
+                        location.setLongitude(geoLocation.longitude);
+                        final DecimalFormat df = new DecimalFormat("#.#");
+                        final String distanceTo = df.format(mCurrentLocation.distanceTo(location) / 1000.0);
+                        mNearHashMap.put(dataSnapshot.getKey(), distanceTo);
                     }
                 }
 
                 @Override
                 public void onDataExited(DataSnapshot dataSnapshot) {
-                    System.out.println(String.format("Key %s is no longer in the search area", dataSnapshot.getKey()));
                 }
 
                 @Override
@@ -125,9 +108,8 @@ class GeofireHelper {
         }
     }
 
-    public ArrayList<NearbyUser> getNearbyUsersList() {
-        mNearbyUsersList = null;
-        mNearbyUsersList = new ArrayList<NearbyUser>(mNearHashMap.values());
-        return mNearbyUsersList;
+    public HashMap<String, String> getNearbyUsers() {
+        //Only return the list of user ids and in NearbyUser
+        return mNearHashMap;
     }
 }

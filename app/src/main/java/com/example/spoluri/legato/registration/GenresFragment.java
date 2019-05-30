@@ -10,17 +10,23 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 import com.example.spoluri.legato.R;
 
 public class GenresFragment extends Fragment {
-    private ListView genresListView;
+    @BindView(R.id.genresListView)
+    ListView genresListView;
     private ArrayAdapter<CharSequence> adapter;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        return inflater.inflate(R.layout.fragment_genres, container, false);
+        View view = inflater.inflate(R.layout.fragment_genres, container, false);
+        ButterKnife.bind(this, view);
+        return view;
     }
 
     @Override
@@ -30,9 +36,6 @@ public class GenresFragment extends Fragment {
         if (view != null) {
             adapter = ArrayAdapter.createFromResource(view.getContext(),
                     R.array.genres_array, android.R.layout.simple_list_item_multiple_choice);
-
-            // Getting the reference to the listview object of the layout
-            genresListView = view.findViewById(R.id.genresListView);
 
             // Setting adapter to the listview
             genresListView.setAdapter(adapter);
