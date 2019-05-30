@@ -3,9 +3,10 @@
 # Only use spaces to indent your .yml configuration.
 # -----
 # You can specify a custom docker image from Docker Hub as your build environment.
-image: uber/android-build-environment:latest
+image: mingc/android-build-box:latest
 pipelines:
   default:
     - step:
         script:
+          - chmod +x gradlew
           - ./gradlew assembleDebug
