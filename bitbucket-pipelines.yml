@@ -8,5 +8,4 @@ pipelines:
   default:
     - step:
         script:
-          - chmod +x gradlew
           - ./gradlew assembleDebug
