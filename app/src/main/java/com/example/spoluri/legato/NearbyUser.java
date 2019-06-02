@@ -66,4 +66,6 @@ class NearbyUser {
     public void setLookingfor(String lookingfor) {
         this.user.setMetaString(Keys.lookingfor, lookingfor);
     }
+
+    public String getEntityID() { return this.user.getEntityID(); }
 }

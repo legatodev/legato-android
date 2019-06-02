@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".registration.RegistrationActivity"
-    android:background="@drawable/legato_background"
     android:orientation="vertical"
     android:gravity="center">
 

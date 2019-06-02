@@ -13,6 +13,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.core.app.ActivityCompat;
+import androidx.appcompat.app.ActionBar;
 
 import com.example.spoluri.legato.messaging.ActiveChatActivity;
 import com.example.spoluri.legato.registration.RegistrationActivity;
@@ -73,7 +74,6 @@ public class AccountActivity extends YouTubeBaseActivity implements YouTubePlaye
         mYoutubeVideo = mUser.metaStringForKey(Keys.youtube);
         InitializeYoutubeView();
         getLastLocation();
-
     }
 
     private void InitializeYoutubeView() {
@@ -95,10 +95,10 @@ public class AccountActivity extends YouTubeBaseActivity implements YouTubePlaye
     }
 
     public void onYoutube(View view) {
-        Intent intent = new Intent(this, YoutubeActivity.class);
-        startActivityForResult(intent, RequestCodes.RC_YOUTUBE_SEARCH);
-        //Intent intent = new Intent(this, RegistrationActivity.class);
-        //startActivity(intent);
+        //Intent intent = new Intent(this, YoutubeActivity.class);
+        //startActivityForResult(intent, RequestCodes.RC_YOUTUBE_SEARCH);
+        Intent intent = new Intent(this, RegistrationActivity.class);
+        startActivity(intent);
     }
 
     @Override

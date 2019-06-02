@@ -1,24 +1,29 @@
 package com.example.spoluri.legato;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import 	androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
+
 import java.io.InputStream;
 import java.net.URL;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import co.chatsdk.core.dao.Keys;
 
 public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
     @BindView(R.id.nearbyUserPhotoImageView)
-    ImageView nearbyUserPhoto;
+    SimpleDraweeView nearbyUserPhoto;
 
     @BindView(R.id.nearbyUserNameTextView)
     TextView nearbyUserName;
@@ -31,6 +36,15 @@ public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.On
 
     @BindView(R.id.nearbyUserSkillsTextView)
     TextView nearbyUserSkills;
+
+    @BindView(R.id.nearbyUserInstagramView)
+    ImageView nearbyUserInstagram;
+
+    @BindView(R.id.nearbyUserFacebookView)
+    ImageView nearbyUserFacebook;
+
+    @BindView(R.id.nearbyUserYoutubeView)
+    ImageView nearbyUserYoutube;
 
     private NearbyUser nearbyUser;
     private final Context context;
@@ -45,30 +59,22 @@ public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.On
 
         // 3. Set the "onClick" listener of the holder
         itemView.setOnClickListener(this);
-    }
 
-    private void LoadImageFromWebOperations(String url) {
-        new AsyncTask<String, Void, Drawable>() {
-
+        nearbyUserInstagram.setOnClickListener(new View.OnClickListener() {
             @Override
-            protected Drawable doInBackground(String... strings) {
-                if (strings == null)
-                    throw new NullPointerException("Parameters to the async task can never be null");
-
+            public void onClick(View v) {
+                String userId = nearbyUser.getEntityID();
+                Uri uri = Uri.parse("http://instagram.com/_u/oliviaculpo");
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                intent.setPackage("com.instagram.android");
                 try {
-                    InputStream is = (InputStream) new URL(strings[0]).getContent();
-                    return Drawable.createFromStream(is, "src name");
-                } catch (Exception e) {
-                    return null;
+                    context.startActivity(intent);
+                } catch (ActivityNotFoundException e) {
+                    context.startActivity(new Intent(Intent.ACTION_VIEW,
+                            Uri.parse("http://instagram.com/oliviaculpo")));
                 }
             }
-
-            @Override
-            protected void onPostExecute(Drawable drawable) {
-                super.onPostExecute(drawable);
-                nearbyUserPhoto.setImageDrawable(drawable);
-            }
-        }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url);
+        });
     }
 
     public void bindNearbyUser(NearbyUser nearbyUser) {
@@ -76,10 +82,9 @@ public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.On
         // 4. Bind the data to the ViewHolder
         this.nearbyUser = nearbyUser;
 
-        LoadImageFromWebOperations(nearbyUser.getPhotourl());
-        this.nearbyUserPhoto.invalidate();
+        this.nearbyUserPhoto.setImageURI(nearbyUser.getPhotourl());
         this.nearbyUserName.setText(nearbyUser.getUsername());
-        this.nearbyUserDistance.setText(nearbyUser.getDistance() + " miles away");
+        this.nearbyUserDistance.setText(nearbyUser.getDistance() + " mi");
         this.nearbyUserGenres.setText(nearbyUser.getGenres());
         this.nearbyUserSkills.setText(nearbyUser.getSkills());
     }
@@ -88,6 +93,7 @@ public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.On
     public void onClick(View v) {
         //Open profile activity
         Intent intent = new Intent(this.context, UserProfileActivity.class);
+        intent.putExtra(Keys.USER_ENTITY_ID, nearbyUser.getEntityID());
         context.startActivity(intent);
     }
 }
