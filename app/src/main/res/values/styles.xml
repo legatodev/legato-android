@@ -5,4 +5,8 @@
     <style name="NoActionBarTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowBackground">@drawable/background_gradient</item>
     </style>
+
+    <style name="ListFont" parent="@android:style/Widget.ListView">
+        <item name="android:textColor">@color/activity_background</item>
+    </style>
 </resources>

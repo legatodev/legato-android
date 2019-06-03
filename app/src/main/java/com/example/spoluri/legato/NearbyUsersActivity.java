@@ -46,7 +46,7 @@ public class NearbyUsersActivity extends AppCompatActivity {
         getSupportActionBar().setCustomView(R.layout.custom_actionbar);
         View view =getSupportActionBar().getCustomView();
 
-        ImageButton imageButton= (ImageButton)view.findViewById(R.id.settings);
+        ImageButton imageButton= view.findViewById(R.id.settings);
 
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override

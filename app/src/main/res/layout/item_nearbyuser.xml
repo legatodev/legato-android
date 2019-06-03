@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="140dp"
         android:layout_gravity="center"
-        card_view:cardElevation="2dp">
+        card_view:cardElevation="4dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -22,8 +22,8 @@
 
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/nearbyUserPhotoImageView"
-                android:layout_width="72dp"
-                android:layout_height="72dp"
+                android:layout_width="68dp"
+                android:layout_height="68dp"
                 fresco:roundAsCircle="true"
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
@@ -31,80 +31,89 @@
                 fresco:roundingBorderWidth="2dp"
                 android:layout_alignParentTop="true"
                 android:layout_marginTop="8dp"
-                android:layout_marginLeft="8dp"/>
+                android:layout_marginLeft="12dp"/>
 
             <TextView
                 android:id="@+id/nearbyUserNameTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
+                android:textSize="18sp"
                 android:textColor="@color/activity_background"
                 android:layout_toRightOf="@id/nearbyUserPhotoImageView"
                 tools:text="Name"
-                android:layout_marginLeft="8dp"
+                android:layout_marginLeft="12dp"
                 android:layout_marginTop="8dp"/>
 
             <ImageView
+                android:id="@+id/nearbyUserAvailability"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_toRightOf="@id/nearbyUserNameTextView"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="8dp"
+                app:srcCompat="@drawable/icn_20_online" />
+
+            <ImageView
                 android:id="@+id/nearbyUserInstagramView"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
                 android:src="@drawable/instagram_icon"
                 android:layout_toRightOf="@id/nearbyUserPhotoImageView"
                 android:layout_below="@id/nearbyUserNameTextView"
-                android:layout_marginLeft="8dp"
+                android:layout_marginLeft="12dp"
                 android:layout_marginTop="8dp"/>
 
             <ImageView
                 android:id="@+id/nearbyUserFacebookView"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
                 android:src="@drawable/facebook_icon"
                 android:layout_toRightOf="@id/nearbyUserInstagramView"
                 android:layout_below="@id/nearbyUserNameTextView"
-                android:layout_marginLeft="8dp"
+                android:layout_marginLeft="12dp"
                 android:layout_marginTop="8dp"/>
 
             <ImageView
                 android:id="@+id/nearbyUserYoutubeView"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
                 android:src="@drawable/youtube_icon"
                 android:layout_toRightOf="@id/nearbyUserFacebookView"
                 android:layout_below="@id/nearbyUserNameTextView"
-                android:layout_marginLeft="8dp"
+                android:layout_marginLeft="12dp"
                 android:layout_marginTop="8dp"/>
 
             <TextView
                 android:id="@+id/nearbyUserDistanceTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
+                android:textSize="18sp"
                 android:textColor="@color/distance"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 tools:text="Distance"
                 android:drawableTop="@drawable/location_pin"
-                android:layout_marginRight="8dp"/>
+                android:layout_marginRight="12dp"/>
 
             <TextView
                 android:id="@+id/nearbyUserGenresTextView"
-                android:layout_width="300dp"
+                android:layout_width="280dp"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
+                android:textSize="18sp"
                 tools:text="Genres"
                 android:layout_below="@id/nearbyUserPhotoImageView"
                 android:layout_marginTop="4dp"
-                android:layout_marginLeft="8dp"/>
+                android:layout_marginLeft="12dp"/>
 
             <TextView
                 android:id="@+id/nearbyUserSkillsTextView"
-                android:layout_width="300dp"
+                android:layout_width="280dp"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
+                android:textSize="18sp"
                 android:layout_below="@id/nearbyUserGenresTextView"
                 tools:text="Skills"
                 android:layout_marginTop="4dp"
-                android:layout_marginLeft="8dp"/>
+                android:layout_marginLeft="12dp"/>
 
         </RelativeLayout>
 

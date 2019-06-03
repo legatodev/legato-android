@@ -68,4 +68,6 @@ class NearbyUser {
     }
 
     public String getEntityID() { return this.user.getEntityID(); }
+
+    public String getAvailability() { return this.user.getAvailability(); }
 }

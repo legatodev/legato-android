@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import com.example.spoluri.legato.R;
 import com.example.spoluri.legato.registration.BasicInfoFragment;
 import com.example.spoluri.legato.registration.GenresFragment;
+import com.google.android.material.tabs.TabLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -47,6 +48,9 @@ public class SoloRegistrationActivity extends AppCompatActivity {
 
         // Set up the ViewPager with the sections adapter.
         mViewPager.setAdapter(mSectionsPagerAdapter);
+
+        TabLayout tabLayout = findViewById(R.id.registrationTablayout);
+        tabLayout.setupWithViewPager(mViewPager);
     }
 
 
@@ -84,7 +88,7 @@ public class SoloRegistrationActivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            switch(position) {
+            switch (position) {
                 case 0:
                     return BasicInfoFragment.newInstance("Sarat", "Poluri");
                 case 1:
@@ -99,6 +103,20 @@ public class SoloRegistrationActivity extends AppCompatActivity {
         public int getCount() {
             // Show 3 total pages.
             return 3;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            switch (position) {
+                case 0:
+                    return "Solo Artist";
+                case 1:
+                    return "Skills";
+                case 2:
+                    return "Genres";
+                default:
+                    return null;
+            }
         }
     }
 }
