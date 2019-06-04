@@ -17,7 +17,7 @@ import java.util.Map;
 import co.chatsdk.core.dao.User;
 import co.chatsdk.core.session.ChatSDK;
 
-class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> implements Filterable {
+class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
 
     private final List<NearbyUser> nearbyUsers;
     private List<NearbyUser> nearbyUsersFiltered;
@@ -69,7 +69,7 @@ class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> implemen
         return this.nearbyUsersFiltered.size();
     }
 
-    @Override
+    /*@Override
     public Filter getFilter() {
         return new Filter() {
             @Override
@@ -110,5 +110,24 @@ class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> implemen
                 }
             }
         };
+    }*/
+
+    public void onFilter(Filters filters) {
+
+        if(filters.hasLookingfor()){
+
+            List<NearbyUser> filteredList = new ArrayList<>();
+            for (NearbyUser row : nearbyUsers) {
+                if(row.getLookingfor().contentEquals(filters.getLookingfor())){
+                    filteredList.add(row);
+                }
+            }
+            nearbyUsersFiltered = filteredList;
+            notifyDataSetChanged();
+
+        }else{
+            nearbyUsersFiltered = nearbyUsers;
+        }
+
     }
 }

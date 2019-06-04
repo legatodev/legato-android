@@ -29,4 +29,8 @@
         <item name="android:checkboxStyle">@style/LegatoCheckBoxStyle</item>
     </style>
 
+    <style name="ThemeOverlay.FilterButton" parent="ThemeOverlay.AppCompat.Dark">
+        <item name="colorButtonNormal">@color/colorPrimary</item>
+    </style>
+
 </resources>

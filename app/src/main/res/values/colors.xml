@@ -6,4 +6,20 @@
     <color name="selector_text">#2980b9</color>
 
     <color name="floating_action_button">#154680</color>
+    <color name="accountBackground">#61727f</color>
+    <color name="accountLabel">#7d97ad</color>
+    <color name="accountText">#61727f</color>
+    <color name="accountLogoutLabel">#fc6240</color>
+
+    <color name="ak_background">#d5f0ec</color>
+    <color name="ak_text">#61727f</color>
+    <color name="ak_buttonBackground">#09d4b6</color>
+    <color name="ak_buttonPressedBackground">#00c5a5</color>
+    <color name="ak_buttonText">#ffffff</color>
+    <color name="ak_inputBackground">#ffffff</color>
+    <color name="ak_inputText">#7d97ad</color>
+    <color name="ak_statusBar">#00c5a5</color>
+    <color name="ak_icon">#09d4b6</color>
+    <color name="greySecondary">#8B000000</color>
+    <color name="greyDisabled">#61000000</color>
 </resources>
