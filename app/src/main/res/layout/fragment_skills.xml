@@ -25,7 +25,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/skillsRecyclerView"
         app:srcCompat="@android:drawable/ic_menu_add"
-        app:backgroundTint="@color/floating_action_button"
+        app:backgroundTint="@color/rounded_button_background"
         android:tint="@color/white"/>
 
     <CheckBox

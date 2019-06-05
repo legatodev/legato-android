@@ -61,4 +61,10 @@
     <string name="rapper">Rapper/MC</string>
 
     <string name="skill_level">Skill Level</string>
+
+    <string name="block">Block</string>
+    <string name="unblock">Unblock</string>
+
+    <string name="connect">Connect</string>
+    <string name="remove">Remove</string>
 </resources>

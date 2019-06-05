@@ -5,7 +5,7 @@
     <color name="skills_card_view_background">#ebebeb</color>
     <color name="selector_selected">#2ecc71</color>
     <color name="selector_text">#2980b9</color>
-
-    <color name="floating_action_button">#154680</color>
     <color name="distance">#2ecc71</color>
+    <color name="rounded_button_background">#154680</color>
+    <color name="red">#FF0000</color>
 </resources>
