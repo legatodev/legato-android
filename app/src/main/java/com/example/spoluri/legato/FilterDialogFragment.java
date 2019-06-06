@@ -99,7 +99,7 @@ public class FilterDialogFragment extends DialogFragment {
     @Nullable
     private String getSelectedLookingfor() {
         String selected = (String) mLookingfor.getSelectedItem();
-        if (getString(R.string.value_any_lookfor).equals(selected)) {
+        if (getString(R.string.value_any_lookingfor).equals(selected)) {
             return null;
         } else {
             return selected;
@@ -108,7 +108,7 @@ public class FilterDialogFragment extends DialogFragment {
     @Nullable
     private String getSelectedGenres() {
         String selected = (String) mGenres.getSelectedItem();
-        if (getString(R.string.value_any_lookfor).equals(selected)) {
+        if (getString(R.string.value_any_genres).equals(selected)) {
             return null;
         } else {
             return selected;
@@ -117,20 +117,29 @@ public class FilterDialogFragment extends DialogFragment {
     @Nullable
     private String getSelectedSkills() {
         String selected = (String) mSkills.getSelectedItem();
-        if (getString(R.string.value_any_lookfor).equals(selected)) {
+        if (getString(R.string.value_any_skills).equals(selected)) {
             return null;
         } else {
             return selected;
         }
     }
 
+    public void resetFilters() {
+        if (mRootView != null) {
+            mLookingfor.setSelection(0);
+            mGenres.setSelection(0);
+            mSkills.setSelection(0);
+        }
+    }
+
+
     public Filters getFilters() {
         Filters filters = new Filters();
 
         if(mRootView != null){
             filters.setLookingfor(getSelectedLookingfor());
-            filters.setGenres(getSelectedLookingfor());
-            filters.setSkills(getSelectedLookingfor());
+            filters.setGenres(getSelectedGenres());
+            filters.setSkills(getSelectedSkills());
         }
 
         return filters;

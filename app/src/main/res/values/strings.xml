@@ -45,22 +45,16 @@
     <string name="action_settings">Settings</string>
 
     <string name="search_hint">search skills</string>
-    <string-array name="looking_for">
-        <item>Jam Session</item>
-        <item>Collaboration</item>
-        <item>Join a band</item>
-    </string-array>
-    <string-array name="genres">
-        <item>Jam Session</item>
-        <item>Collaboration</item>
-        <item>Join a band</item>
-    </string-array>
-    <string-array name="skills">
-        <item>Jam Session</item>
-        <item>Collaboration</item>
-        <item>Join a band</item>
-    </string-array>
 
+    <string name="value_any_lookingfor">All</string>
+    <string name="value_any_genres">All Genre</string>
+    <string name="value_any_skills">Any Skills</string>
+    <string-array name="looking_for">
+        <item>@string/value_any_lookingfor</item>
+        <item>Jam Session</item>
+        <item>Collaboration</item>
+        <item>Join a band</item>
+    </string-array>
 
     <!--Registration-->
     <string name="solo_artist">Solo Artist</string>
@@ -75,5 +69,4 @@
 
     <string name="header_filters">Filter</string>
     <string name="apply">Apply</string>
-    <string name="value_any_lookfor">All</string>
 </resources>

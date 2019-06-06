@@ -22,20 +22,14 @@
 
         <ImageView
             android:id="@+id/icon_lookingfor"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginLeft="8dp"
+            style="@style/AppTheme.FilterIcon"
             android:layout_centerVertical="true"
             android:tint="@color/greySecondary"
             app:srcCompat="@drawable/ic_fastfood_white_24dp" />
 
         <Spinner
             android:id="@+id/lookfor"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="16dp"
-            android:layout_marginBottom="4dp"
+            style="@style/AppTheme.FilterSpinner"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/icon_lookingfor"
             android:entries="@array/looking_for" />
@@ -47,20 +41,14 @@
 
         <ImageView
             android:id="@+id/icon_genres"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginLeft="8dp"
+            style="@style/AppTheme.FilterIcon"
             android:layout_centerVertical="true"
             android:tint="@color/greySecondary"
             app:srcCompat="@drawable/ic_fastfood_white_24dp" />
 
         <Spinner
             android:id="@+id/genres"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="16dp"
-            android:layout_marginBottom="4dp"
+            style="@style/AppTheme.FilterSpinner"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/icon_genres"
             android:entries="@array/genres_array" />
@@ -73,20 +61,14 @@
 
         <ImageView
             android:id="@+id/icon_skills"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginLeft="8dp"
+            style="@style/AppTheme.FilterIcon"
             android:layout_centerVertical="true"
             android:tint="@color/greySecondary"
             app:srcCompat="@drawable/ic_fastfood_white_24dp" />
 
         <Spinner
             android:id="@+id/skills"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="16dp"
-            android:layout_marginBottom="4dp"
+            style="@style/AppTheme.FilterSpinner"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/icon_skills"
             android:entries="@array/skills_array" />

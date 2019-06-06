@@ -10,6 +10,11 @@ public class Filters {
 
     public Filters() {}
 
+    public static Filters getDefault() {
+        Filters filters = new Filters();
+        return filters;
+    }
+
     public boolean hasLookingfor() {
         return !(TextUtils.isEmpty(lookingfor));
     }

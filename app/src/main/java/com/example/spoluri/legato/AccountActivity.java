@@ -71,9 +71,6 @@ public class AccountActivity extends YouTubeBaseActivity implements YouTubePlaye
 
         geofireHelper = GeofireHelper.getInstance();
         mUserId = (String)ChatSDK.auth().getLoginInfo().get(AuthKeys.CurrentUserID);
-        /*Map<String, Object> meta = new HashMap<String, Object>();
-        meta.put("genres","Jazz | Rap");
-        ChatSDK.auth().setLoginInfo(meta);*/
         mUser = ChatSDK.db().fetchOrCreateEntityWithEntityID(User.class, mUserId);
 
         ChatSDK.core().userOn(mUser);

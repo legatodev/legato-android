@@ -26,9 +26,6 @@ public class NearbyUsersActivity extends AppCompatActivity implements FilterDial
     @BindView(R.id.nearbyUserRecylerView)
     RecyclerView mNearbyUserRecyclerView;
 
-/*    @BindView(R.id.lookingForSpinner)
-    Spinner spinner;*/
-
     private NearbyUsersAdapter mNearbyUsersAdapter;
     private FilterDialogFragment mFilterDialog;
 
@@ -74,25 +71,6 @@ public class NearbyUsersActivity extends AppCompatActivity implements FilterDial
         // 7. Set the LayoutManager
         mNearbyUserRecyclerView.setLayoutManager(layoutManager);
 
-        // Creating ArrayAdapter using the string array and default spinner layout
-/*        final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.looking_for, android.R.layout.simple_spinner_item);
-        // Specify layout to be used when list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        // Applying the adapter to our spinner
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(new OnItemSelectedListener(){
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                mNearbyUsersAdapter.getFilter().filter(adapter.getItem(position));
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });*/
     }
 
     @Override
@@ -105,4 +83,12 @@ public class NearbyUsersActivity extends AppCompatActivity implements FilterDial
         // Show the dialog containing filter options
         mFilterDialog.show(getSupportFragmentManager(), FilterDialogFragment.TAG);
     }
+
+    @OnClick(R.id.buttonClearFilter)
+    public void onClearFilterClicked() {
+        //mFilterDialog.resetFilters();
+        onFilter(Filters.getDefault());
+    }
+
+
 }

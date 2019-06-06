@@ -114,20 +114,34 @@ class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
 
     public void onFilter(Filters filters) {
 
-        if(filters.hasLookingfor()){
-
-            List<NearbyUser> filteredList = new ArrayList<>();
+        List<NearbyUser> filteredList = new ArrayList<>();
             for (NearbyUser row : nearbyUsers) {
-                if(row.getLookingfor().contentEquals(filters.getLookingfor())){
+                if (filters.hasLookingfor()) {
+                    if (row.getLookingfor().contentEquals(filters.getLookingfor())) {
+                        filteredList.add(row);
+                    }
+                }
+                if (filters.hasGenres()) {
+                    if (row.getGenres().contains(filters.getGenres())) {
+                        filteredList.add(row);
+                    }
+                }
+                if (filters.hasSkills()) {
+                    if (row.getSkills().contains(filters.getSkills())) {
+                        filteredList.add(row);
+                    }
+                }
+
+                /*If nothing is selected from filter*/
+                if(!filters.hasLookingfor() &&
+                !filters.hasGenres() &&
+                !filters.hasSkills()){
                     filteredList.add(row);
                 }
+
             }
             nearbyUsersFiltered = filteredList;
             notifyDataSetChanged();
-
-        }else{
-            nearbyUsersFiltered = nearbyUsers;
-        }
 
     }
 }
