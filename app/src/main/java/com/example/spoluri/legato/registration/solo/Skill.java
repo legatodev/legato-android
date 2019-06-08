@@ -2,15 +2,15 @@ package com.example.spoluri.legato.registration.solo;
 
 import java.io.Serializable;
 
-class Skills implements Serializable {
+class Skill implements Serializable {
 
     private String skill;
     private int skillLevel = 0;
 
-    public Skills() {
+    public Skill() {
     }
 
-    public Skills(String skill, int skillLevel) {
+    public Skill(String skill, int skillLevel) {
         this.skill = skill;
         this.skillLevel = skillLevel;
     }

@@ -24,7 +24,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:layout_alignParentTop="true"/>
+                android:layout_alignParentTop="true"
+                android:entries="@array/skills_array"
+                app:hintText="Choose Skill"/>
 
             <TextView
                 android:id="@+id/skillLevelLabel1"
@@ -39,6 +41,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
+                android:min="1"
                 android:max="10"
                 android:layout_toRightOf="@+id/skillLevelLabel1"
                 android:layout_below="@id/skillsSpinner1"/>

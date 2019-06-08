@@ -7,6 +7,7 @@ import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -14,11 +15,17 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import com.example.spoluri.legato.R;
+import com.example.spoluri.legato.registration.solo.SoloRegistrationActivity;
 
 public class GenresFragment extends Fragment {
     @BindView(R.id.genresListView)
     ListView genresListView;
     private ArrayAdapter<CharSequence> adapter;
+    private boolean valid;
+
+    public GenresFragment() {
+        valid = false;
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -39,6 +46,13 @@ public class GenresFragment extends Fragment {
 
             // Setting adapter to the listview
             genresListView.setAdapter(adapter);
+            genresListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    // Toggle the state
+                    validate();
+                }
+            });
         }
     }
 
@@ -66,5 +80,15 @@ public class GenresFragment extends Fragment {
 //
 //        // start the ResultActivity
 //        startActivity(intent);
+    }
+
+    public void validate() {
+        int checkedCount = genresListView.getCheckedItemCount();
+        valid = (checkedCount > 0);
+        if (valid) {
+            ((SoloRegistrationActivity) getActivity()).setVisibleTabCount(3);
+        } else {
+            ((SoloRegistrationActivity)getActivity()).setVisibleTabCount(2);
+        }
     }
 }

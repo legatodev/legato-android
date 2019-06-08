@@ -21,6 +21,13 @@
             android:label="@string/title_activity_solo_registration_tab"
             android:theme="@style/NoActionBarTheme"
             android:windowSoftInputMode="adjustPan" />
+
+        <activity
+            android:name=".registration.Band.BandRegistrationActivity"
+            android:label="@string/title_activity_band_registration_tab"
+            android:theme="@style/NoActionBarTheme"
+            android:windowSoftInputMode="adjustPan" />
+
         <activity android:name=".registration.RegistrationActivity"
             android:theme="@style/NoActionBarTheme"/>
 

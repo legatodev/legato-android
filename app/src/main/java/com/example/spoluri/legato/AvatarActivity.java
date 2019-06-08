@@ -37,7 +37,6 @@ public class AvatarActivity extends AppCompatActivity {
             Picasso.with(AvatarActivity.this)
                     .load(imageId)
                     .fit()
-                    .transform(new CircleTransform())
                     .into(mProfilePic);
     }
 }

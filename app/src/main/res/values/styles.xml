@@ -1,12 +1,18 @@
 <resources>
     <style name="ActionBarTheme" parent="Theme.AppCompat.Light">
         <item name="android:windowBackground">@drawable/background_gradient</item>
+        <item name="checkboxStyle">@style/legato_checkbox</item>
     </style>
     <style name="NoActionBarTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowBackground">@drawable/background_gradient</item>
+        <item name="checkboxStyle">@style/legato_checkbox</item>
     </style>
 
     <style name="ListFont" parent="@android:style/Widget.ListView">
         <item name="android:textColor">@color/activity_background</item>
+    </style>
+
+    <style name="legato_checkbox" parent="Widget.AppCompat.CompoundButton.CheckBox">
+        <item name="android:textColor">@color/selector_text</item>
     </style>
 </resources>

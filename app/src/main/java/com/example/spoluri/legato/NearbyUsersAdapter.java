@@ -16,11 +16,13 @@ import java.util.Map;
 
 import co.chatsdk.core.dao.User;
 import co.chatsdk.core.session.ChatSDK;
+import io.reactivex.Completable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> implements Filterable {
 
-    private final List<NearbyUser> nearbyUsers;
-    private List<NearbyUser> nearbyUsersFiltered;
+    private List<NearbyUser> nearbyUsers;
+    //private List<NearbyUser> nearbyUsersFiltered;
     private final Context context;
     private final int itemResource;
 
@@ -32,14 +34,18 @@ class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> implemen
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry)it.next();
             User user = ChatSDK.db().fetchOrCreateEntityWithEntityID(User.class, (String)pair.getKey());
-            ChatSDK.core().userOn(user);
-            // User object has now been populated and is ready to use
-            if (!user.isMe()) {
-                this.nearbyUsers.add(new NearbyUser(user, (String) pair.getValue()));
-            }
+            Completable completable = ChatSDK.core().userOn(user);
+            completable.subscribe(() -> {
+                // User object has now been populated and is ready to use
+                if (!user.isMe()) {
+                    this.nearbyUsers.add(new NearbyUser(user, (String) pair.getValue()));
+                }
+            }, throwable -> {
+
+            });
         }
 
-        this.nearbyUsersFiltered = this.nearbyUsers;
+        //this.nearbyUsersFiltered = this.nearbyUsers;
     }
 
     // 2. Override the onCreateViewHolder method
@@ -58,7 +64,7 @@ class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> implemen
     public void onBindViewHolder(@NonNull NearbyUserHolder holder, int position) {
 
         // 5. Use position to access the correct NearbyUser object
-        NearbyUser nearbyUser = this.nearbyUsersFiltered.get(position);
+        NearbyUser nearbyUser = this.nearbyUsers.get(position);
 
         // 6. Bind the nearbyUser object to the holder
         holder.bindNearbyUser(nearbyUser);
@@ -66,7 +72,10 @@ class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> implemen
 
     @Override
     public int getItemCount() {
-        return this.nearbyUsersFiltered.size();
+        if (nearbyUsers != null)
+            return this.nearbyUsers.size();
+
+        return 0;
     }
 
     @Override
@@ -74,30 +83,32 @@ class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> implemen
         return new Filter() {
             @Override
             protected FilterResults performFiltering(CharSequence charSequence) {
-                String charString = charSequence.toString();
-                if (charString.isEmpty()) {
-                    nearbyUsersFiltered = nearbyUsers;
-                } else {
-                    List<NearbyUser> filteredList = new ArrayList<>();
-                    for (NearbyUser row : nearbyUsers) {
-
-                        // name match condition. this might differ depending on your requirement
-                        // here we are looking for name or phone number match
-                        String skills = row.getSkills();
-                        String genres = row.getGenres();
-                        String lookingfor = row.getLookingfor();
-                        if (skills != null && skills.toLowerCase().contains(charString.toLowerCase()) ||
-                                genres != null && genres.toLowerCase().contains(charString.toLowerCase()) ||
-                                lookingfor != null && lookingfor.contentEquals(charSequence)) {
-                            filteredList.add(row);
-                        }
-                    }
-
-                    nearbyUsersFiltered = filteredList;
-                }
+//                if (nearbyUsersFiltered != null) {
+//                    String charString = charSequence.toString();
+//                    if (charString.isEmpty()) {
+//                        nearbyUsersFiltered = nearbyUsers;
+//                    } else {
+//                        List<NearbyUser> filteredList = new ArrayList<>();
+//                        for (NearbyUser row : nearbyUsers) {
+//
+//                            // name match condition. this might differ depending on your requirement
+//                            // here we are looking for name or phone number match
+//                            String skills = row.getSkills();
+//                            String genres = row.getGenres();
+//                            String lookingfor = row.getLookingfor();
+//                            if (skills != null && skills.toLowerCase().contains(charString.toLowerCase()) ||
+//                                    genres != null && genres.toLowerCase().contains(charString.toLowerCase()) ||
+//                                    lookingfor != null && lookingfor.contentEquals(charSequence)) {
+//                                filteredList.add(row);
+//                            }
+//                        }
+//
+//                        nearbyUsersFiltered = filteredList;
+//                    }
+//                }
 
                 FilterResults filterResults = new FilterResults();
-                filterResults.values = nearbyUsersFiltered;
+                filterResults.values = nearbyUsers;
 
                 return filterResults;
             }
@@ -105,7 +116,7 @@ class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> implemen
             @Override
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
                 if (filterResults.values != null) {
-                    nearbyUsersFiltered = (ArrayList<NearbyUser>) filterResults.values;
+                    nearbyUsers = (ArrayList<NearbyUser>) filterResults.values;
                     notifyDataSetChanged();
                 }
             }

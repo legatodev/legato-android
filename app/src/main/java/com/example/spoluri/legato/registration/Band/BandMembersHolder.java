@@ -1,34 +1,33 @@
-package com.example.spoluri.legato.registration.solo;
+package com.example.spoluri.legato.registration.Band;
 
 import android.content.Context;
-import 	androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.SeekBar;
 import android.widget.Spinner;
+
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.SearchView;
 
 import com.example.spoluri.legato.R;
 
 import java.util.Arrays;
 
-public class SkillsHolder extends RecyclerView.ViewHolder {
+public class BandMembersHolder extends RecyclerView.ViewHolder {
 
-    private final Spinner mSkillSpinner;
-    private final SeekBar mSkillLevelSeekBar;
+    private final Spinner mPositionSpinner;
+    private final SearchView mBandMemberSearchView;
 
     private final String[] mSkillsArray;
-    private Skills mSkill;
+    private BandMember mBandMember;
     private final Context context;
 
-    public SkillsHolder(Context context, View itemView) {
+    public BandMembersHolder(Context context, View itemView) {
         super(itemView);
 
         // 1. Set the context
         this.context = context;
-
-        // 2. Set up the UI widgets of the holder
-        this.mSkillLevelSeekBar = itemView.findViewById(R.id.skillLevelSlider1);
-        this.mSkillSpinner = itemView.findViewById(R.id.skillsSpinner1);
+        this.mPositionSpinner = itemView.findViewById(R.id.positionSpinner);
+        this.mBandMemberSearchView = itemView.findViewById(R.id.bandMemberSearchView);
 
         // Creating ArrayAdapter using the string array and default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(context,
@@ -38,13 +37,13 @@ public class SkillsHolder extends RecyclerView.ViewHolder {
         // Specify layout to be used when list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Applying the adapter to our spinner
-        mSkillSpinner.setAdapter(adapter);
+        mPositionSpinner.setAdapter(adapter);
     }
 
-    public void bindSkill(Skills skill) {
+    public void bindBandMember(BandMember bandMember) {
         // 4. Bind the data to the ViewHolder
-        this.mSkill = skill;
-        this.mSkillLevelSeekBar.setProgress(skill.getSkillLevel());
-        this.mSkillSpinner.setSelection(Arrays.asList(mSkillsArray).indexOf(skill.getSkill()));
+        this.mBandMember = bandMember;
+        //What to do with the searchview
+        this.mPositionSpinner.setSelection(Arrays.asList(mSkillsArray).indexOf(bandMember.getPosition()));
     }
 }

@@ -1,16 +1,16 @@
-package com.example.spoluri.legato.registration.solo;
+package com.example.spoluri.legato.registration.Band;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.viewpager.widget.ViewPager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 import com.example.spoluri.legato.R;
 import com.example.spoluri.legato.registration.GenresFragment;
@@ -19,7 +19,7 @@ import com.google.android.material.tabs.TabLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SoloRegistrationActivity extends AppCompatActivity {
+public class BandRegistrationActivity extends AppCompatActivity {
 
     /**
      * The {@link androidx.core.view.PagerAdapter} that will provide
@@ -34,17 +34,13 @@ public class SoloRegistrationActivity extends AppCompatActivity {
     /**
      * The {@link ViewPager} that will host the section contents.
      */
-    @BindView(R.id.soloViewPager)
+    @BindView(R.id.bandViewPager)
     ViewPager mViewPager;
-
-    private Fragment soloRegistrationTab;
-    private Fragment skillsTab;
-    private Fragment genresTab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_solo_registration_tab);
+        setContentView(R.layout.activity_band_registration_tab);
         ButterKnife.bind(this);
 
         // Create the adapter that will return a fragment for each of the three
@@ -54,14 +50,9 @@ public class SoloRegistrationActivity extends AppCompatActivity {
         // Set up the ViewPager with the sections adapter.
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        TabLayout tabLayout = findViewById(R.id.soloRegistrationTablayout);
+        TabLayout tabLayout = findViewById(R.id.bandRegistrationTablayout);
         tabLayout.setupWithViewPager(mViewPager);
-
-        soloRegistrationTab = SoloArtistBasicInfoFragment.newInstance("Sarat", "Poluri");
-        genresTab = new GenresFragment();
-        skillsTab = new SkillsFragment();
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -84,33 +75,25 @@ public class SoloRegistrationActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void setVisibleTabCount(int count) {
-        mSectionsPagerAdapter.setCount(count);
-
-    }
-
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
     class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-        private int tabCount;
-
         SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
-            tabCount = 1;
         }
 
         @Override
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return soloRegistrationTab;
+                    return BandBasicInfoFragment.newInstance("Sarat", "Poluri");
                 case 1:
-                    return genresTab;
+                    return new GenresFragment();
                 case 2:
-                    return skillsTab;
+                    return new BandMembersFragment();
             }
             return null;
         }
@@ -118,25 +101,18 @@ public class SoloRegistrationActivity extends AppCompatActivity {
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return tabCount;
-        }
-
-        public void setCount(int count) {
-            if (tabCount != count) {
-                tabCount = count;
-                notifyDataSetChanged();
-            }
+            return 3;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "Solo Artist";
+                    return "Band";
                 case 1:
                     return "Genres";
                 case 2:
-                    return "Skill";
+                    return "Band Members";
                 default:
                     return null;
             }
