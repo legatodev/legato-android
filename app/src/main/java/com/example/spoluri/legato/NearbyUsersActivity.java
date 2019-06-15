@@ -16,19 +16,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-public class NearbyUsersActivity extends AppCompatActivity {
+public class NearbyUsersActivity extends AppCompatActivity implements FilterDialogFragment.FilterListener  {
 
-    @BindView(R.id.searchView)
-    SearchView mSearchSkills;
+/*    @BindView(R.id.searchView)
+    SearchView mSearchSkills;*/
 
     @BindView(R.id.nearbyUserRecylerView)
     RecyclerView mNearbyUserRecyclerView;
 
-    @BindView(R.id.lookingForSpinner)
-    Spinner spinner;
-
     private NearbyUsersAdapter mNearbyUsersAdapter;
+    private FilterDialogFragment mFilterDialog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +36,7 @@ public class NearbyUsersActivity extends AppCompatActivity {
         setContentView(R.layout.activity_nearby_users);
         ButterKnife.bind(this);
 
-        mSearchSkills.setActivated(true);
+/*        mSearchSkills.setActivated(true);
         mSearchSkills.setIconified(false);
         mSearchSkills.clearFocus();
         mSearchSkills.onActionViewExpanded();
@@ -53,11 +53,15 @@ public class NearbyUsersActivity extends AppCompatActivity {
 
                 return false;
             }
-        });
+        });*/
 
         Intent intent = getIntent();
         mNearbyUsersAdapter = new NearbyUsersAdapter(this, R.layout.item_nearbyuser);
         mNearbyUserRecyclerView.setAdapter(mNearbyUsersAdapter);
+
+        // Filter Dialog
+        mFilterDialog = new FilterDialogFragment(mNearbyUsersAdapter);
+
         DividerItemDecoration itemDecor = new DividerItemDecoration(mNearbyUserRecyclerView.getContext(), DividerItemDecoration.HORIZONTAL);
         mNearbyUserRecyclerView.addItemDecoration(itemDecor);
 
@@ -67,23 +71,24 @@ public class NearbyUsersActivity extends AppCompatActivity {
         // 7. Set the LayoutManager
         mNearbyUserRecyclerView.setLayoutManager(layoutManager);
 
-        // Creating ArrayAdapter using the string array and default spinner layout
-        final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.looking_for, android.R.layout.simple_spinner_item);
-        // Specify layout to be used when list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Applying the adapter to our spinner
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(new OnItemSelectedListener(){
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                mNearbyUsersAdapter.getFilter().filter(adapter.getItem(position));
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
     }
+
+    @Override
+    public void onFilter(Filters filters) {
+        mNearbyUsersAdapter.onFilter(filters);
+
+    }
+    @OnClick(R.id.filterBar)
+    public void onFilterClicked() {
+        // Show the dialog containing filter options
+        mFilterDialog.show(getSupportFragmentManager(), FilterDialogFragment.TAG);
+    }
+
+    @OnClick(R.id.buttonClearFilter)
+    public void onClearFilterClicked() {
+        //mFilterDialog.resetFilters();
+        onFilter(Filters.getDefault());
+    }
+
+
 }

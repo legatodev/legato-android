@@ -28,6 +28,9 @@ import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayer.Provider;
 import com.google.android.youtube.player.YouTubePlayerView;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import co.chatsdk.core.dao.User;
@@ -69,6 +72,7 @@ public class AccountActivity extends YouTubeBaseActivity implements YouTubePlaye
         geofireHelper = GeofireHelper.getInstance();
         mUserId = (String)ChatSDK.auth().getLoginInfo().get(AuthKeys.CurrentUserID);
         mUser = ChatSDK.db().fetchOrCreateEntityWithEntityID(User.class, mUserId);
+
         ChatSDK.core().userOn(mUser);
         mYoutubeVideo = mUser.metaStringForKey(Keys.youtube);
         InitializeYoutubeView();
