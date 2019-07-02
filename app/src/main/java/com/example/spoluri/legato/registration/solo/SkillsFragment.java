@@ -42,6 +42,7 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
     private boolean skillSelected;
     private Button finishButton;
     private static final int MAX_SKILLS = 6;
+    private FloatingActionButton addButton;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -95,8 +96,9 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
             // 7. Set the LayoutManager
             mSkillsRecyclerView.setLayoutManager(layoutManager);
 
-            FloatingActionButton addButton = view.findViewById(R.id.addSkillButton);
+            addButton = view.findViewById(R.id.addSkillButton);
             addButton.setOnClickListener(this);
+            addButton.setEnabled(false);
 
             finishButton = view.findViewById(R.id.finishSoloRegistrationButton);
             finishButton.setOnClickListener(new View.OnClickListener() {
@@ -123,6 +125,7 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
         if (mSkillArrayList.size() < MAX_SKILLS) {
             mSkillArrayList.add(new Skill("Choose Skill", 0));
             mSkillsAdapter.notifyItemInserted(mSkillArrayList.size() - 1);
+            addButton.setEnabled(false);
             //TODO: how to remove a skill?
         }
     }
@@ -131,6 +134,7 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
     public void onSkillSelected(View v, int position) {
         //TODO: call this when a skill is chosen.
         skillSelected = true;
+        addButton.setEnabled(true);
         validate();
     }
 }
