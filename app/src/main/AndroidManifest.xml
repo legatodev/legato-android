@@ -11,16 +11,25 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
         android:name=".AppObject">
-        <activity android:name=".AvatarActivity"/>
-        <activity android:name=".UserProfileActivity" />
+        <activity android:name=".AvatarActivity"
+            android:theme="@style/NoActionBarTheme"/>
+        <activity android:name=".UserProfileActivity"
+            android:theme="@style/NoActionBarTheme"/>
         <activity
             android:name=".registration.solo.SoloRegistrationActivity"
             android:label="@string/title_activity_solo_registration_tab"
-            android:theme="@style/AppTheme.NoActionBar"
+            android:theme="@style/NoActionBarTheme"
             android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".registration.RegistrationActivity" />
+
+        <activity
+            android:name=".registration.Band.BandRegistrationActivity"
+            android:label="@string/title_activity_band_registration_tab"
+            android:theme="@style/NoActionBarTheme"
+            android:windowSoftInputMode="adjustPan" />
+
+        <activity android:name=".registration.RegistrationActivity"
+            android:theme="@style/NoActionBarTheme"/>
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -42,19 +51,19 @@
         <activity
             android:name=".AccountActivity"
             android:label="@string/title_activity_account"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/NoActionBarTheme" />
         <activity
             android:name=".youtube.YoutubeActivity"
             android:label="@string/title_activity_youtube"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/NoActionBarTheme" />
         <activity
             android:name=".messaging.ActiveChatActivity"
             android:label="@string/title_active_chats"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/NoActionBarTheme" />
         <activity
             android:name=".NearbyUsersActivity"
             android:label="@string/title_nearby_users"
-            android:theme="@style/AppTheme">
+            android:theme="@style/NoActionBarTheme">
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />

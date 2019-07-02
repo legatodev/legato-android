@@ -1,13 +1,8 @@
 <resources>
-
-    <style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
+    <style name="ActionBarTheme" parent="Theme.AppCompat.Light">
+        <item name="android:windowBackground">@drawable/background_gradient</item>
+        <item name="checkboxStyle">@style/legato_checkbox</item>
     </style>
-
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <!-- Added because of popup filter start-->
     <style name="AppTheme.FilterIcon">
@@ -24,26 +19,17 @@
             <item name="android:layout_marginBottom">4dp</item>
     </style>
 
-    <!-- Added because of popup filter end-->
-
-    <style name="LegatoCheckBoxStyle" parent="Base.Widget.AppCompat.CompoundButton.CheckBox">
-        <item name="android:textColor">@drawable/legato_selector</item>
-        <item name="buttonTint">@drawable/legato_selector</item>
+    <style name="NoActionBarTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowBackground">@drawable/background_gradient</item>
+        <item name="checkboxStyle">@style/legato_checkbox</item>
     </style>
 
-    <style name="LegatoRadioButtonStyle" parent="Widget.AppCompat.CompoundButton.RadioButton">
-        <item name="android:textColor">@drawable/legato_selector</item>
-        <item name="buttonTint">@drawable/legato_selector</item>
+    <style name="ListFont" parent="@android:style/Widget.ListView">
+        <item name="android:textColor">@color/activity_background</item>
     </style>
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        .............your other style configurations.............
-        <item name="windowNoTitle">true</item>
-        <item name="windowActionBar">true</item>
-        <item name="radioButtonStyle">@style/LegatoRadioButtonStyle</item>
-        <item name="android:radioButtonStyle">@style/LegatoRadioButtonStyle</item>
-        <item name="checkboxStyle">@style/LegatoCheckBoxStyle</item>
-        <item name="android:checkboxStyle">@style/LegatoCheckBoxStyle</item>
+    <style name="legato_checkbox" parent="Widget.AppCompat.CompoundButton.CheckBox">
+        <item name="android:textColor">@color/selector_text</item>
     </style>
 
     <style name="ThemeOverlay.FilterButton" parent="ThemeOverlay.AppCompat.Dark">

@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/featuredArtistLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/background_gradient">
+
+            <RelativeLayout
+                android:id="@+id/featureArtistLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="16dp">
+                <TextView
+                    android:id="@+id/featuredArtistTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Featured Artist"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:layout_alignParentTop="true"/>
+
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/featuredArtistImageView"
+                    android:layout_width="172dp"
+                    android:layout_height="120dp"
+                    android:adjustViewBounds="true"
+                    android:scaleType="centerCrop"
+                    fresco:roundedCornerRadius="2dp"
+                    android:layout_marginBottom="4dp"
+                    android:layout_below="@+id/featuredArtistTextView"/>
+
+                <TextView
+                    android:id="@+id/featuredArtistNameTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:layout_below="@id/featuredArtistImageView"
+                    android:layout_marginBottom="4dp"
+                    />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/featuredBandLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="36dp"
+                android:layout_toRightOf="@id/featureArtistLayout">
+                <TextView
+                    android:id="@+id/featuredBandTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Featured Band"
+                    android:textColor="@color/white"
+                    android:layout_alignParentTop="true"/>
+
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/featuredBandImageView"
+                    android:layout_width="172dp"
+                    android:layout_height="120dp"
+                    android:adjustViewBounds="true"
+                    android:scaleType="centerCrop"
+                    fresco:roundedCornerRadius="4dp"
+                    android:layout_below="@id/featuredBandTextView"
+                    android:layout_marginTop="4dp"/>
+
+                <TextView
+                    android:id="@+id/featuredBandNameTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:layout_below="@id/featuredBandImageView"
+                    android:layout_marginBottom="4dp"
+                    />
+
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/profileGalleryLayout"
+            android:background="@color/skills_card_view_background"
+            android:layout_below="@+id/featuredArtistLayout">
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/profilePictureLayout">
+
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/profilePhotoImageView"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginTop="8dp"
+                    android:adjustViewBounds="true"
+                    android:scaleType="centerCrop"
+                    fresco:roundAsCircle="true"
+                    fresco:roundingBorderColor="@color/activity_background"
+                    fresco:roundingBorderWidth="2dp" />
+
+                <TextView
+                    android:id="@+id/profileUserNameTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_toRightOf="@id/profilePhotoImageView"
+                    android:textColor="@color/activity_background"
+                    android:textSize="20sp"
+                    tools:text="Name" />
+
+                <ImageView
+                    android:id="@+id/profileUserAvailabilityImageView"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_toRightOf="@id/profileUserNameTextView"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginTop="8dp"
+                    app:srcCompat="@drawable/icn_20_online" />
+
+                <Button
+                    android:id="@+id/connectOrRemoveButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:text="@string/connect"
+                    android:textSize="12sp"
+                    android:textColor="@color/white"
+                    android:background="@drawable/rounded_button"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="16dp"
+                    android:layout_centerVertical="true"
+                    android:visibility="visible"/>
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/galleryLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/skills_card_view_background"
+                android:layout_below="@id/profilePictureLayout">
+
+                <TextView
+                    android:id="@+id/galleryTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Gallery"
+                    android:textColor="@color/black"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="8dp"/>
+
+                <HorizontalScrollView
+                    android:id="@+id/galleryHorizontalScrollView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/galleryTextView"
+                    android:layout_marginLeft="8dp">
+                    <LinearLayout
+                        android:id="@+id/galleryHorizontalScrollViewLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <com.google.android.youtube.player.YouTubePlayerView
+                            android:id="@+id/youtubeView1"
+                            android:layout_width="120dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="8dp"
+                            />
+
+                    </LinearLayout>
+                </HorizontalScrollView>
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/profileInfoRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@android:color/black"
+            android:transcriptMode="alwaysScroll"
+            android:layout_below="@id/profileGalleryLayout"
+            tools:listitem="@layout/item_userprofileinfo"/>
+
+        <Button
+            android:id="@+id/blockOrUnblockButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/red"
+            android:text="@string/block"
+            android:layout_below="@+id/profileInfoRecyclerView"
+            android:layout_centerHorizontal="true"
+            android:visibility="visible"/>
+    </RelativeLayout>
+</ScrollView>

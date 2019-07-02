@@ -22,5 +22,6 @@ public class ExampleInstrumentedTest {
         Context appContext = InstrumentationRegistry.getTargetContext();
 
         assertEquals("com.example.spoluri.legato", appContext.getPackageName());
+        //Firebase.goOffline to do offline testing
     }
 }

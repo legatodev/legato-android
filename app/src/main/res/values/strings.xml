@@ -42,6 +42,7 @@
     <string name="title_activity_registration">RegistrationActivity</string>
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="title_activity_solo_registration_tab">SoloRegistrationTabActivity</string>
+    <string name="title_activity_band_registration_tab">BandRegistrationTabActivity</string>
     <string name="action_settings">Settings</string>
 
     <string name="search_hint">search skills</string>
@@ -49,6 +50,8 @@
     <string name="value_any_lookingfor">All</string>
     <string name="value_any_genres">All Genre</string>
     <string name="value_any_skills">Any Skills</string>
+    <string name="band_search_hint">search band members</string>
+
     <string-array name="looking_for">
         <item>@string/value_any_lookingfor</item>
         <item>Jam Session</item>
@@ -59,14 +62,21 @@
     <!--Registration-->
     <string name="solo_artist">Solo Artist</string>
     <string name="band">Band</string>
-    <string name="username">Username</string>
+    <string name="displayname">Display Name</string>
+    <string name="bandname">Band Name</string>
 
     <string name="vocals">Vocals</string>
     <string name="writing">Writing</string>
     <string name="rapper">Rapper/MC</string>
 
     <string name="skill_level">Skill Level</string>
-
     <string name="header_filters">Filter</string>
     <string name="apply">Apply</string>
+    <string name="finish">Finish</string>
+
+    <string name="block">Block</string>
+    <string name="unblock">Unblock</string>
+
+    <string name="connect">Connect</string>
+    <string name="remove">Remove</string>
 </resources>

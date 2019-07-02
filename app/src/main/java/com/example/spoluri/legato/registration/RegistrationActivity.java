@@ -7,6 +7,7 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.spoluri.legato.R;
+import com.example.spoluri.legato.registration.Band.BandRegistrationActivity;
 import com.example.spoluri.legato.registration.solo.SoloRegistrationActivity;
 
 public class RegistrationActivity extends AppCompatActivity {
@@ -23,5 +24,7 @@ public class RegistrationActivity extends AppCompatActivity {
     }
     public void onBand(View view) {
         //Start band registration activity
+        Intent intent = new Intent(this, BandRegistrationActivity.class);
+        startActivity(intent);
     }
 }

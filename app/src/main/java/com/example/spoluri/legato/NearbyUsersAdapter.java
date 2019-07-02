@@ -16,10 +16,12 @@ import java.util.Map;
 
 import co.chatsdk.core.dao.User;
 import co.chatsdk.core.session.ChatSDK;
+import io.reactivex.Completable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
 
-    private final List<NearbyUser> nearbyUsers;
+    private List<NearbyUser> nearbyUsers;
     private List<NearbyUser> nearbyUsersFiltered;
     private final Context context;
     private final int itemResource;
@@ -32,11 +34,15 @@ class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry)it.next();
             User user = ChatSDK.db().fetchOrCreateEntityWithEntityID(User.class, (String)pair.getKey());
-            ChatSDK.core().userOn(user);
-            // User object has now been populated and is ready to use
-            if (!user.isMe()) {
-                this.nearbyUsers.add(new NearbyUser(user, (String) pair.getValue()));
-            }
+            Completable completable = ChatSDK.core().userOn(user);
+            completable.subscribe(() -> {
+                // User object has now been populated and is ready to use
+                if (!user.isMe()) {
+                    this.nearbyUsers.add(new NearbyUser(user, (String) pair.getValue()));
+                }
+            }, throwable -> {
+
+            });
         }
 
         this.nearbyUsersFiltered = this.nearbyUsers;
@@ -69,79 +75,36 @@ class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
         return this.nearbyUsersFiltered.size();
     }
 
-    /*@Override
-    public Filter getFilter() {
-        return new Filter() {
-            @Override
-            protected FilterResults performFiltering(CharSequence charSequence) {
-                String charString = charSequence.toString();
-                if (charString.isEmpty()) {
-                    nearbyUsersFiltered = nearbyUsers;
-                } else {
-                    List<NearbyUser> filteredList = new ArrayList<>();
-                    for (NearbyUser row : nearbyUsers) {
-
-                        // name match condition. this might differ depending on your requirement
-                        // here we are looking for name or phone number match
-                        String skills = row.getSkills();
-                        String genres = row.getGenres();
-                        String lookingfor = row.getLookingfor();
-                        if (skills != null && skills.toLowerCase().contains(charString.toLowerCase()) ||
-                                genres != null && genres.toLowerCase().contains(charString.toLowerCase()) ||
-                                lookingfor != null && lookingfor.contentEquals(charSequence)) {
-                            filteredList.add(row);
-                        }
-                    }
-
-                    nearbyUsersFiltered = filteredList;
-                }
-
-                FilterResults filterResults = new FilterResults();
-                filterResults.values = nearbyUsersFiltered;
-
-                return filterResults;
-            }
-
-            @Override
-            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-                if (filterResults.values != null) {
-                    nearbyUsersFiltered = (ArrayList<NearbyUser>) filterResults.values;
-                    notifyDataSetChanged();
-                }
-            }
-        };
-    }*/
-
     public void onFilter(Filters filters) {
 
         List<NearbyUser> filteredList = new ArrayList<>();
-            for (NearbyUser row : nearbyUsers) {
-                if (filters.hasLookingfor()) {
-                    if (row.getLookingfor().contentEquals(filters.getLookingfor())) {
-                        filteredList.add(row);
-                    }
-                }
-                if (filters.hasGenres()) {
-                    if (row.getGenres().contains(filters.getGenres())) {
-                        filteredList.add(row);
-                    }
-                }
-                if (filters.hasSkills()) {
-                    if (row.getSkills().contains(filters.getSkills())) {
-                        filteredList.add(row);
-                    }
-                }
-
-                /*If nothing is selected from filter*/
-                if(!filters.hasLookingfor() &&
-                !filters.hasGenres() &&
-                !filters.hasSkills()){
+        for (NearbyUser row : nearbyUsers) {
+            if (filters.hasLookingfor()) {
+                if (row.getLookingfor().contentEquals(filters.getLookingfor())) {
                     filteredList.add(row);
                 }
-
             }
-            nearbyUsersFiltered = filteredList;
-            notifyDataSetChanged();
+            if (filters.hasGenres()) {
+                if (row.getGenres().contains(filters.getGenres())) {
+                    filteredList.add(row);
+                }
+            }
+            if (filters.hasSkills()) {
+                if (row.getSkills().contains(filters.getSkills())) {
+                    filteredList.add(row);
+                }
+            }
 
+            /*If nothing is selected from filter*/
+            if(!filters.hasLookingfor() &&
+                    !filters.hasGenres() &&
+                    !filters.hasSkills()){
+                filteredList.add(row);
+            }
+
+        }
+
+        nearbyUsersFiltered = filteredList;
+        notifyDataSetChanged();
     }
 }

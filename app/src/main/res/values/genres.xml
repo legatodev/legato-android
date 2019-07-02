@@ -2,7 +2,6 @@
 <resources>
     <string-array name="genres_array">
         <item>@string/value_any_genres</item>
-        <item>Choose Genre</item>
         <item>Rock</item>
         <item>Rap/Hip-Hop</item>
         <item>Classical</item>

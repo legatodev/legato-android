@@ -1,42 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/legato_background">
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/nearbyUserRecylerView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:elevation="4dp"
-        android:divider="@android:color/black"
-        android:transcriptMode="alwaysScroll"
-        app:layout_constraintTop_toBottomOf="@id/filterBar"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:listitem="@layout/item_nearbyuser"/>
-
-    <!--
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/searchView"
-        android:layout_width="0dp"
-        android:layout_height="40dp"
-        app:layout_constraintStart_toEndOf="@+id/lookingForSpinner"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:queryHint="@string/search_hint"/>
-    -->
+    android:layout_height="match_parent">
 
      <androidx.cardview.widget.CardView
         android:id="@+id/filterBar"
-        app:layout_constraintBottom_toTopOf="@id/nearbyUserRecylerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clickable="true"
-        android:elevation="12dp"
-        android:foreground="?attr/selectableItemBackground">
+        android:elevation="4dp"
+        android:foreground="?attr/selectableItemBackground"
+         android:layout_alignParentTop="true">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -94,7 +70,15 @@
                 app:srcCompat="@drawable/ic_close_white_24px" />
 
         </RelativeLayout>
-
     </androidx.cardview.widget.CardView>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/nearbyUserRecylerView"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:elevation="4dp"
+        android:divider="@android:color/black"
+        android:transcriptMode="alwaysScroll"
+        android:layout_below="@id/filterBar"
+        tools:listitem="@layout/item_nearbyuser"/>
+</RelativeLayout>
