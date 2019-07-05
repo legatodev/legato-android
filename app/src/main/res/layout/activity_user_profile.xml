@@ -4,8 +4,8 @@
     android:layout_height="fill_parent">
 
     <fragment
-        android:name="ProfileFragment"
-        android:id="@+id/profile_fragment"
+        android:name="com.example.spoluri.legato.UserProfileFragment"
+        android:id="@+id/user_profile_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     </fragment>

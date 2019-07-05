@@ -10,7 +10,6 @@ import co.chatsdk.core.dao.User;
 import co.chatsdk.core.session.ChatSDK;
 import co.chatsdk.core.utils.DisposableList;
 import co.chatsdk.ui.main.BaseActivity;
-import co.chatsdk.ui.profile.ProfileFragment;
 import co.chatsdk.ui.utils.ToastHelper;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
@@ -25,14 +24,14 @@ public class UserProfileActivity extends BaseActivity {
     @Override
     protected void onCreate (Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.chat_sdk_profile_activity);
+        setContentView(R.layout.activity_user_profile);
 
         String userEntityID = getIntent().getStringExtra(Keys.USER_ENTITY_ID);
 
         if (userEntityID != null && !userEntityID.isEmpty()) {
             user =  ChatSDK.db().fetchUserWithEntityID(userEntityID);
             if (user != null) {
-                co.chatsdk.ui.profile.ProfileFragment fragment = (ProfileFragment) getSupportFragmentManager().findFragmentById(R.id.profile_fragment);
+                UserProfileFragment fragment = (UserProfileFragment) getSupportFragmentManager().findFragmentById(R.id.user_profile_fragment);
                 fragment.setUser(user);
                 fragment.updateInterface();
                 return;

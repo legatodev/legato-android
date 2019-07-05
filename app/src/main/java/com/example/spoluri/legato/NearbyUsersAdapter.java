@@ -118,7 +118,6 @@ class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
                     !filters.hasSkills()){
                 filteredList.add(row);
             }
-
         }
 
         nearbyUsersFiltered = filteredList;
