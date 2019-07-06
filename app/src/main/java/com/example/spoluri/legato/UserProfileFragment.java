@@ -28,6 +28,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import co.chatsdk.core.dao.Keys;
 import co.chatsdk.core.dao.User;
+import co.chatsdk.core.events.EventType;
+import co.chatsdk.core.events.NetworkEvent;
 import co.chatsdk.core.session.ChatSDK;
 import co.chatsdk.core.utils.DisposableList;
 import co.chatsdk.ui.main.BaseFragment;
@@ -65,8 +67,13 @@ public class UserProfileFragment extends BaseFragment {
     private String mYoutubeVideo = "";
     private DisposableList disposableList = new DisposableList();
     protected boolean startingChat = false;
+    private ArrayList<UserProfileInfo> profileInfo;
 
     protected User user;
+
+    public UserProfileFragment() {
+        profileInfo = new ArrayList<>();
+    }
 
     public static UserProfileFragment newInstance() {
         return UserProfileFragment.newInstance(null);
@@ -92,13 +99,13 @@ public class UserProfileFragment extends BaseFragment {
             user = ChatSDK.db().fetchUserWithEntityID(savedInstanceState.getString(Keys.UserId));
         }
 
-//        disposableList.add(ChatSDK.events().sourceOnMain().filter(NetworkEvent.filterType(EventType.UserMetaUpdated, EventType.UserPresenceUpdated))
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(networkEvent -> {
-//                    if (networkEvent.user.equals(getUser())) {
-//                        reloadData();
-//                    }
-//                }));
+        disposableList.add(ChatSDK.events().sourceOnMain().filter(NetworkEvent.filterType(EventType.UserMetaUpdated, EventType.UserPresenceUpdated))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(networkEvent -> {
+                    if (networkEvent.user.equals(getUser())) {
+                        reloadData();
+                    }
+                }));
 
         mainView = inflater.inflate(R.layout.fragment_user_profile, container, false);
         ButterKnife.bind(this, mainView);
@@ -198,6 +205,11 @@ public class UserProfileFragment extends BaseFragment {
                 startChat();
             }
         });
+
+        profileInfo.clear();
+        profileInfo.add(new UserProfileInfo("Skills", user.metaStringForKey(com.example.spoluri.legato.Keys.skills)));
+        profileInfo.add(new UserProfileInfo("Genres", user.metaStringForKey(com.example.spoluri.legato.Keys.genres)));
+        userProfileInfoAdapter.notifyData(profileInfo);
     }
 
     @Override
@@ -212,11 +224,6 @@ public class UserProfileFragment extends BaseFragment {
 
     public void setUser (User user) {
         this.user = user;
-
-        ArrayList<UserProfileInfo> profileInfo = new ArrayList<>();
-        profileInfo.add(new UserProfileInfo("Skills", user.metaStringForKey(com.example.spoluri.legato.Keys.skills)));
-        profileInfo.add(new UserProfileInfo("Genres", user.metaStringForKey(com.example.spoluri.legato.Keys.genres)));
-        userProfileInfoAdapter.notifyData(profileInfo);
     }
 
     public void startChat () {
