@@ -12,8 +12,6 @@ import co.chatsdk.ui.utils.ToastHelper;
 public class UserProfileActivity extends BaseActivity {
 
     protected User user;
-    protected boolean startingChat = false;
-
     private DisposableList disposableList = new DisposableList();
 
     @Override

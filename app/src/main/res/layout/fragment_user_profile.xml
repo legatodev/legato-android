@@ -206,20 +206,11 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/profileInfoRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="fill_parent"
             android:divider="@android:color/black"
             android:transcriptMode="alwaysScroll"
             android:layout_below="@id/profileGalleryLayout"
+            android:background="@color/white"
             tools:listitem="@layout/item_userprofileinfo"/>
-
-        <Button
-            android:id="@+id/blockOrUnblockButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/red"
-            android:text="@string/block"
-            android:layout_below="@+id/profileInfoRecyclerView"
-            android:layout_centerHorizontal="true"
-            android:visibility="visible"/>
     </RelativeLayout>
 </ScrollView>

@@ -3,6 +3,8 @@ package com.example.spoluri.legato;
 import android.os.Bundle;
 
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
@@ -19,6 +21,8 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,8 +50,6 @@ public class UserProfileFragment extends BaseFragment {
     protected TextView featuredArtistNameTextView;
     @BindView(R.id.featuredBandNameTextView)
     protected TextView featuredBandNameTextView;
-    @BindView(R.id.blockOrUnblockButton)
-    protected Button blockOrUnblockButton;
     @BindView(R.id.connectOrRemoveButton)
     protected Button connectOrRemoveButton;
     @BindView(R.id.profileInfoRecyclerView)
@@ -59,6 +61,7 @@ public class UserProfileFragment extends BaseFragment {
     @BindView(R.id.emailTextView)
     protected TextView emailTextView;
 
+    private UserProfileInfoAdapter userProfileInfoAdapter;
     private String mYoutubeVideo = "";
     private DisposableList disposableList = new DisposableList();
     protected boolean startingChat = false;
@@ -71,9 +74,7 @@ public class UserProfileFragment extends BaseFragment {
 
     public static UserProfileFragment newInstance(User user) {
         UserProfileFragment f = new UserProfileFragment();
-
         Bundle b = new Bundle();
-
         if (user != null) {
             b.putString(Keys.UserId, user.getEntityID());
         }
@@ -128,50 +129,23 @@ public class UserProfileFragment extends BaseFragment {
             }
         });
 
+        userProfileInfoAdapter = new UserProfileInfoAdapter(getContext(), R.layout.item_userprofileinfo);
+        userInfoRecyclerView.setAdapter(userProfileInfoAdapter);
+
+        DividerItemDecoration itemDecor = new DividerItemDecoration(userInfoRecyclerView.getContext(), DividerItemDecoration.HORIZONTAL);
+        userInfoRecyclerView.addItemDecoration(itemDecor);
+
+        // 4. Initialize ItemAnimator, LayoutManager and ItemDecorators
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+
+        // 7. Set the LayoutManager
+        userInfoRecyclerView.setLayoutManager(layoutManager);
 
         return mainView;
     }
 
     protected User getUser () {
         return user != null ? user : ChatSDK.currentUser();
-    }
-
-    protected void block() {
-        if (getUser().isMe()) return;
-
-        disposableList.add(ChatSDK.blocking().blockUser(getUser().getEntityID())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(() -> {
-                    updateBlockedButton(true);
-                    updateInterface();
-                    ToastHelper.show(getContext(), getString(R.string.user_blocked));
-                }, throwable1 -> {
-                    ChatSDK.logError(throwable1);
-                    Toast.makeText(UserProfileFragment.this.getContext(), throwable1.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-                }));
-    }
-
-    protected void unblock() {
-        if (getUser().isMe()) return;
-
-        disposableList.add(ChatSDK.blocking().unblockUser(getUser().getEntityID())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(() -> {
-                    updateBlockedButton(false);
-                    updateInterface();
-                    ToastHelper.show(getContext(), R.string.user_unblocked);
-                }, throwable12 -> {
-                    ChatSDK.logError(throwable12);
-                    Toast.makeText(UserProfileFragment.this.getContext(), throwable12.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-                }));
-    }
-
-    protected void toggleBlocked() {
-        if (getUser().isMe()) return;
-
-        boolean blocked = ChatSDK.blocking().isBlocked(getUser().getEntityID());
-        if (blocked) unblock();
-        else block();
     }
 
     protected void setViewVisibility(View view, int visibility) {
@@ -186,14 +160,6 @@ public class UserProfileFragment extends BaseFragment {
         if (textView != null) textView.setText(text);
     }
 
-    protected void updateBlockedButton(boolean blocked) {
-        if (blocked) {
-            setViewText(blockOrUnblockButton, getString(R.string.unblock));
-        } else {
-            setViewText(blockOrUnblockButton, getString(R.string.block));
-        }
-    }
-
     public void updateInterface() {
         User user = getUser();
 
@@ -202,20 +168,6 @@ public class UserProfileFragment extends BaseFragment {
 
         boolean isCurrentUser = user.isMe();
         setHasOptionsMenu(isCurrentUser);
-
-        boolean visible = !isCurrentUser;
-
-        if (!isCurrentUser) {
-            // Find out if the user is blocked already?
-            if (ChatSDK.blocking() != null && ChatSDK.blocking().blockingSupported()) {
-                updateBlockedButton(ChatSDK.blocking().isBlocked(getUser().getEntityID()));
-                if (blockOrUnblockButton != null) blockOrUnblockButton.setOnClickListener(v -> toggleBlocked());
-            }
-            else {
-                // TODO: Set height to zero
-                setViewVisibility(blockOrUnblockButton, false);
-            }
-        }
 
         // Name
         setViewText(profileUserNameTextView, getUser().getName());
@@ -260,6 +212,11 @@ public class UserProfileFragment extends BaseFragment {
 
     public void setUser (User user) {
         this.user = user;
+
+        ArrayList<UserProfileInfo> profileInfo = new ArrayList<>();
+        profileInfo.add(new UserProfileInfo("Skills", user.metaStringForKey(com.example.spoluri.legato.Keys.skills)));
+        profileInfo.add(new UserProfileInfo("Genres", user.metaStringForKey(com.example.spoluri.legato.Keys.genres)));
+        userProfileInfoAdapter.notifyData(profileInfo);
     }
 
     public void startChat () {
@@ -280,6 +237,5 @@ public class UserProfileFragment extends BaseFragment {
                     ToastHelper.show(getContext(), throwable.getLocalizedMessage());
                 }));
     }
-
 }
 
