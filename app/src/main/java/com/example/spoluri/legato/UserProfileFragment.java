@@ -2,7 +2,7 @@ package com.example.spoluri.legato;
 
 import android.os.Bundle;
 
-import androidx.annotation.StringRes;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
@@ -16,10 +16,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
-import com.google.android.youtube.player.YouTubePlayerView;
+import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,7 +31,7 @@ import co.chatsdk.ui.utils.AvailabilityHelper;
 import co.chatsdk.ui.utils.ToastHelper;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
-public class UserProfileFragment extends BaseFragment implements YouTubePlayer.OnInitializedListener {
+public class UserProfileFragment extends BaseFragment {
     private static final String TAG = "UserProfileFragment";
 
     @BindView(R.id.featuredArtistImageView)
@@ -59,8 +58,6 @@ public class UserProfileFragment extends BaseFragment implements YouTubePlayer.O
     protected TextView profileUserNameTextView;
     @BindView(R.id.emailTextView)
     protected TextView emailTextView;
-    //@BindView(R.id.youtubeView1)
-    //protected YouTubePlayerView youtubeView;
 
     private String mYoutubeVideo = "";
     private DisposableList disposableList = new DisposableList();
@@ -103,7 +100,33 @@ public class UserProfileFragment extends BaseFragment implements YouTubePlayer.O
 
         mainView = inflater.inflate(R.layout.fragment_user_profile, container, false);
         ButterKnife.bind(this, mainView);
-        //InitializeYoutubeView();
+
+        YouTubePlayerSupportFragment youTubePlayerFragment = YouTubePlayerSupportFragment.newInstance();
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+
+        transaction.replace(R.id.youtubeView1, youTubePlayerFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+
+        youTubePlayerFragment.initialize(AppConstants.YOUTUBE_API_KEY, new YouTubePlayer.OnInitializedListener() {
+
+            @Override
+            public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player, boolean wasRestored) {
+                if (!wasRestored) {
+                    player.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
+                    player.cueVideo(mYoutubeVideo);
+                }
+            }
+
+            @Override
+            public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult error) {
+                // YouTube error
+                String errorMessage = error.toString();
+                Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_LONG).show();
+                Log.d("errorMessage:", errorMessage);
+            }
+        });
+
 
         return mainView;
     }
@@ -215,20 +238,6 @@ public class UserProfileFragment extends BaseFragment implements YouTubePlayer.O
         }
 
         mYoutubeVideo = getUser().metaStringForKey(com.example.spoluri.legato.Keys.youtube);
-    }
-
-    @Override
-    public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult errorReason) {
-        Log.e(TAG, "Youtube Initialization Failed: " + errorReason.toString());
-    }
-
-    @Override
-    public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player, boolean wasRestored) {
-        player.cueVideo(mYoutubeVideo);
-    }
-
-    private void InitializeYoutubeView() {
-        //youtubeView.initialize(AppConstants.YOUTUBE_API_KEY, this);
     }
 
     @Override
