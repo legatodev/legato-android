@@ -61,6 +61,7 @@ public class UserProfileFragment extends BaseFragment {
 
     private String mYoutubeVideo = "";
     private DisposableList disposableList = new DisposableList();
+    protected boolean startingChat = false;
 
     protected User user;
 
@@ -238,6 +239,13 @@ public class UserProfileFragment extends BaseFragment {
         }
 
         mYoutubeVideo = getUser().metaStringForKey(com.example.spoluri.legato.Keys.youtube);
+
+        connectOrRemoveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startChat();
+            }
+        });
     }
 
     @Override
@@ -252,6 +260,25 @@ public class UserProfileFragment extends BaseFragment {
 
     public void setUser (User user) {
         this.user = user;
+    }
+
+    public void startChat () {
+        if (startingChat) {
+            return;
+        }
+
+        startingChat = true;
+        disposableList.add(ChatSDK.thread().createThread("", user, ChatSDK.currentUser())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doFinally(() -> {
+                    dismissProgressDialog();
+                    startingChat = false;
+                })
+                .subscribe(thread -> {
+                    ChatSDK.ui().startChatActivityForID(getContext(), thread.getEntityID());
+                }, throwable -> {
+                    ToastHelper.show(getContext(), throwable.getLocalizedMessage());
+                }));
     }
 
 }
