@@ -66,25 +66,19 @@ class SkillsAdapter extends RecyclerView.Adapter<SkillsAdapter.SkillsHolder>{
         private final SeekBar mSkillLevelSeekBar;
 
         private final String[] mSkillsArray;
-        private Skill mSkill;
-        private final Context context;
 
         public SkillsHolder(Context context, View itemView) {
             super(itemView);
 
             // 1. Set the context
-            this.context = context;
-
             this.mSkillSpinner = itemView.findViewById(R.id.skillsSpinner1);
             this.mSkillLevelSeekBar = itemView.findViewById(R.id.skillLevelSlider1);
             mSkillsArray = itemView.getResources().getStringArray(R.array.skills_array);
             mSkillSpinner.setOnItemSelectedListener(this);
-            //itemView.setOnClickListener(this);
         }
 
         public void bindSkill(Skill skill) {
             // 4. Bind the data to the ViewHolder
-            this.mSkill = skill;
             this.mSkillLevelSeekBar.setProgress(skill.getSkillLevel());
             this.mSkillSpinner.setSelection(Arrays.asList(mSkillsArray).indexOf(skill.getSkill()));
         }
@@ -97,6 +91,15 @@ class SkillsAdapter extends RecyclerView.Adapter<SkillsAdapter.SkillsHolder>{
         @Override
         public void onNothingSelected(AdapterView<?> parent) {
 
+        }
+
+        public String getSkill() {
+            String skill = "";
+            if (!((String)mSkillSpinner.getSelectedItem()).isEmpty()) {
+                skill += ((String)mSkillSpinner.getSelectedItem() + " - " + mSkillLevelSeekBar + "|");
+            }
+
+            return skill;
         }
     }
 }

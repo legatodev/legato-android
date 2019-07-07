@@ -16,8 +16,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.example.spoluri.legato.Keys;
 import com.example.spoluri.legato.R;
 import com.google.android.material.textfield.TextInputEditText;
+
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -178,7 +181,7 @@ public class SoloArtistBasicInfoFragment extends Fragment {
         return view;
     }
 
-    public void validate() {
+    private void validate() {
         valid = (jamCheckBox.isChecked() || collaborateCheckBox.isChecked() || startBandCheckBox.isChecked()) &&
                 !soloDisplayNameTextInputEditText.getText().toString().trim().isEmpty();
         if (valid) {
@@ -186,5 +189,17 @@ public class SoloArtistBasicInfoFragment extends Fragment {
         } else {
             ((SoloRegistrationActivity)getActivity()).setVisibleTabCount(1);
         }
+    }
+
+    public HashMap<String, String> extractData() {
+        HashMap<String, String> basicInfo = new HashMap<>();
+        basicInfo.put(co.chatsdk.core.dao.Keys.Name, soloDisplayNameTextInputEditText.getText().toString().trim());
+        String lookingfor = jamCheckBox.isChecked()?"Jam Session":"" +
+                (collaborateCheckBox.isChecked()?"Ccllaboration":"") +
+                (startBandCheckBox.isChecked()?"Start a Band":"");
+        basicInfo.put(Keys.lookingfor, lookingfor);
+        basicInfo.put(Keys.searchradius, Integer.toString(seekBarSearch.getProgress()));
+
+        return basicInfo;
     }
 }

@@ -14,8 +14,11 @@ import android.widget.ListView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import com.example.spoluri.legato.Keys;
 import com.example.spoluri.legato.R;
 import com.example.spoluri.legato.registration.solo.SoloRegistrationActivity;
+
+import java.util.HashMap;
 
 public class GenresFragment extends Fragment {
     @BindView(R.id.genresListView)
@@ -56,33 +59,7 @@ public class GenresFragment extends Fragment {
         }
     }
 
-    //call this function when proceeding to the next screen
-    private void sendSelectedGenres(){
-        SparseBooleanArray checked = genresListView.getCheckedItemPositions();
-        CharSequence[] selectedItems = new CharSequence[checked.size()];
-        for (int i = 0; i < checked.size(); i++) {
-            // Item position in adapter
-            int position = checked.keyAt(i);
-            // Add sport if it is checked i.e.) == TRUE!
-            if (checked.valueAt(i))
-                selectedItems[i]= adapter.getItem(position);
-        }
-
-//        Intent intent = new Intent(getApplicationContext(),
-//                ResultActivity.class);
-//
-//        // Create a bundle object
-//        Bundle b = new Bundle();
-//        b.putStringArray("selectedItems", selectedItems);
-//
-//        // Add the bundle to the intent.
-//        intent.putExtras(b);
-//
-//        // start the ResultActivity
-//        startActivity(intent);
-    }
-
-    public void validate() {
+    private void validate() {
         int checkedCount = genresListView.getCheckedItemCount();
         valid = (checkedCount > 0);
         if (valid) {
@@ -90,5 +67,21 @@ public class GenresFragment extends Fragment {
         } else {
             ((SoloRegistrationActivity)getActivity()).setVisibleTabCount(2);
         }
+    }
+
+    public String extractData() {
+        String genres = "";
+        SparseBooleanArray checked = genresListView.getCheckedItemPositions();
+        for (int i = 0; i < checked.size(); i++) {
+            // Item position in adapter
+            int position = checked.keyAt(i);
+            // Add sport if it is checked i.e.) == TRUE!
+            if (checked.valueAt(i)) {
+                String genre = adapter.getItem(position).toString();
+                genres += (genre + "|");
+            }
+        }
+
+        return genres;
     }
 }

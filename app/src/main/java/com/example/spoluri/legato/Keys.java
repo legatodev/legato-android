@@ -7,4 +7,6 @@ public class Keys {
     public static final String skills = "skills";
     public static final String genres = "genres";
     public static final String youtube = "youtube";
+    public static final String searchradius = "searchradius";
+    public static final String proximityradius = "proximityradius";
 }

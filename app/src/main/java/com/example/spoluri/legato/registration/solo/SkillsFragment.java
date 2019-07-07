@@ -1,6 +1,7 @@
 package com.example.spoluri.legato.registration.solo;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -22,13 +23,20 @@ import android.widget.Spinner;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import com.example.spoluri.legato.Keys;
+import com.example.spoluri.legato.NearbyUsersActivity;
 import com.example.spoluri.legato.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class SkillsFragment extends Fragment implements View.OnClickListener, SkillsAdapter.SkillSelectedListener {
+    public interface FinishClickedListener{
+        void onFinish();
+    }
+
     @BindView(R.id.skillsRecyclerView)
     RecyclerView mSkillsRecyclerView;
     @BindView(R.id.rapperCheckBox)
@@ -43,6 +51,12 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
     private Button finishButton;
     private static final int MAX_SKILLS = 6;
     private FloatingActionButton addButton;
+
+    private FinishClickedListener finishClickedListener;
+
+    public SkillsFragment(FinishClickedListener finishClickedListener) {
+        this.finishClickedListener = finishClickedListener;
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -101,32 +115,33 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
             addButton.setEnabled(false);
 
             finishButton = view.findViewById(R.id.finishSoloRegistrationButton);
-            finishButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    submitForm();
-                }
-            });
+            finishButton.setOnClickListener(this);
         }
     }
 
-    public void validate() {
+    private void validate() {
         //TODO: atleast one valid skill entry is provided
         boolean valid = skillSelected || rapperCheckBox.isChecked() || vocalsCheckBox.isChecked() || writingCheckBox.isChecked();
 
         finishButton.setEnabled(valid);
     }
 
-    private void submitForm() {
-    }
-
     @Override
     public void onClick(View view) {
-        if (mSkillArrayList.size() < MAX_SKILLS) {
-            mSkillArrayList.add(new Skill("Choose Skill", 0));
-            mSkillsAdapter.notifyItemInserted(mSkillArrayList.size() - 1);
-            addButton.setEnabled(false);
-            //TODO: how to remove a skill?
+        switch (view.getId()) {
+            case R.id.addSkillButton:
+                if (mSkillArrayList.size() < MAX_SKILLS) {
+                    mSkillArrayList.add(new Skill("Choose Skill", 0));
+                    mSkillsAdapter.notifyItemInserted(mSkillArrayList.size() - 1);
+                    addButton.setEnabled(false);
+                    //TODO: how to remove a skill?
+                }
+
+                break;
+            case R.id.finishSoloRegistrationButton:
+                //perhaps return control to activity and read everything from the fragments to submit it
+                finishClickedListener.onFinish();
+                break;
         }
     }
 
@@ -136,5 +151,19 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
         skillSelected = true;
         addButton.setEnabled(true);
         validate();
+    }
+
+    public String extractData() {
+        String skills = "";
+        skills += (vocalsCheckBox.isChecked()?"vocals |":"");
+        skills += (writingCheckBox.isChecked()?"writing |":"");
+        skills += (rapperCheckBox.isChecked()?"rapper |":"");
+
+        for (int i = 0; i < mSkillsAdapter.getItemCount(); i++) {
+            SkillsAdapter.SkillsHolder holder = (SkillsAdapter.SkillsHolder)mSkillsRecyclerView.findViewHolderForAdapterPosition(i);
+            skills += holder.getSkill();
+        }
+
+        return skills;
     }
 }

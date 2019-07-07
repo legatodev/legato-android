@@ -6,20 +6,30 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.spoluri.legato.Keys;
+import com.example.spoluri.legato.NearbyUsersActivity;
 import com.example.spoluri.legato.R;
 import com.example.spoluri.legato.registration.GenresFragment;
 import com.google.android.material.tabs.TabLayout;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import co.chatsdk.core.dao.User;
+import co.chatsdk.core.session.ChatSDK;
 
-public class SoloRegistrationActivity extends AppCompatActivity {
+public class SoloRegistrationActivity extends AppCompatActivity implements SkillsFragment.FinishClickedListener{
 
     /**
      * The {@link androidx.core.view.PagerAdapter} that will provide
@@ -59,7 +69,7 @@ public class SoloRegistrationActivity extends AppCompatActivity {
 
         soloRegistrationTab = SoloArtistBasicInfoFragment.newInstance("Sarat", "Poluri");
         genresTab = new GenresFragment();
-        skillsTab = new SkillsFragment();
+        skillsTab = new SkillsFragment(this);
     }
 
     @Override
@@ -86,7 +96,27 @@ public class SoloRegistrationActivity extends AppCompatActivity {
 
     public void setVisibleTabCount(int count) {
         mSectionsPagerAdapter.setCount(count);
+    }
 
+    public void submitData() {
+        HashMap<String, String> profileInfo = ((SoloArtistBasicInfoFragment)soloRegistrationTab).extractData();
+        profileInfo.put(Keys.genres, ((GenresFragment)genresTab).extractData());
+        profileInfo.put(Keys.skills, ((SkillsFragment)skillsTab).extractData());
+
+        User user = ChatSDK.currentUser();
+        Iterator it = profileInfo.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry)it.next();
+            user.setMetaString((String)pair.getKey(), (String)pair.getValue());
+        }
+    }
+
+    @Override
+    public void onFinish() {
+        submitData();
+        Intent intent = new Intent(this, NearbyUsersActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     /**
