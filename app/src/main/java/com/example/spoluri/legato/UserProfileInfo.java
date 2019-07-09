@@ -1,8 +1,5 @@
 package com.example.spoluri.legato;
 
-import co.chatsdk.core.dao.User;
-import co.chatsdk.core.session.ChatSDK;
-
 class UserProfileInfo {
 
     private String title;

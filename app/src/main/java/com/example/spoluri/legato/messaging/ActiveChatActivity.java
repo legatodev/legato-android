@@ -1,8 +1,10 @@
 package com.example.spoluri.legato.messaging;
 
 import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+
 import com.example.spoluri.legato.R;
 
 import co.chatsdk.core.session.ChatSDK;

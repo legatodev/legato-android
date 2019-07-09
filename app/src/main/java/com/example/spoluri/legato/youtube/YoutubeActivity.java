@@ -1,16 +1,16 @@
 package com.example.spoluri.legato.youtube;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.app.ProgressDialog;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.spoluri.legato.R;
 import com.google.api.services.youtube.model.SearchResult;

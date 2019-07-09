@@ -13,11 +13,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.core.app.ActivityCompat;
-import androidx.appcompat.app.ActionBar;
 
 import com.example.spoluri.legato.messaging.ActiveChatActivity;
 import com.example.spoluri.legato.registration.RegistrationActivity;
-import com.example.spoluri.legato.youtube.YoutubeActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -28,10 +26,6 @@ import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayer.Provider;
 import com.google.android.youtube.player.YouTubePlayerView;
-import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -109,7 +103,6 @@ public class AccountActivity extends YouTubeBaseActivity implements YouTubePlaye
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == RequestCodes.RC_YOUTUBE_SEARCH && resultCode == RESULT_OK && data != null) {
-            // put() method
             mYoutubeVideo = data.getStringExtra("youtube_video");
             mUser.setMetaString(Keys.youtube, mYoutubeVideo);
             InitializeYoutubeView();
@@ -183,8 +176,7 @@ public class AccountActivity extends YouTubeBaseActivity implements YouTubePlaye
 
     private void onLocationChanged(Location location) {
         geofireHelper.setLocation(location);
-        //TODO: get the search radius from the user
-        geofireHelper.queryNeighbors(1600);
+        geofireHelper.queryNeighbors(Integer.parseInt(mUser.metaStringForKey(Keys.searchradius)));
     }
 
     private void showSnackbar(@StringRes int errorMessageRes) {

@@ -1,13 +1,12 @@
 package com.example.spoluri.legato;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import 	androidx.recyclerview.widget.RecyclerView;
-import android.widget.Filter;
-import android.widget.Filterable;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -17,7 +16,6 @@ import java.util.Map;
 import co.chatsdk.core.dao.User;
 import co.chatsdk.core.session.ChatSDK;
 import io.reactivex.Completable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 
 class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
 
@@ -48,25 +46,18 @@ class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
         this.nearbyUsersFiltered = this.nearbyUsers;
     }
 
-    // 2. Override the onCreateViewHolder method
     @NonNull
     @Override
     public NearbyUserHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        // 3. Inflate the view and return the new ViewHolder
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(this.itemResource, parent, false);
         return new NearbyUserHolder(this.context, view);
     }
 
-    // 4. Override the onBindViewHolder method
     @Override
     public void onBindViewHolder(@NonNull NearbyUserHolder holder, int position) {
-
-        // 5. Use position to access the correct NearbyUser object
         NearbyUser nearbyUser = this.nearbyUsersFiltered.get(position);
-
-        // 6. Bind the nearbyUser object to the holder
         holder.bindNearbyUser(nearbyUser);
     }
 

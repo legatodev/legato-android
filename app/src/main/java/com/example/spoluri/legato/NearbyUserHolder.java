@@ -3,18 +3,14 @@ package com.example.spoluri.legato;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.AsyncTask;
-import 	androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.facebook.drawee.view.SimpleDraweeView;
+import androidx.recyclerview.widget.RecyclerView;
 
-import java.io.InputStream;
-import java.net.URL;
+import com.facebook.drawee.view.SimpleDraweeView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -55,13 +51,8 @@ public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.On
 
     public NearbyUserHolder(Context context, View itemView) {
         super(itemView);
-        // 1. Set the context
         this.context = context;
-
-        // 2. Set up the UI widgets of the holder
         ButterKnife.bind(this, itemView);
-
-        // 3. Set the "onClick" listener of the holder
         itemView.setOnClickListener(this);
 
         setSocialMediaOnClick();
@@ -119,8 +110,6 @@ public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.On
     }
 
     public void bindNearbyUser(NearbyUser nearbyUser) {
-
-        // 4. Bind the data to the ViewHolder
         this.nearbyUser = nearbyUser;
 
         if (nearbyUser != null) {
@@ -131,7 +120,6 @@ public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.On
             this.nearbyUserSkills.setText(nearbyUser.getSkills());
 
             String availability = nearbyUser.getAvailability();
-            // Availability
             if (availability != null && nearbyUserAvailabilityImageView != null) {
                 nearbyUserAvailabilityImageView.setImageResource(AvailabilityHelper.imageResourceIdForAvailability(availability));
             }
@@ -140,7 +128,6 @@ public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.On
 
     @Override
     public void onClick(View v) {
-        //Open profile activity
         Intent intent = new Intent(this.context, UserProfileActivity.class);
         intent.putExtra(Keys.USER_ENTITY_ID, nearbyUser.getEntityID());
         context.startActivity(intent);

@@ -4,15 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
-import android.widget.Spinner;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -36,24 +31,15 @@ public class NearbyUsersActivity extends AppCompatActivity implements FilterDial
         setContentView(R.layout.activity_nearby_users);
         ButterKnife.bind(this);
         context = this;
-
-        //setupActionBar();
-
         mNearbyUsersAdapter = new NearbyUsersAdapter(this, R.layout.item_nearbyuser);
         mNearbyUserRecyclerView.setAdapter(mNearbyUsersAdapter);
-
-        // Filter Dialog
         mFilterDialog = new FilterDialogFragment(mNearbyUsersAdapter);
 
         DividerItemDecoration itemDecor = new DividerItemDecoration(mNearbyUserRecyclerView.getContext(), DividerItemDecoration.HORIZONTAL);
         mNearbyUserRecyclerView.addItemDecoration(itemDecor);
 
-        // 4. Initialize ItemAnimator, LayoutManager and ItemDecorators
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-
-        // 7. Set the LayoutManager
         mNearbyUserRecyclerView.setLayoutManager(layoutManager);
-
     }
 
     private void setupActionBar() {
@@ -63,7 +49,6 @@ public class NearbyUsersActivity extends AppCompatActivity implements FilterDial
         View view =getSupportActionBar().getCustomView();
 
         ImageButton imageButton= view.findViewById(R.id.settings);
-
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

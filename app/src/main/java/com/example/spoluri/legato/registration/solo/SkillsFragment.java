@@ -1,36 +1,26 @@
 package com.example.spoluri.legato.registration.solo;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.SeekBar;
-import android.widget.Spinner;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.spoluri.legato.Keys;
-import com.example.spoluri.legato.NearbyUsersActivity;
 import com.example.spoluri.legato.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class SkillsFragment extends Fragment implements View.OnClickListener, SkillsAdapter.SkillSelectedListener {
     public interface FinishClickedListener{
@@ -95,7 +85,6 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
         View view = getView();
 
         if (view != null) {
-            // Initialize message ListView and its adapter
             mSkillArrayList = new ArrayList<>();
             Skill skill = new Skill("Choose Skill", 0);
             mSkillArrayList.add(skill);
@@ -104,10 +93,8 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
             DividerItemDecoration itemDecor = new DividerItemDecoration(mSkillsRecyclerView.getContext(), DividerItemDecoration.HORIZONTAL);
             mSkillsRecyclerView.addItemDecoration(itemDecor);
 
-            // 4. Initialize ItemAnimator, LayoutManager and ItemDecorators
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(view.getContext());
 
-            // 7. Set the LayoutManager
             mSkillsRecyclerView.setLayoutManager(layoutManager);
 
             addButton = view.findViewById(R.id.addSkillButton);
@@ -120,7 +107,6 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
     }
 
     private void validate() {
-        //TODO: atleast one valid skill entry is provided
         boolean valid = skillSelected || rapperCheckBox.isChecked() || vocalsCheckBox.isChecked() || writingCheckBox.isChecked();
 
         finishButton.setEnabled(valid);
@@ -139,7 +125,6 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
 
                 break;
             case R.id.finishSoloRegistrationButton:
-                //perhaps return control to activity and read everything from the fragments to submit it
                 finishClickedListener.onFinish();
                 break;
         }

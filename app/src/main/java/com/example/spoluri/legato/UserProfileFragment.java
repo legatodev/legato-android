@@ -1,12 +1,6 @@
 package com.example.spoluri.legato;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +10,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.youtube.player.YouTubeInitializationResult;
@@ -142,10 +141,7 @@ public class UserProfileFragment extends BaseFragment {
         DividerItemDecoration itemDecor = new DividerItemDecoration(userInfoRecyclerView.getContext(), DividerItemDecoration.HORIZONTAL);
         userInfoRecyclerView.addItemDecoration(itemDecor);
 
-        // 4. Initialize ItemAnimator, LayoutManager and ItemDecorators
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
-
-        // 7. Set the LayoutManager
         userInfoRecyclerView.setLayoutManager(layoutManager);
 
         return mainView;
@@ -176,20 +172,15 @@ public class UserProfileFragment extends BaseFragment {
         boolean isCurrentUser = user.isMe();
         setHasOptionsMenu(isCurrentUser);
 
-        // Name
         setViewText(profileUserNameTextView, getUser().getName());
 
-        // Email
         setViewText(emailTextView, getUser().getEmail());
 
-        //profile pic
         if (profilePhotoImageView != null) {
             profilePhotoImageView.setImageURI(getUser().getAvatarURL());
         }
 
         String availability = getUser().getAvailability();
-
-        // Availability
         if (availability != null && !isCurrentUser && profileUserAvailabilityImageView != null) {
             profileUserAvailabilityImageView.setImageResource(AvailabilityHelper.imageResourceIdForAvailability(availability));
             setViewVisibility(profileUserAvailabilityImageView, true);

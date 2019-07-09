@@ -23,7 +23,6 @@ public class RegistrationActivity extends AppCompatActivity {
         startActivity(intent);
     }
     public void onBand(View view) {
-        //Start band registration activity
         Intent intent = new Intent(this, BandRegistrationActivity.class);
         startActivity(intent);
     }

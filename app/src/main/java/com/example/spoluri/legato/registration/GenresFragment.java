@@ -1,7 +1,5 @@
 package com.example.spoluri.legato.registration;
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import android.os.Bundle;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
@@ -11,14 +9,14 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 
-import com.example.spoluri.legato.Keys;
 import com.example.spoluri.legato.R;
 import com.example.spoluri.legato.registration.solo.SoloRegistrationActivity;
 
-import java.util.HashMap;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class GenresFragment extends Fragment {
     @BindView(R.id.genresListView)
@@ -47,12 +45,10 @@ public class GenresFragment extends Fragment {
             adapter = ArrayAdapter.createFromResource(view.getContext(),
                     R.array.genres_array, android.R.layout.simple_list_item_multiple_choice);
 
-            // Setting adapter to the listview
             genresListView.setAdapter(adapter);
             genresListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    // Toggle the state
                     validate();
                 }
             });
@@ -73,9 +69,7 @@ public class GenresFragment extends Fragment {
         String genres = "";
         SparseBooleanArray checked = genresListView.getCheckedItemPositions();
         for (int i = 0; i < checked.size(); i++) {
-            // Item position in adapter
             int position = checked.keyAt(i);
-            // Add sport if it is checked i.e.) == TRUE!
             if (checked.valueAt(i)) {
                 String genre = adapter.getItem(position).toString();
                 genres += (genre + "|");

@@ -12,14 +12,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.HashMap;
-
-import co.chatsdk.core.session.ChatSDK;
-import co.chatsdk.core.types.AuthKeys;
 
 class GeofireHelper {
     private final String mUserId;
