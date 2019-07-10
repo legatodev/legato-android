@@ -112,7 +112,7 @@ public class UserProfileFragment extends BaseFragment {
         YouTubePlayerSupportFragment youTubePlayerFragment = YouTubePlayerSupportFragment.newInstance();
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
-        transaction.replace(R.id.youtubeView1, youTubePlayerFragment);
+        transaction.replace(R.id.youtubeView, youTubePlayerFragment);
         transaction.addToBackStack(null);
         transaction.commit();
 

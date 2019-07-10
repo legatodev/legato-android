@@ -32,10 +32,12 @@ import butterknife.ButterKnife;
 import co.chatsdk.core.dao.User;
 import co.chatsdk.core.session.ChatSDK;
 import co.chatsdk.core.types.AuthKeys;
+import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public class AccountActivity extends YouTubeBaseActivity implements YouTubePlayer.OnInitializedListener {
     private static final String TAG = "AccountActivity";
+    private static final int DEFAULT_SEARCH_RADIUS = 50;
 
     @BindView(R.id.id)
     TextView id;
@@ -69,10 +71,15 @@ public class AccountActivity extends YouTubeBaseActivity implements YouTubePlaye
         mUserId = (String)ChatSDK.auth().getLoginInfo().get(AuthKeys.CurrentUserID);
         mUser = ChatSDK.db().fetchOrCreateEntityWithEntityID(User.class, mUserId);
 
-        ChatSDK.core().userOn(mUser);
-        mYoutubeVideo = mUser.metaStringForKey(Keys.youtube);
-        InitializeYoutubeView();
+        Completable completable = ChatSDK.core().userOn(mUser);
+        completable.subscribe(() -> {
+            // User object has now been populated and is ready to use
+                mYoutubeVideo = mUser.metaStringForKey(Keys.youtube);
+        }, throwable -> {
+
+        });
         getLastLocation();
+        InitializeYoutubeView();
     }
 
     private void InitializeYoutubeView() {
@@ -176,7 +183,11 @@ public class AccountActivity extends YouTubeBaseActivity implements YouTubePlaye
 
     private void onLocationChanged(Location location) {
         geofireHelper.setLocation(location);
-        geofireHelper.queryNeighbors(Integer.parseInt(mUser.metaStringForKey(Keys.searchradius)));
+        String searchRadius = mUser.metaStringForKey(Keys.searchradius);
+        if (searchRadius != null && !searchRadius.isEmpty())
+            geofireHelper.queryNeighbors(Integer.parseInt(searchRadius));
+        else
+            geofireHelper.queryNeighbors(DEFAULT_SEARCH_RADIUS);
     }
 
     private void showSnackbar(@StringRes int errorMessageRes) {

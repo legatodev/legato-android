@@ -1,5 +1,7 @@
 package com.example.spoluri.legato.registration.solo;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -8,16 +10,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
+import com.example.spoluri.legato.AppConstants;
 import com.example.spoluri.legato.Keys;
 import com.example.spoluri.legato.R;
+import com.example.spoluri.legato.youtube.YoutubeActivity;
+import com.example.spoluri.legato.RequestCodes;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 
 import java.util.HashMap;
 
@@ -32,7 +44,7 @@ import butterknife.ButterKnife;
  * Use the {@link SoloArtistBasicInfoFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SoloArtistBasicInfoFragment extends Fragment {
+public class SoloArtistBasicInfoFragment extends Fragment implements View.OnClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -59,9 +71,23 @@ public class SoloArtistBasicInfoFragment extends Fragment {
     SeekBar seekBarSearch;
     @BindView(R.id.soloDisplayNameTextInputEditText)
     TextInputEditText soloDisplayNameTextInputEditText;
+    @BindView(R.id.instagramTextInputEditText)
+    TextInputEditText instagramTextInputEditText;
+    @BindView(R.id.facebookTextInputEditText)
+    TextInputEditText facebookTextInputEditText;
+    @BindView(R.id.youtubeTextInputEditText)
+    TextInputEditText youtubeTextInputEditText;
+    @BindView(R.id.addSampleButton1)
+    FloatingActionButton addSampleButton1;
+
+    private String mYoutubeVideo;
+    private View youtubeView;
+    private LayoutInflater layoutInflater;
+    private ViewGroup mContainer;
 
     public SoloArtistBasicInfoFragment() {
         valid = false;
+        mYoutubeVideo = "";
     }
 
     /**
@@ -95,6 +121,9 @@ public class SoloArtistBasicInfoFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_solo_artist_basic_info, container, false);
         ButterKnife.bind(this, view);
 
+        layoutInflater = inflater;
+        mContainer = container;
+
         jamCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -115,6 +144,8 @@ public class SoloArtistBasicInfoFragment extends Fragment {
                 validate();
             }
         });
+
+        addSampleButton1.setOnClickListener(this);
 
         seekBarProximity.setEnabled(false);
         seekBarProximity.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -196,7 +227,53 @@ public class SoloArtistBasicInfoFragment extends Fragment {
                 (startBandCheckBox.isChecked()?"Start a Band":"");
         basicInfo.put(Keys.lookingfor, lookingfor);
         basicInfo.put(Keys.searchradius, Integer.toString(seekBarSearch.getProgress()));
+        basicInfo.put(Keys.instagram, instagramTextInputEditText.getText().toString().trim());
+        basicInfo.put(Keys.facebook, facebookTextInputEditText.getText().toString().trim());
+        basicInfo.put(Keys.youtube_channel, youtubeTextInputEditText.getText().toString().trim());
+        basicInfo.put(Keys.youtube, mYoutubeVideo);
 
         return basicInfo;
+    }
+
+    @Override
+    public void onClick(View view) {
+        Intent intent = new Intent(view.getContext(), YoutubeActivity.class);
+        startActivityForResult(intent, RequestCodes.RC_YOUTUBE_SEARCH);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == RequestCodes.RC_YOUTUBE_SEARCH && resultCode == Activity.RESULT_OK && data != null) {
+            mYoutubeVideo = data.getStringExtra("youtube_video");
+            InitializeYoutubeView();
+        }
+    }
+
+    private void InitializeYoutubeView() {
+        LinearLayout galleryHorizontalScrollViewLayout = getView().findViewById(R.id.galleryHorizontalScrollViewLayout1);
+        youtubeView = layoutInflater.inflate(R.layout.youtube_frame_layout, mContainer, false);
+        galleryHorizontalScrollViewLayout.addView(youtubeView);
+        YouTubePlayerSupportFragment youTubePlayerFragment = YouTubePlayerSupportFragment.newInstance();
+
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.youtube_frame_layout, youTubePlayerFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+
+        youTubePlayerFragment.initialize(AppConstants.YOUTUBE_API_KEY, new YouTubePlayer.OnInitializedListener() {
+
+            @Override
+            public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player, boolean wasRestored) {
+                if (!wasRestored) {
+                    player.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
+                    player.cueVideo(mYoutubeVideo);
+                }
+            }
+
+            @Override
+            public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult error) {
+                // YouTube error
+            }
+        });
     }
 }

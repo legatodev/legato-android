@@ -79,4 +79,8 @@
 
     <string name="connect">Connect</string>
     <string name="remove">Remove</string>
+
+    <string name="instagram">Instagram Page</string>
+    <string name="facebook">Facebook Page</string>
+    <string name="youtube_channel">Youtube Channel</string>
 </resources>

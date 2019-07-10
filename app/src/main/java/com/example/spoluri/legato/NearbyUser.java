@@ -70,4 +70,10 @@ class NearbyUser {
     public String getEntityID() { return this.user.getEntityID(); }
 
     public String getAvailability() { return this.user.getAvailability(); }
+
+    public String getInstagram() { return this.user.metaStringForKey(Keys.instagram); }
+
+    public String getFacebook() { return this.user.metaStringForKey(Keys.facebook); }
+
+    public String getYoutubeChannel() { return this.user.metaStringForKey(Keys.youtube_channel); }
 }

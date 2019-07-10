@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.google.android.youtube.player.YouTubeIntents;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,13 +36,13 @@ public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.On
     TextView nearbyUserSkills;
 
     @BindView(R.id.nearbyUserInstagramView)
-    ImageView nearbyUserInstagram;
+    ImageView nearbyUserInstagramView;
 
     @BindView(R.id.nearbyUserFacebookView)
-    ImageView nearbyUserFacebook;
+    ImageView nearbyUserFacebookView;
 
     @BindView(R.id.nearbyUserYoutubeView)
-    ImageView nearbyUserYoutube;
+    ImageView nearbyUserYoutubeView;
 
     @BindView(R.id.nearbyUserAvailability)
     ImageView nearbyUserAvailabilityImageView;
@@ -55,35 +56,33 @@ public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.On
         ButterKnife.bind(this, itemView);
         itemView.setOnClickListener(this);
 
-        setSocialMediaOnClick();
+        nearbyUserFacebookView.setVisibility(View.INVISIBLE);
+        nearbyUserInstagramView.setVisibility(View.INVISIBLE);
+        nearbyUserYoutubeView.setVisibility(View.INVISIBLE);
     }
 
-    private void setSocialMediaOnClick() {
-        setInstagramOnClick();
-        setFacebookOnClick();
-        setYoutubeOnClick();
-    }
-
-    private void setInstagramOnClick() {
-        nearbyUserInstagram.setOnClickListener(new View.OnClickListener() {
+    private void setInstagramOnClick(String instagram) {
+        nearbyUserInstagramView.setVisibility(View.VISIBLE);
+        nearbyUserInstagramView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String userId = nearbyUser.getEntityID();
-                Uri uri = Uri.parse("http://instagram.com/_u/oliviaculpo");
+                Uri uri = Uri.parse("http://instagram.com/_u/"+instagram);
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 intent.setPackage("com.instagram.android");
                 try {
                     context.startActivity(intent);
                 } catch (ActivityNotFoundException e) {
                     context.startActivity(new Intent(Intent.ACTION_VIEW,
-                            Uri.parse("http://instagram.com/oliviaculpo")));
+                            Uri.parse("http://instagram.com/"+instagram)));
                 }
             }
         });
     }
 
-    private void setFacebookOnClick() {
-        nearbyUserFacebook.setOnClickListener(new View.OnClickListener() {
+    private void setFacebookOnClick(String facebook) {
+        nearbyUserFacebookView.setVisibility(View.VISIBLE);
+        nearbyUserFacebookView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String userId = nearbyUser.getEntityID();
@@ -91,20 +90,22 @@ public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.On
                 try {
                     context.getPackageManager()
                             .getPackageInfo("com.facebook.katana", 0); //Checks if FB is even installed.
-                    intent.setData(Uri.parse("fb://profile/10157324862933120"));
+                    intent.setData(Uri.parse("fb://page/"+facebook));
                 } catch (Exception e) {
-                   intent.setData(Uri.parse("https://www.facebook.com/icemansar")); //catches and opens a url to the desired page
+                   intent.setData(Uri.parse("https://www.facebook.com/"+facebook)); //catches and opens a url to the desired page
                 }
                 context.startActivity(intent);
             }
         });
     }
 
-    private void setYoutubeOnClick() {
-        nearbyUserYoutube.setOnClickListener(new View.OnClickListener() {
+    private void setYoutubeOnClick(String youtube_channel) {
+        nearbyUserYoutubeView.setVisibility(View.VISIBLE);
+        nearbyUserYoutubeView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String userId = nearbyUser.getEntityID();
+                Intent intent = YouTubeIntents.createUserIntent(v.getContext(), youtube_channel);
+                v.getContext().startActivity(intent);
             }
         });
     }
@@ -118,6 +119,12 @@ public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.On
             this.nearbyUserDistance.setText(nearbyUser.getDistance() + " mi");
             this.nearbyUserGenres.setText(nearbyUser.getGenres());
             this.nearbyUserSkills.setText(nearbyUser.getSkills());
+            if (nearbyUser.getInstagram() != null && !nearbyUser.getInstagram().isEmpty())
+                this.setInstagramOnClick(nearbyUser.getInstagram());
+            if (nearbyUser.getFacebook() != null && !nearbyUser.getFacebook().isEmpty())
+                this.setFacebookOnClick(nearbyUser.getFacebook());
+            if (nearbyUser.getYoutubeChannel() != null && !nearbyUser.getYoutubeChannel().isEmpty())
+                this.setYoutubeOnClick(nearbyUser.getYoutubeChannel());
 
             String availability = nearbyUser.getAvailability();
             if (availability != null && nearbyUserAvailabilityImageView != null) {
