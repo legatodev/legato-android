@@ -40,19 +40,17 @@ public class GenresFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        View view = getView();
-        if (view != null) {
-            adapter = ArrayAdapter.createFromResource(view.getContext(),
-                    R.array.genres_array, android.R.layout.simple_list_item_multiple_choice);
 
-            genresListView.setAdapter(adapter);
-            genresListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    validate();
-                }
-            });
-        }
+        adapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.genres_array, android.R.layout.simple_list_item_multiple_choice);
+
+        genresListView.setAdapter(adapter);
+        genresListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                validate();
+            }
+        });
     }
 
     private void validate() {

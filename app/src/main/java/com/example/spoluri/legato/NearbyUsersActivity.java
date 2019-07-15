@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.spoluri.legato.messaging.ActiveChatActivity;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -46,7 +48,7 @@ public class NearbyUsersActivity extends AppCompatActivity implements FilterDial
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
         getSupportActionBar().setCustomView(R.layout.custom_actionbar);
-        View view =getSupportActionBar().getCustomView();
+        View view = getSupportActionBar().getCustomView();
 
         ImageButton imageButton= view.findViewById(R.id.settings);
         imageButton.setOnClickListener(new View.OnClickListener() {
@@ -62,16 +64,16 @@ public class NearbyUsersActivity extends AppCompatActivity implements FilterDial
     public void onFilter(Filters filters) {
         mNearbyUsersAdapter.onFilter(filters);
     }
+
     @OnClick(R.id.filterBar)
     public void onFilterClicked() {
         // Show the dialog containing filter options
         mFilterDialog.show(getSupportFragmentManager(), FilterDialogFragment.TAG);
     }
 
-    @OnClick(R.id.buttonClearFilter)
-    public void onClearFilterClicked() {
-        onFilter(Filters.getDefault());
+    @OnClick(R.id.buttonActiveChats)
+    public void onActiveChatsClicked() {
+        Intent intent = new Intent(this, ActiveChatActivity.class);
+        startActivity(intent);
     }
-
-
 }

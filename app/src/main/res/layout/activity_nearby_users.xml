@@ -12,7 +12,10 @@
         android:clickable="true"
         android:elevation="4dp"
         android:foreground="?attr/selectableItemBackground"
-         android:layout_alignParentTop="true">
+         android:background="@color/white"
+         android:layout_alignParentTop="true"
+         android:layout_marginHorizontal="8dp"
+         android:layout_marginVertical="8dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -24,7 +27,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:padding="8dp"
+                android:padding="4dp"
                 android:tint="@color/greySecondary"
                 app:srcCompat="@drawable/ic_filter_list_white_24px" />
 
@@ -42,32 +45,24 @@
                 <TextView
                     android:id="@+id/textCurrentSearch"
                     android:fontFamily="sans-serif"
-                    android:textSize="14sp"
+                    android:textSize="16sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/header_filters"
                     android:textColor="@color/greySecondary"
                     tools:text="Filter" />
 
-                <TextView
-                    android:id="@+id/textCurrentSortBy"
-                    android:fontFamily="sans-serif"
-                    android:textSize="12sp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/greyDisabled" />
-
             </LinearLayout>
 
             <ImageView
-                android:id="@+id/buttonClearFilter"
+                android:id="@+id/buttonActiveChats"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:padding="8dp"
                 android:tint="@color/greySecondary"
-                app:srcCompat="@drawable/ic_close_white_24px" />
+                app:srcCompat="@drawable/ic_action_private" />
 
         </RelativeLayout>
     </androidx.cardview.widget.CardView>

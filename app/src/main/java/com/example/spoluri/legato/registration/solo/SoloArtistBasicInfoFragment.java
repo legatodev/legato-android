@@ -2,6 +2,9 @@ package com.example.spoluri.legato.registration.solo;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,6 +19,8 @@ import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import id.zelory.compressor.Compressor;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -25,16 +30,21 @@ import com.example.spoluri.legato.Keys;
 import com.example.spoluri.legato.R;
 import com.example.spoluri.legato.youtube.YoutubeActivity;
 import com.example.spoluri.legato.RequestCodes;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 
+import java.io.File;
 import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import co.chatsdk.core.session.ChatSDK;
+import co.chatsdk.core.utils.ImageUtils;
+import co.chatsdk.ui.chat.MediaSelector;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -79,15 +89,20 @@ public class SoloArtistBasicInfoFragment extends Fragment implements View.OnClic
     TextInputEditText youtubeTextInputEditText;
     @BindView(R.id.addSampleButton1)
     FloatingActionButton addSampleButton1;
+    @BindView(R.id.soloArtistProfilePictureImageView)
+    SimpleDraweeView soloArtisitProfilePicImageView;
 
     private String mYoutubeVideo;
     private View youtubeView;
     private LayoutInflater layoutInflater;
     private ViewGroup mContainer;
+    private String avatarUrl;
+    protected MediaSelector mediaSelector;
 
     public SoloArtistBasicInfoFragment() {
         valid = false;
         mYoutubeVideo = "";
+        mediaSelector = new MediaSelector();
     }
 
     /**
@@ -206,6 +221,28 @@ public class SoloArtistBasicInfoFragment extends Fragment implements View.OnClic
             }
         });
 
+        soloArtisitProfilePicImageView.setOnClickListener(tempView -> {
+                mediaSelector.startChooseImageActivity(getActivity(), MediaSelector.CropType.Circle,result -> {
+
+                    try {
+                        File compress = new Compressor(ChatSDK.shared().context())
+                                .setMaxHeight(ChatSDK.config().imageMaxThumbnailDimension)
+                                .setMaxWidth(ChatSDK.config().imageMaxThumbnailDimension)
+                                .compressToFile(new File(result));
+
+                        Bitmap bitmap = BitmapFactory.decodeFile(compress.getPath());
+
+                        // Cache the file
+                        File file = ImageUtils.compressImageToFile(ChatSDK.shared().context(), bitmap, ChatSDK.currentUserID(), ".png");
+                        soloArtisitProfilePicImageView.setImageURI(Uri.fromFile(file));
+                        avatarUrl = Uri.fromFile(file).toString();
+                    }
+                    catch (Exception e) {
+                        ChatSDK.logError(e);
+                    }
+                });
+        });
+
         return view;
     }
 
@@ -231,13 +268,14 @@ public class SoloArtistBasicInfoFragment extends Fragment implements View.OnClic
         basicInfo.put(Keys.facebook, facebookTextInputEditText.getText().toString().trim());
         basicInfo.put(Keys.youtube_channel, youtubeTextInputEditText.getText().toString().trim());
         basicInfo.put(Keys.youtube, mYoutubeVideo);
+        basicInfo.put(co.chatsdk.core.dao.Keys.AvatarURL, avatarUrl);
 
         return basicInfo;
     }
 
     @Override
     public void onClick(View view) {
-        Intent intent = new Intent(view.getContext(), YoutubeActivity.class);
+        Intent intent = new Intent(getActivity(), YoutubeActivity.class);
         startActivityForResult(intent, RequestCodes.RC_YOUTUBE_SEARCH);
     }
 
@@ -246,6 +284,13 @@ public class SoloArtistBasicInfoFragment extends Fragment implements View.OnClic
         if (requestCode == RequestCodes.RC_YOUTUBE_SEARCH && resultCode == Activity.RESULT_OK && data != null) {
             mYoutubeVideo = data.getStringExtra("youtube_video");
             InitializeYoutubeView();
+        }
+        else {
+            try {
+                mediaSelector.handleResult(getActivity(), requestCode, resultCode, data);
+            } catch (Exception e) {
+                ChatSDK.logError(e);
+            }
         }
     }
 

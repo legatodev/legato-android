@@ -88,12 +88,12 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
             mSkillArrayList = new ArrayList<>();
             Skill skill = new Skill("Choose Skill", 0);
             mSkillArrayList.add(skill);
-            mSkillsAdapter = new SkillsAdapter(view.getContext(), this, R.layout.item_skill, mSkillArrayList);
+            mSkillsAdapter = new SkillsAdapter(getContext(), this, R.layout.item_skill, mSkillArrayList);
             mSkillsRecyclerView.setAdapter(mSkillsAdapter);
             DividerItemDecoration itemDecor = new DividerItemDecoration(mSkillsRecyclerView.getContext(), DividerItemDecoration.HORIZONTAL);
             mSkillsRecyclerView.addItemDecoration(itemDecor);
 
-            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(view.getContext());
+            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
 
             mSkillsRecyclerView.setLayoutManager(layoutManager);
 

@@ -1,6 +1,8 @@
 package com.example.spoluri.legato.registration.solo;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,6 +19,9 @@ import com.example.spoluri.legato.R;
 import com.example.spoluri.legato.registration.GenresFragment;
 import com.google.android.material.tabs.TabLayout;
 
+import java.io.File;
+import java.net.URI;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -24,7 +29,12 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import co.chatsdk.core.dao.User;
+import co.chatsdk.core.events.NetworkEvent;
 import co.chatsdk.core.session.ChatSDK;
+import co.chatsdk.core.types.FileUploadResult;
+import io.reactivex.Observer;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
 
 public class SoloRegistrationActivity extends AppCompatActivity implements SkillsFragment.FinishClickedListener{
 
@@ -104,6 +114,43 @@ public class SoloRegistrationActivity extends AppCompatActivity implements Skill
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry)it.next();
             user.setMetaString((String)pair.getKey(), (String)pair.getValue());
+            if (co.chatsdk.core.dao.Keys.AvatarURL == (String)pair.getKey()) {
+                try {
+                    // Check to see if the avatar URL is local or remote
+                    File avatar = new File(new URI(ChatSDK.currentUser().getAvatarURL()).getPath());
+                    Bitmap bitmap = BitmapFactory.decodeFile(avatar.getPath());
+
+                    if (new URL(ChatSDK.currentUser().getAvatarURL()).getHost() != null && bitmap != null && ChatSDK.upload() != null) {
+                        // Upload the image
+                        ChatSDK.upload().uploadImage(bitmap).subscribe(new Observer<FileUploadResult>() {
+                            @Override
+                            public void onSubscribe(@NonNull Disposable d) {
+                            }
+
+                            @Override
+                            public void onNext(@NonNull FileUploadResult fileUploadResult) {
+                                if (fileUploadResult.urlValid()) {
+                                    ChatSDK.currentUser().setAvatarURL(fileUploadResult.url);
+                                    ChatSDK.currentUser().update();
+                                    ChatSDK.events().source().onNext(NetworkEvent.userMetaUpdated(ChatSDK.currentUser()));
+                                }
+                            }
+
+                            @Override
+                            public void onError(@NonNull Throwable ex) {
+                                ChatSDK.logError(ex);
+                            }
+
+                            @Override
+                            public void onComplete() {
+                            }
+                        });
+                    }
+                }
+                catch (Exception e) {
+                    ChatSDK.logError(e);
+                }
+            }
         }
     }
 
@@ -113,6 +160,12 @@ public class SoloRegistrationActivity extends AppCompatActivity implements Skill
         Intent intent = new Intent(this, NearbyUsersActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        soloRegistrationTab.onActivityResult(requestCode, resultCode, data);
     }
 
     /**
