@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.SeekBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -58,14 +59,30 @@ class SkillsAdapter extends RecyclerView.Adapter<SkillsAdapter.SkillsHolder>{
 
         private final Spinner mSkillSpinner;
         private final SeekBar mSkillLevelSeekBar;
+        private TextView mSkillLevelValueTextView;
 
         private final String[] mSkillsArray;
 
         public SkillsHolder(Context context, View itemView) {
             super(itemView);
 
-            this.mSkillSpinner = itemView.findViewById(R.id.skillsSpinner1);
-            this.mSkillLevelSeekBar = itemView.findViewById(R.id.skillLevelSlider1);
+            mSkillSpinner = itemView.findViewById(R.id.skillsSpinner1);
+            mSkillLevelValueTextView = itemView.findViewById(R.id.skillLevelValueLabel1);
+            mSkillLevelSeekBar = itemView.findViewById(R.id.skillLevelSlider1);
+            mSkillLevelSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    mSkillLevelValueTextView.setText(progress+"");
+                }
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+                    //write custom code to on start progress
+                }
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+                }
+            });
+
             mSkillsArray = itemView.getResources().getStringArray(R.array.skills_array);
             mSkillSpinner.setOnItemSelectedListener(this);
         }
