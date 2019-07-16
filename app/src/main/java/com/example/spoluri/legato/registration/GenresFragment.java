@@ -34,12 +34,6 @@ public class GenresFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_genres, container, false);
         ButterKnife.bind(this, view);
-        return view;
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
 
         adapter = ArrayAdapter.createFromResource(getContext(),
                 R.array.genres_array, android.R.layout.simple_list_item_multiple_choice);
@@ -51,6 +45,8 @@ public class GenresFragment extends Fragment {
                 validate();
             }
         });
+
+        return view;
     }
 
     private void validate() {
