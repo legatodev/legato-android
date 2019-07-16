@@ -74,16 +74,25 @@ class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
             if (filters.hasLookingfor()) {
                 addRow = row.getLookingfor().contentEquals(filters.getLookingfor());
             }
+            else {
+                addRow = true;
+            }
 
             if (addRow) {
                 if (filters.hasGenres()) {
                     addRow = row.getGenres().contains(filters.getGenres());
+                }
+                else {
+                    addRow = true;
                 }
             }
 
             if (addRow) {
                 if (filters.hasSkills()) {
                     addRow = row.getSkills().contains(filters.getSkills());
+                }
+                else {
+                    addRow = true;
                 }
             }
 
