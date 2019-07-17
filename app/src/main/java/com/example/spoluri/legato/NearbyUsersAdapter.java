@@ -16,6 +16,7 @@ import java.util.Map;
 import co.chatsdk.core.dao.User;
 import co.chatsdk.core.session.ChatSDK;
 import io.reactivex.Completable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
 
@@ -33,17 +34,18 @@ class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
             Map.Entry pair = (Map.Entry)it.next();
             User user = ChatSDK.db().fetchOrCreateEntityWithEntityID(User.class, (String)pair.getKey());
             Completable completable = ChatSDK.core().userOn(user);
-            completable.subscribe(() -> {
+            completable.observeOn(AndroidSchedulers.mainThread()).subscribe(() -> {
                 // User object has now been populated and is ready to use
                 if (!user.isMe()) {
                     this.nearbyUsers.add(new NearbyUser(user, (String) pair.getValue()));
+                    this.nearbyUsersFiltered = this.nearbyUsers;
+                    notifyDataSetChanged();
                 }
             }, throwable -> {
 
             });
         }
 
-        this.nearbyUsersFiltered = this.nearbyUsers;
     }
 
     @NonNull
@@ -63,7 +65,7 @@ class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
 
     @Override
     public int getItemCount() {
-        return this.nearbyUsersFiltered.size();
+        return this.nearbyUsersFiltered != null?this.nearbyUsersFiltered.size():0;
     }
 
     public void onFilter(Filters filters) {
