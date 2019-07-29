@@ -65,10 +65,9 @@ public class UserProfileFragment extends BaseFragment {
     private UserProfileInfoAdapter userProfileInfoAdapter;
     private String mYoutubeVideo = "";
     private DisposableList disposableList = new DisposableList();
-    protected boolean startingChat = false;
+    private boolean startingChat = false;
     private ArrayList<UserProfileInfo> profileInfo;
-
-    protected User user;
+    private User user;
 
     public UserProfileFragment() {
         profileInfo = new ArrayList<>();
@@ -79,15 +78,15 @@ public class UserProfileFragment extends BaseFragment {
     }
 
     public static UserProfileFragment newInstance(User user) {
-        UserProfileFragment f = new UserProfileFragment();
-        Bundle b = new Bundle();
+        UserProfileFragment userProfileFragment = new UserProfileFragment();
+        Bundle bundle = new Bundle();
         if (user != null) {
-            b.putString(Keys.UserId, user.getEntityID());
+            bundle.putString(Keys.UserId, user.getEntityID());
         }
 
-        f.setArguments(b);
-        f.setRetainInstance(true);
-        return f;
+        userProfileFragment.setArguments(bundle);
+        userProfileFragment.setRetainInstance(true);
+        return userProfileFragment;
     }
 
     @Override
@@ -96,19 +95,34 @@ public class UserProfileFragment extends BaseFragment {
 
         if (savedInstanceState != null && savedInstanceState.getString(Keys.UserId) != null) {
             user = ChatSDK.db().fetchUserWithEntityID(savedInstanceState.getString(Keys.UserId));
-        }
 
-        disposableList.add(ChatSDK.events().sourceOnMain().filter(NetworkEvent.filterType(EventType.UserMetaUpdated, EventType.UserPresenceUpdated))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(networkEvent -> {
-                    if (networkEvent.user.equals(getUser())) {
-                        reloadData();
-                    }
-                }));
+            disposableList.add(ChatSDK.events().sourceOnMain().filter(NetworkEvent.filterType(EventType.UserMetaUpdated, EventType.UserPresenceUpdated))
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(networkEvent -> {
+                        if (networkEvent.user.equals(getUser())) {
+                            reloadData();
+                        }
+                    }));
+        }
 
         mainView = inflater.inflate(R.layout.fragment_user_profile, container, false);
         ButterKnife.bind(this, mainView);
 
+        initializeYoutubeFragment();
+
+        userProfileInfoAdapter = new UserProfileInfoAdapter(getContext(), R.layout.item_userprofileinfo);
+        userInfoRecyclerView.setAdapter(userProfileInfoAdapter);
+
+        DividerItemDecoration itemDecor = new DividerItemDecoration(userInfoRecyclerView.getContext(), DividerItemDecoration.HORIZONTAL);
+        userInfoRecyclerView.addItemDecoration(itemDecor);
+
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+        userInfoRecyclerView.setLayoutManager(layoutManager);
+
+        return mainView;
+    }
+
+    private void initializeYoutubeFragment() {
         YouTubePlayerSupportFragment youTubePlayerFragment = YouTubePlayerSupportFragment.newInstance();
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
@@ -134,17 +148,6 @@ public class UserProfileFragment extends BaseFragment {
                 Log.d("errorMessage:", errorMessage);
             }
         });
-
-        userProfileInfoAdapter = new UserProfileInfoAdapter(getContext(), R.layout.item_userprofileinfo);
-        userInfoRecyclerView.setAdapter(userProfileInfoAdapter);
-
-        DividerItemDecoration itemDecor = new DividerItemDecoration(userInfoRecyclerView.getContext(), DividerItemDecoration.HORIZONTAL);
-        userInfoRecyclerView.addItemDecoration(itemDecor);
-
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
-        userInfoRecyclerView.setLayoutManager(layoutManager);
-
-        return mainView;
     }
 
     protected User getUser () {
@@ -166,16 +169,15 @@ public class UserProfileFragment extends BaseFragment {
     public void updateInterface() {
         User user = getUser();
 
-        if (user == null) return;
-        //this.user = user;
+        if (user == null) {
+            return;
+        }
 
         boolean isCurrentUser = user.isMe();
         setHasOptionsMenu(isCurrentUser);
 
         setViewText(profileUserNameTextView, getUser().getName());
-
         setViewText(emailTextView, getUser().getEmail());
-
         if (profilePhotoImageView != null) {
             profilePhotoImageView.setImageURI(getUser().getAvatarURL());
         }
@@ -189,7 +191,6 @@ public class UserProfileFragment extends BaseFragment {
         }
 
         mYoutubeVideo = getUser().metaStringForKey(com.example.spoluri.legato.Keys.youtube);
-
         connectOrRemoveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

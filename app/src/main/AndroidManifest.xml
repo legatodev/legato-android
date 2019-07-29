@@ -23,7 +23,7 @@
             android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name=".registration.Band.BandRegistrationActivity"
+            android:name=".registration.band.BandRegistrationActivity"
             android:label="@string/title_activity_band_registration_tab"
             android:theme="@style/NoActionBarTheme"
             android:windowSoftInputMode="adjustPan" />

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".registration.solo.BandRegistrationActivity">
+    tools:context=".registration.band.BandRegistrationActivity">
 
     <com.google.android.material.tabs.TabLayout
         android:layout_width="match_parent"

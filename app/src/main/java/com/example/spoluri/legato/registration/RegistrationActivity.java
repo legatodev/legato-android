@@ -7,7 +7,7 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.spoluri.legato.R;
-import com.example.spoluri.legato.registration.Band.BandRegistrationActivity;
+import com.example.spoluri.legato.registration.band.BandRegistrationActivity;
 import com.example.spoluri.legato.registration.solo.SoloRegistrationActivity;
 
 public class RegistrationActivity extends AppCompatActivity {

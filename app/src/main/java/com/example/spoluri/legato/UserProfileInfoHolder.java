@@ -17,18 +17,12 @@ public class UserProfileInfoHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.contentTextView)
     TextView contentTextView;
 
-    private UserProfileInfo userProfileInfo;
-    private final Context context;
-
     public UserProfileInfoHolder(Context context, View itemView) {
         super(itemView);
-        this.context = context;
         ButterKnife.bind(this, itemView);
     }
 
     public void bindUserProfileInfo(UserProfileInfo userProfileInfo) {
-        this.userProfileInfo = userProfileInfo;
-
         if (userProfileInfo != null) {
             this.headlineTextView.setText(userProfileInfo.getTitle());
             this.contentTextView.setText(userProfileInfo.getData());

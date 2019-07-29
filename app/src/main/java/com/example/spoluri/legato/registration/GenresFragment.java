@@ -35,16 +35,18 @@ public class GenresFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_genres, container, false);
         ButterKnife.bind(this, view);
 
-        adapter = ArrayAdapter.createFromResource(getContext(),
-                R.array.genres_array, android.R.layout.simple_list_item_multiple_choice);
+        if (getContext() != null) {
+            adapter = ArrayAdapter.createFromResource(getContext(),
+                    R.array.genres_array, android.R.layout.simple_list_item_multiple_choice);
 
-        genresListView.setAdapter(adapter);
-        genresListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                validate();
-            }
-        });
+            genresListView.setAdapter(adapter);
+            genresListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    validate();
+                }
+            });
+        }
 
         return view;
     }
@@ -52,10 +54,12 @@ public class GenresFragment extends Fragment {
     private void validate() {
         int checkedCount = genresListView.getCheckedItemCount();
         valid = (checkedCount > 0);
-        if (valid) {
-            ((SoloRegistrationActivity) getActivity()).setVisibleTabCount(3);
-        } else {
-            ((SoloRegistrationActivity)getActivity()).setVisibleTabCount(2);
+        if (getActivity() != null) {
+            if (valid) {
+                ((SoloRegistrationActivity) getActivity()).setVisibleTabCount(3);
+            } else {
+                ((SoloRegistrationActivity)getActivity()).setVisibleTabCount(2);
+            }
         }
     }
 
@@ -65,8 +69,10 @@ public class GenresFragment extends Fragment {
         for (int i = 0; i < checked.size(); i++) {
             int position = checked.keyAt(i);
             if (checked.valueAt(i)) {
-                String genre = adapter.getItem(position).toString();
-                genres += (genre + "|");
+                if (adapter.getItem(position) != null) {
+                    String genre = adapter.getItem(position).toString();
+                    genres += (genre + "|");
+                }
             }
         }
 

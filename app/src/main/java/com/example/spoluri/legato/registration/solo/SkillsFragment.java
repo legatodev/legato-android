@@ -146,7 +146,9 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
 
         for (int i = 0; i < mSkillsAdapter.getItemCount(); i++) {
             SkillsAdapter.SkillsHolder holder = (SkillsAdapter.SkillsHolder)mSkillsRecyclerView.findViewHolderForAdapterPosition(i);
-            skills += holder.getSkill();
+            if (holder != null) {
+                skills += holder.getSkill();
+            }
         }
 
         return skills;

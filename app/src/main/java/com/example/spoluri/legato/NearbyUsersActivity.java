@@ -76,4 +76,10 @@ public class NearbyUsersActivity extends AppCompatActivity implements FilterDial
         Intent intent = new Intent(this, ActiveChatActivity.class);
         startActivity(intent);
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mNearbyUsersAdapter.onStop();
+    }
 }

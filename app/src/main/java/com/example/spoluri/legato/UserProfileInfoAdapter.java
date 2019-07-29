@@ -13,14 +13,14 @@ import java.util.List;
 
 class UserProfileInfoAdapter extends RecyclerView.Adapter<UserProfileInfoHolder> {
 
-    private List<UserProfileInfo> userProfileInfos;
+    private List<UserProfileInfo> userProfileInfoList;
     private final Context context;
     private final int itemResource;
 
     public UserProfileInfoAdapter(Context context, int itemResource) {
         this.context = context;
         this.itemResource = itemResource;
-        this.userProfileInfos = new ArrayList<>();
+        this.userProfileInfoList = new ArrayList<>();
     }
 
     @NonNull
@@ -34,17 +34,17 @@ class UserProfileInfoAdapter extends RecyclerView.Adapter<UserProfileInfoHolder>
 
     @Override
     public void onBindViewHolder(@NonNull UserProfileInfoHolder holder, int position) {
-        UserProfileInfo userProfileInfo = this.userProfileInfos.get(position);
+        UserProfileInfo userProfileInfo = this.userProfileInfoList.get(position);
         holder.bindUserProfileInfo(userProfileInfo);
     }
 
     @Override
     public int getItemCount() {
-        return this.userProfileInfos.size();
+        return this.userProfileInfoList.size();
     }
 
-    public void notifyData(ArrayList<UserProfileInfo> userProfileInfos) {
-        this.userProfileInfos = userProfileInfos;
+    public void notifyData(ArrayList<UserProfileInfo> userProfileInfoList) {
+        this.userProfileInfoList = userProfileInfoList;
         notifyDataSetChanged();
     }
 }

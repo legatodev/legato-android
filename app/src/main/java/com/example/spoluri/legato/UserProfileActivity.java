@@ -31,6 +31,7 @@ public class UserProfileActivity extends BaseActivity {
             }
         }
 
+        //TODO: is this the right way to handle it?
         ToastHelper.show(this, R.string.user_entity_id_not_set);
         finish();
     }

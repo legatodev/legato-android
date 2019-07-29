@@ -31,7 +31,6 @@
         android:text="@string/finish"
         android:background="@color/selector_selected"
         android:layout_alignParentBottom="true"
-        android:enabled="false"
-        android:onClick="onFinishBandRegistration"/>
+        android:enabled="false"/>
 
 </RelativeLayout>

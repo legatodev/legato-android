@@ -15,8 +15,10 @@ import java.util.Map;
 
 import co.chatsdk.core.dao.User;
 import co.chatsdk.core.session.ChatSDK;
+import co.chatsdk.core.utils.DisposableList;
 import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 
 class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
 
@@ -24,8 +26,10 @@ class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
     private List<NearbyUser> nearbyUsersFiltered;
     private final Context context;
     private final int itemResource;
+    private DisposableList disposableList;
 
     public NearbyUsersAdapter(Context context, int itemResource) {
+        this.disposableList = new DisposableList();
         this.context = context;
         this.itemResource = itemResource;
         this.nearbyUsers = new ArrayList<>();
@@ -34,7 +38,7 @@ class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
             Map.Entry pair = (Map.Entry)it.next();
             User user = ChatSDK.db().fetchOrCreateEntityWithEntityID(User.class, (String)pair.getKey());
             Completable completable = ChatSDK.core().userOn(user);
-            completable.observeOn(AndroidSchedulers.mainThread()).subscribe(() -> {
+            disposableList.add(completable.observeOn(AndroidSchedulers.mainThread()).subscribe(() -> {
                 // User object has now been populated and is ready to use
                 if (!user.isMe()) {
                     this.nearbyUsers.add(new NearbyUser(user, (String) pair.getValue()));
@@ -43,9 +47,8 @@ class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
                 }
             }, throwable -> {
 
-            });
+            }));
         }
-
     }
 
     @NonNull
@@ -72,7 +75,7 @@ class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
 
         List<NearbyUser> filteredList = new ArrayList<>();
         for (NearbyUser row : nearbyUsers) {
-            boolean addRow = false;
+            boolean addRow;
             if (filters.hasLookingfor()) {
                 addRow = row.getLookingfor().contentEquals(filters.getLookingfor());
             }
@@ -112,5 +115,9 @@ class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
 
         nearbyUsersFiltered = filteredList;
         notifyDataSetChanged();
+    }
+
+    public void onStop() {
+        disposableList.dispose();
     }
 }

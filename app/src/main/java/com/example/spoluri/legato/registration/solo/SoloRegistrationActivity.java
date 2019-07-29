@@ -114,7 +114,7 @@ public class SoloRegistrationActivity extends AppCompatActivity implements Skill
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry)it.next();
             user.setMetaString((String)pair.getKey(), (String)pair.getValue());
-            if (co.chatsdk.core.dao.Keys.AvatarURL == (String)pair.getKey()) {
+            if (co.chatsdk.core.dao.Keys.AvatarURL.equals((String)pair.getKey())) {
                 try {
                     // Check to see if the avatar URL is local or remote
                     File avatar = new File(new URI(ChatSDK.currentUser().getAvatarURL()).getPath());

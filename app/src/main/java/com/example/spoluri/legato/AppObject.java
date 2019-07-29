@@ -47,6 +47,7 @@ public class AppObject extends Application {
             ChatSDK.initialize(config.build(), new FirebaseNetworkAdapter(), new BaseInterfaceAdapter(context));
         }
         catch (ChatSDKException e) {
+            //TODO: handle failure
         }
 
         // File storage is needed for profile image upload and image messages

@@ -1,9 +1,10 @@
-package com.example.spoluri.legato.registration.Band;
+package com.example.spoluri.legato.registration.band;
 
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -83,6 +84,7 @@ public class BandRegistrationActivity extends AppCompatActivity {
             super(fm);
         }
 
+        @NonNull
         @Override
         public Fragment getItem(int position) {
             switch (position) {

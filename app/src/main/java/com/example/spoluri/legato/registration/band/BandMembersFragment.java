@@ -1,4 +1,4 @@
-package com.example.spoluri.legato.registration.Band;
+package com.example.spoluri.legato.registration.band;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
