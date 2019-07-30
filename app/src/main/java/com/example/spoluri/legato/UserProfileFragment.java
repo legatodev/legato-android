@@ -68,6 +68,7 @@ public class UserProfileFragment extends BaseFragment {
     private boolean startingChat = false;
     private ArrayList<UserProfileInfo> profileInfo;
     private User user;
+    private String distance;
 
     public UserProfileFragment() {
         profileInfo = new ArrayList<>();
@@ -175,14 +176,16 @@ public class UserProfileFragment extends BaseFragment {
 
         boolean isCurrentUser = user.isMe();
         setHasOptionsMenu(isCurrentUser);
+        String distance = isCurrentUser ? "0" : this.distance;
+        NearbyUser nearbyUser = new NearbyUser(user, distance);
 
-        setViewText(profileUserNameTextView, getUser().getName());
-        setViewText(emailTextView, getUser().getEmail());
+        setViewText(profileUserNameTextView, nearbyUser.getUsername());
+        setViewText(emailTextView, nearbyUser.getEmail());
         if (profilePhotoImageView != null) {
-            profilePhotoImageView.setImageURI(getUser().getAvatarURL());
+            profilePhotoImageView.setImageURI(nearbyUser.getPhotourl());
         }
 
-        String availability = getUser().getAvailability();
+        String availability = nearbyUser.getAvailability();
         if (availability != null && !isCurrentUser && profileUserAvailabilityImageView != null) {
             profileUserAvailabilityImageView.setImageResource(AvailabilityHelper.imageResourceIdForAvailability(availability));
             setViewVisibility(profileUserAvailabilityImageView, true);
@@ -190,7 +193,7 @@ public class UserProfileFragment extends BaseFragment {
             setViewVisibility(profileUserAvailabilityImageView, false);
         }
 
-        mYoutubeVideo = getUser().metaStringForKey(com.example.spoluri.legato.Keys.youtube);
+        mYoutubeVideo = nearbyUser.getYoutube();
         connectOrRemoveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -199,8 +202,8 @@ public class UserProfileFragment extends BaseFragment {
         });
 
         profileInfo.clear();
-        profileInfo.add(new UserProfileInfo("Skills", user.metaStringForKey(com.example.spoluri.legato.Keys.skills)));
-        profileInfo.add(new UserProfileInfo("Genres", user.metaStringForKey(com.example.spoluri.legato.Keys.genres)));
+        profileInfo.add(new UserProfileInfo("Skills", nearbyUser.getSkills()));
+        profileInfo.add(new UserProfileInfo("Genres", nearbyUser.getGenres()));
         userProfileInfoAdapter.notifyData(profileInfo);
     }
 

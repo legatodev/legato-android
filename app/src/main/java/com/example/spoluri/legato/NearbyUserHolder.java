@@ -137,6 +137,7 @@ public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.On
     public void onClick(View v) {
         Intent intent = new Intent(this.context, UserProfileActivity.class);
         intent.putExtra(Keys.USER_ENTITY_ID, nearbyUser.getEntityID());
+        intent.putExtra("distance", nearbyUser.getDistance());
         context.startActivity(intent);
     }
 }

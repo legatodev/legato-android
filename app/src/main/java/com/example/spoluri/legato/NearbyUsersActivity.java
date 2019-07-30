@@ -17,6 +17,8 @@ import com.example.spoluri.legato.messaging.ActiveChatActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import co.chatsdk.core.dao.Keys;
+import co.chatsdk.core.session.ChatSDK;
 
 public class NearbyUsersActivity extends AppCompatActivity implements FilterDialogFragment.FilterListener  {
 
@@ -65,7 +67,7 @@ public class NearbyUsersActivity extends AppCompatActivity implements FilterDial
         mNearbyUsersAdapter.onFilter(filters);
     }
 
-    @OnClick(R.id.filterBar)
+    @OnClick(R.id.buttonFilter)
     public void onFilterClicked() {
         // Show the dialog containing filter options
         mFilterDialog.show(getSupportFragmentManager(), FilterDialogFragment.TAG);
@@ -74,6 +76,13 @@ public class NearbyUsersActivity extends AppCompatActivity implements FilterDial
     @OnClick(R.id.buttonActiveChats)
     public void onActiveChatsClicked() {
         Intent intent = new Intent(this, ActiveChatActivity.class);
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.buttonSettings)
+    public void onSettingsClicked() {
+        Intent intent = new Intent(this, UserProfileActivity.class);
+        intent.putExtra(Keys.USER_ENTITY_ID, ChatSDK.currentUserID());
         startActivity(intent);
     }
 

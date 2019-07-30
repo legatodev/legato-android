@@ -1,9 +1,11 @@
 package com.example.spoluri.legato;
 
+import java.io.Serializable;
+
 import co.chatsdk.core.dao.User;
 import co.chatsdk.core.session.ChatSDK;
 
-class NearbyUser {
+class NearbyUser implements Serializable {
 
     private String distance;
     private User user;
@@ -76,4 +78,12 @@ class NearbyUser {
     public String getFacebook() { return this.user.metaStringForKey(Keys.facebook); }
 
     public String getYoutubeChannel() { return this.user.metaStringForKey(Keys.youtube_channel); }
+
+    public boolean isMe() { return user.isMe(); }
+
+    public String getEmail() { return user.getEmail(); }
+
+    public String getYoutube() { return user.metaStringForKey(com.example.spoluri.legato.Keys.youtube); }
+
+    public User getUser() { return user;}
 }

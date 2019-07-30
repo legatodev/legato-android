@@ -41,9 +41,10 @@ class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
             disposableList.add(completable.observeOn(AndroidSchedulers.mainThread()).subscribe(() -> {
                 // User object has now been populated and is ready to use
                 if (!user.isMe()) {
-                    this.nearbyUsers.add(new NearbyUser(user, (String) pair.getValue()));
+                    NearbyUser nearbyUser = new NearbyUser(user, (String) pair.getValue());
+                    this.nearbyUsers.add(nearbyUser);
                     this.nearbyUsersFiltered = this.nearbyUsers;
-                    notifyDataSetChanged();
+                    notifyItemInserted(this.nearbyUsersFiltered.size() - 1);
                 }
             }, throwable -> {
 
