@@ -69,6 +69,7 @@ class SkillsAdapter extends RecyclerView.Adapter<SkillsAdapter.SkillsHolder>{
             mSkillSpinner = itemView.findViewById(R.id.skillsSpinner1);
             mSkillLevelValueTextView = itemView.findViewById(R.id.skillLevelValueLabel1);
             mSkillLevelSeekBar = itemView.findViewById(R.id.skillLevelSlider1);
+            mSkillLevelSeekBar.setEnabled(false);
             mSkillLevelSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -95,6 +96,7 @@ class SkillsAdapter extends RecyclerView.Adapter<SkillsAdapter.SkillsHolder>{
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             mOnSkillSelectedListener.onSkillSelected(view, position);
+            mSkillLevelSeekBar.setEnabled(true);
         }
 
         @Override
