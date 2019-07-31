@@ -78,4 +78,13 @@ public class GenresFragment extends Fragment {
 
         return genres;
     }
+
+    //Called when the user navigates to this tab
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        if (isVisibleToUser)
+            validate();
+    }
 }

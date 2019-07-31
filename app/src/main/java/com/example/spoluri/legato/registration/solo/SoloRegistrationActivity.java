@@ -71,10 +71,13 @@ public class SoloRegistrationActivity extends AppCompatActivity implements Skill
         // Set up the ViewPager with the sections adapter.
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
+        //Don't destroy the last two fragments.
+        mViewPager.setOffscreenPageLimit(2);
+
         TabLayout tabLayout = findViewById(R.id.soloRegistrationTablayout);
         tabLayout.setupWithViewPager(mViewPager);
 
-        soloRegistrationTab = SoloArtistBasicInfoFragment.newInstance("Sarat", "Poluri");
+        soloRegistrationTab = new SoloArtistBasicInfoFragment();
         genresTab = new GenresFragment();
         skillsTab = new SkillsFragment(this);
     }
