@@ -128,7 +128,10 @@ public class AccountActivity extends YouTubeBaseActivity implements YouTubePlaye
 
     @Override
     public void onInitializationSuccess(Provider provider, YouTubePlayer player, boolean wasRestored) {
-        player.cueVideo(mYoutubeVideo);
+        if(mYoutubeVideo != null)
+            player.cueVideo(mYoutubeVideo);
+        else
+            Log.e(TAG, "Youtube video url not found:");
     }
 
     @Override
