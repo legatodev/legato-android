@@ -106,8 +106,10 @@ class SkillsAdapter extends RecyclerView.Adapter<SkillsAdapter.SkillsHolder>{
 
         public String getSkill() {
             String skill = "";
-            if (!((String)mSkillSpinner.getSelectedItem()).isEmpty()) {
-                skill += (mSkillSpinner.getSelectedItem() + " - " + mSkillLevelSeekBar + "|");
+            if(mSkillSpinner.getSelectedItem() != null){
+                if (!((String)mSkillSpinner.getSelectedItem()).isEmpty()) {
+                    skill += (mSkillSpinner.getSelectedItem() + " - " + mSkillLevelSeekBar + "|");
+                }
             }
 
             return skill;

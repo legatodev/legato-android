@@ -137,7 +137,10 @@ public class UserProfileFragment extends BaseFragment {
             public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player, boolean wasRestored) {
                 if (!wasRestored) {
                     player.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
-                    player.cueVideo(mYoutubeVideo);
+                    if(mYoutubeVideo != null)
+                        player.cueVideo(mYoutubeVideo);
+                    else
+                        Log.e(TAG, "Youtube video url not found:");
                 }
             }
 
