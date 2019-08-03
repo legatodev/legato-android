@@ -142,7 +142,7 @@ public class NearbyUsersActivity extends AppCompatActivity implements FilterDial
         String searchRadius = DEFAULT_SEARCH_RADIUS;
         if (mUser != null) {
             searchRadius = mUser.metaStringForKey(com.example.spoluri.legato.Keys.searchradius);
-            if (searchRadius == null && searchRadius.isEmpty())
+            if (!(searchRadius != null && !searchRadius.isEmpty()))
                 searchRadius = DEFAULT_SEARCH_RADIUS;
         }
 
