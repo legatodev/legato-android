@@ -33,23 +33,30 @@ class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
         this.context = context;
         this.itemResource = itemResource;
         this.nearbyUsers = new ArrayList<>();
-        Iterator it = GeofireHelper.getInstance().getNearbyUsers().entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry)it.next();
-            User user = ChatSDK.db().fetchOrCreateEntityWithEntityID(User.class, (String)pair.getKey());
-            Completable completable = ChatSDK.core().userOn(user);
-            disposableList.add(completable.observeOn(AndroidSchedulers.mainThread()).subscribe(() -> {
-                // User object has now been populated and is ready to use
-                if (!user.isMe()) {
-                    NearbyUser nearbyUser = new NearbyUser(user, (String) pair.getValue());
-                    this.nearbyUsers.add(nearbyUser);
-                    this.nearbyUsersFiltered = this.nearbyUsers;
-                    notifyItemInserted(this.nearbyUsersFiltered.size() - 1);
-                }
-            }, throwable -> {
+    }
 
-            }));
-        }
+    public void populateNearbyUsersList() {
+//        Iterator it = GeofireHelper.getInstance().getNearbyUsers().entrySet().iterator();
+//        while (it.hasNext()) {
+//            Map.Entry pair = (Map.Entry)it.next();
+//            addNearbyUserToRecyclerView((String)pair.getKey(), (String)pair.getValue());
+//        }
+    }
+
+    public void addNearbyUserToRecyclerView(String userId, String distance) {
+        User user = ChatSDK.db().fetchOrCreateEntityWithEntityID(User.class, (String) userId);
+        Completable completable = ChatSDK.core().userOn(user);
+        disposableList.add(completable.observeOn(AndroidSchedulers.mainThread()).subscribe(() -> {
+            // User object has now been populated and is ready to use
+            if (!user.isMe()) {
+                NearbyUser nearbyUser = new NearbyUser(user, (String) distance);
+                this.nearbyUsers.add(nearbyUser);
+                this.nearbyUsersFiltered = this.nearbyUsers;
+                notifyItemInserted(this.nearbyUsersFiltered.size() - 1);
+            }
+        }, throwable -> {
+
+        }));
     }
 
     @NonNull

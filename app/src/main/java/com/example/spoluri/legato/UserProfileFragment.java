@@ -25,6 +25,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import co.chatsdk.core.dao.Keys;
 import co.chatsdk.core.dao.User;
 import co.chatsdk.core.events.EventType;
@@ -61,6 +62,8 @@ public class UserProfileFragment extends BaseFragment {
     protected TextView profileUserNameTextView;
     @BindView(R.id.emailTextView)
     protected TextView emailTextView;
+    @BindView(R.id.logoutButton)
+    protected Button logoutButton;
 
     private UserProfileInfoAdapter userProfileInfoAdapter;
     private String mYoutubeVideo = "";
@@ -180,6 +183,8 @@ public class UserProfileFragment extends BaseFragment {
         boolean isCurrentUser = user.isMe();
         setHasOptionsMenu(isCurrentUser);
         String distance = isCurrentUser ? "0" : this.distance;
+        logoutButton.setVisibility(isCurrentUser?View.VISIBLE:View.INVISIBLE);
+
         NearbyUser nearbyUser = new NearbyUser(user, distance);
 
         setViewText(profileUserNameTextView, nearbyUser.getUsername());
@@ -208,6 +213,15 @@ public class UserProfileFragment extends BaseFragment {
         profileInfo.add(new UserProfileInfo("Skills", nearbyUser.getSkills()));
         profileInfo.add(new UserProfileInfo("Genres", nearbyUser.getGenres()));
         userProfileInfoAdapter.notifyData(profileInfo);
+    }
+
+    @OnClick(R.id.logoutButton)
+    public void onLogout(View view) {
+        ChatSDK.auth().logout()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(() -> ChatSDK.ui().startSplashScreenActivity(getActivity().getApplicationContext()), throwable -> {
+                    ChatSDK.logError(throwable);
+                });
     }
 
     @Override

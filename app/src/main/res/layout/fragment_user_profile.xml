@@ -212,5 +212,18 @@
             android:layout_below="@id/profileGalleryLayout"
             android:background="@color/white"
             tools:listitem="@layout/item_userprofileinfo"/>
+
+        <Button
+            android:id="@+id/logoutButton"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:text="@string/logout"
+            android:textSize="12sp"
+            android:textColor="@color/white"
+            android:background="@drawable/rounded_button"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/profileInfoRecyclerView"
+            android:layout_margin="8dp"
+            android:visibility="invisible"/>
     </RelativeLayout>
 </ScrollView>

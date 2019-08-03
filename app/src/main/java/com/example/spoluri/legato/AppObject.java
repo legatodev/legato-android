@@ -5,6 +5,7 @@ import android.content.Context;
 
 import androidx.multidex.MultiDex;
 
+import com.example.spoluri.legato.registration.RegistrationActivity;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.GoogleAuthProvider;
@@ -56,7 +57,7 @@ public class AppObject extends Application {
 
         // Uncomment this to enable Firebase UI
         FirebaseUIModule.activate(EmailAuthProvider.PROVIDER_ID, GoogleAuthProvider.PROVIDER_ID, FacebookAuthProvider.PROVIDER_ID);
-        ChatSDK.ui().setMainActivity(AccountActivity.class);
+        ChatSDK.ui().setMainActivity(RegistrationActivity.class);
     }
 
     @Override

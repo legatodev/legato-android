@@ -17,24 +17,31 @@ import java.text.DecimalFormat;
 import java.util.HashMap;
 
 class GeofireHelper {
+    public interface NearbyUserFoundListener {
+        void nearbyUserFound(String userId, String distance);
+    }
+
     private final String mUserId;
     private final GeoFire mGeoFire;
     private Location mCurrentLocation;
     private final FirebaseDatabase mFirebaseDatabase;
     private final HashMap<String, String> mNearHashMap; //TODO: maybe use sortedmap in order of distance.
 
+    private NearbyUserFoundListener nearbyUserFoundListener;
+
     private static GeofireHelper sGeofireInstance;
 
-    private GeofireHelper() {
+    private GeofireHelper(NearbyUserFoundListener nearbyUserFoundListener) {
+        this.nearbyUserFoundListener = nearbyUserFoundListener;
         mUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference userLocationDatabaseReference = mFirebaseDatabase.getReference().child("geofire");
         mGeoFire = new GeoFire(userLocationDatabaseReference);
         mNearHashMap = new HashMap<String, String>();
     }
-     public static GeofireHelper getInstance(){
+     public static GeofireHelper getInstance(NearbyUserFoundListener nearbyUserFoundListener){
         if(sGeofireInstance == null){
-            sGeofireInstance = new GeofireHelper();
+            sGeofireInstance = new GeofireHelper(nearbyUserFoundListener);
         }
 
         return  sGeofireInstance;
@@ -70,6 +77,7 @@ class GeofireHelper {
                         location.setLongitude(geoLocation.longitude);
                         final DecimalFormat df = new DecimalFormat("#.#");
                         final String distanceTo = df.format(mCurrentLocation.distanceTo(location) / 1000.0);
+                        nearbyUserFoundListener.nearbyUserFound(dataSnapshot.getKey(), distanceTo);
                         mNearHashMap.put(dataSnapshot.getKey(), distanceTo);
                     }
                 }
