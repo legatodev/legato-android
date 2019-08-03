@@ -53,7 +53,6 @@
     <string name="band_search_hint">search band members</string>
 
     <string-array name="looking_for">
-        <item>@string/value_any_lookingfor</item>
         <item>Jam Session</item>
         <item>Collaboration</item>
         <item>Join a band</item>

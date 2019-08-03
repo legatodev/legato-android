@@ -31,8 +31,7 @@
             android:id="@+id/lookfor"
             style="@style/AppTheme.FilterSpinner"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/icon_lookingfor"
-            android:entries="@array/looking_for" />
+            android:layout_toRightOf="@+id/icon_lookingfor"/>
     </RelativeLayout>
 
     <RelativeLayout
@@ -50,8 +49,7 @@
             android:id="@+id/genres"
             style="@style/AppTheme.FilterSpinner"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/icon_genres"
-            android:entries="@array/genres_array" />
+            android:layout_toRightOf="@+id/icon_genres"/>
 
     </RelativeLayout>
 
@@ -70,8 +68,7 @@
             android:id="@+id/skills"
             style="@style/AppTheme.FilterSpinner"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/icon_skills"
-            android:entries="@array/skills_array" />
+            android:layout_toRightOf="@+id/icon_skills"/>
 
     </RelativeLayout>
 

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="skills_array">
-        <item>@string/value_any_skills</item>
         <item>Piano</item>
         <item>Guitar</item>
         <item>Flute</item>

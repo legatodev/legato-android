@@ -5,11 +5,15 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -54,7 +58,43 @@ public class FilterDialogFragment extends DialogFragment {
         mRootView = inflater.inflate(R.layout.dialog_filters, container, false);
         unbinder = ButterKnife.bind(this, mRootView);
 
+        populateSkillsSpinner();
+        populateGenresSpinner();
+        populateLookingForSpinner();
+
         return mRootView;
+    }
+
+    private void populateSkillsSpinner() {
+        String[] skillsArray = getResources().getStringArray(R.array.skills_array);
+        ArrayList<String> skillsList = new ArrayList<String>(Arrays.asList(skillsArray));
+        skillsList.add(0, getResources().getString(R.string.value_any_skills));
+        // Creating ArrayAdapter using the string array and default spinner layout
+        ArrayAdapter<String> skillsAdapter = new ArrayAdapter<String>(getContext(),
+                R.layout.item_filter_spinner, skillsList);
+        mSkills.setAdapter(skillsAdapter);
+    }
+
+    private void populateGenresSpinner() {
+        String[] genresArray = getResources().getStringArray(R.array.genres_array);
+        ArrayList<String> genresList = new ArrayList<String>(Arrays.asList(genresArray));
+        genresList.add(0, getResources().getString(R.string.value_any_genres));
+        // Creating ArrayAdapter using the string array and default spinner layout
+        ArrayAdapter<String> genresAdapter = new ArrayAdapter<String>(getContext(),
+                R.layout.item_filter_spinner, genresList);
+
+        mGenres.setAdapter(genresAdapter);
+    }
+
+    private void populateLookingForSpinner() {
+        String[] lookingForArray = getResources().getStringArray(R.array.looking_for);
+        ArrayList<String> lookingForList = new ArrayList<String>(Arrays.asList(lookingForArray));
+        lookingForList.add(0, getResources().getString(R.string.value_any_lookingfor));
+        // Creating ArrayAdapter using the string array and default spinner layout
+        ArrayAdapter<String> lookingForAdapter = new ArrayAdapter<String>(getContext(),
+                R.layout.item_filter_spinner, lookingForList);
+
+        mLookingfor.setAdapter(lookingForAdapter);
     }
 
     @Override
