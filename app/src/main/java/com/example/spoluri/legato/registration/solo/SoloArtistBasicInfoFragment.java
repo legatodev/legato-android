@@ -2,6 +2,7 @@ package com.example.spoluri.legato.registration.solo;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -244,11 +245,13 @@ public class SoloArtistBasicInfoFragment extends Fragment implements View.OnClic
     }
 
     public HashMap<String, String> extractData() {
+        Resources res = getResources();
         HashMap<String, String> basicInfo = new HashMap<>();
         basicInfo.put(co.chatsdk.core.dao.Keys.Name, soloDisplayNameTextInputEditText.getText().toString().trim());
-        String lookingfor = jamCheckBox.isChecked()?"Jam Session":"" +
-                (collaborateCheckBox.isChecked()?"Ccllaboration":"") +
-                (startBandCheckBox.isChecked()?"Start a Band":"");
+        String[] lookingForArray = res.getStringArray(R.array.looking_for);
+        String lookingfor = jamCheckBox.isChecked()?lookingForArray[0]:"" +
+                (collaborateCheckBox.isChecked()?lookingForArray[1]:"") +
+                (startBandCheckBox.isChecked()?lookingForArray[2]:"");
         basicInfo.put(Keys.lookingfor, lookingfor);
         basicInfo.put(Keys.searchradius, Integer.toString(seekBarSearch.getProgress()));
         basicInfo.put(Keys.instagram, instagramTextInputEditText.getText().toString().trim());
