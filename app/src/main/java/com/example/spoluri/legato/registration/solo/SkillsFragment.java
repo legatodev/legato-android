@@ -140,9 +140,9 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
 
     public String extractData() {
         String skills = "";
-        skills += (vocalsCheckBox.isChecked()?"vocals |":"");
-        skills += (writingCheckBox.isChecked()?"writing |":"");
-        skills += (rapperCheckBox.isChecked()?"rapper |":"");
+        skills += (vocalsCheckBox.isChecked()?"vocals|":"");
+        skills += (writingCheckBox.isChecked()?"writing|":"");
+        skills += (rapperCheckBox.isChecked()?"rapper|":"");
 
         for (int i = 0; i < mSkillsAdapter.getItemCount(); i++) {
             SkillsAdapter.SkillsHolder holder = (SkillsAdapter.SkillsHolder)mSkillsRecyclerView.findViewHolderForAdapterPosition(i);

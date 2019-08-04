@@ -120,9 +120,16 @@ public class SoloArtistBasicInfoFragment extends Fragment implements View.OnClic
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_solo_artist_basic_info, container, false);
         ButterKnife.bind(this, view);
-
+        User user = ChatSDK.currentUser();
         layoutInflater = inflater;
         mContainer = container;
+
+        Resources res = getResources();
+        String[] rlookingfor = res.getStringArray(R.array.looking_for);
+        String dblookingfor = user.metaStringForKey(Keys.lookingfor);
+
+        if(dblookingfor.contains(rlookingfor[0]))
+            jamCheckBox.setChecked(true);
 
         jamCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -131,12 +138,17 @@ public class SoloArtistBasicInfoFragment extends Fragment implements View.OnClic
             }
         });
 
+        if(dblookingfor.contains(rlookingfor[1]))
+            collaborateCheckBox.setChecked(true);
         collaborateCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 validate();
             }
         });
+
+        if(dblookingfor.contains(rlookingfor[2]))
+            startBandCheckBox.setChecked(true);
 
         startBandCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -175,6 +187,7 @@ public class SoloArtistBasicInfoFragment extends Fragment implements View.OnClic
             public void onStopTrackingTouch(SeekBar seekBar) {
             }
         });
+        seekBarSearch.setProgress(Integer.parseInt(user.metaStringForKey(Keys.searchradius)));
 
         proximitySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -190,7 +203,6 @@ public class SoloArtistBasicInfoFragment extends Fragment implements View.OnClic
             }
         });
 
-        User user = ChatSDK.currentUser();
         soloDisplayNameTextInputEditText.setText(user.getName());
 
         soloDisplayNameTextInputEditText.addTextChangedListener(new TextWatcher() {
@@ -208,6 +220,10 @@ public class SoloArtistBasicInfoFragment extends Fragment implements View.OnClic
                 validate();
             }
         });
+
+        instagramTextInputEditText.setText(user.metaStringForKey(Keys.instagram));
+        facebookTextInputEditText.setText(user.metaStringForKey(Keys.facebook));
+        youtubeTextInputEditText.setText(user.metaStringForKey(Keys.youtube_channel));
 
         soloArtisitProfilePicImageView.setOnClickListener(tempView -> {
                 mediaSelector.startChooseImageActivity(getActivity(), MediaSelector.CropType.Circle,result -> {
@@ -248,10 +264,12 @@ public class SoloArtistBasicInfoFragment extends Fragment implements View.OnClic
         Resources res = getResources();
         HashMap<String, String> basicInfo = new HashMap<>();
         basicInfo.put(co.chatsdk.core.dao.Keys.Name, soloDisplayNameTextInputEditText.getText().toString().trim());
+
         String[] lookingForArray = res.getStringArray(R.array.looking_for);
-        String lookingfor = jamCheckBox.isChecked()?lookingForArray[0]:"" +
-                (collaborateCheckBox.isChecked()?lookingForArray[1]:"") +
-                (startBandCheckBox.isChecked()?lookingForArray[2]:"");
+        String lookingfor = jamCheckBox.isChecked()?lookingForArray[0]+"|":"";
+        lookingfor += collaborateCheckBox.isChecked()?lookingForArray[1]+"|":"";
+        lookingfor += startBandCheckBox.isChecked()?lookingForArray[2]+"|":"";
+
         basicInfo.put(Keys.lookingfor, lookingfor);
         basicInfo.put(Keys.searchradius, Integer.toString(seekBarSearch.getProgress()));
         basicInfo.put(Keys.instagram, instagramTextInputEditText.getText().toString().trim());
