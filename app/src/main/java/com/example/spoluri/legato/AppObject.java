@@ -42,18 +42,17 @@ public class AppObject extends Application {
             config.firebaseRootPath("prod");
             config.logoDrawableResourceID(R.drawable.legato_logo);
 
-
             // Start the Chat SDK and pass in the interface adapter and network adapter. By subclassing either
             // of these classes you could modify deep functionality withing the Chat SDK
             ChatSDK.initialize(config.build(), new FirebaseNetworkAdapter(), new BaseInterfaceAdapter(context));
+
+            // File storage is needed for profile image upload and image messages
+            FirebaseFileStorageModule.activate();
+            FirebaseSocialLoginModule.activate(getApplicationContext());
         }
         catch (ChatSDKException e) {
-            //TODO: handle failure
+            e.printStackTrace();
         }
-
-        // File storage is needed for profile image upload and image messages
-        FirebaseFileStorageModule.activate();
-        FirebaseSocialLoginModule.activate(getApplicationContext());
 
         // Uncomment this to enable Firebase UI
         FirebaseUIModule.activate(EmailAuthProvider.PROVIDER_ID, GoogleAuthProvider.PROVIDER_ID, FacebookAuthProvider.PROVIDER_ID);

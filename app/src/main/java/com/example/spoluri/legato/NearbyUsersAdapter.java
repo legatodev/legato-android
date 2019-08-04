@@ -35,14 +35,6 @@ class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
         this.nearbyUsers = new ArrayList<>();
     }
 
-    public void populateNearbyUsersList() {
-//        Iterator it = GeofireHelper.getInstance().getNearbyUsers().entrySet().iterator();
-//        while (it.hasNext()) {
-//            Map.Entry pair = (Map.Entry)it.next();
-//            addNearbyUserToRecyclerView((String)pair.getKey(), (String)pair.getValue());
-//        }
-    }
-
     public void addNearbyUserToRecyclerView(String userId, String distance) {
         User user = ChatSDK.db().fetchOrCreateEntityWithEntityID(User.class, (String) userId);
         Completable completable = ChatSDK.core().userOn(user);

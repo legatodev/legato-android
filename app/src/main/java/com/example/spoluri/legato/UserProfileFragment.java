@@ -89,13 +89,14 @@ public class UserProfileFragment extends BaseFragment {
         }
 
         userProfileFragment.setArguments(bundle);
-        userProfileFragment.setRetainInstance(true);
         return userProfileFragment;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
+        mainView = inflater.inflate(R.layout.fragment_user_profile, container, false);
+        ButterKnife.bind(this, mainView);
 
         if (savedInstanceState != null && savedInstanceState.getString(Keys.UserId) != null) {
             user = ChatSDK.db().fetchUserWithEntityID(savedInstanceState.getString(Keys.UserId));
@@ -109,11 +110,6 @@ public class UserProfileFragment extends BaseFragment {
                     }));
         }
 
-        mainView = inflater.inflate(R.layout.fragment_user_profile, container, false);
-        ButterKnife.bind(this, mainView);
-
-        initializeYoutubeFragment();
-
         userProfileInfoAdapter = new UserProfileInfoAdapter(getContext(), R.layout.item_userprofileinfo);
         userInfoRecyclerView.setAdapter(userProfileInfoAdapter);
 
@@ -126,35 +122,41 @@ public class UserProfileFragment extends BaseFragment {
         return mainView;
     }
 
-    private void initializeYoutubeFragment() {
-        YouTubePlayerSupportFragment youTubePlayerFragment = YouTubePlayerSupportFragment.newInstance();
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+    public void initializeYoutubeFragment() {
+        if (mYoutubeVideo != null && !mYoutubeVideo.isEmpty()) {
+            YouTubePlayerSupportFragment youTubePlayerFragment = YouTubePlayerSupportFragment.newInstance();
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
-        transaction.replace(R.id.youtubeView, youTubePlayerFragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
+            transaction.replace(R.id.youtubeView, youTubePlayerFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
 
-        youTubePlayerFragment.initialize(AppConstants.YOUTUBE_API_KEY, new YouTubePlayer.OnInitializedListener() {
+            youTubePlayerFragment.initialize(AppConstants.YOUTUBE_API_KEY, new YouTubePlayer.OnInitializedListener() {
 
-            @Override
-            public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player, boolean wasRestored) {
-                if (!wasRestored) {
-                    player.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
-                    if(mYoutubeVideo != null)
-                        player.cueVideo(mYoutubeVideo);
-                    else
-                        Log.e(TAG, "Youtube video url not found:");
+                @Override
+                public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player, boolean wasRestored) {
+                    if (!wasRestored) {
+                        player.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
+                        if (mYoutubeVideo != null)
+                            player.cueVideo(mYoutubeVideo);
+                        else {
+                            Log.e(TAG, "Youtube video url not found:");
+                        }
+                    }
                 }
-            }
 
-            @Override
-            public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult error) {
-                // YouTube error
-                String errorMessage = error.toString();
-                Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_LONG).show();
-                Log.d("errorMessage:", errorMessage);
-            }
-        });
+                @Override
+                public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult error) {
+                    // YouTube error
+                    String errorMessage = error.toString();
+                    Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_LONG).show();
+                    Log.d("errorMessage:", errorMessage);
+                }
+            });
+        }
+        else {
+            mainView.findViewById(R.id.youtubeView).setVisibility(View.INVISIBLE);
+        }
     }
 
     protected User getUser () {
@@ -234,6 +236,7 @@ public class UserProfileFragment extends BaseFragment {
     @Override
     public void reloadData() {
         updateInterface();
+        initializeYoutubeFragment();
     }
 
     public void setUser (User user) {
