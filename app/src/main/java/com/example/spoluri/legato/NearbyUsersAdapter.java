@@ -84,7 +84,7 @@ class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
         List<NearbyUser> filteredList = new ArrayList<>();
         for (NearbyUser row : nearbyUsers) {
             boolean addRow;
-            if (filters.hasLookingfor()) {
+            if (filters.hasLookingfor()&& row.getLookingfor() != null) {
                 addRow = row.getLookingfor().contentEquals(filters.getLookingfor());
             }
             else {
@@ -92,7 +92,7 @@ class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
             }
 
             if (addRow) {
-                if (filters.hasGenres()) {
+                if (filters.hasGenres() && row.getGenres() != null) {
                     addRow = row.getGenres().contains(filters.getGenres());
                 }
                 else {
@@ -101,7 +101,7 @@ class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
             }
 
             if (addRow) {
-                if (filters.hasSkills()) {
+                if (filters.hasSkills() && row.getSkills() != null) {
                     addRow = row.getSkills().contains(filters.getSkills());
                 }
                 else {

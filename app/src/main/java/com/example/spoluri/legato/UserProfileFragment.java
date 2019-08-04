@@ -184,6 +184,7 @@ public class UserProfileFragment extends BaseFragment {
         setHasOptionsMenu(isCurrentUser);
         String distance = isCurrentUser ? "0" : this.distance;
         logoutButton.setVisibility(isCurrentUser?View.VISIBLE:View.INVISIBLE);
+        connectOrRemoveButton.setVisibility(isCurrentUser?View.INVISIBLE:View.VISIBLE);
 
         NearbyUser nearbyUser = new NearbyUser(user, distance);
 
@@ -217,11 +218,12 @@ public class UserProfileFragment extends BaseFragment {
 
     @OnClick(R.id.logoutButton)
     public void onLogout(View view) {
-        ChatSDK.auth().logout()
+        disposableList.add(ChatSDK.auth().logout()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(() -> ChatSDK.ui().startSplashScreenActivity(getActivity().getApplicationContext()), throwable -> {
                     ChatSDK.logError(throwable);
-                });
+                })
+        );
     }
 
     @Override
