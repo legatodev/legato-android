@@ -19,6 +19,7 @@ import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import co.chatsdk.core.dao.User;
 import id.zelory.compressor.Compressor;
 
 import androidx.annotation.NonNull;
@@ -187,6 +188,9 @@ public class SoloArtistBasicInfoFragment extends Fragment implements View.OnClic
                 validate();
             }
         });
+
+        User user = ChatSDK.currentUser();
+        soloDisplayNameTextInputEditText.setText(user.getName());
 
         soloDisplayNameTextInputEditText.addTextChangedListener(new TextWatcher() {
             @Override

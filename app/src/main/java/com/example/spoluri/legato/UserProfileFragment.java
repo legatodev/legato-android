@@ -1,5 +1,6 @@
 package com.example.spoluri.legato;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +17,8 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.spoluri.legato.registration.RegistrationActivity;
+import com.example.spoluri.legato.registration.solo.SoloRegistrationActivity;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
@@ -54,6 +57,8 @@ public class UserProfileFragment extends BaseFragment {
     protected TextView featuredBandNameTextView;
     @BindView(R.id.connectOrRemoveButton)
     protected Button connectOrRemoveButton;
+    @BindView(R.id.editProfileButton)
+    protected Button editProfileButton;
     @BindView(R.id.profileInfoRecyclerView)
     protected RecyclerView userInfoRecyclerView;
     @BindView(R.id.galleryHorizontalScrollViewLayout)
@@ -173,6 +178,12 @@ public class UserProfileFragment extends BaseFragment {
         if (textView != null) textView.setText(text);
     }
 
+    @OnClick(R.id.editProfileButton)
+    public void onEditProfileClicked() {
+        Intent intent = new Intent(getContext(), SoloRegistrationActivity.class);
+        startActivity(intent);
+    }
+
     public void updateInterface() {
         User user = getUser();
 
@@ -181,6 +192,9 @@ public class UserProfileFragment extends BaseFragment {
         }
 
         boolean isCurrentUser = user.isMe();
+        if(!isCurrentUser)
+            editProfileButton.setVisibility(View.GONE);
+
         setHasOptionsMenu(isCurrentUser);
         String distance = isCurrentUser ? "0" : this.distance;
         logoutButton.setVisibility(isCurrentUser?View.VISIBLE:View.INVISIBLE);
