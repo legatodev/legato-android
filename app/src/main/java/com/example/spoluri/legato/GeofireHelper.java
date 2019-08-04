@@ -16,6 +16,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 
+import co.chatsdk.core.session.ChatSDK;
+
 class GeofireHelper {
     public interface NearbyUserFoundListener {
         void nearbyUserFound(String userId, String distance);
@@ -24,7 +26,6 @@ class GeofireHelper {
     private final String mUserId;
     private final GeoFire mGeoFire;
     private Location mCurrentLocation;
-    private final FirebaseDatabase mFirebaseDatabase;
     private final HashMap<String, String> mNearHashMap; //TODO: maybe use sortedmap in order of distance.
 
     private NearbyUserFoundListener nearbyUserFoundListener;
@@ -33,12 +34,13 @@ class GeofireHelper {
 
     private GeofireHelper(NearbyUserFoundListener nearbyUserFoundListener) {
         this.nearbyUserFoundListener = nearbyUserFoundListener;
-        mUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mUserId = ChatSDK.currentUser().getEntityID();
+        FirebaseDatabase mFirebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference userLocationDatabaseReference = mFirebaseDatabase.getReference().child("geofire");
         mGeoFire = new GeoFire(userLocationDatabaseReference);
         mNearHashMap = new HashMap<String, String>();
     }
+
      public static GeofireHelper getInstance(NearbyUserFoundListener nearbyUserFoundListener){
         if(sGeofireInstance == null){
             sGeofireInstance = new GeofireHelper(nearbyUserFoundListener);

@@ -221,6 +221,7 @@ public class SoloArtistBasicInfoFragment extends Fragment implements View.OnClic
                         avatarUrl = Uri.fromFile(file).toString();
                     }
                     catch (Exception e) {
+                        e.printStackTrace();
                         ChatSDK.logError(e);
                     }
                 });

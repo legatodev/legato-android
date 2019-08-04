@@ -86,6 +86,11 @@ public class NearbyUsersActivity extends AppCompatActivity implements FilterDial
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
         mNearbyUsersAdapter.onStop();

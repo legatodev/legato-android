@@ -17,6 +17,7 @@ import co.chatsdk.firebase.FirebaseNetworkAdapter;
 import co.chatsdk.firebase.file_storage.FirebaseFileStorageModule;
 import co.chatsdk.firebase.social_login.FirebaseSocialLoginModule;
 import co.chatsdk.ui.manager.BaseInterfaceAdapter;
+import io.reactivex.plugins.RxJavaPlugins;
 
 public class AppObject extends Application {
 
@@ -26,6 +27,11 @@ public class AppObject extends Application {
 
         // The Chat SDK needs access to the application's context
         Context context = getApplicationContext();
+
+        RxJavaPlugins.setErrorHandler(error -> {
+            //Log error or just ignore it
+            error.printStackTrace();
+        });
 
         // Initialize the Chat SDK
         // Pass in

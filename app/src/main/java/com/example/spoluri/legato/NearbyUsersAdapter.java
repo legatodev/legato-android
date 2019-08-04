@@ -111,6 +111,7 @@ class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
     }
 
     public void onStop() {
+        nearbyUsers.clear();
         disposableList.dispose();
     }
 }

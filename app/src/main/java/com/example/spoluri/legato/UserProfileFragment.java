@@ -267,5 +267,10 @@ public class UserProfileFragment extends BaseFragment {
         super.onStop();
         disposableList.dispose();
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
 }
 
