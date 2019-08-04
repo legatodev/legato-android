@@ -258,5 +258,11 @@ public class UserProfileFragment extends BaseFragment {
                     ToastHelper.show(getContext(), throwable.getLocalizedMessage());
                 }));
     }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        disposableList.dispose();
+    }
 }
 
