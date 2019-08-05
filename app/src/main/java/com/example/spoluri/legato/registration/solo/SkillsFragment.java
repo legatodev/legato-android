@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.spoluri.legato.Keys;
 import com.example.spoluri.legato.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -21,6 +22,8 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import co.chatsdk.core.dao.User;
+import co.chatsdk.core.session.ChatSDK;
 
 public class SkillsFragment extends Fragment implements View.OnClickListener, SkillsAdapter.SkillSelectedListener {
     public interface FinishClickedListener{
@@ -54,7 +57,11 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
         View view = inflater.inflate(R.layout.fragment_skills, container, false);
         ButterKnife.bind(this, view);
         skillSelected = false;
+        User user = ChatSDK.currentUser();
+        String dblookingfor = user.metaStringForKey(Keys.skills);
 
+        if(dblookingfor.contains("rapper"))
+            rapperCheckBox.setChecked(true);
         rapperCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -62,12 +69,18 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
             }
         });
 
+        if(dblookingfor.contains("vocals"))
+            vocalsCheckBox.setChecked(true);
+
         vocalsCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 validate();
             }
         });
+
+        if(dblookingfor.contains("writing"))
+            writingCheckBox.setChecked(true);
 
         writingCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
