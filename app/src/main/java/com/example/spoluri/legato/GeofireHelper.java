@@ -45,6 +45,9 @@ class GeofireHelper {
         if(sGeofireInstance == null){
             sGeofireInstance = new GeofireHelper(nearbyUserFoundListener);
         }
+        else {
+            sGeofireInstance.nearbyUserFoundListener = nearbyUserFoundListener;
+        }
 
         return  sGeofireInstance;
      }

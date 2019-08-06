@@ -106,7 +106,6 @@ public class NearbyUsersActivity extends AppCompatActivity implements FilterDial
     @Override
     protected void onStop() {
         super.onStop();
-        mNearbyUsersAdapter.onStop();
     }
 
     private void getLastLocation() {
@@ -175,5 +174,7 @@ public class NearbyUsersActivity extends AppCompatActivity implements FilterDial
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        mNearbyUsersAdapter.onDestroy();
+        mNearbyUserRecyclerView.setAdapter(null);
     }
 }

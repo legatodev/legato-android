@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -44,7 +45,8 @@ class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
                 NearbyUser nearbyUser = new NearbyUser(user, (String) distance);
                 this.nearbyUsers.add(nearbyUser);
                 this.nearbyUsersFiltered = this.nearbyUsers;
-                notifyItemInserted(this.nearbyUsersFiltered.size() - 1);
+                notifyDataSetChanged();
+                //notifyItemInserted(this.nearbyUsersFiltered.size() - 1);
             }
         }, throwable -> {
 
@@ -110,7 +112,7 @@ class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
         notifyDataSetChanged();
     }
 
-    public void onStop() {
+    public void onDestroy() {
         nearbyUsers.clear();
         disposableList.dispose();
     }
