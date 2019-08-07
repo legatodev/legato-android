@@ -27,6 +27,7 @@ public class UserProfileActivity extends BaseActivity {
                 UserProfileFragment fragment = (UserProfileFragment) getSupportFragmentManager().findFragmentById(R.id.user_profile_fragment);
                 fragment.setUser(user);
                 fragment.updateInterface();
+                fragment.initializeYoutubeFragment();
                 return;
             }
         }

@@ -1,11 +1,14 @@
 package com.example.spoluri.legato;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 
@@ -27,8 +30,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import co.chatsdk.core.dao.Keys;
+import co.chatsdk.core.dao.Message;
 import co.chatsdk.core.dao.User;
+import co.chatsdk.core.hook.Hook;
+import co.chatsdk.core.hook.HookEvent;
 import co.chatsdk.core.session.ChatSDK;
+import io.reactivex.Completable;
 
 public class NearbyUsersActivity extends AppCompatActivity implements FilterDialogFragment.FilterListener, GeofireHelper.NearbyUserFoundListener  {
 
@@ -46,7 +53,6 @@ public class NearbyUsersActivity extends AppCompatActivity implements FilterDial
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getLastLocation();
         setContentView(R.layout.activity_nearby_users);
         ButterKnife.bind(this);
         context = this;
@@ -59,6 +65,13 @@ public class NearbyUsersActivity extends AppCompatActivity implements FilterDial
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         mNearbyUserRecyclerView.setLayoutManager(layoutManager);
+
+        ChatSDK.hook().addHook(new Hook(data -> Completable.create(emitter -> {
+            this.finish();
+            emitter.onComplete();
+        })), HookEvent.WillLogout);
+
+        getLastLocation();
     }
 
     @Override
@@ -86,9 +99,13 @@ public class NearbyUsersActivity extends AppCompatActivity implements FilterDial
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
-        mNearbyUsersAdapter.onStop();
     }
 
     private void getLastLocation() {
@@ -152,5 +169,12 @@ public class NearbyUsersActivity extends AppCompatActivity implements FilterDial
     @Override
     public void nearbyUserFound(String userId, String distance) {
         mNearbyUsersAdapter.addNearbyUserToRecyclerView(userId, distance);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mNearbyUsersAdapter.onDestroy();
+        mNearbyUserRecyclerView.setAdapter(null);
     }
 }

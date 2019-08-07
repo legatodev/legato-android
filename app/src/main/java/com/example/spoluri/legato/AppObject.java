@@ -17,6 +17,7 @@ import co.chatsdk.firebase.FirebaseNetworkAdapter;
 import co.chatsdk.firebase.file_storage.FirebaseFileStorageModule;
 import co.chatsdk.firebase.social_login.FirebaseSocialLoginModule;
 import co.chatsdk.ui.manager.BaseInterfaceAdapter;
+import io.reactivex.plugins.RxJavaPlugins;
 
 public class AppObject extends Application {
 
@@ -26,6 +27,11 @@ public class AppObject extends Application {
 
         // The Chat SDK needs access to the application's context
         Context context = getApplicationContext();
+
+        RxJavaPlugins.setErrorHandler(error -> {
+            //Log error or just ignore it
+            error.printStackTrace();
+        });
 
         // Initialize the Chat SDK
         // Pass in
@@ -42,18 +48,17 @@ public class AppObject extends Application {
             config.firebaseRootPath("prod");
             config.logoDrawableResourceID(R.drawable.legato_logo);
 
-
             // Start the Chat SDK and pass in the interface adapter and network adapter. By subclassing either
             // of these classes you could modify deep functionality withing the Chat SDK
             ChatSDK.initialize(config.build(), new FirebaseNetworkAdapter(), new BaseInterfaceAdapter(context));
+
+            // File storage is needed for profile image upload and image messages
+            FirebaseFileStorageModule.activate();
+            FirebaseSocialLoginModule.activate(getApplicationContext());
         }
         catch (ChatSDKException e) {
-            //TODO: handle failure
+            e.printStackTrace();
         }
-
-        // File storage is needed for profile image upload and image messages
-        FirebaseFileStorageModule.activate();
-        FirebaseSocialLoginModule.activate(getApplicationContext());
 
         // Uncomment this to enable Firebase UI
         FirebaseUIModule.activate(EmailAuthProvider.PROVIDER_ID, GoogleAuthProvider.PROVIDER_ID, FacebookAuthProvider.PROVIDER_ID);

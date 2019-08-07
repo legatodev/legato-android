@@ -119,38 +119,41 @@ public class SoloRegistrationActivity extends AppCompatActivity implements Skill
             user.setMetaString((String)pair.getKey(), (String)pair.getValue());
             if (co.chatsdk.core.dao.Keys.AvatarURL.equals((String)pair.getKey())) {
                 try {
-                    // Check to see if the avatar URL is local or remote
-                    File avatar = new File(new URI(ChatSDK.currentUser().getAvatarURL()).getPath());
-                    Bitmap bitmap = BitmapFactory.decodeFile(avatar.getPath());
+                    if (ChatSDK.currentUser().getAvatarURL() != null && !ChatSDK.currentUser().getAvatarURL().isEmpty()) {
+                        // Check to see if the avatar URL is local or remote
+                        File avatar = new File(new URI(ChatSDK.currentUser().getAvatarURL()).getPath());
+                        Bitmap bitmap = BitmapFactory.decodeFile(avatar.getPath());
 
-                    if (new URL(ChatSDK.currentUser().getAvatarURL()).getHost() != null && bitmap != null && ChatSDK.upload() != null) {
-                        // Upload the image
-                        ChatSDK.upload().uploadImage(bitmap).subscribe(new Observer<FileUploadResult>() {
-                            @Override
-                            public void onSubscribe(@NonNull Disposable d) {
-                            }
-
-                            @Override
-                            public void onNext(@NonNull FileUploadResult fileUploadResult) {
-                                if (fileUploadResult.urlValid()) {
-                                    ChatSDK.currentUser().setAvatarURL(fileUploadResult.url);
-                                    ChatSDK.currentUser().update();
-                                    ChatSDK.events().source().onNext(NetworkEvent.userMetaUpdated(ChatSDK.currentUser()));
+                        if (new URL(ChatSDK.currentUser().getAvatarURL()).getHost() != null && bitmap != null && ChatSDK.upload() != null) {
+                            // Upload the image
+                            ChatSDK.upload().uploadImage(bitmap).subscribe(new Observer<FileUploadResult>() {
+                                @Override
+                                public void onSubscribe(@NonNull Disposable d) {
                                 }
-                            }
 
-                            @Override
-                            public void onError(@NonNull Throwable ex) {
-                                ChatSDK.logError(ex);
-                            }
+                                @Override
+                                public void onNext(@NonNull FileUploadResult fileUploadResult) {
+                                    if (fileUploadResult.urlValid()) {
+                                        ChatSDK.currentUser().setAvatarURL(fileUploadResult.url);
+                                        ChatSDK.currentUser().update();
+                                        ChatSDK.events().source().onNext(NetworkEvent.userMetaUpdated(ChatSDK.currentUser()));
+                                    }
+                                }
 
-                            @Override
-                            public void onComplete() {
-                            }
-                        });
+                                @Override
+                                public void onError(@NonNull Throwable ex) {
+                                    ChatSDK.logError(ex);
+                                }
+
+                                @Override
+                                public void onComplete() {
+                                }
+                            });
+                        }
                     }
                 }
                 catch (Exception e) {
+                    e.printStackTrace();
                     ChatSDK.logError(e);
                 }
             }

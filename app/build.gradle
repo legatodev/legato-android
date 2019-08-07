@@ -76,7 +76,6 @@ dependencies {
     implementation 'co.chatsdk.chatsdk:chat-sdk-firebase-adapter:4.7.0'
     implementation 'co.chatsdk.chatsdk:chat-sdk-firebase-file-storage:4.6.4'
     implementation 'co.chatsdk.chatsdk:chat-sdk-core:4.7.0'
-    implementation 'co.chatsdk.chatsdk:chat-sdk-firebase-push:4.6.4'
     implementation 'co.chatsdk.chatsdk:chat-sdk-firebase-ui:4.6.4'
     implementation 'co.chatsdk.chatsdk:chat-sdk-ui:4.7.0'
     implementation 'co.chatsdk.chatsdk:chat-sdk-firebase-social-login:4.7.0'
