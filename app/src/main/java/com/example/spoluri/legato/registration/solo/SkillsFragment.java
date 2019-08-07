@@ -1,5 +1,6 @@
 package com.example.spoluri.legato.registration.solo;
 
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,7 +40,7 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
     @BindView(R.id.writingCheckBox)
     CheckBox writingCheckBox;
     private SkillsAdapter mSkillsAdapter;
-    private ArrayList<Skill> mSkillArrayList;
+    private ArrayList<Skill> mSkillArrayList = new ArrayList<>();
     private boolean skillSelected;
     private Button finishButton;
     private static final int MAX_SKILLS = 6;
@@ -58,7 +59,21 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
         ButterKnife.bind(this, view);
         skillSelected = false;
         User user = ChatSDK.currentUser();
+        Resources res = getResources();
+
+        /*Creating pre-selected skill objects*/
         String dblookingfor = user.metaStringForKey(Keys.skills);
+        String[] dbskillsArray = dblookingfor.split("\\|", -1);
+        String[] resSkills = res.getStringArray(R.array.skills_array);
+        for(int i=0;i<resSkills.length;i++){
+            for(int j=0;j<dbskillsArray.length;j++){
+                if(dbskillsArray[j].contains(resSkills[i])){
+                    String skillLevel = dbskillsArray[j].replaceAll("[^\\d]", "");
+                    Skill s = new Skill("Choose Skill",Integer.parseInt(skillLevel));
+                    mSkillArrayList.add(s);
+                }
+            }
+        }
 
         if(dblookingfor.contains("rapper"))
             rapperCheckBox.setChecked(true);
@@ -98,14 +113,14 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
         View view = getView();
 
         if (view != null) {
-            mSkillArrayList = new ArrayList<>();
-            Skill skill = new Skill("Choose Skill", 0);
-            mSkillArrayList.add(skill);
+            if(mSkillArrayList.size()==0) {
+                Skill skill = new Skill("Choose Skill", 0);
+                mSkillArrayList.add(skill);
+            }
             mSkillsAdapter = new SkillsAdapter(getContext(), this, R.layout.item_skill, mSkillArrayList);
             mSkillsRecyclerView.setAdapter(mSkillsAdapter);
             DividerItemDecoration itemDecor = new DividerItemDecoration(mSkillsRecyclerView.getContext(), DividerItemDecoration.HORIZONTAL);
             mSkillsRecyclerView.addItemDecoration(itemDecor);
-
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
 
             mSkillsRecyclerView.setLayoutManager(layoutManager);
