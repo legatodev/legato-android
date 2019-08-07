@@ -8,17 +8,17 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:142839384361:android:8ae6ba85085750ab",
+        "mobilesdk_app_id": "1:142839384361:android:cce5809104a75e26",
         "android_client_info": {
-          "package_name": "com.example.spoluri.legato"
+          "package_name": "com.legato.music"
         }
       },
       "oauth_client": [
         {
-          "client_id": "142839384361-f37lgh75kthopva2274q51g46jb602st.apps.googleusercontent.com",
+          "client_id": "142839384361-1o4dtstga6gtgliniaujnukorp4acia4.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.spoluri.legato",
+            "package_name": "com.legato.music",
             "certificate_hash": "3c79b091c0605c83944477a6e1c496c025676f28"
           }
         },
@@ -33,20 +33,13 @@
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 2,
           "other_platform_oauth_client": [
             {
               "client_id": "142839384361-m1b8r7t5eh8q5r1p75096i6epgshfl3k.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
-        },
-        "ads_service": {
-          "status": 2
         }
       }
     }

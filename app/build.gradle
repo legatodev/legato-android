@@ -4,7 +4,7 @@ apply plugin: 'com.google.gms.google-services'
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "com.example.spoluri.legato"
+        applicationId "com.legato.music"
         minSdkVersion 21
         targetSdkVersion 28
         versionCode 1
@@ -38,7 +38,11 @@ android {
 }
 
 configurations {
-    all*.exclude group: 'com.google.guava', module: 'listenablefuture'
+    all{
+        exclude module: 'listenablefuture'
+        exclude module: 'httpclient'
+        exclude module: 'commons-logging'
+    }
 }
 
 dependencies {

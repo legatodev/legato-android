@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".messaging.ActiveChatActivity">
+    tools:context="com.legato.music.messaging.ActiveChatActivity">
 
     <FrameLayout
         android:id="@+id/activeChats"

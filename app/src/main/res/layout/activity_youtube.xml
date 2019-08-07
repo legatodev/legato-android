@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".youtube.YoutubeActivity">
+    tools:context="com.legato.music.youtube.YoutubeActivity">
 
     <LinearLayout
         android:layout_width="match_parent"

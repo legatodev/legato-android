@@ -1,4 +1,4 @@
-package com.example.spoluri.legato;
+package com.legato.music;
 
 import org.junit.Test;
 

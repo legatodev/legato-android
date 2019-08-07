@@ -1,4 +1,4 @@
-package com.example.spoluri.legato;
+package com.legato.music;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,7 +21,7 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.example.spoluri.legato", appContext.getPackageName());
+        assertEquals("com.legato.music", appContext.getPackageName());
         //Firebase.goOffline to do offline testing
     }
 }
