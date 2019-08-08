@@ -1,5 +1,6 @@
 package com.example.spoluri.legato.registration.solo;
 
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.spoluri.legato.Keys;
 import com.example.spoluri.legato.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -21,6 +23,8 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import co.chatsdk.core.dao.User;
+import co.chatsdk.core.session.ChatSDK;
 
 public class SkillsFragment extends Fragment implements View.OnClickListener, SkillsAdapter.SkillSelectedListener {
     public interface FinishClickedListener{
@@ -36,7 +40,7 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
     @BindView(R.id.writingCheckBox)
     CheckBox writingCheckBox;
     private SkillsAdapter mSkillsAdapter;
-    private ArrayList<Skill> mSkillArrayList;
+    private ArrayList<Skill> mSkillArrayList = new ArrayList<>();
     private boolean skillSelected;
     private Button finishButton;
     private static final int MAX_SKILLS = 6;
@@ -54,7 +58,25 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
         View view = inflater.inflate(R.layout.fragment_skills, container, false);
         ButterKnife.bind(this, view);
         skillSelected = false;
+        User user = ChatSDK.currentUser();
+        Resources res = getResources();
 
+        /*Creating pre-selected skill objects*/
+        String dblookingfor = user.metaStringForKey(Keys.skills);
+        String[] dbskillsArray = dblookingfor.split("\\|", -1);
+        String[] resSkills = res.getStringArray(R.array.skills_array);
+        for(int i=0;i<resSkills.length;i++){
+            for(int j=0;j<dbskillsArray.length;j++){
+                if(dbskillsArray[j].contains(resSkills[i])){
+                    String skillLevel = dbskillsArray[j].replaceAll("[^\\d]", "");
+                    Skill s = new Skill("Choose Skill",Integer.parseInt(skillLevel));
+                    mSkillArrayList.add(s);
+                }
+            }
+        }
+
+        if(dblookingfor.contains("rapper"))
+            rapperCheckBox.setChecked(true);
         rapperCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -62,12 +84,18 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
             }
         });
 
+        if(dblookingfor.contains("vocals"))
+            vocalsCheckBox.setChecked(true);
+
         vocalsCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 validate();
             }
         });
+
+        if(dblookingfor.contains("writing"))
+            writingCheckBox.setChecked(true);
 
         writingCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -85,14 +113,14 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
         View view = getView();
 
         if (view != null) {
-            mSkillArrayList = new ArrayList<>();
-            Skill skill = new Skill("Choose Skill", 0);
-            mSkillArrayList.add(skill);
+            if(mSkillArrayList.size()==0) {
+                Skill skill = new Skill("Choose Skill", 0);
+                mSkillArrayList.add(skill);
+            }
             mSkillsAdapter = new SkillsAdapter(getContext(), this, R.layout.item_skill, mSkillArrayList);
             mSkillsRecyclerView.setAdapter(mSkillsAdapter);
             DividerItemDecoration itemDecor = new DividerItemDecoration(mSkillsRecyclerView.getContext(), DividerItemDecoration.HORIZONTAL);
             mSkillsRecyclerView.addItemDecoration(itemDecor);
-
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
 
             mSkillsRecyclerView.setLayoutManager(layoutManager);
@@ -140,9 +168,9 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
 
     public String extractData() {
         String skills = "";
-        skills += (vocalsCheckBox.isChecked()?"vocals |":"");
-        skills += (writingCheckBox.isChecked()?"writing |":"");
-        skills += (rapperCheckBox.isChecked()?"rapper |":"");
+        skills += (vocalsCheckBox.isChecked()?"vocals|":"");
+        skills += (writingCheckBox.isChecked()?"writing|":"");
+        skills += (rapperCheckBox.isChecked()?"rapper|":"");
 
         for (int i = 0; i < mSkillsAdapter.getItemCount(); i++) {
             SkillsAdapter.SkillsHolder holder = (SkillsAdapter.SkillsHolder)mSkillsRecyclerView.findViewHolderForAdapterPosition(i);
