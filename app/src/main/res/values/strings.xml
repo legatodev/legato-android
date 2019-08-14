@@ -11,8 +11,8 @@
 
     <string name="app_name">Legato</string>
 
-    <string name="facebook_application_id">2089269674470093</string>
-    <string name="facebook_login_protocol_scheme" translatable="false">fb2089269674470093</string>
+    <string name="facebook_application_id">239074277018835</string>
+    <string name="facebook_login_protocol_scheme" translatable="false">fb239074277018835</string>
     <string name="login_email_label">Login with Email</string>
     <string name="login_phone_label">Login with Phone Number</string>
     <string name="account">Account</string>
