@@ -61,7 +61,6 @@ public class AppObject extends Application {
             e.printStackTrace();
         }
 
-        // Uncomment this to enable Firebase UI
         FirebaseUIModule.activate(EmailAuthProvider.PROVIDER_ID, GoogleAuthProvider.PROVIDER_ID, FacebookAuthProvider.PROVIDER_ID);
         ChatSDK.ui().setMainActivity(RegistrationActivity.class);
     }

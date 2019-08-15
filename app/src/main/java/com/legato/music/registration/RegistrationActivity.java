@@ -6,6 +6,7 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.legato.music.Keys;
 import com.legato.music.NearbyUsersActivity;
 import com.legato.music.R;
 import com.legato.music.registration.band.BandRegistrationActivity;
@@ -20,7 +21,7 @@ public class RegistrationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         if (ChatSDK.currentUser() != null) {
-            if (ChatSDK.currentUser().getName() != null && !ChatSDK.currentUser().getName().isEmpty()) {
+            if (ChatSDK.currentUser().metaStringForKey(Keys.skills) != null && !ChatSDK.currentUser().metaStringForKey(Keys.skills).isEmpty()) {
                 Intent intent = new Intent(this, NearbyUsersActivity.class);
                 startActivity(intent);
                 finish();
