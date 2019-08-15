@@ -109,6 +109,7 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
+        //TODO: Why does this need to be in onActivityCreated? Why can't it be in OnCreateView?
         super.onActivityCreated(savedInstanceState);
         View view = getView();
 
@@ -132,6 +133,8 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
             finishButton = view.findViewById(R.id.finishSoloRegistrationButton);
             finishButton.setOnClickListener(this);
         }
+
+        validate();
     }
 
     private void validate() {

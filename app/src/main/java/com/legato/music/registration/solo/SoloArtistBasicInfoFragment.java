@@ -247,6 +247,8 @@ public class SoloArtistBasicInfoFragment extends Fragment implements View.OnClic
                 });
         });
 
+        validate();
+
         return view;
     }
 

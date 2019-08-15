@@ -59,6 +59,8 @@ public class GenresFragment extends Fragment {
             });
         }
 
+        validate();
+
         return view;
     }
 
