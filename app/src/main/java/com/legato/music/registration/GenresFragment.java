@@ -46,11 +46,14 @@ public class GenresFragment extends Fragment {
 
             genresListView.setAdapter(adapter);
             int listCount = genresListView.getCount();
-            for(int i=0;i<listCount;i++){
-                if(dbgenres.contains(adapter.getItem(i).toString())){
-                    genresListView.setItemChecked(i,true);
+            if (dbgenres != null) {
+                for (int i = 0; i < listCount; i++) {
+                    if (dbgenres.contains(adapter.getItem(i).toString())) {
+                        genresListView.setItemChecked(i, true);
+                    }
                 }
             }
+
             genresListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

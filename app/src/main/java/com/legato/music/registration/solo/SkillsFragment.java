@@ -62,21 +62,30 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
         Resources res = getResources();
 
         /*Creating pre-selected skill objects*/
-        String dblookingfor = user.metaStringForKey(Keys.skills);
-        String[] dbskillsArray = dblookingfor.split("\\|", -1);
         String[] resSkills = res.getStringArray(R.array.skills_array);
-        for(int i=0;i<resSkills.length;i++){
-            for(int j=0;j<dbskillsArray.length;j++){
-                if(dbskillsArray[j].contains(resSkills[i])){
-                    String skillLevel = dbskillsArray[j].replaceAll("[^\\d]", "");
-                    Skill s = new Skill("Choose Skill",Integer.parseInt(skillLevel));
-                    mSkillArrayList.add(s);
+        String dblookingfor = user.metaStringForKey(Keys.skills);
+        if (dblookingfor != null && !dblookingfor.isEmpty()) {
+            String[] dbskillsArray = dblookingfor.split("\\|", -1);
+            for (int i = 0; i < resSkills.length; i++) {
+                for (int j = 0; j < dbskillsArray.length; j++) {
+                    if (dbskillsArray[j].contains(resSkills[i])) {
+                        String skillLevel = dbskillsArray[j].replaceAll("[^\\d]", "");
+                        Skill s = new Skill("Choose Skill", Integer.parseInt(skillLevel));
+                        mSkillArrayList.add(s);
+                    }
                 }
             }
+
+            if(dblookingfor.contains("rapper"))
+                rapperCheckBox.setChecked(true);
+
+            if(dblookingfor.contains("vocals"))
+                vocalsCheckBox.setChecked(true);
+
+            if(dblookingfor.contains("writing"))
+                writingCheckBox.setChecked(true);
         }
 
-        if(dblookingfor.contains("rapper"))
-            rapperCheckBox.setChecked(true);
         rapperCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -84,18 +93,12 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
             }
         });
 
-        if(dblookingfor.contains("vocals"))
-            vocalsCheckBox.setChecked(true);
-
         vocalsCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 validate();
             }
         });
-
-        if(dblookingfor.contains("writing"))
-            writingCheckBox.setChecked(true);
 
         writingCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override

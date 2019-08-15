@@ -127,8 +127,16 @@ public class SoloArtistBasicInfoFragment extends Fragment implements View.OnClic
         String[] rlookingfor = res.getStringArray(R.array.looking_for);
         String dblookingfor = user.metaStringForKey(Keys.lookingfor);
 
-        if(dblookingfor.contains(rlookingfor[0]))
-            jamCheckBox.setChecked(true);
+        if(dblookingfor != null) {
+            if (dblookingfor.contains(rlookingfor[0]))
+                jamCheckBox.setChecked(true);
+
+            if(dblookingfor.contains(rlookingfor[1]))
+                collaborateCheckBox.setChecked(true);
+
+            if(dblookingfor.contains(rlookingfor[2]))
+                startBandCheckBox.setChecked(true);
+        }
 
         jamCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -137,17 +145,12 @@ public class SoloArtistBasicInfoFragment extends Fragment implements View.OnClic
             }
         });
 
-        if(dblookingfor.contains(rlookingfor[1]))
-            collaborateCheckBox.setChecked(true);
         collaborateCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 validate();
             }
         });
-
-        if(dblookingfor.contains(rlookingfor[2]))
-            startBandCheckBox.setChecked(true);
 
         startBandCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -186,7 +189,8 @@ public class SoloArtistBasicInfoFragment extends Fragment implements View.OnClic
             public void onStopTrackingTouch(SeekBar seekBar) {
             }
         });
-        seekBarSearch.setProgress(Integer.parseInt(user.metaStringForKey(Keys.searchradius)));
+        String searchRadius = user.metaStringForKey(Keys.searchradius) == null || user.metaStringForKey(Keys.searchradius).isEmpty()?AppConstants.DEFAULT_SEARCH_RADIUS:user.metaStringForKey(Keys.searchradius);
+        seekBarSearch.setProgress(Integer.parseInt(searchRadius));
 
         proximitySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override

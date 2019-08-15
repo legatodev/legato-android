@@ -8,4 +8,5 @@ public interface AppConstants
     String SEARCH_VIDEO_MSG = "Searching Videos";
     String DIALOG_TITLE = "Loading";
     String ANONYMOUS = "anonymous";
+    String DEFAULT_SEARCH_RADIUS = "50";
 }

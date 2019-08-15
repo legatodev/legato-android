@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.legato.music.R;
+import com.legato.music.AppConstants;
 import com.legato.music.messaging.ActiveChatActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -32,8 +33,6 @@ import co.chatsdk.core.session.ChatSDK;
 import io.reactivex.Completable;
 
 public class NearbyUsersActivity extends AppCompatActivity implements FilterDialogFragment.FilterListener, GeofireHelper.NearbyUserFoundListener  {
-
-    private static final String DEFAULT_SEARCH_RADIUS = "50";
 
     @BindView(R.id.nearbyUserRecylerView)
     RecyclerView mNearbyUserRecyclerView;
@@ -150,11 +149,11 @@ public class NearbyUsersActivity extends AppCompatActivity implements FilterDial
 
     private void onLocationChanged(Location location) {
         geofireHelper.setLocation(location);
-        String searchRadius = DEFAULT_SEARCH_RADIUS;
+        String searchRadius = AppConstants.DEFAULT_SEARCH_RADIUS;
         if (mUser != null) {
             searchRadius = mUser.metaStringForKey(com.legato.music.Keys.searchradius);
             if (!(searchRadius != null && !searchRadius.isEmpty()))
-                searchRadius = DEFAULT_SEARCH_RADIUS;
+                searchRadius = AppConstants.DEFAULT_SEARCH_RADIUS;
         }
 
         geofireHelper.queryNeighbors(Integer.parseInt(searchRadius));

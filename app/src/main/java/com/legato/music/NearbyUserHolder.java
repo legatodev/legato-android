@@ -114,18 +114,18 @@ public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.On
     public void bindNearbyUser(NearbyUser nearbyUser) {
         this.nearbyUser = nearbyUser;
 
-        if (nearbyUser != null) {
-            this.nearbyUserPhoto.setImageURI(nearbyUser.getPhotourl());
-            this.nearbyUserName.setText(nearbyUser.getUsername());
-            this.nearbyUserDistance.setText(nearbyUser.getDistance() + " mi");
-            this.nearbyUserGenres.setText(nearbyUser.getGenres());
-            this.nearbyUserSkills.setText(nearbyUser.getSkills());
-            if (nearbyUser.getInstagram() != null && !nearbyUser.getInstagram().isEmpty())
-                this.setInstagramOnClick(nearbyUser.getInstagram());
-            if (nearbyUser.getFacebook() != null && !nearbyUser.getFacebook().isEmpty())
-                this.setFacebookOnClick(nearbyUser.getFacebook());
-            if (nearbyUser.getYoutubeChannel() != null && !nearbyUser.getYoutubeChannel().isEmpty())
-                this.setYoutubeOnClick(nearbyUser.getYoutubeChannel());
+        if (this.nearbyUser != null) {
+            this.nearbyUserPhoto.setImageURI(this.nearbyUser.getPhotourl());
+            this.nearbyUserName.setText(this.nearbyUser.getUsername());
+            this.nearbyUserDistance.setText(this.nearbyUser.getDistance() + " mi");
+            this.nearbyUserGenres.setText(this.nearbyUser.getGenres());
+            this.nearbyUserSkills.setText(this.nearbyUser.getSkills());
+            if (this.nearbyUser.getInstagram() != null && !this.nearbyUser.getInstagram().isEmpty())
+                this.setInstagramOnClick(this.nearbyUser.getInstagram());
+            if (this.nearbyUser.getFacebook() != null && !this.nearbyUser.getFacebook().isEmpty())
+                this.setFacebookOnClick(this.nearbyUser.getFacebook());
+            if (this.nearbyUser.getYoutubeChannel() != null && !this.nearbyUser.getYoutubeChannel().isEmpty())
+                this.setYoutubeOnClick(this.nearbyUser.getYoutubeChannel());
 
             String availability = nearbyUser.getAvailability();
             if (availability != null && nearbyUserAvailabilityImageView != null) {
