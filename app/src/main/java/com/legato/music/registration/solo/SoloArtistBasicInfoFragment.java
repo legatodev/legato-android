@@ -189,7 +189,9 @@ public class SoloArtistBasicInfoFragment extends Fragment implements View.OnClic
             public void onStopTrackingTouch(SeekBar seekBar) {
             }
         });
-        String searchRadius = user.metaStringForKey(Keys.searchradius) == null || user.metaStringForKey(Keys.searchradius).isEmpty()?AppConstants.DEFAULT_SEARCH_RADIUS:user.metaStringForKey(Keys.searchradius);
+        String searchRadius = AppConstants.DEFAULT_SEARCH_RADIUS;
+        if (user.metaStringForKey(Keys.searchradius) != null && !user.metaStringForKey(Keys.searchradius).isEmpty())
+            searchRadius = user.metaStringForKey(Keys.searchradius);
         seekBarSearch.setProgress(Integer.parseInt(searchRadius));
 
         proximitySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -228,6 +230,7 @@ public class SoloArtistBasicInfoFragment extends Fragment implements View.OnClic
         facebookTextInputEditText.setText(user.metaStringForKey(Keys.facebook));
         youtubeTextInputEditText.setText(user.metaStringForKey(Keys.youtube_channel));
 
+        soloArtisitProfilePicImageView.setImageURI(user.getAvatarURL());
         soloArtisitProfilePicImageView.setOnClickListener(tempView -> {
                 mediaSelector.startChooseImageActivity(getActivity(), MediaSelector.CropType.Circle,result -> {
 
