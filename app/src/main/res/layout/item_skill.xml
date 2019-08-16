@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <com.toptoche.searchablespinnerlibrary.SearchableSpinner
+            <com.legato.music.SearchableSpinner
                 android:id="@+id/skillsSpinner1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -20,6 +20,8 @@ import com.legato.music.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -70,8 +72,12 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
                 for (int j = 0; j < dbskillsArray.length; j++) {
                     if (dbskillsArray[j].contains(resSkills[i])) {
                         String skillLevel = dbskillsArray[j].replaceAll("[^\\d]", "");
-                        Skill s = new Skill("Choose Skill", Integer.parseInt(skillLevel));
-                        mSkillArrayList.add(s);
+                        Pattern pattern = Pattern.compile("[\\p{L}]+");
+                        Matcher matcher = pattern.matcher(dbskillsArray[j]);
+                        if (matcher.find()) {
+                            Skill s = new Skill(matcher.group(0), Integer.parseInt(skillLevel));
+                            mSkillArrayList.add(s);
+                        }
                     }
                 }
             }

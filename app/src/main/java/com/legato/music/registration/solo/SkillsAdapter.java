@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.legato.music.R;
+import com.legato.music.SearchableSpinner;
 
 import java.util.Arrays;
 import java.util.List;
@@ -57,7 +58,7 @@ class SkillsAdapter extends RecyclerView.Adapter<SkillsAdapter.SkillsHolder>{
 
     public class SkillsHolder extends RecyclerView.ViewHolder implements Spinner.OnItemSelectedListener {
 
-        private final Spinner mSkillSpinner;
+        private final SearchableSpinner mSkillSpinner;
         private final SeekBar mSkillLevelSeekBar;
         private TextView mSkillLevelValueTextView;
 
@@ -90,7 +91,8 @@ class SkillsAdapter extends RecyclerView.Adapter<SkillsAdapter.SkillsHolder>{
 
         public void bindSkill(Skill skill) {
             this.mSkillLevelSeekBar.setProgress(skill.getSkillLevel());
-            this.mSkillSpinner.setSelection(Arrays.asList(mSkillsArray).indexOf(skill.getSkill()));
+            int indexOfSkill = Arrays.asList(mSkillsArray).indexOf(skill.getSkill());
+            this.mSkillSpinner.setSelectionM(indexOfSkill);
         }
 
         @Override
