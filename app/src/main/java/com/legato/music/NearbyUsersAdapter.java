@@ -41,8 +41,7 @@ class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
                 NearbyUser nearbyUser = new NearbyUser(user, (String) distance);
                 this.nearbyUsers.add(nearbyUser);
                 this.nearbyUsersFiltered = this.nearbyUsers;
-                notifyDataSetChanged();
-                //notifyItemInserted(this.nearbyUsersFiltered.size() - 1);
+                notifyItemInserted(this.nearbyUsersFiltered.size() - 1);
             }
         }, throwable -> {
 

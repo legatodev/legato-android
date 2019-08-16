@@ -57,14 +57,14 @@ public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.On
         ButterKnife.bind(this, itemView);
         itemView.setOnClickListener(this);
 
-        nearbyUserFacebookView.setVisibility(View.INVISIBLE);
-        nearbyUserInstagramView.setVisibility(View.INVISIBLE);
-        nearbyUserYoutubeView.setVisibility(View.INVISIBLE);
+        this.nearbyUserFacebookView.setVisibility(View.INVISIBLE);
+        this.nearbyUserInstagramView.setVisibility(View.INVISIBLE);
+        this.nearbyUserYoutubeView.setVisibility(View.INVISIBLE);
     }
 
     private void setInstagramOnClick(String instagram) {
-        nearbyUserInstagramView.setVisibility(View.VISIBLE);
-        nearbyUserInstagramView.setOnClickListener(new View.OnClickListener() {
+        this.nearbyUserInstagramView.setVisibility(View.VISIBLE);
+        this.nearbyUserInstagramView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String userId = nearbyUser.getEntityID();
@@ -82,8 +82,8 @@ public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.On
     }
 
     private void setFacebookOnClick(String facebook) {
-        nearbyUserFacebookView.setVisibility(View.VISIBLE);
-        nearbyUserFacebookView.setOnClickListener(new View.OnClickListener() {
+        this.nearbyUserFacebookView.setVisibility(View.VISIBLE);
+        this.nearbyUserFacebookView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String userId = nearbyUser.getEntityID();
@@ -101,8 +101,8 @@ public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.On
     }
 
     private void setYoutubeOnClick(String youtube_channel) {
-        nearbyUserYoutubeView.setVisibility(View.VISIBLE);
-        nearbyUserYoutubeView.setOnClickListener(new View.OnClickListener() {
+        this.nearbyUserYoutubeView.setVisibility(View.VISIBLE);
+        this.nearbyUserYoutubeView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = YouTubeIntents.createUserIntent(v.getContext(), youtube_channel);
@@ -122,10 +122,18 @@ public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.On
             this.nearbyUserSkills.setText(this.nearbyUser.getSkills());
             if (this.nearbyUser.getInstagram() != null && !this.nearbyUser.getInstagram().isEmpty())
                 this.setInstagramOnClick(this.nearbyUser.getInstagram());
+            else
+                this.nearbyUserInstagramView.setVisibility(View.INVISIBLE);
+
             if (this.nearbyUser.getFacebook() != null && !this.nearbyUser.getFacebook().isEmpty())
                 this.setFacebookOnClick(this.nearbyUser.getFacebook());
+            else
+                this.nearbyUserFacebookView.setVisibility(View.INVISIBLE);
+
             if (this.nearbyUser.getYoutubeChannel() != null && !this.nearbyUser.getYoutubeChannel().isEmpty())
                 this.setYoutubeOnClick(this.nearbyUser.getYoutubeChannel());
+            else
+                this.nearbyUserYoutubeView.setVisibility(View.INVISIBLE);
 
             String availability = nearbyUser.getAvailability();
             if (availability != null && nearbyUserAvailabilityImageView != null) {
