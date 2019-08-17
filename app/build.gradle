@@ -7,8 +7,8 @@ android {
         applicationId "com.legato.music"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 3
-        versionName "1.02"
+        versionCode 5
+        versionName "1.04"
         //testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true

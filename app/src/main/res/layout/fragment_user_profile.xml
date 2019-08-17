@@ -115,7 +115,8 @@
                     android:scaleType="centerCrop"
                     fresco:roundAsCircle="true"
                     fresco:roundingBorderColor="@color/activity_background"
-                    fresco:roundingBorderWidth="2dp" />
+                    fresco:roundingBorderWidth="2dp"
+                    fresco:placeholderImage="@color/white"/>
 
                 <TextView
                     android:id="@+id/profileUserNameTextView"

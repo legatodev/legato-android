@@ -9,7 +9,6 @@
         android:id="@+id/filterBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:clickable="true"
         android:elevation="4dp"
         android:foreground="?attr/selectableItemBackground"
          android:background="@color/white"

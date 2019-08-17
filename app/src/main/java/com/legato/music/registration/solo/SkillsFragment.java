@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.legato.music.Keys;
 import com.legato.music.R;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -35,18 +34,12 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
 
     @BindView(R.id.skillsRecyclerView)
     RecyclerView mSkillsRecyclerView;
-    @BindView(R.id.rapperCheckBox)
-    CheckBox rapperCheckBox;
-    @BindView(R.id.vocalsCheckBox)
-    CheckBox vocalsCheckBox;
-    @BindView(R.id.writingCheckBox)
-    CheckBox writingCheckBox;
     private SkillsAdapter mSkillsAdapter;
     private ArrayList<Skill> mSkillArrayList = new ArrayList<>();
     private boolean skillSelected;
     private Button finishButton;
     private static final int MAX_SKILLS = 6;
-    private FloatingActionButton addButton;
+    private Button addSkillButton;
 
     private FinishClickedListener finishClickedListener;
 
@@ -72,46 +65,18 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
                 for (int j = 0; j < dbskillsArray.length; j++) {
                     if (dbskillsArray[j].contains(resSkills[i])) {
                         String skillLevel = dbskillsArray[j].replaceAll("[^\\d]", "");
-                        Pattern pattern = Pattern.compile("[\\p{L}]+");
-                        Matcher matcher = pattern.matcher(dbskillsArray[j]);
-                        if (matcher.find()) {
-                            Skill s = new Skill(matcher.group(0), Integer.parseInt(skillLevel));
-                            mSkillArrayList.add(s);
+                        if (!skillLevel.isEmpty()) {
+                            Pattern pattern = Pattern.compile("[\\p{L}]+");
+                            Matcher matcher = pattern.matcher(dbskillsArray[j]);
+                            if (matcher.find()) {
+                                Skill s = new Skill(matcher.group(0), Integer.parseInt(skillLevel));
+                                mSkillArrayList.add(s);
+                            }
                         }
                     }
                 }
             }
-
-            if(dblookingfor.contains("rapper"))
-                rapperCheckBox.setChecked(true);
-
-            if(dblookingfor.contains("vocals"))
-                vocalsCheckBox.setChecked(true);
-
-            if(dblookingfor.contains("writing"))
-                writingCheckBox.setChecked(true);
         }
-
-        rapperCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                validate();
-            }
-        });
-
-        vocalsCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                validate();
-            }
-        });
-
-        writingCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                validate();
-            }
-        });
 
         return view;
     }
@@ -135,9 +100,9 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
 
             mSkillsRecyclerView.setLayoutManager(layoutManager);
 
-            addButton = view.findViewById(R.id.addSkillButton);
-            addButton.setOnClickListener(this);
-            addButton.setEnabled(false);
+            addSkillButton = view.findViewById(R.id.addSkillButton);
+            addSkillButton.setOnClickListener(this);
+            addSkillButton.setEnabled(false);
 
             finishButton = view.findViewById(R.id.finishSoloRegistrationButton);
             finishButton.setOnClickListener(this);
@@ -147,9 +112,7 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
     }
 
     private void validate() {
-        boolean valid = skillSelected || rapperCheckBox.isChecked() || vocalsCheckBox.isChecked() || writingCheckBox.isChecked();
-
-        finishButton.setEnabled(valid);
+        finishButton.setEnabled(skillSelected);
     }
 
     @Override
@@ -159,7 +122,7 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
                 if (mSkillArrayList.size() < MAX_SKILLS) {
                     mSkillArrayList.add(new Skill("Choose Skill", 0));
                     mSkillsAdapter.notifyItemInserted(mSkillArrayList.size() - 1);
-                    addButton.setEnabled(false);
+                    addSkillButton.setEnabled(false);
                     //TODO: how to remove a skill?
                 }
 
@@ -174,15 +137,12 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
     public void onSkillSelected(View v, int position) {
         //TODO: call this when a skill is chosen.
         skillSelected = true;
-        addButton.setEnabled(true);
+        addSkillButton.setEnabled(true);
         validate();
     }
 
     public String extractData() {
         String skills = "";
-        skills += (vocalsCheckBox.isChecked()?"vocals|":"");
-        skills += (writingCheckBox.isChecked()?"writing|":"");
-        skills += (rapperCheckBox.isChecked()?"rapper|":"");
 
         for (int i = 0; i < mSkillsAdapter.getItemCount(); i++) {
             SkillsAdapter.SkillsHolder holder = (SkillsAdapter.SkillsHolder)mSkillsRecyclerView.findViewHolderForAdapterPosition(i);

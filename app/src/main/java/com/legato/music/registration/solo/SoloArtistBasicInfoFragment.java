@@ -92,6 +92,8 @@ public class SoloArtistBasicInfoFragment extends Fragment implements View.OnClic
     FloatingActionButton addSampleButton1;
     @BindView(R.id.soloArtistProfilePictureImageView)
     SimpleDraweeView soloArtisitProfilePicImageView;
+    @BindView(R.id.soloArtistAddEditProfilePictureTextView)
+    TextView soloArtistAddEditProfilePicTextView;
 
     private String mYoutubeVideo;
     private View youtubeView;
@@ -189,6 +191,7 @@ public class SoloArtistBasicInfoFragment extends Fragment implements View.OnClic
             public void onStopTrackingTouch(SeekBar seekBar) {
             }
         });
+
         String searchRadius = AppConstants.DEFAULT_SEARCH_RADIUS;
         if (user.metaStringForKey(Keys.searchradius) != null && !user.metaStringForKey(Keys.searchradius).isEmpty())
             searchRadius = user.metaStringForKey(Keys.searchradius);
@@ -230,7 +233,11 @@ public class SoloArtistBasicInfoFragment extends Fragment implements View.OnClic
         facebookTextInputEditText.setText(user.metaStringForKey(Keys.facebook));
         youtubeTextInputEditText.setText(user.metaStringForKey(Keys.youtube_channel));
 
-        soloArtisitProfilePicImageView.setImageURI(user.getAvatarURL());
+        if (user.getAvatarURL() != null) {
+            soloArtisitProfilePicImageView.setImageURI(user.getAvatarURL());
+            soloArtistAddEditProfilePicTextView.setText(R.string.edit_profile_pic);
+        }
+
         soloArtisitProfilePicImageView.setOnClickListener(tempView -> {
                 mediaSelector.startChooseImageActivity(getActivity(), MediaSelector.CropType.Circle,result -> {
 
@@ -245,6 +252,7 @@ public class SoloArtistBasicInfoFragment extends Fragment implements View.OnClic
                         // Cache the file
                         File file = ImageUtils.compressImageToFile(ChatSDK.shared().context(), bitmap, ChatSDK.currentUserID(), ".png");
                         soloArtisitProfilePicImageView.setImageURI(Uri.fromFile(file));
+                        soloArtistAddEditProfilePicTextView.setText(R.string.edit_profile_pic);
                         avatarUrl = Uri.fromFile(file).toString();
                     }
                     catch (Exception e) {
@@ -253,6 +261,11 @@ public class SoloArtistBasicInfoFragment extends Fragment implements View.OnClic
                     }
                 });
         });
+
+        if (user.metaStringForKey(Keys.youtube) != null) {
+            mYoutubeVideo = user.metaStringForKey(Keys.youtube);
+            InitializeYoutubeView(view);
+        }
 
         validate();
 
@@ -300,7 +313,7 @@ public class SoloArtistBasicInfoFragment extends Fragment implements View.OnClic
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == RequestCodes.RC_YOUTUBE_SEARCH && resultCode == Activity.RESULT_OK && data != null) {
             mYoutubeVideo = data.getStringExtra("youtube_video");
-            InitializeYoutubeView();
+            InitializeYoutubeView(getView());
         }
         else {
             try {
@@ -311,8 +324,8 @@ public class SoloArtistBasicInfoFragment extends Fragment implements View.OnClic
         }
     }
 
-    private void InitializeYoutubeView() {
-        LinearLayout galleryHorizontalScrollViewLayout = getView().findViewById(R.id.galleryHorizontalScrollViewLayout1);
+    private void InitializeYoutubeView(View view) {
+        LinearLayout galleryHorizontalScrollViewLayout = view.findViewById(R.id.galleryHorizontalScrollViewLayout1);
         youtubeView = layoutInflater.inflate(R.layout.youtube_frame_layout, mContainer, false);
         galleryHorizontalScrollViewLayout.addView(youtubeView);
         YouTubePlayerSupportFragment youTubePlayerFragment = YouTubePlayerSupportFragment.newInstance();

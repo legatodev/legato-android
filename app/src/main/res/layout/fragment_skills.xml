@@ -12,8 +12,9 @@
         android:transcriptMode="alwaysScroll"
         app:layout_constraintTop_toTopOf="parent"/>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <Button
         android:id="@+id/addSkillButton"
+        android:background="@drawable/rounded_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -21,34 +22,8 @@
         android:clickable="true"
         android:focusable="true"
         android:layout_below="@+id/skillsRecyclerView"
-        app:srcCompat="@android:drawable/ic_menu_add"
-        app:backgroundTint="@color/rounded_button_background"
-        android:tint="@color/white"/>
-
-    <CheckBox
-        android:id="@+id/vocalsCheckBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginLeft="16dp"
-        android:text="@string/vocals"
-        android:layout_below="@+id/addSkillButton"/>
-
-    <CheckBox
-        android:id="@+id/writingCheckBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/writing"
-        android:layout_below="@+id/vocalsCheckBox"
-        android:layout_marginLeft="16dp"/>
-
-    <CheckBox
-        android:id="@+id/rapperCheckBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/rapper"
-        android:layout_below="@+id/writingCheckBox"
-        android:layout_marginLeft="16dp"/>
+        android:text="@string/add_skill"
+        android:textColor="@color/white"/>
 
     <Button
         android:id="@+id/finishSoloRegistrationButton"

@@ -63,10 +63,13 @@
     <string name="band">Band</string>
     <string name="displayname">Display Name</string>
     <string name="bandname">Band Name</string>
+    <string name="add_profile_pic">Add Profile Picture</string>
+    <string name="edit_profile_pic">Edit Profile Picture</string>
 
     <string name="vocals">Vocals</string>
     <string name="writing">Writing</string>
     <string name="rapper">Rapper/MC</string>
+    <string name="add_skill">Add Skill</string>
 
     <string name="skill_level">Skill Level</string>
     <string name="header_filters">Filter</string>
