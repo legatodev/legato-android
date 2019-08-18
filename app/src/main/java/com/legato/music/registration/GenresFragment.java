@@ -71,11 +71,7 @@ public class GenresFragment extends Fragment {
         int checkedCount = genresListView.getCheckedItemCount();
         valid = (checkedCount > 0);
         if (getActivity() != null) {
-            if (valid) {
-                ((SoloRegistrationActivity) getActivity()).setVisibleTabCount(3);
-            } else {
-                ((SoloRegistrationActivity)getActivity()).setVisibleTabCount(2);
-            }
+            ((SoloRegistrationActivity) getActivity()).setVisibleTabCount();
         }
     }
 
@@ -102,5 +98,9 @@ public class GenresFragment extends Fragment {
 
         if (isVisibleToUser)
             validate();
+    }
+
+    public boolean isInputValid() {
+        return valid;
     }
 }

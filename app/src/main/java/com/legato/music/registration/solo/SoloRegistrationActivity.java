@@ -103,8 +103,17 @@ public class SoloRegistrationActivity extends AppCompatActivity implements Skill
         return super.onOptionsItemSelected(item);
     }
 
-    public void setVisibleTabCount(int count) {
-        mSectionsPagerAdapter.setCount(count);
+    public void setVisibleTabCount() {
+        int countTab = 1;
+
+        if (((SoloArtistBasicInfoFragment)soloRegistrationTab).isInputValid()) {
+            countTab = 2;
+            if (((GenresFragment)genresTab).isInputValid()) {
+                countTab = 3;
+            }
+        }
+
+        mSectionsPagerAdapter.setCount(countTab);
     }
 
     public void submitData() {

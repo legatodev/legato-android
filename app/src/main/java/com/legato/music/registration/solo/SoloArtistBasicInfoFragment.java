@@ -272,14 +272,14 @@ public class SoloArtistBasicInfoFragment extends Fragment implements View.OnClic
         return view;
     }
 
+    public boolean isInputValid() {
+        return valid;
+    }
+
     private void validate() {
         valid = (jamCheckBox.isChecked() || collaborateCheckBox.isChecked() || startBandCheckBox.isChecked()) &&
                 !soloDisplayNameTextInputEditText.getText().toString().trim().isEmpty();
-        if (valid) {
-            ((SoloRegistrationActivity) getActivity()).setVisibleTabCount(2);
-        } else {
-            ((SoloRegistrationActivity)getActivity()).setVisibleTabCount(1);
-        }
+                ((SoloRegistrationActivity) getActivity()).setVisibleTabCount();
     }
 
     public HashMap<String, String> extractData() {

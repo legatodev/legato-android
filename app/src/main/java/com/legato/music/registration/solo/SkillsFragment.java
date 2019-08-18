@@ -40,6 +40,7 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
     private Button finishButton;
     private static final int MAX_SKILLS = 6;
     private Button addSkillButton;
+    private boolean valid;
 
     private FinishClickedListener finishClickedListener;
 
@@ -112,7 +113,8 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
     }
 
     private void validate() {
-        finishButton.setEnabled(skillSelected);
+        valid = skillSelected;
+        finishButton.setEnabled(valid);
     }
 
     @Override
@@ -152,5 +154,9 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
         }
 
         return skills;
+    }
+
+    public boolean isInputValid() {
+        return valid;
     }
 }
