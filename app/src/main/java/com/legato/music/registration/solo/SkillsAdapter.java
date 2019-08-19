@@ -90,9 +90,11 @@ class SkillsAdapter extends RecyclerView.Adapter<SkillsAdapter.SkillsHolder>{
         }
 
         public void bindSkill(Skill skill) {
-            this.mSkillLevelSeekBar.setProgress(skill.getSkillLevel());
-            int indexOfSkill = Arrays.asList(mSkillsArray).indexOf(skill.getSkill());
-            this.mSkillSpinner.setSelectionM(indexOfSkill);
+            if (skill != null) {
+                this.mSkillLevelSeekBar.setProgress(skill.getSkillLevel());
+                int indexOfSkill = Arrays.asList(mSkillsArray).indexOf(skill.getSkill());
+                this.mSkillSpinner.setSelectionM(indexOfSkill);
+            }
         }
 
         @Override

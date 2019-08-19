@@ -115,11 +115,16 @@ public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.On
         this.nearbyUser = nearbyUser;
 
         if (this.nearbyUser != null) {
-            this.nearbyUserPhoto.setImageURI(this.nearbyUser.getPhotourl());
-            this.nearbyUserName.setText(this.nearbyUser.getUsername());
-            this.nearbyUserDistance.setText(this.nearbyUser.getDistance() + " mi");
-            this.nearbyUserGenres.setText(this.nearbyUser.getGenres());
-            this.nearbyUserSkills.setText(this.nearbyUser.getSkills());
+            if (this.nearbyUser.getPhotourl() != null)
+                this.nearbyUserPhoto.setImageURI(this.nearbyUser.getPhotourl());
+            if (this.nearbyUser.getUsername() != null)
+                this.nearbyUserName.setText(this.nearbyUser.getUsername());
+            if (this.nearbyUser.getDistance() != null)
+                this.nearbyUserDistance.setText(this.nearbyUser.getDistance() + " mi");
+            if (this.nearbyUser.getGenres() != null)
+                this.nearbyUserGenres.setText(this.nearbyUser.getGenres());
+            if (this.nearbyUser.getSkills() != null)
+                this.nearbyUserSkills.setText(this.nearbyUser.getSkills());
             if (this.nearbyUser.getInstagram() != null && !this.nearbyUser.getInstagram().isEmpty())
                 this.setInstagramOnClick(this.nearbyUser.getInstagram());
             else

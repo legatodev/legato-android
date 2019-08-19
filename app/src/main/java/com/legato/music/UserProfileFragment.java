@@ -206,7 +206,7 @@ public class UserProfileFragment extends BaseFragment {
 
         setViewText(profileUserNameTextView, nearbyUser.getUsername());
         setViewText(emailTextView, nearbyUser.getEmail());
-        if (profilePhotoImageView != null) {
+        if (profilePhotoImageView != null && nearbyUser.getPhotourl() != null) {
             profilePhotoImageView.setImageURI(nearbyUser.getPhotourl());
         }
 
