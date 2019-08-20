@@ -42,6 +42,7 @@ public class NearbyUsersActivity extends AppCompatActivity implements FilterDial
     private FilterDialogFragment mFilterDialog;
     private Context context;
     private User mUser;
+    final int REQUEST_FINE_LOCATION=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,26 +109,30 @@ public class NearbyUsersActivity extends AppCompatActivity implements FilterDial
         boolean havePermission = checkPermissions();
 
         if (havePermission) {
-            FusedLocationProviderClient locationClient = LocationServices.getFusedLocationProviderClient(this);
+            onLocationPermissionsGranted();
+        }
+    }
 
-            if (locationClient != null) {
-                locationClient.getLastLocation()
-                        .addOnSuccessListener(new OnSuccessListener<Location>() {
-                            @Override
-                            public void onSuccess(Location location) {
-                                // GPS location can be null if GPS is switched off
-                                if (location != null) {
-                                    onLocationChanged(location);
-                                }
+    private void onLocationPermissionsGranted() {
+        FusedLocationProviderClient locationClient = LocationServices.getFusedLocationProviderClient(this);
+
+        if (locationClient != null) {
+            locationClient.getLastLocation()
+                    .addOnSuccessListener(new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            // GPS location can be null if GPS is switched off
+                            if (location != null) {
+                                onLocationChanged(location);
                             }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                //showSnackbar(R.string.location_failure);
-                            }
-                        });
-            }
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            //showSnackbar(R.string.location_failure);
+                        }
+                    });
         }
     }
 
@@ -142,9 +147,30 @@ public class NearbyUsersActivity extends AppCompatActivity implements FilterDial
     }
 
     private void requestPermissions() {
-        final int REQUEST_FINE_LOCATION=0;
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_FINE_LOCATION);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case REQUEST_FINE_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    this.onLocationPermissionsGranted();
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+            default:
+                return;
+        }
     }
 
     private void onLocationChanged(Location location) {
