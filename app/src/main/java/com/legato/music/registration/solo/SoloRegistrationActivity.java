@@ -32,9 +32,15 @@ import co.chatsdk.core.dao.User;
 import co.chatsdk.core.events.NetworkEvent;
 import co.chatsdk.core.session.ChatSDK;
 import co.chatsdk.core.types.FileUploadResult;
+import co.chatsdk.firebase.wrappers.UserWrapper;
+import io.reactivex.Completable;
 import io.reactivex.Observer;
+import io.reactivex.Single;
+import io.reactivex.SingleOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class SoloRegistrationActivity extends AppCompatActivity implements SkillsFragment.FinishClickedListener{
 
@@ -127,46 +133,53 @@ public class SoloRegistrationActivity extends AppCompatActivity implements Skill
             Map.Entry pair = (Map.Entry)it.next();
             user.setMetaString((String)pair.getKey(), (String)pair.getValue());
             if (co.chatsdk.core.dao.Keys.AvatarURL.equals((String)pair.getKey())) {
-                try {
-                    if (ChatSDK.currentUser().getAvatarURL() != null && !ChatSDK.currentUser().getAvatarURL().isEmpty()) {
-                        // Check to see if the avatar URL is local or remote
-                        File avatar = new File(new URI(ChatSDK.currentUser().getAvatarURL()).getPath());
-                        Bitmap bitmap = BitmapFactory.decodeFile(avatar.getPath());
-
-                        if (new URL(ChatSDK.currentUser().getAvatarURL()).getHost() != null && bitmap != null && ChatSDK.upload() != null) {
-                            // Upload the image
-                            ChatSDK.upload().uploadImage(bitmap).subscribe(new Observer<FileUploadResult>() {
-                                @Override
-                                public void onSubscribe(@NonNull Disposable d) {
-                                }
-
-                                @Override
-                                public void onNext(@NonNull FileUploadResult fileUploadResult) {
-                                    if (fileUploadResult.urlValid()) {
-                                        ChatSDK.currentUser().setAvatarURL(fileUploadResult.url);
-                                        ChatSDK.currentUser().update();
-                                        ChatSDK.events().source().onNext(NetworkEvent.userMetaUpdated(ChatSDK.currentUser()));
-                                    }
-                                }
-
-                                @Override
-                                public void onError(@NonNull Throwable ex) {
-                                    ChatSDK.logError(ex);
-                                }
-
-                                @Override
-                                public void onComplete() {
-                                }
-                            });
-                        }
-                    }
-                }
-                catch (Exception e) {
-                    e.printStackTrace();
-                    ChatSDK.logError(e);
-                }
+                pushProfilePic().observeOn(AndroidSchedulers.mainThread());
             }
         }
+    }
+
+    private Completable pushProfilePic() {
+            return Single.create((SingleOnSubscribe<User>) e -> {
+                String url = ChatSDK.currentUser().getAvatarURL();
+                if (url == null || url.isEmpty()) {
+                    e.onSuccess(ChatSDK.currentUser());
+                } else {
+                    // Check to see if the avatar URL is local or remote
+                    File avatar = new File(new URI(ChatSDK.currentUser().getAvatarURL()).getPath());
+                    Bitmap bitmap = BitmapFactory.decodeFile(avatar.getPath());
+
+                    if (new URL(ChatSDK.currentUser().getAvatarURL()).getHost() != null && bitmap != null && ChatSDK.upload() != null) {
+                        // Upload the image
+                        ChatSDK.upload().uploadImage(bitmap).subscribe(new Observer<FileUploadResult>() {
+                            @Override
+                            public void onSubscribe(@NonNull Disposable d) {
+                            }
+
+                            @Override
+                            public void onNext(@NonNull FileUploadResult fileUploadResult) {
+                                if (fileUploadResult.urlValid()) {
+                                    ChatSDK.currentUser().setAvatarURL(fileUploadResult.url);
+                                    ChatSDK.currentUser().update();
+                                    ChatSDK.events().source().onNext(NetworkEvent.userMetaUpdated(ChatSDK.currentUser()));
+                                }
+                            }
+
+                            @Override
+                            public void onError(@NonNull Throwable ex) {
+                                ChatSDK.logError(ex);
+                                e.onSuccess(ChatSDK.currentUser());
+                            }
+
+                            @Override
+                            public void onComplete() {
+                                e.onSuccess(ChatSDK.currentUser());
+                            }
+                        });
+                    } else {
+                        e.onSuccess(ChatSDK.currentUser());
+                    }
+                }
+            }).flatMapCompletable(user -> new UserWrapper(user).push()).subscribeOn(Schedulers.single());
     }
 
     @Override
