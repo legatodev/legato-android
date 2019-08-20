@@ -7,8 +7,8 @@ android {
         applicationId "com.legato.music"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 7
-        versionName "1.06"
+        versionCode 8
+        versionName "1.07"
         //testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
@@ -19,7 +19,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    
+
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES'
         exclude 'META-INF/LICENSE'
