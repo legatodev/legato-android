@@ -56,10 +56,19 @@ public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.On
         this.context = context;
         ButterKnife.bind(this, itemView);
         itemView.setOnClickListener(this);
+        initializeView();
+    }
 
+    private void initializeView() {
+        this.nearbyUserPhoto.setImageURI("");
+        this.nearbyUserName.setText("");
+        this.nearbyUserGenres.setText("");
+        this.nearbyUserDistance.setText("");
+        this.nearbyUserDistance.setText("");
         this.nearbyUserFacebookView.setVisibility(View.INVISIBLE);
         this.nearbyUserInstagramView.setVisibility(View.INVISIBLE);
         this.nearbyUserYoutubeView.setVisibility(View.INVISIBLE);
+        this.nearbyUserAvailabilityImageView.setVisibility(View.INVISIBLE);
     }
 
     private void setInstagramOnClick(String instagram) {
@@ -113,6 +122,7 @@ public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.On
 
     public void bindNearbyUser(NearbyUser nearbyUser) {
         this.nearbyUser = nearbyUser;
+        initializeView();
 
         if (this.nearbyUser != null) {
             if (this.nearbyUser.getPhotourl() != null)
