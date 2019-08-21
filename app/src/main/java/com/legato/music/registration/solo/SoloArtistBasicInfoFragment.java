@@ -236,6 +236,7 @@ public class SoloArtistBasicInfoFragment extends Fragment implements View.OnClic
         if (user.getAvatarURL() != null) {
             soloArtisitProfilePicImageView.setImageURI(user.getAvatarURL());
             soloArtistAddEditProfilePicTextView.setText(R.string.edit_profile_pic);
+            avatarUrl = user.getAvatarURL();
         }
 
         soloArtisitProfilePicImageView.setOnClickListener(tempView -> {
