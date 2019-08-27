@@ -1,5 +1,6 @@
 package com.legato.music;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 
@@ -17,6 +18,7 @@ import co.chatsdk.core.session.Configuration;
 import co.chatsdk.firebase.FirebaseNetworkAdapter;
 import co.chatsdk.firebase.file_storage.FirebaseFileStorageModule;
 import co.chatsdk.firebase.social_login.FirebaseSocialLoginModule;
+import co.chatsdk.ui.login.LoginActivity;
 import co.chatsdk.ui.manager.BaseInterfaceAdapter;
 import io.reactivex.plugins.RxJavaPlugins;
 
@@ -48,6 +50,7 @@ public class AppObject extends Application {
             // For example, you could have one root path for "test" and another for "production"
             config.firebaseRootPath("prod");
             config.logoDrawableResourceID(R.drawable.legato_logo);
+            config.defaultUserAvatarUrl("");
 
             // Start the Chat SDK and pass in the interface adapter and network adapter. By subclassing either
             // of these classes you could modify deep functionality withing the Chat SDK

@@ -26,6 +26,10 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.firebase.auth.FacebookAuthProvider;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserInfo;
 import com.legato.music.AppConstants;
 import com.legato.music.Keys;
 import com.legato.music.R;
@@ -37,6 +41,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.HashMap;
@@ -233,10 +238,13 @@ public class SoloArtistBasicInfoFragment extends Fragment implements View.OnClic
         facebookTextInputEditText.setText(user.metaStringForKey(Keys.facebook));
         youtubeTextInputEditText.setText(user.metaStringForKey(Keys.youtube_channel));
 
-        if (user.getAvatarURL() != null) {
+        if (user.getAvatarURL() != null && !user.getAvatarURL().isEmpty()) {
             soloArtisitProfilePicImageView.setImageURI(user.getAvatarURL());
             soloArtistAddEditProfilePicTextView.setText(R.string.edit_profile_pic);
             avatarUrl = user.getAvatarURL();
+        }
+        else {
+            extractProfilePicFromFacebook();
         }
 
         soloArtisitProfilePicImageView.setOnClickListener(tempView -> {
@@ -272,6 +280,23 @@ public class SoloArtistBasicInfoFragment extends Fragment implements View.OnClic
 
         return view;
     }
+
+    private void extractProfilePicFromFacebook() {
+        String facebookUserId = "";
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        // find the Facebook profile and get the user's id
+        for(UserInfo profile : firebaseUser.getProviderData()) {
+            // check if the provider id matches "facebook.com"
+            if(FacebookAuthProvider.PROVIDER_ID.equals(profile.getProviderId())) {
+                facebookUserId = profile.getUid();
+            }
+        }
+        String photoUrl = "https://graph.facebook.com/" + facebookUserId + "/picture?height=500";
+        soloArtisitProfilePicImageView.setImageURI(photoUrl);
+        soloArtistAddEditProfilePicTextView.setText(R.string.edit_profile_pic);
+        avatarUrl = photoUrl;
+    }
+
 
     public boolean isInputValid() {
         return valid;
