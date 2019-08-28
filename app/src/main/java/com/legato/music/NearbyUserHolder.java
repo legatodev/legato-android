@@ -139,6 +139,14 @@ public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.On
         return dbString;
     }
 
+    protected void setViewVisibility(View view, int visibility) {
+        if (view != null) view.setVisibility(visibility);
+    }
+
+    protected void setViewVisibility(View view, boolean visible) {
+        setViewVisibility(view, visible ? View.VISIBLE : View.INVISIBLE);
+    }
+
     public void bindNearbyUser(NearbyUser nearbyUser) {
         this.nearbyUser = nearbyUser;
         initializeView();
@@ -173,6 +181,9 @@ public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.On
             String availability = nearbyUser.getAvailability();
             if (availability != null && nearbyUserAvailabilityImageView != null) {
                 nearbyUserAvailabilityImageView.setImageResource(AvailabilityHelper.imageResourceIdForAvailability(availability));
+                setViewVisibility(nearbyUserAvailabilityImageView, true);
+            }else {
+                setViewVisibility(nearbyUserAvailabilityImageView, false);
             }
         }
     }
