@@ -51,6 +51,10 @@ class GeofireHelper {
         return  sGeofireInstance;
      }
 
+     public static void destroyGeofireHelper() {
+        sGeofireInstance = null;
+     }
+
     public void setLocation(Location location) {
         mCurrentLocation = location;
         mGeoFire.setLocation(mUserId, new GeoLocation(mCurrentLocation.getLatitude(),

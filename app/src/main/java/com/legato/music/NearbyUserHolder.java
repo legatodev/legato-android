@@ -102,7 +102,7 @@ public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.On
                             .getPackageInfo("com.facebook.katana", 0); //Checks if FB is even installed.
                     intent.setData(Uri.parse("fb://page/"+facebook));
                 } catch (Exception e) {
-                   intent.setData(Uri.parse("https://www.facebook.com/"+facebook)); //catches and opens a url to the desired page
+                    intent.setData(Uri.parse("https://www.facebook.com/"+facebook)); //catches and opens a url to the desired page
                 }
                 context.startActivity(intent);
             }
@@ -120,9 +120,29 @@ public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.On
         });
     }
 
+    String getTrimString(String dbString,int trimLength){
+        StringBuilder trimString = new StringBuilder("");
+        int strLength = dbString.length();
+        String[] genre = dbString.split("\\|", -1);
+        if(strLength > trimLength){
+            String moreString = " ...";
+            for(int i=0;i<genre.length;i++){
+                int tempLength = trimString.length() + genre[i].length();
+                if(tempLength>trimLength)
+                    break;
+                else
+                    trimString.append(genre[i]+"|");
+            }
+            trimString.append(moreString);
+            return trimString.toString();
+        }
+        return dbString;
+    }
+
     public void bindNearbyUser(NearbyUser nearbyUser) {
         this.nearbyUser = nearbyUser;
         initializeView();
+        final int TRIM_STRING_LENGTH = 25;
 
         if (this.nearbyUser != null) {
             if (this.nearbyUser.getPhotourl() != null)
@@ -132,9 +152,9 @@ public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.On
             if (this.nearbyUser.getDistance() != null)
                 this.nearbyUserDistance.setText(this.nearbyUser.getDistance() + " mi");
             if (this.nearbyUser.getGenres() != null)
-                this.nearbyUserGenres.setText(this.nearbyUser.getGenres());
+                this.nearbyUserGenres.setText(getTrimString(this.nearbyUser.getGenres(),TRIM_STRING_LENGTH));
             if (this.nearbyUser.getSkills() != null)
-                this.nearbyUserSkills.setText(this.nearbyUser.getSkills());
+                this.nearbyUserSkills.setText(getTrimString(this.nearbyUser.getSkills(),TRIM_STRING_LENGTH));
             if (this.nearbyUser.getInstagram() != null && !this.nearbyUser.getInstagram().isEmpty())
                 this.setInstagramOnClick(this.nearbyUser.getInstagram());
             else
