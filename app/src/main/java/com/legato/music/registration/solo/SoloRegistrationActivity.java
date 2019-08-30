@@ -32,6 +32,7 @@ import co.chatsdk.core.dao.User;
 import co.chatsdk.core.events.NetworkEvent;
 import co.chatsdk.core.session.ChatSDK;
 import co.chatsdk.core.types.FileUploadResult;
+import co.chatsdk.core.utils.DisposableList;
 import co.chatsdk.firebase.wrappers.UserWrapper;
 import io.reactivex.Completable;
 import io.reactivex.Observer;
@@ -64,6 +65,8 @@ public class SoloRegistrationActivity extends AppCompatActivity implements Skill
     private Fragment skillsTab;
     private Fragment genresTab;
 
+    private DisposableList disposableList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +89,8 @@ public class SoloRegistrationActivity extends AppCompatActivity implements Skill
         soloRegistrationTab = new SoloArtistBasicInfoFragment();
         genresTab = new GenresFragment();
         skillsTab = new SkillsFragment(this);
+
+        disposableList = new DisposableList();
     }
 
     @Override
@@ -133,7 +138,11 @@ public class SoloRegistrationActivity extends AppCompatActivity implements Skill
             Map.Entry pair = (Map.Entry)it.next();
             user.setMetaString((String)pair.getKey(), (String)pair.getValue());
             if (co.chatsdk.core.dao.Keys.AvatarURL.equals((String)pair.getKey())) {
-                pushProfilePic().observeOn(AndroidSchedulers.mainThread());
+                disposableList.add(pushProfilePic()
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(() -> {
+                            //dismiss update progress bar
+                        }));
             }
         }
     }
