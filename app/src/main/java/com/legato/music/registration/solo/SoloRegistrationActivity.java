@@ -13,6 +13,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.firebase.database.annotations.NotNull;
 import com.legato.music.Keys;
 import com.legato.music.NearbyUsersActivity;
 import com.legato.music.R;
@@ -40,6 +41,7 @@ import io.reactivex.Single;
 import io.reactivex.SingleOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
+import io.reactivex.annotations.Nullable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -145,6 +147,12 @@ public class SoloRegistrationActivity extends AppCompatActivity implements Skill
                         }));
             }
         }
+
+        log(null);
+    }
+
+    private void log(Object x) {
+        System.out.println(x.toString());
     }
 
     private Completable pushProfilePic() {
