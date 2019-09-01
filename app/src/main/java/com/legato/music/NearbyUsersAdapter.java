@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
 
     private List<NearbyUser> nearbyUsers;
-    private List<NearbyUser> nearbyUsersFiltered;
+    @Nullable private List<NearbyUser> nearbyUsersFiltered;
     private final Context context;
     private final int itemResource;
     private DisposableList disposableList;
@@ -33,12 +34,12 @@ class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
     }
 
     public void addNearbyUserToRecyclerView(String userId, String distance) {
-        User user = ChatSDK.db().fetchOrCreateEntityWithEntityID(User.class, (String) userId);
+        User user = ChatSDK.db().fetchOrCreateEntityWithEntityID(User.class, userId);
         Completable completable = ChatSDK.core().userOn(user);
         disposableList.add(completable.observeOn(AndroidSchedulers.mainThread()).subscribe(() -> {
             // User object has now been populated and is ready to use
             if (!user.isMe()) {
-                NearbyUser nearbyUser = new NearbyUser(user, (String) distance);
+                NearbyUser nearbyUser = new NearbyUser(user, distance);
                 this.nearbyUsers.add(nearbyUser);
                 this.nearbyUsersFiltered = this.nearbyUsers;
                 notifyItemInserted(this.nearbyUsersFiltered.size() - 1);
@@ -59,8 +60,10 @@ class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull NearbyUserHolder holder, int position) {
-        NearbyUser nearbyUser = this.nearbyUsersFiltered.get(position);
-        holder.bindNearbyUser(nearbyUser);
+        if (this.nearbyUsersFiltered != null) {
+            NearbyUser nearbyUser = this.nearbyUsersFiltered.get(position);
+            holder.bindNearbyUser(nearbyUser);
+        }
     }
 
     @Override

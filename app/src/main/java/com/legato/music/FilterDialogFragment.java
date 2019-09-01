@@ -25,7 +25,7 @@ import butterknife.Unbinder;
 public class FilterDialogFragment extends DialogFragment {
 
     public static final String TAG = "FilterDialog";
-    private NearbyUsersAdapter adapter;
+    @Nullable private NearbyUsersAdapter adapter = null;
 
     public FilterDialogFragment(NearbyUsersAdapter adapter){
         this.adapter = adapter;
@@ -48,7 +48,7 @@ public class FilterDialogFragment extends DialogFragment {
     @BindView(R.id.skills)
     Spinner mSkills;
 
-    private FilterListener mFilterListener;
+    @Nullable private FilterListener mFilterListener;
 
     private Unbinder unbinder;
 

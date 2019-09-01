@@ -13,7 +13,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import com.google.firebase.database.annotations.NotNull;
 import com.legato.music.Keys;
 import com.legato.music.NearbyUsersActivity;
 import com.legato.music.R;
@@ -80,7 +79,9 @@ public class SoloRegistrationActivity extends AppCompatActivity implements Skill
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager.setAdapter(mSectionsPagerAdapter);
+        if (mViewPager != null) {
+            mViewPager.setAdapter(mSectionsPagerAdapter);
+        }
 
         //Don't destroy the last two fragments.
         mViewPager.setOffscreenPageLimit(2);
@@ -139,7 +140,7 @@ public class SoloRegistrationActivity extends AppCompatActivity implements Skill
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry)it.next();
             user.setMetaString((String)pair.getKey(), (String)pair.getValue());
-            if (co.chatsdk.core.dao.Keys.AvatarURL.equals((String)pair.getKey())) {
+            if (co.chatsdk.core.dao.Keys.AvatarURL.equals(pair.getKey())) {
                 disposableList.add(pushProfilePic()
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(() -> {
@@ -147,12 +148,6 @@ public class SoloRegistrationActivity extends AppCompatActivity implements Skill
                         }));
             }
         }
-
-        log(null);
-    }
-
-    private void log(Object x) {
-        System.out.println(x.toString());
     }
 
     private Completable pushProfilePic() {
@@ -226,6 +221,7 @@ public class SoloRegistrationActivity extends AppCompatActivity implements Skill
             tabCount = 1;
         }
 
+        @NonNull
         @Override
         public Fragment getItem(int position) {
             switch (position) {
@@ -236,7 +232,9 @@ public class SoloRegistrationActivity extends AppCompatActivity implements Skill
                 case 2:
                     return skillsTab;
             }
-            return null;
+
+            //TODO: should we return an error if position exceeds the number of tabs available.
+            return soloRegistrationTab;
         }
 
         @Override
@@ -261,7 +259,8 @@ public class SoloRegistrationActivity extends AppCompatActivity implements Skill
                 case 2:
                     return "Skill";
                 default:
-                    return null;
+                    //TODO: throw an error perhaps?
+                    return "";
             }
         }
     }

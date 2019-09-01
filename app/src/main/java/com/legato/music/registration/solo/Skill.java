@@ -1,13 +1,13 @@
 package com.legato.music.registration.solo;
 
-import java.io.Serializable;
-
-class Skill implements Serializable {
+class Skill {
 
     private String skill;
-    private int skillLevel = 0;
+    private int skillLevel;
 
     public Skill() {
+        skill = "";
+        skillLevel = 0;
     }
 
     public Skill(String skill, int skillLevel) {

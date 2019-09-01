@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.legato.music.Keys;
@@ -24,11 +25,12 @@ import co.chatsdk.core.session.ChatSDK;
 public class GenresFragment extends Fragment {
     @BindView(R.id.genresListView)
     ListView genresListView;
-    private ArrayAdapter<CharSequence> adapter;
+    @Nullable private ArrayAdapter<CharSequence> adapter;
     private boolean valid;
 
     public GenresFragment() {
         valid = false;
+        adapter = null;
     }
 
     @Override
@@ -44,22 +46,24 @@ public class GenresFragment extends Fragment {
             adapter = ArrayAdapter.createFromResource(getContext(),
                     R.array.genres_array, android.R.layout.simple_list_item_multiple_choice);
 
-            genresListView.setAdapter(adapter);
-            int listCount = genresListView.getCount();
-            if (dbgenres != null) {
-                for (int i = 0; i < listCount; i++) {
-                    if (dbgenres.contains(adapter.getItem(i).toString())) {
-                        genresListView.setItemChecked(i, true);
+            if (genresListView != null) {
+                genresListView.setAdapter(adapter);
+                int listCount = genresListView.getCount();
+                if (dbgenres != null) {
+                    for (int i = 0; i < listCount; i++) {
+                        if (dbgenres.contains(adapter.getItem(i).toString())) {
+                            genresListView.setItemChecked(i, true);
+                        }
                     }
                 }
-            }
 
-            genresListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    validate();
-                }
-            });
+                genresListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        validate();
+                    }
+                });
+            }
         }
 
         validate();
@@ -77,13 +81,15 @@ public class GenresFragment extends Fragment {
 
     public String extractData() {
         String genres = "";
-        SparseBooleanArray checked = genresListView.getCheckedItemPositions();
-        for (int i = 0; i < checked.size(); i++) {
-            int position = checked.keyAt(i);
-            if (checked.valueAt(i)) {
-                if (adapter.getItem(position) != null) {
-                    String genre = adapter.getItem(position).toString();
-                    genres += (genre + "|");
+        if (genresListView != null && adapter != null) {
+            SparseBooleanArray checked = genresListView.getCheckedItemPositions();
+            for (int i = 0; i < checked.size(); i++) {
+                int position = checked.keyAt(i);
+                if (checked.valueAt(i)) {
+                    if (adapter.getItem(position) != null) {
+                        String genre = adapter.getItem(position).toString();
+                        genres += (genre + "|");
+                    }
                 }
             }
         }

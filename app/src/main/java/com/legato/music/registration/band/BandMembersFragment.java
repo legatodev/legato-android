@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -22,11 +23,14 @@ import butterknife.ButterKnife;
 
 public class BandMembersFragment extends Fragment implements View.OnClickListener {
     @BindView(R.id.bandMembersRecyclerView)
-    RecyclerView mBandMembersRecyclerView;
-    private BandMembersAdapter mBandMembersAdapter;
-    private ArrayList<BandMember> mBandMemberArrayList;
+    @Nullable RecyclerView mBandMembersRecyclerView;
+    @BindView(R.id.finishBandRegistrationButton)
+    @Nullable Button finishButton;
+    @BindView(R.id.addBandMemberButton)
+    @Nullable Button addBandMember;
+    @Nullable private BandMembersAdapter mBandMembersAdapter;
+    private ArrayList<BandMember> mBandMemberArrayList = new ArrayList<>();
 
-    private Button finishButton;
     private static final int MAX_SKILLS = 6;
 
     @Override
@@ -42,26 +46,23 @@ public class BandMembersFragment extends Fragment implements View.OnClickListene
         super.onActivityCreated(savedInstanceState);
         View view = getView();
 
-        if (view != null) {
-            // Initialize message ListView and its adapter
-            mBandMemberArrayList = new ArrayList<>();
-            BandMember bandMember = new BandMember("Choose Skill", "");
-            mBandMemberArrayList.add(bandMember);
-            mBandMembersAdapter = new BandMembersAdapter(view.getContext(), R.layout.item_band_member, mBandMemberArrayList);
+        if (view == null) { return; }
+        // Initialize message ListView and its adapter
+        BandMember bandMember = new BandMember("Choose Skill", "");
+        mBandMemberArrayList.add(bandMember);
+        mBandMembersAdapter = new BandMembersAdapter(view.getContext(), R.layout.item_band_member, mBandMemberArrayList);
+        if (mBandMembersRecyclerView != null) {
             mBandMembersRecyclerView.setAdapter(mBandMembersAdapter);
             DividerItemDecoration itemDecor = new DividerItemDecoration(mBandMembersRecyclerView.getContext(), DividerItemDecoration.HORIZONTAL);
             mBandMembersRecyclerView.addItemDecoration(itemDecor);
-
-            // 4. Initialize ItemAnimator, LayoutManager and ItemDecorators
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(view.getContext());
-
-            // 7. Set the LayoutManager
             mBandMembersRecyclerView.setLayoutManager(layoutManager);
+        }
 
-            FloatingActionButton addButton = view.findViewById(R.id.addBandMemberButton);
-            addButton.setOnClickListener(this);
+        if (addBandMember != null)
+            addBandMember.setOnClickListener(this);
 
-            finishButton = view.findViewById(R.id.finishBandRegistrationButton);
+        if (finishButton != null) {
             finishButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -76,7 +77,7 @@ public class BandMembersFragment extends Fragment implements View.OnClickListene
 
     @Override
     public void onClick(View view) {
-        if (mBandMemberArrayList.size() < MAX_SKILLS) {
+        if (mBandMembersAdapter != null && mBandMemberArrayList.size() < MAX_SKILLS) {
             mBandMemberArrayList.add(new BandMember("Choose Skill", ""));
             mBandMembersAdapter.notifyItemInserted(mBandMemberArrayList.size() - 1); //TODO: We do't need to refresh the whole adapter and have it refreshed. Only add.
             //TODO: how to remove a skill?

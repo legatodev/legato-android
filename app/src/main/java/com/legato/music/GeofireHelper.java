@@ -16,6 +16,8 @@ import java.text.DecimalFormat;
 import java.util.HashMap;
 
 import co.chatsdk.core.session.ChatSDK;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.annotations.Nullable;
 
 class GeofireHelper {
     public interface NearbyUserFoundListener {
@@ -24,14 +26,14 @@ class GeofireHelper {
 
     private final String mUserId;
     private final GeoFire mGeoFire;
-    private Location mCurrentLocation;
+    @Nullable private Location mCurrentLocation = null;
     private final HashMap<String, String> mNearHashMap; //TODO: maybe use sortedmap in order of distance.
 
-    private NearbyUserFoundListener nearbyUserFoundListener;
+    @Nullable private NearbyUserFoundListener nearbyUserFoundListener;
 
-    private static GeofireHelper sGeofireInstance;
+    private static @Nullable GeofireHelper sGeofireInstance;
 
-    private GeofireHelper(NearbyUserFoundListener nearbyUserFoundListener) {
+    private GeofireHelper(@Nullable NearbyUserFoundListener nearbyUserFoundListener) {
         this.nearbyUserFoundListener = nearbyUserFoundListener;
         mUserId = ChatSDK.currentUser().getEntityID();
         FirebaseDatabase mFirebaseDatabase = FirebaseDatabase.getInstance();
@@ -40,7 +42,7 @@ class GeofireHelper {
         mNearHashMap = new HashMap<String, String>();
     }
 
-     public static GeofireHelper getInstance(NearbyUserFoundListener nearbyUserFoundListener){
+     public static GeofireHelper getInstance(@Nullable NearbyUserFoundListener nearbyUserFoundListener){
         if(sGeofireInstance == null){
             sGeofireInstance = new GeofireHelper(nearbyUserFoundListener);
         }
@@ -55,7 +57,7 @@ class GeofireHelper {
         sGeofireInstance = null;
      }
 
-    public void setLocation(Location location) {
+    public void setLocation(@NonNull Location location) {
         mCurrentLocation = location;
         mGeoFire.setLocation(mUserId, new GeoLocation(mCurrentLocation.getLatitude(),
                 mCurrentLocation.getLongitude()), new GeoFire.CompletionListener() {
@@ -84,9 +86,13 @@ class GeofireHelper {
                         location.setLatitude(geoLocation.latitude);
                         location.setLongitude(geoLocation.longitude);
                         final DecimalFormat df = new DecimalFormat("#.#");
-                        final String distanceTo = df.format(mCurrentLocation.distanceTo(location) / 1000.0);
-                        nearbyUserFoundListener.nearbyUserFound(dataSnapshot.getKey(), distanceTo);
-                        mNearHashMap.put(dataSnapshot.getKey(), distanceTo);
+                        if (mCurrentLocation != null) {
+                            final String distanceTo = df.format(mCurrentLocation.distanceTo(location) / 1000.0);
+                            if (nearbyUserFoundListener != null) {
+                                nearbyUserFoundListener.nearbyUserFound(dataSnapshot.getKey(), distanceTo);
+                            }
+                            mNearHashMap.put(dataSnapshot.getKey(), distanceTo);
+                        }
                     }
                 }
 
@@ -122,5 +128,9 @@ class GeofireHelper {
     public HashMap<String, String> getNearbyUsers() {
         //Only return the list of user ids and in NearbyUser
         return mNearHashMap;
+    }
+
+    public String getDistanceToCurrentUser(String userEntityId) {
+        return mNearHashMap.get(userEntityId) != null?mNearHashMap.get(userEntityId):"error";
     }
 }

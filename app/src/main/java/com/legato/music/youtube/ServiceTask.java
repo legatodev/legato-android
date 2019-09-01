@@ -13,24 +13,27 @@ import com.google.api.services.youtube.model.SearchResult;
 import java.io.IOException;
 import java.util.List;
 
+import io.reactivex.annotations.Nullable;
+
 class ServiceTask extends AsyncTask<Object, Void, Object[]> implements
         ServiceTaskInterface {
-    private ServerResponseListener mServerResponseListener = null;
+    @Nullable private ServerResponseListener mServerResponseListener = null;
     private final int mRequestCode;
+
+    public ServiceTask(int iReqCode) {
+        mRequestCode = iReqCode;
+    }
 
     public void setServerResponseListener(
             ServerResponseListener mServerResponseListener) {
         this.mServerResponseListener = mServerResponseListener;
     }
 
-    public ServiceTask(int iReqCode) {
-        mRequestCode = iReqCode;
-    }
-
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        mServerResponseListener.prepareRequest(mRequestCode);
+        if (mServerResponseListener != null)
+            mServerResponseListener.prepareRequest(mRequestCode);
     }
 
     @Override
@@ -38,7 +41,8 @@ class ServiceTask extends AsyncTask<Object, Void, Object[]> implements
         if (params == null)
             throw new NullPointerException("Parameters to the async task can never be null");
 
-        mServerResponseListener.goBackground();
+        if (mServerResponseListener != null)
+            mServerResponseListener.goBackground();
 
         Object[] resultDetails = new Object[2];
         resultDetails[0] = mRequestCode;
@@ -55,7 +59,8 @@ class ServiceTask extends AsyncTask<Object, Void, Object[]> implements
     @Override
     protected void onPostExecute(Object[] result) {
         super.onPostExecute(result);
-        mServerResponseListener.completedRequest(result);
+        if (mServerResponseListener != null)
+            mServerResponseListener.completedRequest(result);
     }
 
 
@@ -64,13 +69,14 @@ class ServiceTask extends AsyncTask<Object, Void, Object[]> implements
      * @see <a>https://developers.google.com/youtube/v3/code_samples/java#search_by_keyword</a>
      * @param queryTerm
      */
-    private List<SearchResult> loadVideos(String queryTerm) {
+    private @Nullable List<SearchResult> loadVideos(String queryTerm) {
         try {
             // This object is used to make YouTube Data API requests. The last
             // argument is required, but since we don't need anything
             // initialized when the HttpRequest is initialized, we override
             // the interface and provide a no-op function.
             YouTube youtube = new YouTube.Builder(transport, jsonFactory, new HttpRequestInitializer() {
+                @Override
                 public void initialize(HttpRequest request) {
                 }
             }).setApplicationName("Legato").build();

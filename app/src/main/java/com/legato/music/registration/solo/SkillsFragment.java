@@ -10,6 +10,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -33,13 +34,15 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
     }
 
     @BindView(R.id.skillsRecyclerView)
-    RecyclerView mSkillsRecyclerView;
-    private SkillsAdapter mSkillsAdapter;
+    @Nullable RecyclerView mSkillsRecyclerView;
+    @BindView(R.id.finishSoloRegistrationButton)
+    @Nullable Button finishButton;
+    @BindView(R.id.addSkillButton)
+    @Nullable Button addSkillButton;
+    @Nullable private SkillsAdapter mSkillsAdapter;
     private ArrayList<Skill> mSkillArrayList = new ArrayList<>();
     private boolean skillSelected;
-    private Button finishButton;
     private static final int MAX_SKILLS = 6;
-    private Button addSkillButton;
     private boolean valid;
 
     private FinishClickedListener finishClickedListener;
@@ -88,43 +91,47 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
         super.onActivityCreated(savedInstanceState);
         View view = getView();
 
-        if (view != null) {
-            if(mSkillArrayList.size()==0) {
-                Skill skill = new Skill("Choose Skill", 0);
-                mSkillArrayList.add(skill);
-            }
-            mSkillsAdapter = new SkillsAdapter(getContext(), this, R.layout.item_skill, mSkillArrayList);
+        if (view == null) { return; }
+
+        if(mSkillArrayList.size()==0) {
+            Skill skill = new Skill("Choose Skill", 0);
+            mSkillArrayList.add(skill);
+        }
+        mSkillsAdapter = new SkillsAdapter(getContext(), this, R.layout.item_skill, mSkillArrayList);
+        if (mSkillsRecyclerView != null) {
             mSkillsRecyclerView.setAdapter(mSkillsAdapter);
             DividerItemDecoration itemDecor = new DividerItemDecoration(mSkillsRecyclerView.getContext(), DividerItemDecoration.HORIZONTAL);
             mSkillsRecyclerView.addItemDecoration(itemDecor);
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
-
             mSkillsRecyclerView.setLayoutManager(layoutManager);
+        }
 
-            addSkillButton = view.findViewById(R.id.addSkillButton);
+        if (addSkillButton != null) {
             addSkillButton.setOnClickListener(this);
             addSkillButton.setEnabled(false);
-
-            finishButton = view.findViewById(R.id.finishSoloRegistrationButton);
-            finishButton.setOnClickListener(this);
         }
+
+        if (finishButton != null)
+            finishButton.setOnClickListener(this);
 
         validate();
     }
 
     private void validate() {
         valid = skillSelected;
-        finishButton.setEnabled(valid);
+        if (finishButton != null)
+            finishButton.setEnabled(valid);
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.addSkillButton:
-                if (mSkillArrayList.size() < MAX_SKILLS) {
+                if (mSkillsAdapter != null && mSkillArrayList.size() < MAX_SKILLS) {
                     mSkillArrayList.add(new Skill("Choose Skill", 0));
                     mSkillsAdapter.notifyItemInserted(mSkillArrayList.size() - 1);
-                    addSkillButton.setEnabled(false);
+                    if (addSkillButton != null)
+                        addSkillButton.setEnabled(false);
                     //TODO: how to remove a skill?
                 }
 
@@ -139,17 +146,20 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
     public void onSkillSelected(View v, int position) {
         //TODO: call this when a skill is chosen.
         skillSelected = true;
-        addSkillButton.setEnabled(true);
+        if (addSkillButton != null)
+            addSkillButton.setEnabled(true);
         validate();
     }
 
     public String extractData() {
         String skills = "";
 
-        for (int i = 0; i < mSkillsAdapter.getItemCount(); i++) {
-            SkillsAdapter.SkillsHolder holder = (SkillsAdapter.SkillsHolder)mSkillsRecyclerView.findViewHolderForAdapterPosition(i);
-            if (holder != null) {
-                skills += holder.getSkill();
+        if (mSkillsAdapter != null && mSkillsRecyclerView != null) {
+            for (int i = 0; i < mSkillsAdapter.getItemCount(); i++) {
+                SkillsAdapter.SkillsHolder holder = (SkillsAdapter.SkillsHolder) mSkillsRecyclerView.findViewHolderForAdapterPosition(i);
+                if (holder != null) {
+                    skills += holder.getSkill();
+                }
             }
         }
 

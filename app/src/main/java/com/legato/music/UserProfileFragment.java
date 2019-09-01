@@ -44,62 +44,50 @@ import co.chatsdk.ui.main.BaseFragment;
 import co.chatsdk.ui.utils.AvailabilityHelper;
 import co.chatsdk.ui.utils.ToastHelper;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.Nullable;
 
 public class UserProfileFragment extends BaseFragment {
     private static final String TAG = "UserProfileFragment";
 
     @BindView(R.id.featuredArtistImageView)
-    protected ImageView featuredArtistImageView;
+    @Nullable protected ImageView featuredArtistImageView;
     @BindView(R.id.featuredBandImageView)
-    protected ImageView featuredBandImageView;
+    @Nullable protected ImageView featuredBandImageView;
     @BindView(R.id.profilePhotoImageView)
-    protected SimpleDraweeView profilePhotoImageView;
+    @Nullable protected SimpleDraweeView profilePhotoImageView;
     @BindView(R.id.profileUserAvailabilityImageView)
-    protected ImageView profileUserAvailabilityImageView;
+    @Nullable protected ImageView profileUserAvailabilityImageView;
     @BindView(R.id.featuredArtistNameTextView)
-    protected TextView featuredArtistNameTextView;
+    @Nullable protected TextView featuredArtistNameTextView;
     @BindView(R.id.featuredBandNameTextView)
-    protected TextView featuredBandNameTextView;
+    @Nullable protected TextView featuredBandNameTextView;
     @BindView(R.id.connectOrRemoveButton)
-    protected Button connectOrRemoveButton;
+    @Nullable protected Button connectOrRemoveButton;
     @BindView(R.id.editProfileButton)
-    protected Button editProfileButton;
+    @Nullable protected Button editProfileButton;
     @BindView(R.id.profileInfoRecyclerView)
-    protected RecyclerView userInfoRecyclerView;
+    @Nullable protected RecyclerView userInfoRecyclerView;
     @BindView(R.id.galleryHorizontalScrollViewLayout)
-    protected LinearLayout galleryHorizontalScrollViewLayout;
+    @Nullable protected LinearLayout galleryHorizontalScrollViewLayout;
     @BindView(R.id.profileUserNameTextView)
-    protected TextView profileUserNameTextView;
+    @Nullable protected TextView profileUserNameTextView;
     @BindView(R.id.emailTextView)
-    protected TextView emailTextView;
+    @Nullable protected TextView emailTextView;
     @BindView(R.id.logoutButton)
-    protected Button logoutButton;
+    @Nullable protected Button logoutButton;
 
     private UserProfileInfoAdapter userProfileInfoAdapter;
     private String mYoutubeVideo = "";
     private DisposableList disposableList = new DisposableList();
     private boolean startingChat = false;
     private ArrayList<UserProfileInfo> profileInfo;
-    private User user;
-    private String distance;
+    @Nullable private User user;
+    @Nullable private String distance;
 
     public UserProfileFragment() {
         profileInfo = new ArrayList<>();
-    }
-
-    public static UserProfileFragment newInstance() {
-        return UserProfileFragment.newInstance(null);
-    }
-
-    public static UserProfileFragment newInstance(User user) {
-        UserProfileFragment userProfileFragment = new UserProfileFragment();
-        Bundle bundle = new Bundle();
-        if (user != null) {
-            bundle.putString(Keys.UserId, user.getEntityID());
-        }
-
-        userProfileFragment.setArguments(bundle);
-        return userProfileFragment;
+        user = null;
+        distance = null;
     }
 
     @Override
@@ -121,13 +109,15 @@ public class UserProfileFragment extends BaseFragment {
         }
 
         userProfileInfoAdapter = new UserProfileInfoAdapter(getContext(), R.layout.item_userprofileinfo);
-        userInfoRecyclerView.setAdapter(userProfileInfoAdapter);
+        if (userInfoRecyclerView != null) {
+            userInfoRecyclerView.setAdapter(userProfileInfoAdapter);
 
-        DividerItemDecoration itemDecor = new DividerItemDecoration(userInfoRecyclerView.getContext(), DividerItemDecoration.HORIZONTAL);
-        userInfoRecyclerView.addItemDecoration(itemDecor);
+            DividerItemDecoration itemDecor = new DividerItemDecoration(userInfoRecyclerView.getContext(), DividerItemDecoration.HORIZONTAL);
+            userInfoRecyclerView.addItemDecoration(itemDecor);
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
-        userInfoRecyclerView.setLayoutManager(layoutManager);
+            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+            userInfoRecyclerView.setLayoutManager(layoutManager);
+        }
 
         return mainView;
     }
@@ -181,7 +171,7 @@ public class UserProfileFragment extends BaseFragment {
         setViewVisibility(view, visible ? View.VISIBLE : View.INVISIBLE);
     }
 
-    protected void setViewText(TextView textView, String text) {
+    protected void setViewText(@Nullable TextView textView, String text) {
         if (textView != null) textView.setText(text);
     }
 
@@ -199,13 +189,27 @@ public class UserProfileFragment extends BaseFragment {
         }
 
         boolean isCurrentUser = user.isMe();
-        if(!isCurrentUser)
+        String distance = isCurrentUser ? "0" : this.distance;
+
+        if (distance == null)
+            return;
+
+        if(!isCurrentUser && editProfileButton != null)
             editProfileButton.setVisibility(View.GONE);
 
         setHasOptionsMenu(isCurrentUser);
-        String distance = isCurrentUser ? "0" : this.distance;
-        logoutButton.setVisibility(isCurrentUser?View.VISIBLE:View.INVISIBLE);
-        connectOrRemoveButton.setVisibility(isCurrentUser?View.INVISIBLE:View.VISIBLE);
+        if (logoutButton != null)
+            logoutButton.setVisibility(isCurrentUser?View.VISIBLE:View.INVISIBLE);
+        if (connectOrRemoveButton != null) {
+            connectOrRemoveButton.setVisibility(isCurrentUser ? View.INVISIBLE : View.VISIBLE);
+
+            connectOrRemoveButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startChat();
+                }
+            });
+        }
 
         NearbyUser nearbyUser = new NearbyUser(user, distance);
 
@@ -216,20 +220,16 @@ public class UserProfileFragment extends BaseFragment {
         }
 
         String availability = nearbyUser.getAvailability();
-        if (availability != null && !isCurrentUser && profileUserAvailabilityImageView != null) {
-            profileUserAvailabilityImageView.setImageResource(AvailabilityHelper.imageResourceIdForAvailability(availability));
-            setViewVisibility(profileUserAvailabilityImageView, true);
-        } else {
-            setViewVisibility(profileUserAvailabilityImageView, false);
+        if (profileUserAvailabilityImageView != null) {
+            if (availability != null && !isCurrentUser && profileUserAvailabilityImageView != null) {
+                profileUserAvailabilityImageView.setImageResource(AvailabilityHelper.imageResourceIdForAvailability(availability));
+                setViewVisibility(profileUserAvailabilityImageView, true);
+            } else {
+                setViewVisibility(profileUserAvailabilityImageView, false);
+            }
         }
 
         mYoutubeVideo = nearbyUser.getYoutube();
-        connectOrRemoveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startChat();
-            }
-        });
 
         profileInfo.clear();
         profileInfo.add(new UserProfileInfo("Skills", nearbyUser.getSkills()));
@@ -260,6 +260,10 @@ public class UserProfileFragment extends BaseFragment {
 
     public void setUser (User user) {
         this.user = user;
+    }
+
+    public void setDistance(String distance) {
+        this.distance = distance;
     }
 
     public void startChat () {
