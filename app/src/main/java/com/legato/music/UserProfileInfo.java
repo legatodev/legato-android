@@ -5,9 +5,6 @@ class UserProfileInfo {
     private String title;
     private String data;
 
-    public UserProfileInfo() {
-    }
-
     public UserProfileInfo(String title, String data) {
         this.title = title;
         this.data = data;

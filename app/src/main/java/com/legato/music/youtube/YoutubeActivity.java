@@ -19,21 +19,22 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.annotations.Nullable;
 
 public class YoutubeActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener, ServerResponseListener {
 
     @BindView(R.id.yt_video_edt)
-    EditText mYtVideoEdt;
+    @Nullable EditText mYtVideoEdt;
 
     @BindView(R.id.yt_video_btn)
-    Button mYtVideoBtn;
+    @Nullable Button mYtVideoBtn;
 
     @BindView(R.id.yt_video_lsv)
-    ListView mYtVideoLsv;
+    @Nullable ListView mYtVideoLsv;
 
-    private YtAdapter mYtAdapter = null;
-    private ServiceTask mYtServiceTask = null;
-    private ProgressDialog mLoadingDialog = null;
+    @Nullable private YtAdapter mYtAdapter = null;
+    @Nullable private ServiceTask mYtServiceTask = null;
+    @Nullable private ProgressDialog mLoadingDialog = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,21 +49,25 @@ public class YoutubeActivity extends AppCompatActivity implements View.OnClickLi
      * Method that initializes views from the activity's content layout
      */
     private void initializeViews() {
-        mYtVideoBtn.setOnClickListener(this);
-        mYtVideoLsv.setOnItemClickListener(this);
+        if (mYtVideoBtn != null)
+            mYtVideoBtn.setOnClickListener(this);
+        if (mYtVideoLsv != null)
+            mYtVideoLsv.setOnItemClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.yt_video_btn:
-                final String keyWord = mYtVideoEdt.getText().toString().trim();
-                if (keyWord.length() > 0) {
+                if (mYtVideoEdt != null) {
+                    final String keyWord = mYtVideoEdt.getText().toString().trim();
+                    if (keyWord.length() > 0) {
 
-                    // Service to search video
-                    mYtServiceTask = new ServiceTask(SEARCH_VIDEO);
-                    mYtServiceTask.setServerResponseListener(this);
-                    mYtServiceTask.execute(new String[]{keyWord});
+                        // Service to search video
+                        mYtServiceTask = new ServiceTask(SEARCH_VIDEO);
+                        mYtServiceTask.setServerResponseListener(this);
+                        mYtServiceTask.execute(new String[]{keyWord});
+                    }
                 }
                 break;
         }
@@ -70,11 +75,13 @@ public class YoutubeActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        SearchResult result = (SearchResult) mYtAdapter.getItem(i);
-        Intent resultIntent = new Intent();
-        resultIntent.putExtra("youtube_video", result.getId().getVideoId());
-        setResult(Activity.RESULT_OK, resultIntent);
-        finish();
+        if (mYtAdapter != null) {
+            SearchResult result = (SearchResult) mYtAdapter.getItem(i);
+            Intent resultIntent = new Intent();
+            resultIntent.putExtra("youtube_video", result.getId().getVideoId());
+            setResult(Activity.RESULT_OK, resultIntent);
+            finish();
+        }
     }
 
     @Override
@@ -119,7 +126,8 @@ public class YoutubeActivity extends AppCompatActivity implements View.OnClickLi
                 if (mYtAdapter == null) {
                     mYtAdapter = new YtAdapter(this);
                     mYtAdapter.setVideoList((List<SearchResult>) objects[1]);
-                    mYtVideoLsv.setAdapter(mYtAdapter);
+                    if (mYtVideoLsv != null)
+                        mYtVideoLsv.setAdapter(mYtAdapter);
                 } else {
                     mYtAdapter.setVideoList((List<SearchResult>) objects[1]);
                     mYtAdapter.notifyDataSetChanged();

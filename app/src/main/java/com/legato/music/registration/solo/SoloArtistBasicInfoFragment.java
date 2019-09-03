@@ -23,6 +23,7 @@ import co.chatsdk.core.dao.User;
 import id.zelory.compressor.Compressor;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -43,6 +44,8 @@ import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 import com.squareup.picasso.Picasso;
 
+import org.w3c.dom.Text;
+
 import java.io.File;
 import java.util.HashMap;
 
@@ -61,47 +64,41 @@ import co.chatsdk.ui.chat.MediaSelector;
  * create an instance of this fragment.
  */
 public class SoloArtistBasicInfoFragment extends Fragment implements View.OnClickListener {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
     private boolean valid;
 
     @BindView(R.id.proximityAlertSwitch)
-    Switch proximitySwitch;
+    @Nullable Switch proximitySwitch;
     @BindView(R.id.jamCheckBox)
-    CheckBox jamCheckBox;
+    @Nullable CheckBox jamCheckBox;
     @BindView(R.id.collaborateCheckBox)
-    CheckBox collaborateCheckBox;
+    @Nullable CheckBox collaborateCheckBox;
     @BindView(R.id.startBandCheckBox)
-    CheckBox startBandCheckBox;
+    @Nullable CheckBox startBandCheckBox;
     @BindView(R.id.proximityRadiusValue)
-    TextView proximityRadiusValue;
+    @Nullable TextView proximityRadiusValue;
     @BindView(R.id.proximityRadiusSeekBar)
-    SeekBar seekBarProximity;
+    @Nullable SeekBar seekBarProximity;
     @BindView(R.id.searchRadiusValue)
-    TextView searchRadiusValue;
+    @Nullable TextView searchRadiusValue;
     @BindView(R.id.searchRadiusSeekBar)
-    SeekBar seekBarSearch;
+    @Nullable SeekBar seekBarSearch;
     @BindView(R.id.soloDisplayNameTextInputEditText)
-    TextInputEditText soloDisplayNameTextInputEditText;
+    @Nullable TextInputEditText soloDisplayNameTextInputEditText;
     @BindView(R.id.instagramTextInputEditText)
-    TextInputEditText instagramTextInputEditText;
+    @Nullable TextInputEditText instagramTextInputEditText;
     @BindView(R.id.facebookTextInputEditText)
-    TextInputEditText facebookTextInputEditText;
+    @Nullable TextInputEditText facebookTextInputEditText;
     @BindView(R.id.youtubeTextInputEditText)
-    TextInputEditText youtubeTextInputEditText;
+    @Nullable TextInputEditText youtubeTextInputEditText;
     @BindView(R.id.addSampleButton1)
-    FloatingActionButton addSampleButton1;
+    @Nullable FloatingActionButton addSampleButton1;
     @BindView(R.id.soloArtistProfilePictureImageView)
-    SimpleDraweeView soloArtisitProfilePicImageView;
+    @Nullable SimpleDraweeView soloArtisitProfilePicImageView;
     @BindView(R.id.soloArtistAddEditProfilePictureTextView)
-    TextView soloArtistAddEditProfilePicTextView;
+    @Nullable TextView soloArtistAddEditProfilePicTextView;
 
     private String mYoutubeVideo;
-    private View youtubeView;
+    @Nullable private View youtubeView;
     private LayoutInflater layoutInflater;
     private ViewGroup mContainer;
     private String avatarUrl;
@@ -110,15 +107,13 @@ public class SoloArtistBasicInfoFragment extends Fragment implements View.OnClic
     public SoloArtistBasicInfoFragment() {
         valid = false;
         mYoutubeVideo = "";
+        avatarUrl = "";
         mediaSelector = new MediaSelector();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-        }
     }
 
     @Override
@@ -135,120 +130,120 @@ public class SoloArtistBasicInfoFragment extends Fragment implements View.OnClic
         String dblookingfor = user.metaStringForKey(Keys.lookingfor);
 
         if(dblookingfor != null) {
-            if (dblookingfor.contains(rlookingfor[0]))
+            if (dblookingfor.contains(rlookingfor[0]) && jamCheckBox != null)
                 jamCheckBox.setChecked(true);
 
-            if(dblookingfor.contains(rlookingfor[1]))
+            if(dblookingfor.contains(rlookingfor[1]) && collaborateCheckBox != null)
                 collaborateCheckBox.setChecked(true);
 
-            if(dblookingfor.contains(rlookingfor[2]))
+            if(dblookingfor.contains(rlookingfor[2]) && startBandCheckBox != null)
                 startBandCheckBox.setChecked(true);
         }
 
-        jamCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                validate();
-            }
-        });
+        setOnCheckedChanged(jamCheckBox);
+        setOnCheckedChanged(collaborateCheckBox);
+        setOnCheckedChanged(startBandCheckBox);
 
-        collaborateCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                validate();
-            }
-        });
+        if (addSampleButton1 != null)
+            addSampleButton1.setOnClickListener(this);
 
-        startBandCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                validate();
-            }
-        });
+        if (seekBarProximity != null) {
+            seekBarProximity.setEnabled(false);
+            seekBarProximity.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    setTextView(proximityRadiusValue, progress + "ft");
+                }
 
-        addSampleButton1.setOnClickListener(this);
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+                    //write custom code to on start progress
+                }
 
-        seekBarProximity.setEnabled(false);
-        seekBarProximity.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                proximityRadiusValue.setText(progress + "ft");
-            }
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-                //write custom code to on start progress
-            }
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-            }
-        });
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+                }
+            });
+        }
 
-        seekBarSearch.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                searchRadiusValue.setText(progress + "mi");
-            }
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-                //write custom code to on start progress
-            }
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-            }
-        });
+        if (seekBarSearch != null) {
+            seekBarSearch.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    setTextView(searchRadiusValue, progress + "mi");
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+                    //write custom code to on start progress
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+                }
+            });
+        }
 
         String searchRadius = AppConstants.DEFAULT_SEARCH_RADIUS;
         if (user.metaStringForKey(Keys.searchradius) != null && !user.metaStringForKey(Keys.searchradius).isEmpty())
             searchRadius = user.metaStringForKey(Keys.searchradius);
-        seekBarSearch.setProgress(Integer.parseInt(searchRadius));
+        if (seekBarSearch != null) {
+            seekBarSearch.setProgress(Integer.parseInt(searchRadius));
+        }
 
-        proximitySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    seekBarProximity.setEnabled(true);
+        if (proximitySwitch != null) {
+            proximitySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (seekBarProximity != null) {
+                        if (isChecked) {
+                            seekBarProximity.setEnabled(true);
+                        } else {
+                            seekBarProximity.setEnabled(false);
+                        }
+                    }
+
+                    validate();
                 }
-                else {
-                    seekBarProximity.setEnabled(false);
+            });
+        }
+
+        setTextView(soloDisplayNameTextInputEditText, user.getName());
+
+        if (soloDisplayNameTextInputEditText != null) {
+            soloDisplayNameTextInputEditText.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    //Do nothing
                 }
 
-                validate();
-            }
-        });
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                }
 
-        soloDisplayNameTextInputEditText.setText(user.getName());
+                @Override
+                public void afterTextChanged(Editable s) {
+                    validate();
+                }
+            });
+        }
 
-        soloDisplayNameTextInputEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                //Do nothing
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                validate();
-            }
-        });
-
-        instagramTextInputEditText.setText(user.metaStringForKey(Keys.instagram));
-        facebookTextInputEditText.setText(user.metaStringForKey(Keys.facebook));
-        youtubeTextInputEditText.setText(user.metaStringForKey(Keys.youtube_channel));
+        setTextView(instagramTextInputEditText, user.metaStringForKey(Keys.instagram));
+        setTextView(facebookTextInputEditText, user.metaStringForKey(Keys.facebook));
+        setTextView(youtubeTextInputEditText, user.metaStringForKey(Keys.youtube_channel));
 
         if (user.getAvatarURL() != null && !user.getAvatarURL().isEmpty()) {
-            soloArtisitProfilePicImageView.setImageURI(user.getAvatarURL());
-            soloArtistAddEditProfilePicTextView.setText(R.string.edit_profile_pic);
+            setImageURI(soloArtisitProfilePicImageView, user.getAvatarURL());
+            setTextView(soloArtistAddEditProfilePicTextView, R.string.edit_profile_pic);
             avatarUrl = user.getAvatarURL();
         }
         else {
             extractProfilePicFromFacebook();
         }
 
-        soloArtisitProfilePicImageView.setOnClickListener(tempView -> {
-                mediaSelector.startChooseImageActivity(getActivity(), MediaSelector.CropType.Circle,result -> {
+        if (soloArtisitProfilePicImageView != null) {
+            soloArtisitProfilePicImageView.setOnClickListener(tempView -> {
+                mediaSelector.startChooseImageActivity(getActivity(), MediaSelector.CropType.Circle, result -> {
 
                     try {
                         File compress = new Compressor(ChatSDK.shared().context())
@@ -260,16 +255,16 @@ public class SoloArtistBasicInfoFragment extends Fragment implements View.OnClic
 
                         // Cache the file
                         File file = ImageUtils.compressImageToFile(ChatSDK.shared().context(), bitmap, ChatSDK.currentUserID(), ".png");
-                        soloArtisitProfilePicImageView.setImageURI(Uri.fromFile(file));
-                        soloArtistAddEditProfilePicTextView.setText(R.string.edit_profile_pic);
+                        setImageURI(soloArtisitProfilePicImageView, Uri.fromFile(file));
+                        setTextView(soloArtistAddEditProfilePicTextView, R.string.edit_profile_pic);
                         avatarUrl = Uri.fromFile(file).toString();
-                    }
-                    catch (Exception e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                         ChatSDK.logError(e);
                     }
                 });
-        });
+            });
+        }
 
         if (user.metaStringForKey(Keys.youtube) != null) {
             mYoutubeVideo = user.metaStringForKey(Keys.youtube);
@@ -279,6 +274,37 @@ public class SoloArtistBasicInfoFragment extends Fragment implements View.OnClic
         validate();
 
         return view;
+    }
+
+    private void setImageURI(@Nullable SimpleDraweeView view, String uri) {
+        if (view != null) {
+            view.setImageURI(uri);
+        }
+    }
+
+    private void setImageURI(@Nullable SimpleDraweeView view, Uri uri) {
+        if (view != null) {
+            view.setImageURI(uri);
+        }
+    }
+
+    private void setOnCheckedChanged(@Nullable CheckBox checkBox) {
+        if (checkBox != null) {
+            checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    validate();
+                }
+            });
+        }
+    }
+
+    private void setTextView(@Nullable TextView view, String text) {
+        if (view != null) { view.setText(text); }
+    }
+
+    private void setTextView(@Nullable TextView view, int resid) {
+        if (view != null) { view.setText(resid); }
     }
 
     private void extractProfilePicFromFacebook() {
@@ -292,8 +318,8 @@ public class SoloArtistBasicInfoFragment extends Fragment implements View.OnClic
             }
         }
         String photoUrl = "https://graph.facebook.com/" + facebookUserId + "/picture?height=500";
-        soloArtisitProfilePicImageView.setImageURI(photoUrl);
-        soloArtistAddEditProfilePicTextView.setText(R.string.edit_profile_pic);
+        setImageURI(soloArtisitProfilePicImageView, photoUrl);
+        setTextView(soloArtistAddEditProfilePicTextView, R.string.edit_profile_pic);
         avatarUrl = photoUrl;
     }
 
@@ -303,26 +329,42 @@ public class SoloArtistBasicInfoFragment extends Fragment implements View.OnClic
     }
 
     private void validate() {
-        valid = (jamCheckBox.isChecked() || collaborateCheckBox.isChecked() || startBandCheckBox.isChecked()) &&
-                !soloDisplayNameTextInputEditText.getText().toString().trim().isEmpty();
-                ((SoloRegistrationActivity) getActivity()).setVisibleTabCount();
+        valid = (isCheckBoxChecked(jamCheckBox) || isCheckBoxChecked(collaborateCheckBox) || isCheckBoxChecked(startBandCheckBox));
+        if (soloDisplayNameTextInputEditText != null) {
+            valid = valid && !soloDisplayNameTextInputEditText.getText().toString().trim().isEmpty();
+        }
+
+        ((SoloRegistrationActivity) getActivity()).setVisibleTabCount();
+    }
+
+    private boolean isCheckBoxChecked(@Nullable CheckBox checkbox) {
+        if (checkbox != null) {
+            return checkbox.isChecked();
+        }
+
+        return false;
     }
 
     public HashMap<String, String> extractData() {
         Resources res = getResources();
         HashMap<String, String> basicInfo = new HashMap<>();
-        basicInfo.put(co.chatsdk.core.dao.Keys.Name, soloDisplayNameTextInputEditText.getText().toString().trim());
+        if (soloDisplayNameTextInputEditText != null)
+            basicInfo.put(co.chatsdk.core.dao.Keys.Name, soloDisplayNameTextInputEditText.getText().toString().trim());
 
         String[] lookingForArray = res.getStringArray(R.array.looking_for);
-        String lookingfor = jamCheckBox.isChecked()?lookingForArray[0]+"|":"";
-        lookingfor += collaborateCheckBox.isChecked()?lookingForArray[1]+"|":"";
-        lookingfor += startBandCheckBox.isChecked()?lookingForArray[2]+"|":"";
+        String lookingfor = isCheckBoxChecked(jamCheckBox)?lookingForArray[0]+"|":"";
+        lookingfor += isCheckBoxChecked(collaborateCheckBox)?lookingForArray[1]+"|":"";
+        lookingfor += isCheckBoxChecked(startBandCheckBox)?lookingForArray[2]+"|":"";
 
         basicInfo.put(Keys.lookingfor, lookingfor);
-        basicInfo.put(Keys.searchradius, Integer.toString(seekBarSearch.getProgress()));
-        basicInfo.put(Keys.instagram, instagramTextInputEditText.getText().toString().trim());
-        basicInfo.put(Keys.facebook, facebookTextInputEditText.getText().toString().trim());
-        basicInfo.put(Keys.youtube_channel, youtubeTextInputEditText.getText().toString().trim());
+        if (seekBarSearch != null)
+            basicInfo.put(Keys.searchradius, Integer.toString(seekBarSearch.getProgress()));
+        if (instagramTextInputEditText != null)
+            basicInfo.put(Keys.instagram, instagramTextInputEditText.getText().toString().trim());
+        if (facebookTextInputEditText != null)
+            basicInfo.put(Keys.facebook, facebookTextInputEditText.getText().toString().trim());
+        if (youtubeTextInputEditText != null)
+            basicInfo.put(Keys.youtube_channel, youtubeTextInputEditText.getText().toString().trim());
         basicInfo.put(Keys.youtube, mYoutubeVideo);
         basicInfo.put(co.chatsdk.core.dao.Keys.AvatarURL, avatarUrl);
 
@@ -353,28 +395,30 @@ public class SoloArtistBasicInfoFragment extends Fragment implements View.OnClic
     private void InitializeYoutubeView(View view) {
         LinearLayout galleryHorizontalScrollViewLayout = view.findViewById(R.id.galleryHorizontalScrollViewLayout1);
         youtubeView = layoutInflater.inflate(R.layout.youtube_frame_layout, mContainer, false);
-        galleryHorizontalScrollViewLayout.addView(youtubeView);
-        YouTubePlayerSupportFragment youTubePlayerFragment = YouTubePlayerSupportFragment.newInstance();
+        if (youtubeView != null) {
+            galleryHorizontalScrollViewLayout.addView(youtubeView);
+            YouTubePlayerSupportFragment youTubePlayerFragment = YouTubePlayerSupportFragment.newInstance();
 
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.youtube_frame_layout, youTubePlayerFragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.youtube_frame_layout, youTubePlayerFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
 
-        youTubePlayerFragment.initialize(AppConstants.YOUTUBE_API_KEY, new YouTubePlayer.OnInitializedListener() {
+            youTubePlayerFragment.initialize(AppConstants.YOUTUBE_API_KEY, new YouTubePlayer.OnInitializedListener() {
 
-            @Override
-            public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player, boolean wasRestored) {
-                if (!wasRestored) {
-                    player.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
-                    player.cueVideo(mYoutubeVideo);
+                @Override
+                public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player, boolean wasRestored) {
+                    if (!wasRestored) {
+                        player.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
+                        player.cueVideo(mYoutubeVideo);
+                    }
                 }
-            }
 
-            @Override
-            public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult error) {
-                // YouTube error
-            }
-        });
+                @Override
+                public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult error) {
+                    // YouTube error
+                }
+            });
+        }
     }
 }

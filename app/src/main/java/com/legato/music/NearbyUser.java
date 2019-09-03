@@ -4,14 +4,14 @@ import java.io.Serializable;
 
 import co.chatsdk.core.dao.User;
 import co.chatsdk.core.session.ChatSDK;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.annotations.Nullable;
 
-class NearbyUser implements Serializable {
+class NearbyUser {
 
-    private String distance;
+    @NonNull private String distance;
+    @NonNull
     private User user;
-
-    public NearbyUser() {
-    }
 
     public NearbyUser(User user, String distance) {
         this.distance = distance;
@@ -51,13 +51,13 @@ class NearbyUser implements Serializable {
         return user.metaStringForKey(Keys.genres);
     }
 
-    public void setGenres(String genres) {    this.user.setMetaString(Keys.genres, genres);   }
+    public void setGenres(@Nullable String genres) {    this.user.setMetaString(Keys.genres, genres);   }
 
     public String getSkills() {
         return user.metaStringForKey(Keys.skills);
     }
 
-    public void setSkills(String skills) {
+    public void setSkills(@Nullable String skills) {
         this.user.setMetaString(Keys.skills, skills);
     }
 
@@ -65,7 +65,7 @@ class NearbyUser implements Serializable {
         return this.user.metaStringForKey(Keys.lookingfor);
     }
 
-    public void setLookingfor(String lookingfor) {
+    public void setLookingfor(@Nullable String lookingfor) {
         this.user.setMetaString(Keys.lookingfor, lookingfor);
     }
 

@@ -47,7 +47,8 @@ public class BandRegistrationActivity extends AppCompatActivity {
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager.setAdapter(mSectionsPagerAdapter);
+        if (mViewPager != null)
+            mViewPager.setAdapter(mSectionsPagerAdapter);
 
         TabLayout tabLayout = findViewById(R.id.bandRegistrationTablayout);
         tabLayout.setupWithViewPager(mViewPager);
@@ -89,13 +90,14 @@ public class BandRegistrationActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return BandBasicInfoFragment.newInstance("Sarat", "Poluri");
+                    return new BandBasicInfoFragment();
                 case 1:
                     return new GenresFragment();
                 case 2:
                     return new BandMembersFragment();
             }
-            return null;
+
+            throw new IllegalArgumentException("Tab does not exist.");
         }
 
         @Override
@@ -114,7 +116,8 @@ public class BandRegistrationActivity extends AppCompatActivity {
                 case 2:
                     return "Band Members";
                 default:
-                    return null;
+                    //TODO: should we be throwing an error here instead?
+                    return "Band";
             }
         }
     }

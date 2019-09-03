@@ -14,10 +14,13 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import io.reactivex.annotations.NonNull;
+import io.reactivex.annotations.Nullable;
+
 class YtAdapter extends BaseAdapter {
 
     private final Activity mActivity;
-    private List<SearchResult> mVideoList;
+    @Nullable private List<SearchResult> mVideoList;
     private final LayoutInflater mLayoutInflater;
 
     public YtAdapter(Activity iActivity) {
@@ -32,12 +35,16 @@ class YtAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return (mVideoList==null)?(0):(mVideoList.size());
+        return (mVideoList==null)?0:mVideoList.size();
     }
 
     @Override
     public Object getItem(int i) {
-        return (mVideoList!=null && mVideoList.size()>i)?(mVideoList.get(i)):(null);
+        //TODO: Throw an error. Perhaps array out of bounds error.
+        if (mVideoList!=null && mVideoList.size()>i)
+            return mVideoList.get(i);
+
+        throw new ArrayIndexOutOfBoundsException();
     }
 
     @Override
@@ -47,7 +54,7 @@ class YtAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        ViewHolder mHolder;
+        @NonNull ViewHolder mHolder;
         if (view != null) {
             mHolder = (ViewHolder)view.getTag();
         } else {
@@ -60,19 +67,23 @@ class YtAdapter extends BaseAdapter {
         }
 
         // Set the data
-        SearchResult result = mVideoList.get(i);
-        mHolder.mVideoTitleTxv.setText(result.getSnippet().getTitle());
-        mHolder.mVideoDescTxv.setText(result.getSnippet().getDescription());
+        if (mVideoList != null) {
+            SearchResult result = mVideoList.get(i);
+            if (mHolder.mVideoTitleTxv != null)
+                mHolder.mVideoTitleTxv.setText(result.getSnippet().getTitle());
+            if (mHolder.mVideoDescTxv != null)
+                mHolder.mVideoDescTxv.setText(result.getSnippet().getDescription());
 
-        //Load images
-        Picasso.with(mActivity).load(result.getSnippet().getThumbnails().getMedium().getUrl()).into(mHolder.mVideoThumbnail);
+            //Load images
+            Picasso.with(mActivity).load(result.getSnippet().getThumbnails().getMedium().getUrl()).into(mHolder.mVideoThumbnail);
+        }
 
         return view;
     }
 
     private class ViewHolder {
-        private TextView mVideoTitleTxv = null;
-        private TextView mVideoDescTxv = null;
-        private ImageView mVideoThumbnail = null;
+        @Nullable private TextView mVideoTitleTxv = null;
+        @Nullable private TextView mVideoDescTxv = null;
+        @Nullable private ImageView mVideoThumbnail = null;
     }
 }

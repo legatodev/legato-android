@@ -10,10 +10,13 @@ import co.chatsdk.core.session.ChatSDK;
 import co.chatsdk.core.utils.DisposableList;
 import co.chatsdk.ui.main.BaseActivity;
 import co.chatsdk.ui.utils.ToastHelper;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.annotations.Nullable;
 
 public class UserProfileActivity extends BaseActivity {
 
-    protected User user;
+    @Nullable protected User user;
+    @Nullable protected String distance;
     private DisposableList disposableList = new DisposableList();
 
     @Override
@@ -25,9 +28,11 @@ public class UserProfileActivity extends BaseActivity {
 
         if (userEntityID != null && !userEntityID.isEmpty()) {
             user =  ChatSDK.db().fetchUserWithEntityID(userEntityID);
+            distance = GeofireHelper.getInstance(null).getDistanceToCurrentUser(userEntityID);
             if (user != null) {
                 UserProfileFragment fragment = (UserProfileFragment) getSupportFragmentManager().findFragmentById(R.id.user_profile_fragment);
                 fragment.setUser(user);
+                fragment.setDistance(distance);
                 fragment.updateInterface();
                 fragment.initializeYoutubeFragment();
                 return;

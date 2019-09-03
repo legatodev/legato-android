@@ -27,6 +27,7 @@ public class AvatarActivity extends AppCompatActivity {
         final AvatarImageAdapter avatarImageAdapter = new AvatarImageAdapter(this);
         gridView.setAdapter(avatarImageAdapter);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 displayProfilePic((Integer) avatarImageAdapter.getItem(position));
             }

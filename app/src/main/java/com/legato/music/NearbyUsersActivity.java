@@ -40,7 +40,6 @@ public class NearbyUsersActivity extends AppCompatActivity implements FilterDial
     private GeofireHelper geofireHelper;
     private NearbyUsersAdapter mNearbyUsersAdapter;
     private FilterDialogFragment mFilterDialog;
-    private Context context;
     private User mUser;
     final int REQUEST_FINE_LOCATION=0;
 
@@ -49,9 +48,10 @@ public class NearbyUsersActivity extends AppCompatActivity implements FilterDial
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nearby_users);
         ButterKnife.bind(this);
-        context = this;
         mNearbyUsersAdapter = new NearbyUsersAdapter(this, R.layout.item_nearbyuser);
-        mNearbyUserRecyclerView.setAdapter(mNearbyUsersAdapter);
+        if (mNearbyUserRecyclerView != null) {
+            mNearbyUserRecyclerView.setAdapter(mNearbyUsersAdapter);
+        }
         mFilterDialog = new FilterDialogFragment(mNearbyUsersAdapter);
 
         DividerItemDecoration itemDecor = new DividerItemDecoration(mNearbyUserRecyclerView.getContext(), DividerItemDecoration.HORIZONTAL);

@@ -107,6 +107,6 @@ import net.ltgt.gradle.errorprone.CheckSeverity
 
 tasks.withType(JavaCompile).configureEach {
     options.compilerArgs << "-Xlint:all"
-    options.errorprone.errorproneArgs << "-XepDisableWarningsInGeneratedCode"
-    options.errorprone.errorproneArgs << "-Xep:NullAway:ERROR" << "-XepOpt:NullAway:AnnotatedPackages=com.uber"
+    options.errorprone.errorproneArgs << "-XepExcludedPaths:.*/build/generated/.*"
+    options.errorprone.errorproneArgs << "-Xep:NullAway:ERROR" << "-XepOpt:NullAway:AnnotatedPackages=com.legato.music"
 }

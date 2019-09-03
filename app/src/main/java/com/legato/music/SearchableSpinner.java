@@ -18,6 +18,8 @@ import com.toptoche.searchablespinnerlibrary.SearchableListDialog;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.annotations.Nullable;
+
 public class SearchableSpinner extends Spinner implements View.OnTouchListener,
         SearchableListDialog.SearchableItem {
 
@@ -28,7 +30,7 @@ public class SearchableSpinner extends Spinner implements View.OnTouchListener,
 
     private boolean _isDirty;
     private ArrayAdapter _arrayAdapter;
-    private String _strHintText;
+    @Nullable private String _strHintText;
     private boolean _isFromInit;
 
     public SearchableSpinner(Context context) {
@@ -90,7 +92,9 @@ public class SearchableSpinner extends Spinner implements View.OnTouchListener,
                 }
                 // Change end.
 
-                _searchableListDialog.show(scanForActivity(_context).getFragmentManager(), "TAG");
+                Activity activity = scanForActivity(_context);
+                if (activity != null)
+                    _searchableListDialog.show(activity.getFragmentManager(), "TAG");
             }
         }
         return true;
@@ -142,7 +146,7 @@ public class SearchableSpinner extends Spinner implements View.OnTouchListener,
         _searchableListDialog.setOnSearchTextChangedListener(onSearchTextChanged);
     }
 
-    private Activity scanForActivity(Context cont) {
+    private @Nullable Activity scanForActivity(Context cont) {
         if (cont == null)
             return null;
         else if (cont instanceof Activity)
@@ -165,7 +169,7 @@ public class SearchableSpinner extends Spinner implements View.OnTouchListener,
     @Override
     public Object getSelectedItem() {
         if (!TextUtils.isEmpty(_strHintText) && !_isDirty) {
-            return null;
+            return "";
         } else {
             return super.getSelectedItem();
         }

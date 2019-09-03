@@ -2,11 +2,13 @@ package com.legato.music;
 
 import android.text.TextUtils;
 
+import io.reactivex.annotations.Nullable;
+
 public class Filters {
 
-    private String lookingfor = null;
-    private String genres = null;
-    private String skills = null;
+    @Nullable private String lookingfor = null;
+    @Nullable private String genres = null;
+    @Nullable private String skills = null;
 
     public Filters() {}
 
@@ -16,35 +18,35 @@ public class Filters {
     }
 
     public boolean hasLookingfor() {
-        return !(TextUtils.isEmpty(lookingfor));
+        return !TextUtils.isEmpty(lookingfor);
     }
     public boolean hasGenres() {
-        return !(TextUtils.isEmpty(genres));
+        return !TextUtils.isEmpty(genres);
     }
     public boolean hasSkills() {
-        return !(TextUtils.isEmpty(skills));
+        return !TextUtils.isEmpty(skills);
     }
-    public String getLookingfor() {
+    public @Nullable String getLookingfor() {
         return lookingfor;
     }
 
-    public void setLookingfor(String lookingfor) {
+    public void setLookingfor(@Nullable String lookingfor) {
         this.lookingfor = lookingfor;
     }
 
-    public String getGenres() {
+    public @Nullable String getGenres() {
         return genres;
     }
 
-    public void setGenres(String genres) {
+    public void setGenres(@Nullable String genres) {
         this.genres = genres;
     }
 
-    public String getSkills() {
+    public @Nullable String getSkills() {
         return skills;
     }
 
-    public void setSkills(String skills) {
+    public void setSkills(@Nullable String skills) {
         this.skills = skills;
     }
 }

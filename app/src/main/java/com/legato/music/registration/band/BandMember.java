@@ -1,14 +1,9 @@
 package com.legato.music.registration.band;
 
-import java.io.Serializable;
-
-class BandMember implements Serializable {
+class BandMember {
 
     private String position;
     private String userEntityId;
-
-    public BandMember() {
-    }
 
     public BandMember(String position, String userEntityId) {
         this.position = position;

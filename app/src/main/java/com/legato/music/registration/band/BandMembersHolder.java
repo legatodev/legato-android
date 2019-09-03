@@ -12,20 +12,20 @@ import com.legato.music.R;
 
 import java.util.Arrays;
 
+import io.reactivex.annotations.Nullable;
+
 public class BandMembersHolder extends RecyclerView.ViewHolder {
 
     private final Spinner mPositionSpinner;
     private final SearchView mBandMemberSearchView;
 
     private final String[] mSkillsArray;
-    private BandMember mBandMember;
-    private final Context context;
+    @Nullable private BandMember mBandMember;
 
     public BandMembersHolder(Context context, View itemView) {
         super(itemView);
 
         // 1. Set the context
-        this.context = context;
         this.mPositionSpinner = itemView.findViewById(R.id.positionSpinner);
         this.mBandMemberSearchView = itemView.findViewById(R.id.bandMemberSearchView);
 
