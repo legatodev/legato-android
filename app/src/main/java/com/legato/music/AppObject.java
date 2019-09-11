@@ -6,7 +6,7 @@ import android.content.Context;
 
 import androidx.multidex.MultiDex;
 
-import com.legato.music.R;
+import com.crashlytics.android.Crashlytics;
 import com.legato.music.registration.RegistrationActivity;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FacebookAuthProvider;
@@ -20,6 +20,7 @@ import co.chatsdk.firebase.file_storage.FirebaseFileStorageModule;
 import co.chatsdk.firebase.social_login.FirebaseSocialLoginModule;
 import co.chatsdk.ui.login.LoginActivity;
 import co.chatsdk.ui.manager.BaseInterfaceAdapter;
+import io.fabric.sdk.android.Fabric;
 import io.reactivex.plugins.RxJavaPlugins;
 
 public class AppObject extends Application {
@@ -63,6 +64,8 @@ public class AppObject extends Application {
         catch (ChatSDKException e) {
             e.printStackTrace();
         }
+
+        Fabric.with(context, new Crashlytics());
 
         FirebaseUIModule.activate(EmailAuthProvider.PROVIDER_ID, GoogleAuthProvider.PROVIDER_ID, FacebookAuthProvider.PROVIDER_ID);
         ChatSDK.ui().setMainActivity(RegistrationActivity.class);

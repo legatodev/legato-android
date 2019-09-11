@@ -7,6 +7,7 @@ import co.chatsdk.core.session.ChatSDK;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.annotations.Nullable;
 
+//A Model in MVVM
 class NearbyUser {
 
     @NonNull private String distance;
