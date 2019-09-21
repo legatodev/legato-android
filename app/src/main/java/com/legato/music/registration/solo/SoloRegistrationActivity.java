@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -13,6 +14,10 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.legato.music.Keys;
 import com.legato.music.NearbyUsersActivity;
 import com.legato.music.R;
@@ -40,7 +45,6 @@ import io.reactivex.Single;
 import io.reactivex.SingleOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
-import io.reactivex.annotations.Nullable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -67,6 +71,7 @@ public class SoloRegistrationActivity extends AppCompatActivity implements Skill
     private Fragment genresTab;
 
     private DisposableList disposableList;
+    private String previousAvatarURL = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,6 +144,9 @@ public class SoloRegistrationActivity extends AppCompatActivity implements Skill
         Iterator it = profileInfo.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry)it.next();
+            if (co.chatsdk.core.dao.Keys.AvatarURL.equals(pair.getKey()))
+                previousAvatarURL = user.getAvatarURL();
+
             user.setMetaString((String)pair.getKey(), (String)pair.getValue());
             if (co.chatsdk.core.dao.Keys.AvatarURL.equals(pair.getKey())) {
                 disposableList.add(pushProfilePic()
@@ -184,6 +192,20 @@ public class SoloRegistrationActivity extends AppCompatActivity implements Skill
 
                             @Override
                             public void onComplete() {
+                                FirebaseStorage storage = FirebaseStorage.getInstance();
+                                StorageReference storageRef = storage.getReferenceFromUrl(previousAvatarURL);
+                                storageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Log.d("SoloRegActivity", "onSuccess: deleted file");
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception exception) {
+                                        Log.d("SoloRegActivity", "onFailure: did not delete file");
+                                    }
+                                });
+
                                 e.onSuccess(ChatSDK.currentUser());
                             }
                         });
