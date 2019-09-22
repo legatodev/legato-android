@@ -64,7 +64,7 @@ public class YoutubeActivity extends AppCompatActivity implements View.OnClickLi
                     if (keyWord.length() > 0) {
 
                         // Service to search video
-                        mYtServiceTask = new ServiceTask(SEARCH_VIDEO);
+                        mYtServiceTask = new ServiceTask(SEARCH_VIDEO, getResources().getString(R.string.google_api_key));
                         mYtServiceTask.setServerResponseListener(this);
                         mYtServiceTask.execute(new String[]{keyWord});
                     }

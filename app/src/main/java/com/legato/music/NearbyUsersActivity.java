@@ -6,14 +6,19 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.nearby.Nearby;
+import com.google.android.gms.nearby.messages.Message;
+import com.google.android.gms.nearby.messages.MessageListener;
 import com.legato.music.R;
 import com.legato.music.AppConstants;
 import com.legato.music.messaging.ActiveChatActivity;
@@ -43,6 +48,8 @@ public class NearbyUsersActivity extends AppCompatActivity implements FilterDial
     private User mUser;
     final int REQUEST_FINE_LOCATION=0;
 
+    @Nullable NearbyMessages nearbyMessages;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +73,15 @@ public class NearbyUsersActivity extends AppCompatActivity implements FilterDial
         })), HookEvent.WillLogout);
 
         getLastLocation();
+
+        String proximityAlert = ChatSDK.currentUser().metaStringForKey(com.legato.music.Keys.proximityalert);
+        if (proximityAlert != null) {
+            boolean proximityAlertEnabled = proximityAlert.equals("true");
+            if (proximityAlertEnabled) {
+                nearbyMessages = new NearbyMessages(this);
+                nearbyMessages.initialize();
+            }
+        }
     }
 
     @Override

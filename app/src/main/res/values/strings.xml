@@ -86,4 +86,6 @@
     <string name="instagram">Instagram Page</string>
     <string name="facebook">Facebook Page</string>
     <string name="youtube_channel">Youtube Channel</string>
+
+    <string name="nearby_service">NearbyService</string>
 </resources>

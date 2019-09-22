@@ -42,9 +42,6 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
-import com.squareup.picasso.Picasso;
-
-import org.w3c.dom.Text;
 
 import java.io.File;
 import java.util.HashMap;
@@ -74,10 +71,6 @@ public class SoloArtistBasicInfoFragment extends Fragment implements View.OnClic
     @Nullable CheckBox collaborateCheckBox;
     @BindView(R.id.startBandCheckBox)
     @Nullable CheckBox startBandCheckBox;
-    @BindView(R.id.proximityRadiusValue)
-    @Nullable TextView proximityRadiusValue;
-    @BindView(R.id.proximityRadiusSeekBar)
-    @Nullable SeekBar seekBarProximity;
     @BindView(R.id.searchRadiusValue)
     @Nullable TextView searchRadiusValue;
     @BindView(R.id.searchRadiusSeekBar)
@@ -147,25 +140,6 @@ public class SoloArtistBasicInfoFragment extends Fragment implements View.OnClic
         if (addSampleButton1 != null)
             addSampleButton1.setOnClickListener(this);
 
-        if (seekBarProximity != null) {
-            seekBarProximity.setEnabled(false);
-            seekBarProximity.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                @Override
-                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    setTextView(proximityRadiusValue, progress + "ft");
-                }
-
-                @Override
-                public void onStartTrackingTouch(SeekBar seekBar) {
-                    //write custom code to on start progress
-                }
-
-                @Override
-                public void onStopTrackingTouch(SeekBar seekBar) {
-                }
-            });
-        }
-
         if (seekBarSearch != null) {
             seekBarSearch.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
@@ -195,14 +169,6 @@ public class SoloArtistBasicInfoFragment extends Fragment implements View.OnClic
             proximitySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if (seekBarProximity != null) {
-                        if (isChecked) {
-                            seekBarProximity.setEnabled(true);
-                        } else {
-                            seekBarProximity.setEnabled(false);
-                        }
-                    }
-
                     validate();
                 }
             });
@@ -365,6 +331,10 @@ public class SoloArtistBasicInfoFragment extends Fragment implements View.OnClic
             basicInfo.put(Keys.facebook, facebookTextInputEditText.getText().toString().trim());
         if (youtubeTextInputEditText != null)
             basicInfo.put(Keys.youtube_channel, youtubeTextInputEditText.getText().toString().trim());
+        if (proximitySwitch != null) {
+            basicInfo.put(Keys.proximityalert, Boolean.toString(proximitySwitch.isEnabled()));
+        }
+
         basicInfo.put(Keys.youtube, mYoutubeVideo);
         basicInfo.put(co.chatsdk.core.dao.Keys.AvatarURL, avatarUrl);
 
@@ -404,7 +374,7 @@ public class SoloArtistBasicInfoFragment extends Fragment implements View.OnClic
             transaction.addToBackStack(null);
             transaction.commit();
 
-            youTubePlayerFragment.initialize(AppConstants.YOUTUBE_API_KEY, new YouTubePlayer.OnInitializedListener() {
+            youTubePlayerFragment.initialize(getResources().getString(R.string.google_api_key), new YouTubePlayer.OnInitializedListener() {
 
                 @Override
                 public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player, boolean wasRestored) {

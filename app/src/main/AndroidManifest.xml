@@ -34,6 +34,9 @@
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_application_id" />
+        <meta-data
+            android:name="com.google.android.nearby.messages.API_KEY"
+            android:value="@string/google_api_key" />
 
         <uses-library
             android:name="com.google.android.maps"
@@ -68,6 +71,11 @@
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
         </activity>
+        <service
+            android:name=".NearbyService"
+            android:label="@string/nearby_service"
+            >
+        </service>
     </application>
 
 </manifest>

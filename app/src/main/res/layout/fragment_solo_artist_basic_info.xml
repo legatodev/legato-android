@@ -146,25 +146,6 @@
             android:layout_below="@+id/searchRadiusLayout" />
 
         <TextView
-            android:id="@+id/proximityRadiusTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Proximity Radius"
-            android:layout_below="@+id/proximityAlertSwitch"/>
-
-        <SeekBar
-            android:id="@+id/proximityRadiusSeekBar"
-            android:layout_width="186dp"
-            android:layout_height="20dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginLeft="16dp"
-            android:min="15"
-            android:max="100"
-            android:layout_below="@+id/proximityAlertSwitch"
-            android:layout_toRightOf="@+id/proximityRadiusTextView"/>
-
-        <TextView
             android:id="@+id/proximityRadiusValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

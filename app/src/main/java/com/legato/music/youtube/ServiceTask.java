@@ -19,9 +19,11 @@ class ServiceTask extends AsyncTask<Object, Void, Object[]> implements
         ServiceTaskInterface {
     @Nullable private ServerResponseListener mServerResponseListener = null;
     private final int mRequestCode;
+    private final String mGoogleApiKey;
 
-    public ServiceTask(int iReqCode) {
+    public ServiceTask(int iReqCode, String googleApiKey) {
         mRequestCode = iReqCode;
+        mGoogleApiKey = googleApiKey;
     }
 
     public void setServerResponseListener(
@@ -87,7 +89,7 @@ class ServiceTask extends AsyncTask<Object, Void, Object[]> implements
             // Set your developer key from the Google Developers Console for
             // non-authenticated requests. See:
             // https://console.developers.google.com/
-            search.setKey(AppConstants.YOUTUBE_API_KEY);
+            search.setKey(mGoogleApiKey);
             search.setQ(queryTerm);
 
             // Restrict the search results to only include videos. See:
