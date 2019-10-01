@@ -86,7 +86,7 @@ public class NearbyUsersActivity extends AppCompatActivity implements FilterDial
 
     @Override
     public void onFilter(Filters filters) {
-        mNearbyUsersAdapter.onFilter(filters);
+        mNearbyUsersAdapter.onFilter(filters,geofireHelper);
     }
 
     @OnClick(R.id.buttonFilter)
