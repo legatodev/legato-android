@@ -108,44 +108,47 @@ class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
         2] If radius is different than previous , update User.MetaKey and get new list based on updated radius.
         3] This should update nearbyUsers list
          */
-        String searchRadius = filters.getSearchRadius();
-        String currentSearchRadius = ChatSDK.currentUser().metaStringForKey(Keys.searchradius);
-        if(currentSearchRadius != searchRadius) {
+
+        String dbSearchRadius = ChatSDK.currentUser().metaStringForKey(Keys.searchradius);
+
+        if(dbSearchRadius != filters.getSearchRadius()) {
             if (geofireHelper == null)
                 return;
-            geofireHelper.queryNeighbors(Integer.parseInt(searchRadius));
-            ChatSDK.currentUser().setMetaString(Keys.searchradius,searchRadius);
+            geofireHelper.queryNeighbors(Integer.parseInt(filters.getSearchRadius()));
         }
+        ChatSDK.currentUser().setMetaString(Keys.searchradius,filters.getSearchRadius());
 
         for (NearbyUser row : nearbyUsers) {
             boolean addRow;
-            if (filters.hasLookingfor()&& row.getLookingfor() != null) {
-                addRow = row.getLookingfor().contentEquals(filters.getLookingfor());
-            }
-            else {
-                addRow = true;
-            }
-
-            if (addRow) {
-                if (filters.hasGenres() && row.getGenres() != null) {
-                    addRow = row.getGenres().contains(filters.getGenres());
+            if(Float.parseFloat(filters.getSearchRadius()) >= Float.parseFloat(row.getDistance())) {
+                if (filters.hasLookingfor()&& row.getLookingfor() != null) {
+                    addRow = row.getLookingfor().contentEquals(filters.getLookingfor());
                 }
                 else {
                     addRow = true;
                 }
-            }
 
-            if (addRow) {
-                if (filters.hasSkills() && row.getSkills() != null) {
-                    addRow = row.getSkills().contains(filters.getSkills());
+                if (addRow) {
+                    if (filters.hasGenres() && row.getGenres() != null) {
+                        addRow = row.getGenres().contains(filters.getGenres());
+                    }
+                    else {
+                        addRow = true;
+                    }
                 }
-                else {
-                    addRow = true;
-                }
-            }
 
-            if (addRow) {
-                filteredList.add(row);
+                if (addRow) {
+                    if (filters.hasSkills() && row.getSkills() != null) {
+                        addRow = row.getSkills().contains(filters.getSkills());
+                    }
+                    else {
+                        addRow = true;
+                    }
+                }
+
+                if (addRow) {
+                    filteredList.add(row);
+                }
             }
         }
 
