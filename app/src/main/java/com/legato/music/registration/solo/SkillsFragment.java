@@ -130,9 +130,9 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
                 if (mSkillsAdapter != null && mSkillArrayList.size() < MAX_SKILLS) {
                     mSkillArrayList.add(new Skill("Choose Skill", 0));
                     mSkillsAdapter.notifyItemInserted(mSkillArrayList.size() - 1);
+                } else {
                     if (addSkillButton != null)
                         addSkillButton.setEnabled(false);
-                    //TODO: how to remove a skill?
                 }
 
                 break;

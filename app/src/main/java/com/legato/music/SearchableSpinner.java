@@ -175,14 +175,17 @@ public class SearchableSpinner extends Spinner implements View.OnTouchListener,
         }
     }
 
-    public void setSelectionM(int position)
-    {
+    public void setSelectionM(int position) {
         if (position != NO_ITEM_SELECTED) {
             if (!_isDirty) {
                 _isDirty = true;
                 setAdapter(_arrayAdapter);
                 super.setSelection(position);
             }
+        } else {
+            _isDirty = false;
+            _isFromInit = false;
+            setAdapter(_arrayAdapter);
         }
     }
 }

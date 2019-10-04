@@ -16,8 +16,12 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <RelativeLayout
+            android:layout_width="360dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:id="@+id/skillLayout">
 
             <com.legato.music.SearchableSpinner
                 android:id="@+id/skillsSpinner1"
@@ -38,7 +42,7 @@
 
             <SeekBar
                 android:id="@+id/skillLevelSlider1"
-                android:layout_width="270dp"
+                android:layout_width="240dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:min="1"
@@ -54,6 +58,21 @@
                 android:text="1"
                 android:layout_below="@id/skillsSpinner1"
                 android:layout_toRightOf="@+id/skillLevelSlider1"/>
+
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@id/skillLayout">
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@android:drawable/ic_menu_delete"
+                android:layout_gravity="center"
+                android:background="@android:color/transparent"
+                android:id="@+id/deleteSkill"
+                android:layout_centerVertical="true"/>
+        </RelativeLayout>
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 </LinearLayout>
