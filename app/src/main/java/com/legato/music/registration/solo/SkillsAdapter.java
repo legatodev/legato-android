@@ -8,12 +8,15 @@ import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
-import butterknife.OnClick;
+import butterknife.BindArray;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 import com.legato.music.R;
 import com.legato.music.SearchableSpinner;
@@ -61,57 +64,74 @@ class SkillsAdapter extends RecyclerView.Adapter<SkillsAdapter.SkillsHolder> {
 
     public class SkillsHolder extends RecyclerView.ViewHolder implements Spinner.OnItemSelectedListener, View.OnClickListener {
 
-        private SearchableSpinner mSkillSpinner;
-        private SeekBar mSkillLevelSeekBar;
-        private TextView mSkillLevelValueTextView;
-        public ImageButton mDeleteSkillButton;
+        @BindView(R.id.skillsSpinner1)
+        @Nullable SearchableSpinner mSkillSpinner;
+        @BindView(R.id.skillLevelSlider1)
+        @Nullable SeekBar mSkillLevelSeekBar;
+        @BindView(R.id.skillLevelValueLabel1)
+        @Nullable TextView mSkillLevelValueTextView;
+        @BindView(R.id.deleteSkill)
+        @Nullable ImageButton mDeleteSkillButton;
+        @BindView(R.id.ownsInstrumentSwitch)
+        @Nullable Switch mOwnsInstrumentSwitch;
 
-        private final String[] mSkillsArray;
+        @BindArray(R.array.skills_array)
+        @Nullable String[] mSkillsArray;
 
         public SkillsHolder(Context context, View itemView) {
             super(itemView);
+            ButterKnife.bind(this, itemView);
+            if (mSkillLevelSeekBar != null) {
+                mSkillLevelSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                    @Override
+                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                        if (mSkillLevelValueTextView != null) {
+                            mSkillLevelValueTextView.setText(progress + "");
+                        }
+                        skills.get(getAdapterPosition()).setSkillLevel(progress);
+                    }
 
-            mSkillLevelValueTextView = itemView.findViewById(R.id.skillLevelValueLabel1);
-            mSkillLevelSeekBar = itemView.findViewById(R.id.skillLevelSlider1);
-            mSkillLevelSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                @Override
-                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    mSkillLevelValueTextView.setText(progress + "");
-                    skills.get(getAdapterPosition()).setSkillLevel(progress);
-                }
+                    @Override
+                    public void onStartTrackingTouch(SeekBar seekBar) {
+                        //write custom code to on start progress
+                    }
 
-                @Override
-                public void onStartTrackingTouch(SeekBar seekBar) {
-                    //write custom code to on start progress
-                }
-
-                @Override
-                public void onStopTrackingTouch(SeekBar seekBar) {
-                }
-            });
-
-            mSkillsArray = itemView.getResources().getStringArray(R.array.skills_array);
-            mDeleteSkillButton = itemView.findViewById(R.id.deleteSkill);
-            mDeleteSkillButton.setOnClickListener(this);
-
-            mSkillSpinner = itemView.findViewById(R.id.skillsSpinner1);
-            mSkillLevelSeekBar.setEnabled(false);
-            mSkillSpinner.setOnItemSelectedListener(this);
+                    @Override
+                    public void onStopTrackingTouch(SeekBar seekBar) {
+                    }
+                });
+                mSkillLevelSeekBar.setEnabled(false);
+            }
+            if (mDeleteSkillButton != null) {
+                mDeleteSkillButton.setOnClickListener(this);
+            }
+            if (mSkillSpinner != null) {
+                mSkillSpinner.setOnItemSelectedListener(this);
+            }
         }
 
         public void bindSkill(Skill skill) {
             if (skill != null) {
-                this.mSkillLevelSeekBar.setEnabled(skill.getSkillLevel() > 0);
-                this.mSkillLevelSeekBar.setProgress(skill.getSkillLevel());
+                if (mSkillLevelSeekBar != null) {
+                    this.mSkillLevelSeekBar.setEnabled(skill.getSkillLevel() > 0);
+                    this.mSkillLevelSeekBar.setProgress(skill.getSkillLevel());
+                }
                 int indexOfSkill = Arrays.asList(mSkillsArray).indexOf(skill.getSkill());
-                this.mSkillSpinner.setSelectionM(indexOfSkill);
+                if (mSkillSpinner != null) {
+                    this.mSkillSpinner.setSelectionM(indexOfSkill);
+                }
+                if (mOwnsInstrumentSwitch != null) {
+                    this.mOwnsInstrumentSwitch.setChecked(skill.getOwnsInstrument());
+                }
             }
         }
 
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             mOnSkillSelectedListener.onSkillSelected(view, position);
-            mSkillLevelSeekBar.setEnabled(true);
+            if (mSkillLevelSeekBar != null) {
+                mSkillLevelSeekBar.setEnabled(true);
+            }
             skills.get(getAdapterPosition()).setSkill(Arrays.asList(mSkillsArray).get(position));
         }
 
@@ -122,8 +142,12 @@ class SkillsAdapter extends RecyclerView.Adapter<SkillsAdapter.SkillsHolder> {
 
         public String getSkill() {
             String skill = "";
-            if (!((String) mSkillSpinner.getSelectedItem()).isEmpty()) {
-                skill += (mSkillSpinner.getSelectedItem() + " - " + mSkillLevelSeekBar.getProgress() + "|");
+            String ownsInstrument = "No";
+            if (mOwnsInstrumentSwitch != null && mOwnsInstrumentSwitch.isChecked()) {
+                ownsInstrument = "Yes";
+            }
+            if (mSkillSpinner != null && !((String) mSkillSpinner.getSelectedItem()).isEmpty() && mSkillLevelSeekBar != null) {
+                skill += (mSkillSpinner.getSelectedItem() + "(" + ownsInstrument + ")" + " - " + mSkillLevelSeekBar.getProgress() + "|");
             }
 
             return skill;
@@ -131,12 +155,19 @@ class SkillsAdapter extends RecyclerView.Adapter<SkillsAdapter.SkillsHolder> {
 
         @Override
         public void onClick(View view) {
-            int position = getAdapterPosition();
-            skills.remove(position);
-            notifyItemRemoved(position);
-            notifyItemRangeChanged(position, skills.size());
-            this.mSkillSpinner.setSelectionM(-1);
-            this.mSkillLevelSeekBar.setEnabled(false);
+            if (view.getId() == R.id.deleteSkill) {
+                int position = getAdapterPosition();
+                skills.remove(position);
+                notifyItemRemoved(position);
+                notifyItemRangeChanged(position, skills.size());
+                //Reset this item. Necessary because when you delete the item at the end, the viewholder lingers.
+                if (mSkillSpinner != null) {
+                    this.mSkillSpinner.setSelectionM(SearchableSpinner.NO_ITEM_SELECTED);
+                }
+                if (mSkillLevelSeekBar != null) {
+                    this.mSkillLevelSeekBar.setEnabled(false);
+                }
+            }
         }
     }
 }

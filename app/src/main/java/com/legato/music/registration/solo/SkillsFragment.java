@@ -6,8 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -59,21 +57,25 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
         skillSelected = false;
         User user = ChatSDK.currentUser();
         Resources res = getResources();
+        populateCurrentSkills(user, res);
 
-        /*Creating pre-selected skill objects*/
+        return view;
+    }
+
+    private void populateCurrentSkills(User user, Resources res) {
         String[] resSkills = res.getStringArray(R.array.skills_array);
-        String dblookingfor = user.metaStringForKey(Keys.skills);
-        if (dblookingfor != null && !dblookingfor.isEmpty()) {
-            String[] dbskillsArray = dblookingfor.split("\\|", -1);
+        String currentSkills = user.metaStringForKey(Keys.skills);
+        if (currentSkills != null && !currentSkills.isEmpty()) {
+            String[] currentSkillsArray = currentSkills.split("\\|", -1);
             for (int i = 0; i < resSkills.length; i++) {
-                for (int j = 0; j < dbskillsArray.length; j++) {
-                    if (dbskillsArray[j].contains(resSkills[i])) {
-                        String skillLevel = dbskillsArray[j].replaceAll("[^\\d]", "");
+                for (int j = 0; j < currentSkillsArray.length; j++) {
+                    if (currentSkillsArray[j].contains(resSkills[i])) {
+                        String skillLevel = getSkillLevel(currentSkillsArray[j]);
                         if (!skillLevel.isEmpty()) {
-                            Pattern pattern = Pattern.compile("[\\p{L}]+");
-                            Matcher matcher = pattern.matcher(dbskillsArray[j]);
-                            if (matcher.find()) {
-                                Skill s = new Skill(matcher.group(0), Integer.parseInt(skillLevel));
+                            String skillString = getSkill(currentSkillsArray[j]);
+                            boolean ownsInstrument = getOwnsInstrument(currentSkillsArray[j]);
+                            if (!skillString.isEmpty()) {
+                                Skill s = new Skill(skillString, Integer.parseInt(skillLevel), ownsInstrument);
                                 mSkillArrayList.add(s);
                             }
                         }
@@ -81,8 +83,35 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
                 }
             }
         }
+    }
 
-        return view;
+    private String getSkill(String input) {
+        Pattern pattern = Pattern.compile("[\\p{L}]+");
+        Matcher matcher = pattern.matcher(input);
+        if (matcher.find()) {
+            return matcher.group(0);
+        }
+
+        return "";
+    }
+
+    private boolean getOwnsInstrument(String input) {
+        Matcher matcher = Pattern.compile("\\((.*?)\\)").matcher(input);
+        String ownsInstrumentString = "";
+        if (matcher.find()) {
+            ownsInstrumentString = matcher.group(1);
+            if (!ownsInstrumentString.isEmpty() && ownsInstrumentString.equals("Yes")) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        return false;
+    }
+
+    private String getSkillLevel(String s) {
+        return s.replaceAll("[^\\d]", "");
     }
 
     @Override

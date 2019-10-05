@@ -88,4 +88,5 @@
     <string name="youtube_channel">Youtube Channel</string>
 
     <string name="nearby_service">NearbyService</string>
+    <string name="instrument_owned">Do you own the instrument?</string>
 </resources>
