@@ -71,10 +71,6 @@ public class SoloArtistBasicInfoFragment extends Fragment implements View.OnClic
     @Nullable CheckBox collaborateCheckBox;
     @BindView(R.id.startBandCheckBox)
     @Nullable CheckBox startBandCheckBox;
-    @BindView(R.id.searchRadiusValue)
-    @Nullable TextView searchRadiusValue;
-    @BindView(R.id.searchRadiusSeekBar)
-    @Nullable SeekBar seekBarSearch;
     @BindView(R.id.soloDisplayNameTextInputEditText)
     @Nullable TextInputEditText soloDisplayNameTextInputEditText;
     @BindView(R.id.instagramTextInputEditText)
@@ -140,30 +136,6 @@ public class SoloArtistBasicInfoFragment extends Fragment implements View.OnClic
         if (addSampleButton1 != null)
             addSampleButton1.setOnClickListener(this);
 
-        if (seekBarSearch != null) {
-            seekBarSearch.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                @Override
-                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    setTextView(searchRadiusValue, progress + "mi");
-                }
-
-                @Override
-                public void onStartTrackingTouch(SeekBar seekBar) {
-                    //write custom code to on start progress
-                }
-
-                @Override
-                public void onStopTrackingTouch(SeekBar seekBar) {
-                }
-            });
-        }
-
-        String searchRadius = AppConstants.DEFAULT_SEARCH_RADIUS;
-        if (user.metaStringForKey(Keys.searchradius) != null && !user.metaStringForKey(Keys.searchradius).isEmpty())
-            searchRadius = user.metaStringForKey(Keys.searchradius);
-        if (seekBarSearch != null) {
-            seekBarSearch.setProgress(Integer.parseInt(searchRadius));
-        }
 
         if (proximitySwitch != null) {
             proximitySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -323,8 +295,6 @@ public class SoloArtistBasicInfoFragment extends Fragment implements View.OnClic
         lookingfor += isCheckBoxChecked(startBandCheckBox)?lookingForArray[2]+"|":"";
 
         basicInfo.put(Keys.lookingfor, lookingfor);
-        if (seekBarSearch != null)
-            basicInfo.put(Keys.searchradius, Integer.toString(seekBarSearch.getProgress()));
         if (instagramTextInputEditText != null)
             basicInfo.put(Keys.instagram, instagramTextInputEditText.getText().toString().trim());
         if (facebookTextInputEditText != null)

@@ -6,7 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.SeekBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,6 +23,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import co.chatsdk.core.session.ChatSDK;
 
 public class FilterDialogFragment extends DialogFragment {
 
@@ -48,6 +51,12 @@ public class FilterDialogFragment extends DialogFragment {
     @BindView(R.id.skills)
     Spinner mSkills;
 
+    @BindView(R.id.searchRadiusValue)
+    @Nullable TextView searchRadiusValue;
+    @BindView(R.id.searchRadiusSeekBar)
+    SeekBar seekBarSearch;
+
+
     @Nullable private FilterListener mFilterListener;
 
     private Unbinder unbinder;
@@ -63,8 +72,12 @@ public class FilterDialogFragment extends DialogFragment {
         populateSkillsSpinner();
         populateGenresSpinner();
         populateLookingForSpinner();
+        populateSearchSeekBar();
 
         return mRootView;
+    }
+    private void setTextView(@Nullable TextView view, String text) {
+        if (view != null) { view.setText(text); }
     }
 
     private void populateSkillsSpinner() {
@@ -97,6 +110,34 @@ public class FilterDialogFragment extends DialogFragment {
                 R.layout.item_filter_spinner, lookingForList);
 
         mLookingfor.setAdapter(lookingForAdapter);
+    }
+    private void populateSearchSeekBar(){
+
+        if (seekBarSearch != null) {
+            seekBarSearch.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    setTextView(searchRadiusValue, progress + "mi");
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+                    //write custom code to on start progress
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+                }
+            });
+        }
+
+        String searchRadius = AppConstants.DEFAULT_SEARCH_RADIUS;
+        if (ChatSDK.currentUser().metaStringForKey(Keys.searchradius) != null && !ChatSDK.currentUser().metaStringForKey(Keys.searchradius).isEmpty()) {
+            searchRadius = ChatSDK.currentUser().metaStringForKey(Keys.searchradius);
+        }
+        if (seekBarSearch != null) {
+            seekBarSearch.setProgress(Integer.parseInt(searchRadius));
+        }
     }
 
     @Override
@@ -169,6 +210,10 @@ public class FilterDialogFragment extends DialogFragment {
         }
     }
 
+    private  String getSelectedSearchRadius() {
+            return Integer.toString(seekBarSearch.getProgress());
+    }
+
     public void resetFilters() {
         if (mRootView != null) {
             mLookingfor.setSelection(0);
@@ -185,6 +230,7 @@ public class FilterDialogFragment extends DialogFragment {
             filters.setLookingfor(getSelectedLookingfor());
             filters.setGenres(getSelectedGenres());
             filters.setSkills(getSelectedSkills());
+            filters.setSearchRadius(getSelectedSearchRadius());
         }
 
         return filters;

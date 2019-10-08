@@ -33,6 +33,24 @@ class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
         this.nearbyUsers = new ArrayList<>();
     }
 
+    /*
+    TODO: Below look will have to be improved if nearbyUser list grows bigger
+    Maybe hashmap will be better???
+     */
+    @Nullable
+    private NearbyUser isNearbyUserInList(NearbyUser user){
+
+        if(this.nearbyUsers.size()==0)
+            return null;
+
+        for(NearbyUser u: this.nearbyUsers){
+            if(u.getEntityID().equals(user.getEntityID())){
+                return u;
+            }
+        }
+        return null;
+    }
+
     public void addNearbyUserToRecyclerView(String userId, String distance) {
         User user = ChatSDK.db().fetchOrCreateEntityWithEntityID(User.class, userId);
         Completable completable = ChatSDK.core().userOn(user);
@@ -40,7 +58,18 @@ class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
             // User object has now been populated and is ready to use
             if (!user.isMe()) {
                 NearbyUser nearbyUser = new NearbyUser(user, distance);
-                this.nearbyUsers.add(nearbyUser);
+                /*
+                Below logic is due to SearchRadius in filter.
+                Everytime user changes the radius, new record needs to be pulled from DB
+                and replace previous record if user exists in list.
+                 */
+                NearbyUser prevNearbyUser = isNearbyUserInList(nearbyUser);
+                if(prevNearbyUser != null){
+                    this.nearbyUsers.remove(prevNearbyUser);
+                    this.nearbyUsers.add(nearbyUser);
+                }else{
+                    this.nearbyUsers.add(nearbyUser);
+                }
                 this.nearbyUsersFiltered = this.nearbyUsers;
                 notifyItemInserted(this.nearbyUsersFiltered.size() - 1);
             }
@@ -71,38 +100,55 @@ class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
         return this.nearbyUsersFiltered != null?this.nearbyUsersFiltered.size():0;
     }
 
-    public void onFilter(Filters filters) {
+    public void onFilter(Filters filters, GeofireHelper geofireHelper) {
 
         List<NearbyUser> filteredList = new ArrayList<>();
+        /*
+        1] GetSearchRadius.
+        2] If radius is different than previous , update User.MetaKey and get new list based on updated radius.
+        3] This should update nearbyUsers list
+         */
+
+        String dbSearchRadius = ChatSDK.currentUser().metaStringForKey(Keys.searchradius);
+
+        if(dbSearchRadius != filters.getSearchRadius()) {
+            if (geofireHelper == null)
+                return;
+            geofireHelper.queryNeighbors(Integer.parseInt(filters.getSearchRadius()));
+        }
+        ChatSDK.currentUser().setMetaString(Keys.searchradius,filters.getSearchRadius());
+
         for (NearbyUser row : nearbyUsers) {
             boolean addRow;
-            if (filters.hasLookingfor()&& row.getLookingfor() != null) {
-                addRow = row.getLookingfor().contentEquals(filters.getLookingfor());
-            }
-            else {
-                addRow = true;
-            }
-
-            if (addRow) {
-                if (filters.hasGenres() && row.getGenres() != null) {
-                    addRow = row.getGenres().contains(filters.getGenres());
+            if(Float.parseFloat(filters.getSearchRadius()) >= Float.parseFloat(row.getDistance())) {
+                if (filters.hasLookingfor()&& row.getLookingfor() != null) {
+                    addRow = row.getLookingfor().contentEquals(filters.getLookingfor());
                 }
                 else {
                     addRow = true;
                 }
-            }
 
-            if (addRow) {
-                if (filters.hasSkills() && row.getSkills() != null) {
-                    addRow = row.getSkills().contains(filters.getSkills());
+                if (addRow) {
+                    if (filters.hasGenres() && row.getGenres() != null) {
+                        addRow = row.getGenres().contains(filters.getGenres());
+                    }
+                    else {
+                        addRow = true;
+                    }
                 }
-                else {
-                    addRow = true;
-                }
-            }
 
-            if (addRow) {
-                filteredList.add(row);
+                if (addRow) {
+                    if (filters.hasSkills() && row.getSkills() != null) {
+                        addRow = row.getSkills().contains(filters.getSkills());
+                    }
+                    else {
+                        addRow = true;
+                    }
+                }
+
+                if (addRow) {
+                    filteredList.add(row);
+                }
             }
         }
 

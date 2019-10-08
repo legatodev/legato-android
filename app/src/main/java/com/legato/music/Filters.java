@@ -9,8 +9,11 @@ public class Filters {
     @Nullable private String lookingfor = null;
     @Nullable private String genres = null;
     @Nullable private String skills = null;
+    private String searchRadius;
 
-    public Filters() {}
+    public Filters() {
+        searchRadius = AppConstants.DEFAULT_SEARCH_RADIUS;
+    }
 
     public static Filters getDefault() {
         Filters filters = new Filters();
@@ -20,12 +23,15 @@ public class Filters {
     public boolean hasLookingfor() {
         return !TextUtils.isEmpty(lookingfor);
     }
+
     public boolean hasGenres() {
         return !TextUtils.isEmpty(genres);
     }
+
     public boolean hasSkills() {
         return !TextUtils.isEmpty(skills);
     }
+
     public @Nullable String getLookingfor() {
         return lookingfor;
     }
@@ -42,11 +48,13 @@ public class Filters {
         this.genres = genres;
     }
 
-    public @Nullable String getSkills() {
-        return skills;
-    }
+    public @Nullable String getSkills() { return skills; }
 
     public void setSkills(@Nullable String skills) {
         this.skills = skills;
     }
+
+    public String getSearchRadius() { return searchRadius; }
+
+    public void setSearchRadius(String searchRadius) { this.searchRadius = searchRadius;}
 }
