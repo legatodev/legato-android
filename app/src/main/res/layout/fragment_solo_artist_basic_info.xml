@@ -110,22 +110,13 @@
             android:text="Enable Proximity Alerts"
             android:layout_below="@+id/lookingforLayout" />
 
-        <TextView
-            android:id="@+id/proximityRadiusValue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="2dp"
-            android:layout_marginTop="8dp"
-            android:text="15ft"
-            android:layout_below="@+id/proximityAlertSwitch"
-            android:layout_toRightOf="@+id/proximityRadiusSeekBar" />
 
         <LinearLayout
             android:id="@+id/instagramLinearLayout"
             android:orientation="horizontal"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/proximityRadiusValue">
+            android:layout_below="@+id/proximityAlertSwitch">
             <TextView
                 android:id="@+id/instagramTextView"
                 android:layout_width="wrap_content"

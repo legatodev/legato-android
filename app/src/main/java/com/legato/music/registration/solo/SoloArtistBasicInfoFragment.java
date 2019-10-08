@@ -71,10 +71,6 @@ public class SoloArtistBasicInfoFragment extends Fragment implements View.OnClic
     @Nullable CheckBox collaborateCheckBox;
     @BindView(R.id.startBandCheckBox)
     @Nullable CheckBox startBandCheckBox;
-    @BindView(R.id.proximityRadiusValue)
-    @Nullable TextView proximityRadiusValue;
-    @BindView(R.id.proximityRadiusSeekBar)
-    @Nullable SeekBar seekBarProximity;
     @BindView(R.id.soloDisplayNameTextInputEditText)
     @Nullable TextInputEditText soloDisplayNameTextInputEditText;
     @BindView(R.id.instagramTextInputEditText)
@@ -140,24 +136,6 @@ public class SoloArtistBasicInfoFragment extends Fragment implements View.OnClic
         if (addSampleButton1 != null)
             addSampleButton1.setOnClickListener(this);
 
-        if (seekBarProximity != null) {
-            seekBarProximity.setEnabled(false);
-            seekBarProximity.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                @Override
-                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    setTextView(proximityRadiusValue, progress + "ft");
-                }
-
-                @Override
-                public void onStartTrackingTouch(SeekBar seekBar) {
-                    //write custom code to on start progress
-                }
-
-                @Override
-                public void onStopTrackingTouch(SeekBar seekBar) {
-                }
-            });
-        }
 
         if (proximitySwitch != null) {
             proximitySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

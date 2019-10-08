@@ -132,8 +132,9 @@ public class FilterDialogFragment extends DialogFragment {
         }
 
         String searchRadius = AppConstants.DEFAULT_SEARCH_RADIUS;
-        if (ChatSDK.currentUser().metaStringForKey(Keys.searchradius) != null && !ChatSDK.currentUser().metaStringForKey(Keys.searchradius).isEmpty())
+        if (ChatSDK.currentUser().metaStringForKey(Keys.searchradius) != null && !ChatSDK.currentUser().metaStringForKey(Keys.searchradius).isEmpty()) {
             searchRadius = ChatSDK.currentUser().metaStringForKey(Keys.searchradius);
+        }
         if (seekBarSearch != null) {
             seekBarSearch.setProgress(Integer.parseInt(searchRadius));
         }
