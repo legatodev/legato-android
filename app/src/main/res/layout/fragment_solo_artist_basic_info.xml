@@ -102,48 +102,13 @@
                 android:layout_below="@+id/collaborateCheckBox" />
         </RelativeLayout>
 
-        <LinearLayout
-            android:id="@+id/searchRadiusLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/lookingforLayout">
-            <TextView
-                android:id="@+id/searchRadiusTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Search Radius"/>
-
-            <SeekBar
-                android:id="@+id/searchRadiusSeekBar"
-                android:layout_width="194dp"
-                android:layout_height="20dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="16dp"
-                android:min="1"
-                android:max="100"
-                android:progress="50"
-                android:layout_toRightOf="@id/searchRadiusTextView"
-                android:layout_below="@+id/startBandCheckBox"/>
-
-            <TextView
-                android:id="@+id/searchRadiusValue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="2dp"
-                android:layout_marginTop="16dp"
-                android:text="50mi"
-                android:layout_toRightOf="@+id/searchRadiusSeekBar"
-                android:layout_below="@+id/startBandCheckBox"/>
-        </LinearLayout>
-
         <Switch
             android:id="@+id/proximityAlertSwitch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="Enable Proximity Alerts"
-            android:layout_below="@+id/searchRadiusLayout" />
+            android:layout_below="@+id/lookingforLayout" />
 
         <TextView
             android:id="@+id/proximityRadiusValue"
