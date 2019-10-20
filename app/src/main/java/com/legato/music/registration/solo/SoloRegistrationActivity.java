@@ -141,21 +141,14 @@ public class SoloRegistrationActivity extends AppCompatActivity implements Skill
         profileInfo.put(Keys.skills, ((SkillsFragment)skillsTab).extractData());
 
         User user = ChatSDK.currentUser();
-        Iterator it = profileInfo.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry)it.next();
-            if (co.chatsdk.core.dao.Keys.AvatarURL.equals(pair.getKey()))
-                previousAvatarURL = user.getAvatarURL();
+        previousAvatarURL = user.getAvatarURL();
 
-            user.setMetaString((String)pair.getKey(), (String)pair.getValue());
-            if (co.chatsdk.core.dao.Keys.AvatarURL.equals(pair.getKey())) {
-                disposableList.add(pushProfilePic()
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(() -> {
-                            //dismiss update progress bar
-                        }));
-            }
-        }
+        user.setMetaMap(profileInfo);
+        disposableList.add(pushProfilePic()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(() -> {
+                    //dismiss update progress bar
+                }));
     }
 
     private Completable pushProfilePic() {
