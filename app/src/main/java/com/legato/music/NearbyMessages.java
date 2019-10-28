@@ -37,7 +37,7 @@ public class NearbyMessages {
         Nearby.getMessagesClient(activity).publish(mActiveMessage).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.println(1, "NearbyService", "publish failed");
+                Log.println(1, "NearbyMessages", "publish failed");
             }
         });
     }
@@ -53,7 +53,7 @@ public class NearbyMessages {
         mMessageListener = new MessageListener() {
             @Override
             public void onFound(Message message) {
-                Log.println(1, "NearbyService", "Found a nearby user");
+                Log.println(1, "NearbyMessages", "Found a nearby user");
                 if (activity != null) {
                     Context context = activity.getApplicationContext();
                     String userEntityID = new String(message.getContent());
@@ -75,7 +75,7 @@ public class NearbyMessages {
         Nearby.getMessagesClient(activity).subscribe(mMessageListener).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.println(1, "NearbyService", "subscribe failed");
+                Log.println(1, "NearbyMessages", "subscribe failed");
             }
         });
     }

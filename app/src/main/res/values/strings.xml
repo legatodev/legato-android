@@ -87,6 +87,9 @@
     <string name="facebook">Facebook Page</string>
     <string name="youtube_channel">Youtube Channel</string>
 
-    <string name="nearby_service">NearbyService</string>
+    <string name="delete_account">Delete Account</string>
+    <string name="alert_delete_account">Delete your account?</string>
+    <string name="alert_email_verification">Please verify your e-mail and sign back in</string>
+    <string name="resend_verification">Resend Verification</string>
     <string name="instrument_owned">Do you own the instrument?</string>
 </resources>

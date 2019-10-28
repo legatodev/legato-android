@@ -1,6 +1,6 @@
 package com.legato.music;
 
-import java.io.Serializable;
+import com.legato.music.utils.Keys;
 
 import co.chatsdk.core.dao.User;
 import co.chatsdk.core.session.ChatSDK;

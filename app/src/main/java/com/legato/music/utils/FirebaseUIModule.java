@@ -1,4 +1,4 @@
-package com.legato.music;
+package com.legato.music.utils;
 
 import android.content.Intent;
 
@@ -29,6 +29,7 @@ public class FirebaseUIModule {
                 .createSignInIntentBuilder()
                 .setLogo(R.drawable.legato_logo)
                 .setAvailableProviders(idps)
+                .setIsSmartLockEnabled(false)
                 .build();
 
         ChatSDK.ui().setLoginIntent(authUILoginIntent);

@@ -2,7 +2,7 @@ package com.legato.music;
 
 import android.os.Bundle;
 
-import com.legato.music.R;
+import com.legato.music.utils.GeofireHelper;
 
 import co.chatsdk.core.dao.Keys;
 import co.chatsdk.core.dao.User;
@@ -10,7 +10,6 @@ import co.chatsdk.core.session.ChatSDK;
 import co.chatsdk.core.utils.DisposableList;
 import co.chatsdk.ui.main.BaseActivity;
 import co.chatsdk.ui.utils.ToastHelper;
-import io.reactivex.annotations.NonNull;
 import io.reactivex.annotations.Nullable;
 
 public class UserProfileActivity extends BaseActivity {
@@ -28,7 +27,7 @@ public class UserProfileActivity extends BaseActivity {
 
         if (userEntityID != null && !userEntityID.isEmpty()) {
             user =  ChatSDK.db().fetchUserWithEntityID(userEntityID);
-            distance = GeofireHelper.getInstance(null).getDistanceToCurrentUser(userEntityID);
+            distance = GeofireHelper.getInstance(userEntityID, null).getDistanceToCurrentUser(userEntityID);
             if (user != null) {
                 UserProfileFragment fragment = (UserProfileFragment) getSupportFragmentManager().findFragmentById(R.id.user_profile_fragment);
                 fragment.setUser(user);

@@ -6,7 +6,7 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.legato.music.Keys;
+import com.legato.music.utils.Keys;
 import com.legato.music.NearbyUsersActivity;
 import com.legato.music.R;
 import com.legato.music.registration.band.BandRegistrationActivity;

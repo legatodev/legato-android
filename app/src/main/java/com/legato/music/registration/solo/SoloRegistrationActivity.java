@@ -18,7 +18,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.legato.music.Keys;
+import com.legato.music.utils.Keys;
 import com.legato.music.NearbyUsersActivity;
 import com.legato.music.R;
 import com.legato.music.registration.GenresFragment;
@@ -185,20 +185,7 @@ public class SoloRegistrationActivity extends AppCompatActivity implements Skill
 
                             @Override
                             public void onComplete() {
-                                FirebaseStorage storage = FirebaseStorage.getInstance();
-                                StorageReference storageRef = storage.getReferenceFromUrl(previousAvatarURL);
-                                storageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        Log.d("SoloRegActivity", "onSuccess: deleted file");
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception exception) {
-                                        Log.d("SoloRegActivity", "onFailure: did not delete file");
-                                    }
-                                });
-
+                                deleteProfilePic(previousAvatarURL);
                                 e.onSuccess(ChatSDK.currentUser());
                             }
                         });
@@ -207,6 +194,22 @@ public class SoloRegistrationActivity extends AppCompatActivity implements Skill
                     }
                 }
             }).flatMapCompletable(user -> new UserWrapper(user).push()).subscribeOn(Schedulers.single());
+    }
+
+    private void deleteProfilePic(String avatarUrl) {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReferenceFromUrl(avatarUrl);
+        storageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d("SoloRegActivity", "onSuccess: deleted file");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                Log.d("SoloRegActivity", "onFailure: did not delete file");
+            }
+        });
     }
 
     @Override

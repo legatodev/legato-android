@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.legato.music.Keys;
+import com.legato.music.utils.Keys;
 import com.legato.music.R;
 
 import java.util.ArrayList;

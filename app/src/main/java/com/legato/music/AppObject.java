@@ -1,6 +1,5 @@
 package com.legato.music;
 
-import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 
@@ -11,6 +10,8 @@ import com.legato.music.registration.RegistrationActivity;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.legato.music.utils.FirebaseUIModule;
+import com.legato.music.utils.LegatoAuthenticationHandler;
 
 import co.chatsdk.core.error.ChatSDKException;
 import co.chatsdk.core.session.ChatSDK;
@@ -18,7 +19,6 @@ import co.chatsdk.core.session.Configuration;
 import co.chatsdk.firebase.FirebaseNetworkAdapter;
 import co.chatsdk.firebase.file_storage.FirebaseFileStorageModule;
 import co.chatsdk.firebase.social_login.FirebaseSocialLoginModule;
-import co.chatsdk.ui.login.LoginActivity;
 import co.chatsdk.ui.manager.BaseInterfaceAdapter;
 import io.fabric.sdk.android.Fabric;
 import io.reactivex.plugins.RxJavaPlugins;
@@ -56,6 +56,7 @@ public class AppObject extends Application {
             // Start the Chat SDK and pass in the interface adapter and network adapter. By subclassing either
             // of these classes you could modify deep functionality withing the Chat SDK
             ChatSDK.initialize(config.build(), new FirebaseNetworkAdapter(), new BaseInterfaceAdapter(context));
+            ChatSDK.a().auth = new LegatoAuthenticationHandler();
 
             // File storage is needed for profile image upload and image messages
             FirebaseFileStorageModule.activate();

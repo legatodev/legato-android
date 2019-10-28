@@ -23,7 +23,7 @@
             android:orientation="vertical"
             android:id="@+id/skillLayout">
 
-            <com.legato.music.SearchableSpinner
+            <com.legato.music.utils.SearchableSpinner
                 android:id="@+id/skillsSpinner1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -58,9 +58,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="4dp"
-                android:layout_marginHorizontal="8dp"
+                android:layout_marginHorizontal="4dp"
                 android:text="1"
-                android:layout_below="@id/ownsInstrumentSwitch"
+                android:layout_below="@+id/skillsSpinner1"
                 android:layout_toRightOf="@+id/skillsSpinner1"/>
 
             <Switch

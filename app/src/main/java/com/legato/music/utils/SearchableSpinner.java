@@ -1,4 +1,4 @@
-package com.legato.music;
+package com.legato.music.utils;
 
 import android.app.Activity;
 import android.content.Context;
@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 
+import com.legato.music.R;
 import com.toptoche.searchablespinnerlibrary.SearchableListDialog;
 
 import java.util.ArrayList;
