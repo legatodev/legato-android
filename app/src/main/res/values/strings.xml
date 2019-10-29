@@ -50,12 +50,17 @@
     <string name="value_any_lookingfor">All</string>
     <string name="value_any_genres">All Genre</string>
     <string name="value_any_skills">Any Skills</string>
+    <string name="value_default_sort">Default</string>
     <string name="band_search_hint">search band members</string>
 
     <string-array name="looking_for">
         <item>Jam Session</item>
         <item>Collaboration</item>
         <item>Join a band</item>
+    </string-array>
+
+    <string-array name="sortBy">
+        <item>Distance</item>
     </string-array>
 
     <!--Registration-->
