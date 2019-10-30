@@ -129,7 +129,8 @@ public class NearbyUsersActivity extends AppCompatActivity implements FilterDial
 
     @Override
     public void onFilter(Filters filters) {
-        mNearbyUsersAdapter.onFilter(filters,geofireHelper);
+        mNearbyUsersAdapter.setFilters(filters);
+        geofireHelper.queryNeighbors(Integer.parseInt(filters.getSearchRadius()));
     }
 
     @OnClick(R.id.buttonFilter)
@@ -153,11 +154,13 @@ public class NearbyUsersActivity extends AppCompatActivity implements FilterDial
 
     @Override
     protected void onResume() {
+
         super.onResume();
     }
 
     @Override
     protected void onStop() {
+
         super.onStop();
         disposableList.dispose();
     }

@@ -76,6 +76,25 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <ImageView
+            android:id="@+id/icon_sortby"
+            style="@style/AppTheme.FilterIcon"
+            android:layout_centerVertical="true"
+            android:tint="@color/greySecondary"
+            app:srcCompat="@drawable/ic_sort_white_24px" />
+
+        <Spinner
+            android:id="@+id/sortby"
+            style="@style/AppTheme.FilterSpinner"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/icon_sortby"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
         <TextView
             android:id="@+id/searchRadiusTextView"
             android:layout_width="wrap_content"

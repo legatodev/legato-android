@@ -1,6 +1,7 @@
 package com.legato.music;
 
 import com.legato.music.utils.Keys;
+import java.util.Comparator;
 
 import co.chatsdk.core.dao.User;
 import co.chatsdk.core.session.ChatSDK;
@@ -87,4 +88,14 @@ class NearbyUser {
     public String getYoutube() { return user.metaStringForKey(Keys.youtube); }
 
     public User getUser() { return user;}
+
+    public static Comparator<NearbyUser> sortByDistance = new Comparator<NearbyUser>() {
+        public int compare(NearbyUser u1, NearbyUser u2){
+                    return Double.parseDouble(u1.getDistance()) < Double.parseDouble(u2.getDistance())? -1
+                    : Double.parseDouble(u1.getDistance()) > Double.parseDouble(u2.getDistance())? 1
+                    :0;
+        }
+    };
+
+
 }

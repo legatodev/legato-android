@@ -9,6 +9,7 @@ public class Filters {
     @Nullable private String lookingfor = null;
     @Nullable private String genres = null;
     @Nullable private String skills = null;
+    @Nullable private String sortby = null;
     private String searchRadius;
 
     public Filters() {
@@ -32,6 +33,10 @@ public class Filters {
         return !TextUtils.isEmpty(skills);
     }
 
+    public boolean hasSortBy() {
+        return !TextUtils.isEmpty(sortby);
+    }
+
     public @Nullable String getLookingfor() {
         return lookingfor;
     }
@@ -53,6 +58,10 @@ public class Filters {
     public void setSkills(@Nullable String skills) {
         this.skills = skills;
     }
+
+    public @Nullable String getSortby() { return sortby; }
+
+    public void setSortby(@Nullable String sortby) { this.sortby = sortby; }
 
     public String getSearchRadius() { return searchRadius; }
 
