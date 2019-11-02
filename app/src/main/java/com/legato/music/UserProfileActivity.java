@@ -2,7 +2,6 @@ package com.legato.music;
 
 import android.os.Bundle;
 
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 import com.legato.music.utils.GeofireHelper;
 
 import co.chatsdk.core.dao.Keys;
