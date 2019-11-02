@@ -1,32 +1,25 @@
 package com.legato.music;
 
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.legato.music.registration.solo.SoloRegistrationActivity;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.google.android.youtube.player.YouTubeInitializationResult;
-import com.google.android.youtube.player.YouTubePlayer;
-import com.google.android.youtube.player.YouTubePlayerSupportFragment;
+import com.legato.music.registration.solo.SoloRegistrationActivity;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
@@ -39,13 +32,11 @@ import co.chatsdk.core.events.EventType;
 import co.chatsdk.core.events.NetworkEvent;
 import co.chatsdk.core.session.ChatSDK;
 import co.chatsdk.core.utils.DisposableList;
-import co.chatsdk.core.utils.ImageBuilder;
 import co.chatsdk.ui.main.BaseFragment;
 import co.chatsdk.ui.utils.AvailabilityHelper;
 import co.chatsdk.ui.utils.ToastHelper;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.Nullable;
-import io.reactivex.disposables.Disposable;
 
 public class UserProfileFragment extends BaseFragment {
     private static final String TAG = "UserProfileFragment";
@@ -68,8 +59,6 @@ public class UserProfileFragment extends BaseFragment {
     @Nullable protected Button editProfileButton;
     @BindView(R.id.profileInfoRecyclerView)
     @Nullable protected RecyclerView userInfoRecyclerView;
-    @BindView(R.id.galleryHorizontalScrollViewLayout)
-    @Nullable protected LinearLayout galleryHorizontalScrollViewLayout;
     @BindView(R.id.profileUserNameTextView)
     @Nullable protected TextView profileUserNameTextView;
     @BindView(R.id.emailTextView)
@@ -84,6 +73,8 @@ public class UserProfileFragment extends BaseFragment {
     private ArrayList<UserProfileInfo> profileInfo;
     @Nullable private User user;
     @Nullable private String distance;
+
+    private YouTubePlayerView youTubePlayerView;
 
     public UserProfileFragment() {
         profileInfo = new ArrayList<>();
@@ -100,7 +91,11 @@ public class UserProfileFragment extends BaseFragment {
         if (savedInstanceState != null && savedInstanceState.getString(Keys.UserId) != null) {
             user = ChatSDK.db().fetchUserWithEntityID(savedInstanceState.getString(Keys.UserId));
 
-            disposableList.add(ChatSDK.events().sourceOnMain().filter(NetworkEvent.filterType(EventType.UserMetaUpdated, EventType.UserPresenceUpdated))
+            disposableList
+                .add(ChatSDK.events().sourceOnMain().filter(
+                    NetworkEvent.filterType(
+                        EventType.UserMetaUpdated,
+                        EventType.UserPresenceUpdated))
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(networkEvent -> {
                         if (networkEvent.user.equals(getUser())) {
@@ -120,43 +115,23 @@ public class UserProfileFragment extends BaseFragment {
             userInfoRecyclerView.setLayoutManager(layoutManager);
         }
 
+        youTubePlayerView = mainView.findViewById(R.id.youtube_player_view);
+        getLifecycle().addObserver(youTubePlayerView);
+        youTubePlayerView.addYouTubePlayerListener(new AbstractYouTubePlayerListener() {
+            @Override
+            public void onReady(@NotNull YouTubePlayer youTubePlayer) {
+                youTubePlayer.cueVideo(mYoutubeVideo, 0);
+            }
+        });
+
         return mainView;
     }
 
     public void initializeYoutubeFragment() {
+        youTubePlayerView.setVisibility(View.GONE);
+
         if (mYoutubeVideo != null && !mYoutubeVideo.isEmpty()) {
-            YouTubePlayerSupportFragment youTubePlayerFragment = YouTubePlayerSupportFragment.newInstance();
-            FragmentTransaction transaction = getFragmentManager().beginTransaction();
-
-            transaction.replace(R.id.youtubeView, youTubePlayerFragment);
-            transaction.addToBackStack(null);
-            transaction.commit();
-
-            youTubePlayerFragment.initialize(getResources().getString(R.string.google_api_key), new YouTubePlayer.OnInitializedListener() {
-
-                @Override
-                public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player, boolean wasRestored) {
-                    if (!wasRestored) {
-                        player.setPlayerStyle(YouTubePlayer.PlayerStyle.DEFAULT);
-                        if (mYoutubeVideo != null)
-                            player.cueVideo(mYoutubeVideo);
-                        else {
-                            Log.e(TAG, "Youtube video url not found:");
-                        }
-                    }
-                }
-
-                @Override
-                public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult error) {
-                    // YouTube error
-                    String errorMessage = error.toString();
-                    Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_LONG).show();
-                    Log.d("errorMessage:", errorMessage);
-                }
-            });
-        }
-        else {
-            mainView.findViewById(R.id.youtubeView).setVisibility(View.INVISIBLE);
+            youTubePlayerView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -216,8 +191,8 @@ public class UserProfileFragment extends BaseFragment {
 
         setViewText(profileUserNameTextView, nearbyUser.getUsername());
         setViewText(emailTextView, nearbyUser.getEmail());
-        if (profilePhotoImageView != null && nearbyUser.getPhotourl() != null) {
-            profilePhotoImageView.setImageURI(nearbyUser.getPhotourl());
+        if (profilePhotoImageView != null && nearbyUser.getPhotoUrl() != null) {
+            profilePhotoImageView.setImageURI(nearbyUser.getPhotoUrl());
         }
 
         String availability = nearbyUser.getAvailability();
@@ -242,9 +217,7 @@ public class UserProfileFragment extends BaseFragment {
     public void onLogout(View view) {
         disposableList.add(ChatSDK.auth().logout()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(() -> ChatSDK.ui().startSplashScreenActivity(getActivity().getApplicationContext()), throwable -> {
-                    ChatSDK.logError(throwable);
-                })
+                .subscribe(() -> ChatSDK.ui().startSplashScreenActivity(getActivity().getApplicationContext()), throwable -> ChatSDK.logError(throwable))
         );
     }
 
@@ -281,20 +254,24 @@ public class UserProfileFragment extends BaseFragment {
                 })
                 .subscribe(thread -> {
                     ChatSDK.ui().startChatActivityForID(getContext(), thread.getEntityID());
-                }, throwable -> {
-                    ToastHelper.show(getContext(), throwable.getLocalizedMessage());
-                }));
+                }, throwable -> ToastHelper.show(getContext(), throwable.getLocalizedMessage())));
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        disposableList.dispose();
     }
 
     @Override
     public void onResume() {
         super.onResume();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        disposableList.dispose();
+        youTubePlayerView.release();
     }
 }
 

@@ -8,101 +8,106 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <RelativeLayout
             android:id="@+id/featuredArtistLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="160dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
             android:background="@drawable/background_gradient">
 
             <RelativeLayout
                 android:id="@+id/featureArtistLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginLeft="16dp">
+                android:layout_marginBottom="8dp">
+
                 <TextView
                     android:id="@+id/featuredArtistTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
                     android:text="Featured Artist"
                     android:textColor="@color/white"
-                    android:textSize="16sp"
-                    android:layout_alignParentTop="true"/>
+                    android:textSize="16sp" />
 
                 <com.facebook.drawee.view.SimpleDraweeView
                     android:id="@+id/featuredArtistImageView"
                     android:layout_width="172dp"
                     android:layout_height="120dp"
+                    android:layout_below="@+id/featuredArtistTextView"
+                    android:layout_marginBottom="4dp"
                     android:adjustViewBounds="true"
                     android:scaleType="centerCrop"
-                    fresco:roundedCornerRadius="2dp"
-                    android:layout_marginBottom="4dp"
-                    android:layout_below="@+id/featuredArtistTextView"/>
+                    fresco:roundedCornerRadius="2dp" />
 
                 <TextView
                     android:id="@+id/featuredArtistNameTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/white"
-                    android:textSize="18sp"
                     android:layout_below="@id/featuredArtistImageView"
                     android:layout_marginBottom="4dp"
-                    />
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/featuredBandLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="36dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
-                android:layout_marginLeft="36dp"
                 android:layout_toRightOf="@id/featureArtistLayout">
+
                 <TextView
                     android:id="@+id/featuredBandTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
                     android:text="Featured Band"
                     android:textColor="@color/white"
-                    android:layout_alignParentTop="true"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp" />
 
                 <com.facebook.drawee.view.SimpleDraweeView
                     android:id="@+id/featuredBandImageView"
                     android:layout_width="172dp"
                     android:layout_height="120dp"
+                    android:layout_below="@id/featuredBandTextView"
+                    android:layout_marginBottom="4dp"
                     android:adjustViewBounds="true"
                     android:scaleType="centerCrop"
-                    fresco:roundedCornerRadius="2dp"
-                    android:layout_below="@id/featuredBandTextView"
-                    android:layout_marginBottom="4dp"/>
+                    fresco:roundedCornerRadius="2dp" />
 
                 <TextView
                     android:id="@+id/featuredBandNameTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/white"
                     android:layout_below="@id/featuredBandImageView"
                     android:layout_marginBottom="4dp"
-                    android:textSize="18sp"
-                    />
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
 
             </RelativeLayout>
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/profileGalleryLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/profileGalleryLayout"
-            android:background="@color/skills_card_view_background"
-            android:layout_below="@+id/featuredArtistLayout">
+            android:layout_below="@+id/featuredArtistLayout"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:background="@color/skills_card_view_background">
+
             <RelativeLayout
+                android:id="@+id/profilePictureLayout"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/profilePictureLayout">
+                android:layout_height="wrap_content">
 
                 <com.facebook.drawee.view.SimpleDraweeView
                     android:id="@+id/profilePhotoImageView"
@@ -113,10 +118,10 @@
                     android:layout_marginTop="8dp"
                     android:adjustViewBounds="true"
                     android:scaleType="centerCrop"
+                    fresco:placeholderImage="@color/white"
                     fresco:roundAsCircle="true"
                     fresco:roundingBorderColor="@color/activity_background"
-                    fresco:roundingBorderWidth="2dp"
-                    fresco:placeholderImage="@color/white"/>
+                    fresco:roundingBorderWidth="2dp" />
 
                 <TextView
                     android:id="@+id/profileUserNameTextView"
@@ -133,48 +138,48 @@
                     android:id="@+id/profileUserAvailabilityImageView"
                     android:layout_width="16dp"
                     android:layout_height="16dp"
-                    android:layout_toRightOf="@id/profileUserNameTextView"
                     android:layout_marginLeft="12dp"
                     android:layout_marginTop="8dp"
+                    android:layout_toRightOf="@id/profileUserNameTextView"
                     app:srcCompat="@drawable/icn_20_online" />
 
                 <Button
                     android:id="@+id/connectOrRemoveButton"
                     android:layout_width="wrap_content"
                     android:layout_height="36dp"
-                    android:text="@string/connect"
-                    android:textSize="12sp"
-                    android:textColor="@color/white"
-                    android:background="@drawable/rounded_button"
                     android:layout_alignParentRight="true"
-                    android:layout_marginRight="16dp"
                     android:layout_centerVertical="true"
-                    android:visibility="visible"/>
+                    android:layout_marginRight="16dp"
+                    android:background="@drawable/rounded_button"
+                    android:text="@string/connect"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    android:visibility="visible" />
 
                 <Button
                     android:id="@+id/editProfileButton"
                     android:layout_width="wrap_content"
                     android:layout_height="36dp"
-                    android:text="@string/edit"
-                    android:textSize="12sp"
-                    android:textColor="@color/white"
-                    android:background="@drawable/rounded_button"
                     android:layout_below="@+id/connectOrRemoveButton"
                     android:layout_alignParentRight="true"
-                    android:layout_marginRight="16dp"
                     android:layout_centerVertical="true"
-                    android:visibility="visible"/>
+                    android:layout_marginRight="16dp"
+                    android:background="@drawable/rounded_button"
+                    android:text="@string/edit"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    android:visibility="visible" />
 
                 <TextView
                     android:id="@+id/emailTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="E-Mail"
-                    android:textColor="@color/black"
                     android:layout_below="@id/profileUserNameTextView"
-                    android:layout_toRightOf="@id/profilePhotoImageView"
                     android:layout_marginLeft="12dp"
-                    android:layout_marginTop="8dp"/>
+                    android:layout_marginTop="8dp"
+                    android:layout_toRightOf="@id/profilePhotoImageView"
+                    android:text="E-Mail"
+                    android:textColor="@color/black" />
             </RelativeLayout>
 
 
@@ -182,39 +187,36 @@
                 android:id="@+id/galleryLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/skills_card_view_background"
-                android:layout_below="@id/profilePictureLayout">
+                android:layout_below="@id/profilePictureLayout"
+                android:layout_margin="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="@color/skills_card_view_background">
 
                 <TextView
                     android:id="@+id/galleryTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
                     android:text="Gallery"
                     android:textColor="@color/black"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginTop="8dp"/>
+                    android:textStyle="bold" />
 
-                <HorizontalScrollView
-                    android:id="@+id/galleryHorizontalScrollView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/galleryTextView"
-                    android:layout_marginLeft="8dp">
-                    <LinearLayout
-                        android:id="@+id/galleryHorizontalScrollViewLayout"
-                        android:layout_width="match_parent"
+                <LinearLayout
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
+
+                    <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+                        android:id="@+id/youtube_player_view"
+                        android:layout_width="320dp"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:padding="6dp"
+                        app:autoPlay="false"
+                        app:showFullScreenButton="false"
+                        app:useWebUi="true" />
+                </LinearLayout>
 
-                        <FrameLayout
-                            android:id="@+id/youtubeView"
-                            android:layout_width="200dp"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="8dp"
-                            />
-
-                    </LinearLayout>
-                </HorizontalScrollView>
             </RelativeLayout>
         </RelativeLayout>
 
@@ -222,11 +224,13 @@
             android:id="@+id/profileInfoRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
+            android:layout_below="@id/profileGalleryLayout"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:background="@color/white"
             android:divider="@android:color/black"
             android:transcriptMode="alwaysScroll"
-            android:layout_below="@id/profileGalleryLayout"
-            android:background="@color/white"
-            tools:listitem="@layout/item_userprofileinfo"/>
+            tools:listitem="@layout/item_userprofileinfo" />
 
         <Button
             android:id="@+id/logoutButton"

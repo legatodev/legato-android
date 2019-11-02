@@ -2,7 +2,7 @@ package com.legato.music;
 
 import android.os.Bundle;
 
-import com.legato.music.R;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 
 import co.chatsdk.core.dao.Keys;
 import co.chatsdk.core.dao.User;
@@ -10,7 +10,6 @@ import co.chatsdk.core.session.ChatSDK;
 import co.chatsdk.core.utils.DisposableList;
 import co.chatsdk.ui.main.BaseActivity;
 import co.chatsdk.ui.utils.ToastHelper;
-import io.reactivex.annotations.NonNull;
 import io.reactivex.annotations.Nullable;
 
 public class UserProfileActivity extends BaseActivity {
@@ -34,7 +33,7 @@ public class UserProfileActivity extends BaseActivity {
                 fragment.setUser(user);
                 fragment.setDistance(distance);
                 fragment.updateInterface();
-                fragment.initializeYoutubeFragment();
+
                 return;
             }
         }

@@ -59,6 +59,9 @@ dependencies {
     api 'com.facebook.android:facebook-android-sdk:+'
     testImplementation 'junit:junit:4.12'
 
+    // Library for Youtube Alternative Player
+    implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:10.0.5'
+
     implementation 'com.google.firebase:firebase-core:16.0.8'
     implementation 'com.google.firebase:firebase-analytics:16.0.8'
 

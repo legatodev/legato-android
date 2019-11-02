@@ -1,7 +1,5 @@
 package com.legato.music;
 
-import java.io.Serializable;
-
 import co.chatsdk.core.dao.User;
 import co.chatsdk.core.session.ChatSDK;
 import io.reactivex.annotations.NonNull;
@@ -11,8 +9,9 @@ import io.reactivex.annotations.Nullable;
 class NearbyUser {
 
     @NonNull private String distance;
-    @NonNull
-    private User user;
+    @NonNull private User user;
+
+    private String[] youtubeIds = {};
 
     public NearbyUser(User user, String distance) {
         this.distance = distance;
@@ -32,11 +31,11 @@ class NearbyUser {
         this.user.setName(username);
     }
 
-    public String getPhotourl() {
+    public String getPhotoUrl() {
         return user.getAvatarURL();
     }
 
-    public void setPhotourl(String photourl) {
+    public void setPhotoUrl(String photourl) {
         this.user.setAvatarURL(photourl);
     }
 
@@ -85,6 +84,13 @@ class NearbyUser {
     public String getEmail() { return user.getEmail(); }
 
     public String getYoutube() { return user.metaStringForKey(Keys.youtube); }
+
+    public String[] getYoutubeIds() {
+        if(youtubeIds.length == 0)
+            return new String[] { user.metaStringForKey(Keys.youtube) };
+        else
+            return youtubeIds;
+    }
 
     public User getUser() { return user;}
 }
