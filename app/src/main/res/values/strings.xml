@@ -50,12 +50,17 @@
     <string name="value_any_lookingfor">All</string>
     <string name="value_any_genres">All Genre</string>
     <string name="value_any_skills">Any Skills</string>
+    <string name="value_default_sort">Default</string>
     <string name="band_search_hint">search band members</string>
 
     <string-array name="looking_for">
         <item>Jam Session</item>
         <item>Collaboration</item>
         <item>Join a band</item>
+    </string-array>
+
+    <string-array name="sortBy">
+        <item>Distance</item>
     </string-array>
 
     <!--Registration-->
@@ -87,6 +92,9 @@
     <string name="facebook">Facebook Page</string>
     <string name="youtube_channel">Youtube Channel</string>
 
-    <string name="nearby_service">NearbyService</string>
+    <string name="delete_account">Delete Account</string>
+    <string name="alert_delete_account">Delete your account?</string>
+    <string name="alert_email_verification">Please verify your e-mail and sign back in</string>
+    <string name="resend_verification">Resend Verification</string>
     <string name="instrument_owned">Do you own the instrument?</string>
 </resources>

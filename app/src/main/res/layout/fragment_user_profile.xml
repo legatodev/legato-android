@@ -243,6 +243,21 @@
             android:layout_centerHorizontal="true"
             android:layout_below="@+id/profileInfoRecyclerView"
             android:layout_margin="8dp"
+            android:padding="2dp"
             android:visibility="invisible"/>
+
+        <Button
+            android:id="@+id/deleteAccountButton"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:text="@string/delete_account"
+            android:textSize="12sp"
+            android:textColor="@color/white"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/logoutButton"
+            android:padding="2dp"
+            android:visibility="invisible"
+            android:background="@color/red"
+            android:layout_alignParentBottom="true"/>
     </RelativeLayout>
 </ScrollView>

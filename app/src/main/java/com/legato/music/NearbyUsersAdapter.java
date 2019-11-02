@@ -5,11 +5,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.legato.music.utils.GeofireHelper;
+import com.legato.music.utils.Keys;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import co.chatsdk.core.dao.User;
@@ -25,30 +29,40 @@ class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
     private final Context context;
     private final int itemResource;
     private DisposableList disposableList;
+    @Nullable private Filters mfilters;
 
     public NearbyUsersAdapter(Context context, int itemResource) {
         this.disposableList = new DisposableList();
         this.context = context;
         this.itemResource = itemResource;
         this.nearbyUsers = new ArrayList<>();
+        this.mfilters = null;
+    }
+
+    @Nullable
+    public Filters getFilters() {
+        return mfilters;
+    }
+
+    public void setFilters(Filters filters) {
+        this.mfilters = filters;
     }
 
     /*
-    TODO: Below look will have to be improved if nearbyUser list grows bigger
-    Maybe hashmap will be better???
-     */
-    @Nullable
-    private NearbyUser isNearbyUserInList(NearbyUser user){
+        TODO: Below look will have to be improved if nearbyUser list grows bigger
+        Maybe hashmap will be better???
+         */
+    private Boolean isUserInNearbyUserList(User user){
 
         if(this.nearbyUsers.size()==0)
-            return null;
+            return false;
 
         for(NearbyUser u: this.nearbyUsers){
             if(u.getEntityID().equals(user.getEntityID())){
-                return u;
+                return true;
             }
         }
-        return null;
+        return false;
     }
 
     public void addNearbyUserToRecyclerView(String userId, String distance) {
@@ -57,21 +71,11 @@ class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
         disposableList.add(completable.observeOn(AndroidSchedulers.mainThread()).subscribe(() -> {
             // User object has now been populated and is ready to use
             if (!user.isMe()) {
-                NearbyUser nearbyUser = new NearbyUser(user, distance);
-                /*
-                Below logic is due to SearchRadius in filter.
-                Everytime user changes the radius, new record needs to be pulled from DB
-                and replace previous record if user exists in list.
-                 */
-                NearbyUser prevNearbyUser = isNearbyUserInList(nearbyUser);
-                if(prevNearbyUser != null){
-                    this.nearbyUsers.remove(prevNearbyUser);
-                    this.nearbyUsers.add(nearbyUser);
-                }else{
+                if(!isUserInNearbyUserList(user)){
+                    NearbyUser nearbyUser = new NearbyUser(user, distance);
                     this.nearbyUsers.add(nearbyUser);
                 }
-                this.nearbyUsersFiltered = this.nearbyUsers;
-                notifyItemInserted(this.nearbyUsersFiltered.size() - 1);
+                onFilter(mfilters);
             }
         }, throwable -> {
 
@@ -100,7 +104,16 @@ class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
         return this.nearbyUsersFiltered != null?this.nearbyUsersFiltered.size():0;
     }
 
-    public void onFilter(Filters filters, GeofireHelper geofireHelper) {
+    public void onFilter(@Nullable Filters filters) {
+
+        if(filters == null){
+            /*
+            This should be called when app loads for first time.
+             */
+            this.nearbyUsersFiltered = this.nearbyUsers;
+            notifyItemInserted(this.nearbyUsersFiltered.size() - 1);
+            return;
+        }
 
         List<NearbyUser> filteredList = new ArrayList<>();
         /*
@@ -108,19 +121,8 @@ class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
         2] If radius is different than previous , update User.MetaKey and get new list based on updated radius.
         3] This should update nearbyUsers list
          */
-
-        String dbSearchRadius = ChatSDK.currentUser().metaStringForKey(Keys.searchradius);
-
-        if(dbSearchRadius != filters.getSearchRadius()) {
-            if (geofireHelper == null)
-                return;
-            geofireHelper.queryNeighbors(Integer.parseInt(filters.getSearchRadius()));
-        }
-        ChatSDK.currentUser().setMetaString(Keys.searchradius,filters.getSearchRadius());
-
         for (NearbyUser row : nearbyUsers) {
             boolean addRow;
-            if(Float.parseFloat(filters.getSearchRadius()) >= Float.parseFloat(row.getDistance())) {
                 if (filters.hasLookingfor()&& row.getLookingfor() != null) {
                     addRow = row.getLookingfor().contentEquals(filters.getLookingfor());
                 }
@@ -149,10 +151,14 @@ class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
                 if (addRow) {
                     filteredList.add(row);
                 }
-            }
         }
 
         nearbyUsersFiltered = filteredList;
+
+        if (filters.hasSortBy()) {
+            Collections.sort(nearbyUsersFiltered, NearbyUser.sortByDistance);
+        }
+
         notifyDataSetChanged();
     }
 

@@ -72,11 +72,6 @@
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
         </activity>
-        <service
-            android:name=".NearbyService"
-            android:label="@string/nearby_service"
-            >
-        </service>
     </application>
 
 </manifest>

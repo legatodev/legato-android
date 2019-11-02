@@ -14,12 +14,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
+
 import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import com.legato.music.R;
-import com.legato.music.SearchableSpinner;
+import com.legato.music.utils.SearchableSpinner;
 
 import java.util.Arrays;
 import java.util.List;

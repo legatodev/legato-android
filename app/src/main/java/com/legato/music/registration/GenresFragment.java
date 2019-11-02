@@ -13,7 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.legato.music.Keys;
+import com.legato.music.utils.Keys;
 import com.legato.music.R;
 import com.legato.music.registration.solo.SoloRegistrationActivity;
 

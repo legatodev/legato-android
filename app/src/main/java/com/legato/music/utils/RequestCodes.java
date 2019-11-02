@@ -1,4 +1,4 @@
-package com.legato.music;
+package com.legato.music.utils;
 
 public final class RequestCodes {
     /** Request code for starting when starting the flow to get youtube video */

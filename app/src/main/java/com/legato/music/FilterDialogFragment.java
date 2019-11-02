@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.legato.music.R;
+import com.legato.music.utils.Keys;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,6 +52,9 @@ public class FilterDialogFragment extends DialogFragment {
     @BindView(R.id.skills)
     Spinner mSkills;
 
+    @BindView(R.id.sortby)
+    Spinner mSortBy;
+
     @BindView(R.id.searchRadiusValue)
     @Nullable TextView searchRadiusValue;
     @BindView(R.id.searchRadiusSeekBar)
@@ -72,6 +76,7 @@ public class FilterDialogFragment extends DialogFragment {
         populateSkillsSpinner();
         populateGenresSpinner();
         populateLookingForSpinner();
+        populateSortBy();
         populateSearchSeekBar();
 
         return mRootView;
@@ -110,6 +115,17 @@ public class FilterDialogFragment extends DialogFragment {
                 R.layout.item_filter_spinner, lookingForList);
 
         mLookingfor.setAdapter(lookingForAdapter);
+    }
+
+    private void populateSortBy() {
+        String[] sortByArray = getResources().getStringArray(R.array.sortBy);
+        ArrayList<String> sortByList = new ArrayList<String>(Arrays.asList(sortByArray));
+        sortByList.add(0, getResources().getString(R.string.value_default_sort));
+        // Creating ArrayAdapter using the string array and default spinner layout
+        ArrayAdapter<String> sortByAdapter = new ArrayAdapter<String>(getContext(),
+                R.layout.item_filter_spinner, sortByList);
+
+        mSortBy.setAdapter(sortByAdapter);
     }
     private void populateSearchSeekBar(){
 
@@ -210,6 +226,16 @@ public class FilterDialogFragment extends DialogFragment {
         }
     }
 
+    @Nullable
+    private String getSelectedSortBy() {
+        String selected = (String) mSortBy.getSelectedItem();
+        if (getString(R.string.value_default_sort).equals(selected)) {
+            return null;
+        } else {
+            return selected;
+        }
+    }
+
     private  String getSelectedSearchRadius() {
             return Integer.toString(seekBarSearch.getProgress());
     }
@@ -219,6 +245,7 @@ public class FilterDialogFragment extends DialogFragment {
             mLookingfor.setSelection(0);
             mGenres.setSelection(0);
             mSkills.setSelection(0);
+            mSortBy.setSelection(0);
         }
     }
 
@@ -230,6 +257,7 @@ public class FilterDialogFragment extends DialogFragment {
             filters.setLookingfor(getSelectedLookingfor());
             filters.setGenres(getSelectedGenres());
             filters.setSkills(getSelectedSkills());
+            filters.setSortby(getSelectedSortBy());
             filters.setSearchRadius(getSelectedSearchRadius());
         }
 

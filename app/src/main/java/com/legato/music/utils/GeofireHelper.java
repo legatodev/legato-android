@@ -1,4 +1,4 @@
-package com.legato.music;
+package com.legato.music.utils;
 
 import android.location.Location;
 import android.util.Log;
@@ -19,12 +19,12 @@ import co.chatsdk.core.session.ChatSDK;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.annotations.Nullable;
 
-class GeofireHelper {
+public class GeofireHelper {
     public interface NearbyUserFoundListener {
         void nearbyUserFound(String userId, String distance);
     }
 
-    private final String mUserId;
+    private String mUserId = "";
     private final GeoFire mGeoFire;
     @Nullable private Location mCurrentLocation = null;
     private final HashMap<String, String> mNearHashMap; //TODO: maybe use sortedmap in order of distance.
@@ -35,20 +35,20 @@ class GeofireHelper {
 
     private GeofireHelper(@Nullable NearbyUserFoundListener nearbyUserFoundListener) {
         this.nearbyUserFoundListener = nearbyUserFoundListener;
-        mUserId = ChatSDK.currentUser().getEntityID();
         FirebaseDatabase mFirebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference userLocationDatabaseReference = mFirebaseDatabase.getReference().child("geofire");
         mGeoFire = new GeoFire(userLocationDatabaseReference);
         mNearHashMap = new HashMap<String, String>();
     }
 
-     public static GeofireHelper getInstance(@Nullable NearbyUserFoundListener nearbyUserFoundListener){
+     public static GeofireHelper getInstance(String userId, @Nullable NearbyUserFoundListener nearbyUserFoundListener){
         if(sGeofireInstance == null){
             sGeofireInstance = new GeofireHelper(nearbyUserFoundListener);
         }
         else {
             sGeofireInstance.nearbyUserFoundListener = nearbyUserFoundListener;
         }
+         sGeofireInstance.mUserId = userId;
 
         return  sGeofireInstance;
      }

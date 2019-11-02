@@ -1,5 +1,8 @@
 package com.legato.music;
 
+import com.legato.music.utils.Keys;
+import java.util.Comparator;
+
 import co.chatsdk.core.dao.User;
 import co.chatsdk.core.session.ChatSDK;
 import io.reactivex.annotations.NonNull;
@@ -9,9 +12,8 @@ import io.reactivex.annotations.Nullable;
 class NearbyUser {
 
     @NonNull private String distance;
-    @NonNull private User user;
-
-    private String[] youtubeIds = {};
+    @NonNull
+    private User user;
 
     public NearbyUser(User user, String distance) {
         this.distance = distance;
@@ -31,11 +33,11 @@ class NearbyUser {
         this.user.setName(username);
     }
 
-    public String getPhotoUrl() {
+    public String getPhotourl() {
         return user.getAvatarURL();
     }
 
-    public void setPhotoUrl(String photourl) {
+    public void setPhotourl(String photourl) {
         this.user.setAvatarURL(photourl);
     }
 
@@ -85,12 +87,15 @@ class NearbyUser {
 
     public String getYoutube() { return user.metaStringForKey(Keys.youtube); }
 
-    public String[] getYoutubeIds() {
-        if(youtubeIds.length == 0)
-            return new String[] { user.metaStringForKey(Keys.youtube) };
-        else
-            return youtubeIds;
-    }
-
     public User getUser() { return user;}
+
+    public static Comparator<NearbyUser> sortByDistance = new Comparator<NearbyUser>() {
+        public int compare(NearbyUser u1, NearbyUser u2){
+                    return Double.parseDouble(u1.getDistance()) < Double.parseDouble(u2.getDistance())? -1
+                    : Double.parseDouble(u1.getDistance()) > Double.parseDouble(u2.getDistance())? 1
+                    :0;
+        }
+    };
+
+
 }

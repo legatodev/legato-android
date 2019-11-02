@@ -3,6 +3,7 @@ package com.legato.music;
 import android.os.Bundle;
 
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
+import com.legato.music.utils.GeofireHelper;
 
 import co.chatsdk.core.dao.Keys;
 import co.chatsdk.core.dao.User;
@@ -27,7 +28,7 @@ public class UserProfileActivity extends BaseActivity {
 
         if (userEntityID != null && !userEntityID.isEmpty()) {
             user =  ChatSDK.db().fetchUserWithEntityID(userEntityID);
-            distance = GeofireHelper.getInstance(null).getDistanceToCurrentUser(userEntityID);
+            distance = GeofireHelper.getInstance(userEntityID, null).getDistanceToCurrentUser(userEntityID);
             if (user != null) {
                 UserProfileFragment fragment = (UserProfileFragment) getSupportFragmentManager().findFragmentById(R.id.user_profile_fragment);
                 fragment.setUser(user);
