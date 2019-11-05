@@ -43,7 +43,7 @@ public class YoutubePlayerAdapter extends RecyclerView.Adapter<YoutubePlayerAdap
         viewHolder.cueVideo(mVideoIds[position]);
     }
 
-    public void setmVideoIds(String[] mVideoIds)
+    public void setVideoIds(String[] mVideoIds)
     {
         this.mVideoIds = mVideoIds;
     }
