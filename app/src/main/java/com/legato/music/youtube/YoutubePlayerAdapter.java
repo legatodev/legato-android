@@ -17,14 +17,14 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTube
 public class YoutubePlayerAdapter extends RecyclerView.Adapter<YoutubePlayerAdapter.ViewHolder> {
 
     private LayoutInflater mInflator;
-    private String[] videoIds;
-    private Lifecycle lifecycle;
+    private String[] mVideoIds;
+    private Lifecycle mLifecycle;
 
     public YoutubePlayerAdapter(Context context, String[] videoIds, Lifecycle lifecycle)
     {
         mInflator = LayoutInflater.from(context);
-        this.videoIds = videoIds;
-        this.lifecycle = lifecycle;
+        mVideoIds = videoIds;
+        mLifecycle = lifecycle;
     }
 
     @NonNull
@@ -33,24 +33,24 @@ public class YoutubePlayerAdapter extends RecyclerView.Adapter<YoutubePlayerAdap
     {
         YouTubePlayerView youTubePlayerView = (YouTubePlayerView)mInflator
                 .inflate(R.layout.item_youtube_view, parent,false);
-        lifecycle.addObserver(youTubePlayerView);
+        mLifecycle.addObserver(youTubePlayerView);
 
         return new ViewHolder(youTubePlayerView, this);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
-        viewHolder.cueVideo(videoIds[position]);
+        viewHolder.cueVideo(mVideoIds[position]);
     }
 
-    public void setVideoIds(String[] videoIds)
+    public void setmVideoIds(String[] mVideoIds)
     {
-        this.videoIds = videoIds;
+        this.mVideoIds = mVideoIds;
     }
 
     @Override
     public int getItemCount() {
-        return videoIds.length;
+        return mVideoIds.length;
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
