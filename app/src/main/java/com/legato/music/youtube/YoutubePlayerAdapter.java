@@ -5,16 +5,14 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.Lifecycle;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.legato.music.R;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerListener;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
-
-import org.jetbrains.annotations.NotNull;
 
 public class YoutubePlayerAdapter extends RecyclerView.Adapter<YoutubePlayerAdapter.ViewHolder> {
 
@@ -59,7 +57,7 @@ public class YoutubePlayerAdapter extends RecyclerView.Adapter<YoutubePlayerAdap
         final YoutubePlayerAdapter mAdapter;
 
         private YouTubePlayerView youTubePlayerView;
-        private YouTubePlayer youTubePlayer;
+        @Nullable private YouTubePlayer youTubePlayer;
         private String currentVideoId;
 
         ViewHolder(YouTubePlayerView playerView, YoutubePlayerAdapter adapter) {
@@ -68,7 +66,7 @@ public class YoutubePlayerAdapter extends RecyclerView.Adapter<YoutubePlayerAdap
             youTubePlayerView = playerView;
             this.mAdapter = adapter;
 
-            youTubePlayer = new YoutubePlayer();
+            youTubePlayer = null;
             currentVideoId = "";
 
             youTubePlayerView.addYouTubePlayerListener(new AbstractYouTubePlayerListener() {
@@ -88,63 +86,6 @@ public class YoutubePlayerAdapter extends RecyclerView.Adapter<YoutubePlayerAdap
             }
 
             youTubePlayer.cueVideo(videoId, 0);
-        }
-    }
-
-    private static class YoutubePlayer implements YouTubePlayer {
-
-        public YoutubePlayer() {
-
-        }
-
-        @Override
-        public boolean addListener(@NotNull YouTubePlayerListener youTubePlayerListener) {
-            return false;
-        }
-
-        @Override
-        public void cueVideo(@NotNull String s, float v) {
-
-        }
-
-        @Override
-        public void loadVideo(@NotNull String s, float v) {
-
-        }
-
-        @Override
-        public void mute() {
-
-        }
-
-        @Override
-        public void pause() {
-
-        }
-
-        @Override
-        public void play() {
-
-        }
-
-        @Override
-        public boolean removeListener(@NotNull YouTubePlayerListener youTubePlayerListener) {
-            return false;
-        }
-
-        @Override
-        public void seekTo(float v) {
-
-        }
-
-        @Override
-        public void setVolume(int i) {
-
-        }
-
-        @Override
-        public void unMute() {
-
         }
     }
 }
