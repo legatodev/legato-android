@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.legato.music.R;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.youtube.player.YouTubeIntents;
 
@@ -178,8 +177,8 @@ public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.On
         final int TRIM_STRING_LENGTH = 25;
 
         if (this.nearbyUser != null) {
-            if (this.nearbyUser.getPhotourl() != null &&  this.nearbyUserPhoto != null)
-                this.nearbyUserPhoto.setImageURI(this.nearbyUser.getPhotourl());
+            if (this.nearbyUser.getPhotoUrl() != null &&  this.nearbyUserPhoto != null)
+                this.nearbyUserPhoto.setImageURI(this.nearbyUser.getPhotoUrl());
             if (this.nearbyUser.getUsername() != null)
                 setTextView(this.nearbyUserName, this.nearbyUser.getUsername());
             if (this.nearbyUser.getDistance() != null)

@@ -33,7 +33,7 @@ public class UserProfileActivity extends BaseActivity {
                 fragment.setUser(user);
                 fragment.setDistance(distance);
                 fragment.updateInterface();
-                fragment.initializeYoutubeFragment();
+
                 return;
             }
         }

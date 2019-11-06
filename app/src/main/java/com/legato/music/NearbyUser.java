@@ -1,6 +1,7 @@
 package com.legato.music;
 
 import com.legato.music.utils.Keys;
+
 import java.util.Comparator;
 
 import co.chatsdk.core.dao.User;
@@ -33,12 +34,12 @@ class NearbyUser {
         this.user.setName(username);
     }
 
-    public String getPhotourl() {
+    public String getPhotoUrl() {
         return user.getAvatarURL();
     }
 
-    public void setPhotourl(String photourl) {
-        this.user.setAvatarURL(photourl);
+    public void setPhotoUrl(String photoUrl) {
+        this.user.setAvatarURL(photoUrl);
     }
 
     public String getDistance() {
