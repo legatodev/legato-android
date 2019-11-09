@@ -1,4 +1,4 @@
-package com.legato.music.youtube;
+package com.legato.music.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -20,19 +20,21 @@ public class YoutubePlayerAdapter extends RecyclerView.Adapter<YoutubePlayerAdap
     private String[] mVideoIds;
     private Lifecycle mLifecycle;
 
-    public YoutubePlayerAdapter(Context context, String[] videoIds, Lifecycle lifecycle)
+    public YoutubePlayerAdapter(Context context, String commaSeparatedVideoIds, Lifecycle lifecycle)
     {
         mInflator = LayoutInflater.from(context);
-        mVideoIds = videoIds;
         mLifecycle = lifecycle;
+
+        setVideoIds(commaSeparatedVideoIds);
     }
 
     @NonNull
     @Override
     public YoutubePlayerAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
     {
+
         YouTubePlayerView youTubePlayerView = (YouTubePlayerView)mInflator
-                .inflate(R.layout.item_youtube_view, parent,false);
+                .inflate(R.id.youtube_recycler_item, parent,false);
         mLifecycle.addObserver(youTubePlayerView);
 
         return new ViewHolder(youTubePlayerView, this);
@@ -43,9 +45,8 @@ public class YoutubePlayerAdapter extends RecyclerView.Adapter<YoutubePlayerAdap
         viewHolder.cueVideo(mVideoIds[position]);
     }
 
-    public void setVideoIds(String[] mVideoIds)
-    {
-        this.mVideoIds = mVideoIds;
+    public void setVideoIds(String commaSeparatedVideoIds) {
+        this.mVideoIds = commaSeparatedVideoIds.split(",");
     }
 
     @Override

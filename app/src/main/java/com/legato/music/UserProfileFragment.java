@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,8 +27,10 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.legato.music.adapters.YoutubePlayerAdapter;
 import com.legato.music.registration.solo.SoloRegistrationActivity;
 import com.legato.music.utils.LegatoAuthenticationHandler;
+import com.legato.music.viewmodels.UserProfileViewModel;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
@@ -35,6 +38,7 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTube
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -85,78 +89,40 @@ public class UserProfileFragment extends BaseFragment {
     @Nullable protected Button logoutButton;
     @BindView(R.id.deleteAccountButton)
     @Nullable protected Button deleteAccountButton;
+    @BindView(R.id.youtubeRecyclerView)
+    @Nullable protected RecyclerView youtubeRecyclerView;
+
+    private DisposableList disposableList = new DisposableList();
 
     private UserProfileInfoAdapter userProfileInfoAdapter;
-    private String mYoutubeVideo = "";
-    private DisposableList disposableList = new DisposableList();
-    private boolean startingChat = false;
-    private ArrayList<UserProfileInfo> profileInfo;
-    @Nullable private User user;
-    @Nullable private String distance;
+    private YoutubePlayerAdapter youtubePlayerAdapter;
 
-    private YouTubePlayerView youTubePlayerView;
-
-    public UserProfileFragment() {
-        profileInfo = new ArrayList<>();
-        user = null;
-        distance = null;
-    }
+    @NonNull private UserProfileViewModel userProfileViewModel;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(
+            LayoutInflater inflater,
+            ViewGroup container,
+            Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
+
         mainView = inflater.inflate(R.layout.fragment_user_profile, container, false);
         ButterKnife.bind(this, mainView);
 
-        if (savedInstanceState != null && savedInstanceState.getString(Keys.UserId) != null) {
-            user = ChatSDK.db().fetchUserWithEntityID(savedInstanceState.getString(Keys.UserId));
-
-            disposableList
-                .add(ChatSDK.events().sourceOnMain().filter(
-                    NetworkEvent.filterType(
-                        EventType.UserMetaUpdated,
-                        EventType.UserPresenceUpdated))
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(networkEvent -> {
-                        if (networkEvent.user.equals(getUser())) {
-                            reloadData();
-                        }
-                    }));
-        }
-
-        userProfileInfoAdapter = new UserProfileInfoAdapter(getContext(), R.layout.item_userprofileinfo);
-        if (userInfoRecyclerView != null) {
-            userInfoRecyclerView.setAdapter(userProfileInfoAdapter);
-
-            DividerItemDecoration itemDecor = new DividerItemDecoration(userInfoRecyclerView.getContext(), DividerItemDecoration.HORIZONTAL);
-            userInfoRecyclerView.addItemDecoration(itemDecor);
-
-            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
-            userInfoRecyclerView.setLayoutManager(layoutManager);
-        }
-
-        youTubePlayerView = mainView.findViewById(R.id.youtube_player_view);
-        getLifecycle().addObserver(youTubePlayerView);
-        youTubePlayerView.addYouTubePlayerListener(new AbstractYouTubePlayerListener() {
-            @Override
-            public void onReady(@NotNull YouTubePlayer youTubePlayer) {
-                youTubePlayer.cueVideo(mYoutubeVideo, 0);
-            }
-        });
+        userProfileViewModel = ViewModelProviders.of(getActivity()).get(UserProfileViewModel.class);
 
         return mainView;
     }
 
     public void initializeYoutubeFragment() {
-        youTubePlayerView.setVisibility(View.GONE);
+        if (youtubeRecyclerView != null) {
+            youtubeRecyclerView.setVisibility(View.GONE);
 
-        if (mYoutubeVideo != null && !mYoutubeVideo.isEmpty()) {
-            youTubePlayerView.setVisibility(View.VISIBLE);
+            String youtubeVideoId = userProfileViewModel.getYoutubeVideoIds();
+            if (youtubeVideoId != null && !youtubeVideoId.isEmpty()) {
+                youtubeRecyclerView.setVisibility(View.VISIBLE);
+            }
         }
-    }
-
-    protected User getUser () {
-        return user != null ? user : ChatSDK.currentUser();
     }
 
     protected void setViewVisibility(View view, int visibility) {
@@ -179,7 +145,8 @@ public class UserProfileFragment extends BaseFragment {
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        List<Thread> allThreads = ChatSDK.thread().getThreads(ThreadType.Private1to1);
+                        List<Thread> allThreads = ChatSDK.thread()
+                                .getThreads(ThreadType.Private1to1);
                         for (Thread thread : allThreads) {
                             ChatSDK.thread().deleteThread(thread);
                         }
@@ -200,17 +167,14 @@ public class UserProfileFragment extends BaseFragment {
     }
 
     public void updateInterface() {
-        User user = getUser();
+        User user = userProfileViewModel.getUser();
 
         if (user == null) {
             return;
         }
 
         boolean isCurrentUser = user.isMe();
-        String distance = isCurrentUser ? "0" : this.distance;
-
-        if (distance == null)
-            return;
+        String distance = isCurrentUser ? "0" : userProfileViewModel.getDistance();
 
         if(!isCurrentUser && editProfileButton != null)
             editProfileButton.setVisibility(View.GONE);
@@ -237,28 +201,38 @@ public class UserProfileFragment extends BaseFragment {
 
         NearbyUser nearbyUser = new NearbyUser(user, distance);
 
-        setViewText(profileUserNameTextView, nearbyUser.getUsername());
-        setViewText(emailTextView, nearbyUser.getEmail());
-        if (profilePhotoImageView != null && nearbyUser.getPhotoUrl() != null) {
-            profilePhotoImageView.setImageURI(nearbyUser.getPhotoUrl());
-        }
-
-        String availability = nearbyUser.getAvailability();
-        if (profileUserAvailabilityImageView != null) {
-            if (availability != null && !isCurrentUser && profileUserAvailabilityImageView != null) {
-                profileUserAvailabilityImageView.setImageResource(AvailabilityHelper.imageResourceIdForAvailability(availability));
-                setViewVisibility(profileUserAvailabilityImageView, true);
-            } else {
-                setViewVisibility(profileUserAvailabilityImageView, false);
+        if (!nearbyUser.getUsername().isEmpty()) {
+            setViewText(profileUserNameTextView, nearbyUser.getUsername());
+            setViewText(emailTextView, nearbyUser.getEmail());
+            if (profilePhotoImageView != null && nearbyUser.getPhotoUrl() != null) {
+                profilePhotoImageView.setImageURI(nearbyUser.getPhotoUrl());
             }
+
+            String availability = nearbyUser.getAvailability();
+            if (profileUserAvailabilityImageView != null) {
+                if (availability != null &&
+                        !isCurrentUser &&
+                        profileUserAvailabilityImageView != null) {
+                    profileUserAvailabilityImageView.setImageResource(
+                            AvailabilityHelper.imageResourceIdForAvailability(availability));
+                    setViewVisibility(profileUserAvailabilityImageView, true);
+                } else {
+                    setViewVisibility(profileUserAvailabilityImageView, false);
+                }
+            }
+
+            userProfileViewModel.updateYoutubeVideoIds(nearbyUser.getYoutube());
+
+            userProfileViewModel.updateUserProfileInfo(
+                    new ArrayList<UserProfileInfo>(
+                            Arrays.asList(
+                                    new UserProfileInfo("Skills", nearbyUser.getSkills()),
+                                    new UserProfileInfo("Genres", nearbyUser.getGenres())
+                            )
+                    )
+            );
+            userProfileInfoAdapter.notifyData(userProfileViewModel.getProfileInfo());
         }
-
-        mYoutubeVideo = nearbyUser.getYoutube();
-
-        profileInfo.clear();
-        profileInfo.add(new UserProfileInfo("Skills", nearbyUser.getSkills()));
-        profileInfo.add(new UserProfileInfo("Genres", nearbyUser.getGenres()));
-        userProfileInfoAdapter.notifyData(profileInfo);
     }
 
     private void deleteUserAuthentication(FirebaseUser firebaseUser) {
@@ -268,7 +242,8 @@ public class UserProfileFragment extends BaseFragment {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            ChatSDK.ui().startSplashScreenActivity(getActivity().getApplicationContext());
+                            ChatSDK.ui().startSplashScreenActivity(
+                                    getActivity().getApplicationContext());
                         } else {
                             Log.e(TAG, "User authentication deletion failed :");
                         }
@@ -328,14 +303,14 @@ public class UserProfileFragment extends BaseFragment {
     private void deleteUser(FirebaseUser firebaseUser, String currentUserId) {
         LegatoAuthenticationHandler authHandler = (LegatoAuthenticationHandler) ChatSDK.auth();
         disposableList.add(authHandler.deleteUser()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(() -> {
-                            deleteUserAuthentication(firebaseUser);
-                            ChatSDK.ui().startSplashScreenActivity(getContext());
-                        },
-                        throwable -> {
-                            ChatSDK.logError(throwable);
-                        })
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(() -> {
+                    deleteUserAuthentication(firebaseUser);
+                    ChatSDK.ui().startSplashScreenActivity(getContext());
+                },
+                throwable -> {
+                    ChatSDK.logError(throwable);
+                })
         );
     }
 
@@ -346,8 +321,10 @@ public class UserProfileFragment extends BaseFragment {
 
     private void logout() {
         disposableList.add(ChatSDK.auth().logout()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(() -> ChatSDK.ui().startSplashScreenActivity(getActivity().getApplicationContext()), throwable -> ChatSDK.logError(throwable))
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(() -> ChatSDK.ui().startSplashScreenActivity(
+                getActivity().getApplicationContext()),
+                throwable -> ChatSDK.logError(throwable))
         );
     }
 
@@ -362,29 +339,24 @@ public class UserProfileFragment extends BaseFragment {
         initializeYoutubeFragment();
     }
 
-    public void setUser (User user) {
-        this.user = user;
-    }
-
-    public void setDistance(String distance) {
-        this.distance = distance;
-    }
-
     public void startChat () {
+        boolean startingChat = userProfileViewModel.getStartingSdkChat();
         if (startingChat) {
             return;
         }
 
-        startingChat = true;
-        disposableList.add(ChatSDK.thread().createThread("", user, ChatSDK.currentUser())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doFinally(() -> {
-                    dismissProgressDialog();
-                    startingChat = false;
-                })
-                .subscribe(thread -> {
-                    ChatSDK.ui().startChatActivityForID(getContext(), thread.getEntityID());
-                }, throwable -> ToastHelper.show(getContext(), throwable.getLocalizedMessage())));
+        userProfileViewModel.setSdkChat(true);
+        User user = userProfileViewModel.getUser();
+        disposableList.add(
+            ChatSDK.thread().createThread("", user, ChatSDK.currentUser())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doFinally(() -> {
+                dismissProgressDialog();
+                userProfileViewModel.setSdkChat(false);
+            })
+            .subscribe(thread -> {
+                ChatSDK.ui().startChatActivityForID(getContext(), thread.getEntityID());
+            }, throwable -> ToastHelper.show(getContext(), throwable.getLocalizedMessage())));
     }
 
     @Override
@@ -395,13 +367,59 @@ public class UserProfileFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+
+        updateInterface();
+    }
+
+    @Override
+    public void onViewCreated(@androidx.annotation.NonNull View view,
+                              @androidx.annotation.Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        if (savedInstanceState != null && savedInstanceState.getString(Keys.UserId) != null) {
+            userProfileViewModel.fetchChatSdkUser(savedInstanceState.getString(Keys.UserId));
+
+            disposableList.add(
+                    ChatSDK.events().sourceOnMain().filter(
+                            NetworkEvent.filterType(
+                                    EventType.UserMetaUpdated,
+                                    EventType.UserPresenceUpdated))
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(networkEvent -> {
+                                if (networkEvent.user.equals(userProfileViewModel.getUser())) {
+                                    reloadData();
+                                }
+                            })
+            );
+        }
+
+        userProfileInfoAdapter = new UserProfileInfoAdapter(
+                getContext(),
+                R.layout.item_userprofileinfo);
+        if (userInfoRecyclerView != null) {
+            userInfoRecyclerView.setAdapter(userProfileInfoAdapter);
+
+            DividerItemDecoration itemDecor = new DividerItemDecoration(
+                    userInfoRecyclerView.getContext(),
+                    DividerItemDecoration.HORIZONTAL);
+            userInfoRecyclerView.addItemDecoration(itemDecor);
+
+            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+            userInfoRecyclerView.setLayoutManager(layoutManager);
+        }
+
+        youtubePlayerAdapter = new YoutubePlayerAdapter(
+                getContext(),
+                userProfileViewModel.getYoutubeVideoIds(),
+                getActivity().getLifecycle()
+        );
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+
         disposableList.dispose();
-        youTubePlayerView.release();
     }
 }
 

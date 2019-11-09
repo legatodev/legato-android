@@ -1,6 +1,6 @@
 package com.legato.music;
 
-class UserProfileInfo {
+public class UserProfileInfo {
 
     private String title;
     private String data;

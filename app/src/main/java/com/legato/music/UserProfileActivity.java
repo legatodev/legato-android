@@ -2,38 +2,52 @@ package com.legato.music;
 
 import android.os.Bundle;
 
+import androidx.lifecycle.ViewModelProviders;
+
 import com.legato.music.utils.GeofireHelper;
+import com.legato.music.viewmodels.UserProfileViewModel;
 
 import co.chatsdk.core.dao.Keys;
 import co.chatsdk.core.dao.User;
 import co.chatsdk.core.session.ChatSDK;
-import co.chatsdk.core.utils.DisposableList;
 import co.chatsdk.ui.main.BaseActivity;
 import co.chatsdk.ui.utils.ToastHelper;
 import io.reactivex.annotations.Nullable;
 
 public class UserProfileActivity extends BaseActivity {
 
-    @Nullable protected User user;
-    @Nullable protected String distance;
-    private DisposableList disposableList = new DisposableList();
+    @Nullable
+    UserProfileViewModel userProfileViewModel;
+
+    @Nullable
+    UserProfileFragment userProfileFragment;
 
     @Override
     protected void onCreate (Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
 
+        userProfileViewModel = ViewModelProviders.of(this).get(UserProfileViewModel.class);
+
+        userProfileFragment = (UserProfileFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.user_profile_fragment);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
         String userEntityID = getIntent().getStringExtra(Keys.USER_ENTITY_ID);
-
         if (userEntityID != null && !userEntityID.isEmpty()) {
-            user =  ChatSDK.db().fetchUserWithEntityID(userEntityID);
-            distance = GeofireHelper.getInstance(userEntityID, null).getDistanceToCurrentUser(userEntityID);
-            if (user != null) {
-                UserProfileFragment fragment = (UserProfileFragment) getSupportFragmentManager().findFragmentById(R.id.user_profile_fragment);
-                fragment.setUser(user);
-                fragment.setDistance(distance);
-                fragment.updateInterface();
+            User user =  ChatSDK.db().fetchUserWithEntityID(userEntityID);
+            String distance = GeofireHelper.getInstance(userEntityID, null)
+                    .getDistanceToCurrentUser(userEntityID);
 
+            if (user != null) {
+                if (userProfileViewModel != null) {
+                    userProfileViewModel.setUser(user);
+                    userProfileViewModel.setDistance(distance);
+                }
                 return;
             }
         }
@@ -46,12 +60,12 @@ public class UserProfileActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        this.finish();
+
+        finish();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        disposableList.dispose();
     }
 }

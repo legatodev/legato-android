@@ -5,13 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <view
+    <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
         android:id="@+id/youtube_recycler_item"
-        class="com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView"
         android:layout_width="320dp"
         android:layout_height="wrap_content"
         android:padding="6dp"
         app:autoPlay="false"
         app:showFullScreenButton="false"
-        app:useWebUi="false" />
+        app:useWebUi="true" />
+
 </LinearLayout>

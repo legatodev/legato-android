@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-class UserProfileInfoAdapter extends RecyclerView.Adapter<UserProfileInfoHolder> {
+public class UserProfileInfoAdapter extends RecyclerView.Adapter<UserProfileInfoHolder> {
 
     private List<UserProfileInfo> userProfileInfoList;
     private final Context context;
