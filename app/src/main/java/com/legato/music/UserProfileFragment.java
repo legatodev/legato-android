@@ -178,8 +178,9 @@ public class UserProfileFragment extends BaseFragment {
             return;
         }
 
+        String distance = userProfileViewModel.getDistance();
+
         boolean isCurrentUser = user.isMe();
-        String distance = isCurrentUser ? "0" : userProfileViewModel.getDistance();
 
         if(!isCurrentUser && editProfileButton != null)
             editProfileButton.setVisibility(View.GONE);

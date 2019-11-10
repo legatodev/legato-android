@@ -17,24 +17,15 @@ public class UserProfileViewModel extends ViewModel {
         userProfile = new UserProfile();
     }
 
-    public void resetUserProfileInfo() {
-        userProfile.resetUserProfileInfo();
-    }
-
-    public void updateUserProfileInfo(ArrayList<UserProfileInfo> newInfo) {
-        userProfile.updateUserProfileInfo(newInfo);
-    }
-
-    public void updateYoutubeVideoIds(String commaSeparatedVideoIds) {
-        userProfile.updateYoutubeVideoIds(commaSeparatedVideoIds);
-    }
-
     public ArrayList<UserProfileInfo> getProfileInfo() {
         return userProfile.getProfileInfo();
     }
+    public void setUserProfileInfo(ArrayList<UserProfileInfo> newInfo) {
+        userProfile.setUserProfileInfo(newInfo);
+    }
 
     public void setSdkChat(boolean state) {
-        userProfile.setSdkChat(state);
+        userProfile.setStartingSdkChat(state);
     }
     public boolean getStartingSdkChat() {
         return userProfile.getStartingSdkChat();
@@ -46,6 +37,7 @@ public class UserProfileViewModel extends ViewModel {
     public void setUser(User user) {
         userProfile.setUser(user);
     }
+
     public void fetchChatSdkUser(String userId) {
         userProfile.fetchChatSdkUser(userId);
     }
@@ -53,12 +45,14 @@ public class UserProfileViewModel extends ViewModel {
     public String getDistance() {
         return userProfile.getDistance();
     }
-
     public void setDistance(String distance) {
         userProfile.setDistance(distance);
     }
 
     public String getYoutubeVideoIds() {
         return userProfile.getYoutubeVideoIds();
+    }
+    public void setYoutubeVideoIds(String commaSeparatedVideoIds) {
+        userProfile.setYoutubeVideoIds(commaSeparatedVideoIds);
     }
 }

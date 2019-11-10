@@ -37,42 +37,41 @@ public class UserProfile {
         return profileInfo;
     }
 
-    public void setSdkChat(boolean state) {
-        startingChat = state;
-    }
-
     public boolean getStartingSdkChat() {
         return startingChat;
     }
-
-    public User getUser() {
-        return chatSdkUser;
-    }
-
-    public void fetchChatSdkUser(String userId) {
-        chatSdkUser = ChatSDK.db().fetchUserWithEntityID(userId);
+    public void setStartingSdkChat(boolean state) {
+        startingChat = state;
     }
 
     protected User getChatSdkUser() {
         return chatSdkUser != null ? chatSdkUser : ChatSDK.currentUser();
     }
-
-    public String getDistance() {
-        return distance;
+    public void fetchChatSdkUser(String userId) {
+        chatSdkUser = ChatSDK.db().fetchUserWithEntityID(userId);
     }
 
+    public User getUser() {
+        return chatSdkUser;
+    }
     public void setUser(User user) {
         this.chatSdkUser = user;
     }
 
+    public String getDistance() {
+        return chatSdkUser.isMe() ? "0" : this.distance;
+    }
     public void setDistance(String distance) {
         this.distance = distance;
     }
 
-    public void setYoutubeVideoIds(String commaSeparatedVideoIds) {
-        youtubeVideoIds = commaSeparatedVideoIds;
-    }
+
+
     public String getYoutubeVideoIds() {
         return youtubeVideoIds;
     }
+    public void setYoutubeVideoIds(String commaSeparatedVideoIds) {
+        youtubeVideoIds = commaSeparatedVideoIds;
+    }
+
 }
