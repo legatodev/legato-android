@@ -28,7 +28,7 @@ public class UserProfile {
         profileInfo = new ArrayList<UserProfileInfo>();
     }
 
-    public void updateUserProfileInfo(ArrayList<UserProfileInfo> newInfo) {
+    public void setUserProfileInfo(ArrayList<UserProfileInfo> newInfo) {
         profileInfo.clear();
         profileInfo = newInfo;
     }
@@ -69,7 +69,7 @@ public class UserProfile {
         this.distance = distance;
     }
 
-    public void updateYoutubeVideoIds(String commaSeparatedVideoIds) {
+    public void setYoutubeVideoIds(String commaSeparatedVideoIds) {
         youtubeVideoIds = commaSeparatedVideoIds;
     }
     public String getYoutubeVideoIds() {
