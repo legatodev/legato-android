@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
-import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -32,11 +31,6 @@ import com.legato.music.adapters.YoutubePlayerAdapter;
 import com.legato.music.registration.solo.SoloRegistrationActivity;
 import com.legato.music.utils.LegatoAuthenticationHandler;
 import com.legato.music.viewmodels.UserProfileViewModel;
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -117,18 +111,19 @@ public class UserProfileFragment extends BaseFragment {
         return mainView;
     }
 
-    public void initializeYoutubeFragment() {
+    public void updateYoutubePlayerView() {
         if (youtubeGalleryView != null) {
             youtubeGalleryView.setVisibility(View.GONE);
 
             if (youtubeRecyclerView != null) {
-                youtubePlayerAdapter = new YoutubePlayerAdapter(
-                        userProfileViewModel.getYoutubeVideoIds(),
-                        this.getLifecycle());
-                youtubeRecyclerView.setAdapter(youtubePlayerAdapter);
+                String youtubeVideoIds = userProfileViewModel.getYoutubeVideoIds();
 
-                if (youtubePlayerAdapter != null &&
-                        !userProfileViewModel.getYoutubeVideoIds().isEmpty()) {
+                if (!userProfileViewModel.getYoutubeVideoIds().isEmpty()) {
+                    youtubePlayerAdapter = new YoutubePlayerAdapter(
+                            youtubeVideoIds,
+                            this.getLifecycle());
+                    youtubeRecyclerView.setAdapter(youtubePlayerAdapter);
+
                     youtubeGalleryView.setVisibility(View.VISIBLE);
                 }
             }
@@ -231,10 +226,10 @@ public class UserProfileFragment extends BaseFragment {
                 }
             }
 
-            userProfileViewModel.updateYoutubeVideoIds(nearbyUser.getYoutube());
-            initializeYoutubeFragment();
+            userProfileViewModel.setYoutubeVideoIds(nearbyUser.getYoutube());
+            updateYoutubePlayerView();
 
-            userProfileViewModel.updateUserProfileInfo(
+            userProfileViewModel.setUserProfileInfo(
                     new ArrayList<UserProfileInfo>(
                             Arrays.asList(
                                     new UserProfileInfo("Skills", nearbyUser.getSkills()),
@@ -347,7 +342,7 @@ public class UserProfileFragment extends BaseFragment {
     @Override
     public void reloadData() {
         updateInterface();
-        initializeYoutubeFragment();
+        updateYoutubePlayerView();
     }
 
     public void startChat () {
