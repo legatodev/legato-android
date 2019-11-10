@@ -120,11 +120,10 @@ public class UserProfileFragment extends BaseFragment {
     public void initializeYoutubeFragment() {
         if (youtubeGalleryView != null) {
             youtubeGalleryView.setVisibility(View.GONE);
-            if (youtubeRecyclerView != null) {
 
-                String videoIds = userProfileViewModel.getYoutubeVideoIds();
+            if (youtubeRecyclerView != null) {
                 youtubePlayerAdapter = new YoutubePlayerAdapter(
-                        videoIds,
+                        userProfileViewModel.getYoutubeVideoIds(),
                         this.getLifecycle());
                 youtubeRecyclerView.setAdapter(youtubePlayerAdapter);
 
