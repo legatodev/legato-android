@@ -431,10 +431,6 @@ public class UserProfileFragment extends BaseFragment {
         super.onDestroy();
 
         disposableList.dispose();
-
-        if (youtubePlayerAdapter != null) {
-            youtubePlayerAdapter = null;
-        }
     }
 }
 
