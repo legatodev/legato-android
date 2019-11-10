@@ -2,7 +2,6 @@ package com.legato.music.models;
 
 import androidx.annotation.NonNull;
 
-import com.legato.music.NearbyUser;
 import com.legato.music.UserProfileInfo;
 
 import java.util.ArrayList;
@@ -14,13 +13,13 @@ public class UserProfile {
     private boolean startingChat = false;
     @NonNull
     ArrayList<UserProfileInfo> profileInfo;
-    @NonNull private User user;
+    @NonNull private User chatSdkUser;
     private String distance;
     @NonNull private String youtubeVideoIds;
 
     public UserProfile() {
         profileInfo = new ArrayList<UserProfileInfo>();
-        user = new User();
+        chatSdkUser = new User();
         distance = "";
         youtubeVideoIds = "";
     }
@@ -34,31 +33,28 @@ public class UserProfile {
         profileInfo = newInfo;
     }
 
-    public void updateYoutubeVideoIds(String commaSeparatedVideoIds) {
-        youtubeVideoIds = commaSeparatedVideoIds;
-    }
-
-
     public ArrayList<UserProfileInfo> getProfileInfo() {
         return profileInfo;
     }
 
-
     public void setSdkChat(boolean state) {
         startingChat = state;
     }
+
     public boolean getStartingSdkChat() {
         return startingChat;
     }
 
     public User getUser() {
-        return user;
+        return chatSdkUser;
     }
+
     public void fetchChatSdkUser(String userId) {
-        user = ChatSDK.db().fetchUserWithEntityID(userId);
+        chatSdkUser = ChatSDK.db().fetchUserWithEntityID(userId);
     }
+
     protected User getChatSdkUser() {
-        return user != null ? user : ChatSDK.currentUser();
+        return chatSdkUser != null ? chatSdkUser : ChatSDK.currentUser();
     }
 
     public String getDistance() {
@@ -66,13 +62,16 @@ public class UserProfile {
     }
 
     public void setUser(User user) {
-        this.user = user;
+        this.chatSdkUser = user;
     }
 
     public void setDistance(String distance) {
         this.distance = distance;
     }
 
+    public void updateYoutubeVideoIds(String commaSeparatedVideoIds) {
+        youtubeVideoIds = commaSeparatedVideoIds;
+    }
     public String getYoutubeVideoIds() {
         return youtubeVideoIds;
     }

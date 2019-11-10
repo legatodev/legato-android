@@ -64,8 +64,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
-                android:layout_toEndOf="@id/featureArtistLayout"
-                android:weight="1">
+                android:layout_toEndOf="@id/featureArtistLayout">
 
                 <TextView
                     android:id="@+id/featuredBandTextView"
@@ -92,7 +91,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/featuredBandImageView"
                     android:layout_centerHorizontal="false"
-                    android:layout_marginBottom="4dp"
+                    android:layout_marginBottom="8dp"
                     android:text="Test"
                     android:textColor="@color/white"
                     android:textSize="18sp" />
@@ -190,8 +189,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/profileInfoLayout"
-            android:layout_margin="8dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
             android:background="@color/skills_card_view_background">
 
             <TextView
@@ -212,8 +211,8 @@
                 android:layout_below="@+id/galleryTextView"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
-                android:orientation="horizontal"
-                tools:listitem="@layout/item_youtube_view" />
+                android:layout_marginBottom="8dp"
+                android:orientation="horizontal" />
 
         </RelativeLayout>
 

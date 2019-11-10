@@ -2,7 +2,6 @@ package com.legato.music.viewmodels;
 
 import androidx.lifecycle.ViewModel;
 
-import com.legato.music.NearbyUser;
 import com.legato.music.UserProfileInfo;
 import com.legato.music.models.UserProfile;
 
@@ -44,16 +43,15 @@ public class UserProfileViewModel extends ViewModel {
     public User getUser() {
         return userProfile.getUser();
     }
+    public void setUser(User user) {
+        userProfile.setUser(user);
+    }
     public void fetchChatSdkUser(String userId) {
         userProfile.fetchChatSdkUser(userId);
     }
 
     public String getDistance() {
         return userProfile.getDistance();
-    }
-
-    public void setUser(User user) {
-        userProfile.setUser(user);
     }
 
     public void setDistance(String distance) {

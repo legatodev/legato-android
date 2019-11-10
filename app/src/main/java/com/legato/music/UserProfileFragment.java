@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -91,11 +92,13 @@ public class UserProfileFragment extends BaseFragment {
     @Nullable protected Button deleteAccountButton;
     @BindView(R.id.youtubeRecyclerView)
     @Nullable protected RecyclerView youtubeRecyclerView;
+    @BindView(R.id.youtubeGalleryLayout)
+    @Nullable protected View youtubeGalleryView;
 
     private DisposableList disposableList = new DisposableList();
 
     private UserProfileInfoAdapter userProfileInfoAdapter;
-    private YoutubePlayerAdapter youtubePlayerAdapter;
+    @Nullable private YoutubePlayerAdapter youtubePlayerAdapter;
 
     @NonNull private UserProfileViewModel userProfileViewModel;
 
@@ -115,12 +118,20 @@ public class UserProfileFragment extends BaseFragment {
     }
 
     public void initializeYoutubeFragment() {
-        if (youtubeRecyclerView != null) {
-            youtubeRecyclerView.setVisibility(View.GONE);
+        if (youtubeGalleryView != null) {
+            youtubeGalleryView.setVisibility(View.GONE);
+            if (youtubeRecyclerView != null) {
 
-            String youtubeVideoId = userProfileViewModel.getYoutubeVideoIds();
-            if (youtubeVideoId != null && !youtubeVideoId.isEmpty()) {
-                youtubeRecyclerView.setVisibility(View.VISIBLE);
+                String videoIds = userProfileViewModel.getYoutubeVideoIds();
+                youtubePlayerAdapter = new YoutubePlayerAdapter(
+                        videoIds,
+                        this.getLifecycle());
+                youtubeRecyclerView.setAdapter(youtubePlayerAdapter);
+
+                if (youtubePlayerAdapter != null &&
+                        !userProfileViewModel.getYoutubeVideoIds().isEmpty()) {
+                    youtubeGalleryView.setVisibility(View.VISIBLE);
+                }
             }
         }
     }
@@ -222,6 +233,7 @@ public class UserProfileFragment extends BaseFragment {
             }
 
             userProfileViewModel.updateYoutubeVideoIds(nearbyUser.getYoutube());
+            initializeYoutubeFragment();
 
             userProfileViewModel.updateUserProfileInfo(
                     new ArrayList<UserProfileInfo>(
@@ -408,11 +420,15 @@ public class UserProfileFragment extends BaseFragment {
             userInfoRecyclerView.setLayoutManager(layoutManager);
         }
 
-        youtubePlayerAdapter = new YoutubePlayerAdapter(
-                getContext(),
-                userProfileViewModel.getYoutubeVideoIds(),
-                getActivity().getLifecycle()
-        );
+        if (youtubeRecyclerView != null) {
+            youtubeRecyclerView.setHasFixedSize(true);
+
+            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
+                    getActivity(),
+                    LinearLayoutManager.HORIZONTAL,
+                    false);
+            youtubeRecyclerView.setLayoutManager(layoutManager);
+        }
     }
 
     @Override
@@ -420,6 +436,10 @@ public class UserProfileFragment extends BaseFragment {
         super.onDestroy();
 
         disposableList.dispose();
+
+        if (youtubePlayerAdapter != null) {
+            youtubePlayerAdapter = null;
+        }
     }
 }
 
