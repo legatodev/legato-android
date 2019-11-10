@@ -49,7 +49,7 @@ public class YoutubePlayerAdapter extends RecyclerView.Adapter<YoutubePlayerAdap
         return videoIds.length;
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
         private YouTubePlayerView youTubePlayerView;
         @Nullable
         private YouTubePlayer youTubePlayer;
