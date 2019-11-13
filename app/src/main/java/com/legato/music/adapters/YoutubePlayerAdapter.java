@@ -1,6 +1,6 @@
-package com.legato.music.youtube;
+package com.legato.music.adapters;
 
-import android.content.Context;
+
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -15,59 +15,50 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.Abs
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 
 public class YoutubePlayerAdapter extends RecyclerView.Adapter<YoutubePlayerAdapter.ViewHolder> {
+    private String[] videoIds;
+    private Lifecycle lifecycle;
 
-    private LayoutInflater mInflator;
-    private String[] mVideoIds;
-    private Lifecycle mLifecycle;
-
-    public YoutubePlayerAdapter(Context context, String[] videoIds, Lifecycle lifecycle)
-    {
-        mInflator = LayoutInflater.from(context);
-        mVideoIds = videoIds;
-        mLifecycle = lifecycle;
+    public YoutubePlayerAdapter(String commaSeparatedVideoIds, Lifecycle lifecycle) {
+        setVideoIds(commaSeparatedVideoIds);
+        this.lifecycle = lifecycle;
     }
 
     @NonNull
     @Override
-    public YoutubePlayerAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
-    {
-        YouTubePlayerView youTubePlayerView = (YouTubePlayerView)mInflator
-                .inflate(R.layout.item_youtube_view, parent,false);
-        mLifecycle.addObserver(youTubePlayerView);
+    public YoutubePlayerAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        YouTubePlayerView youTubePlayerView = (YouTubePlayerView) LayoutInflater
+                .from(parent.getContext())
+                .inflate(R.layout.item_youtube_view, parent, false);
+        lifecycle.addObserver(youTubePlayerView);
 
-        return new ViewHolder(youTubePlayerView, this);
+        return new ViewHolder(youTubePlayerView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
-        viewHolder.cueVideo(mVideoIds[position]);
+        viewHolder.cueVideo(videoIds[position]);
+
     }
 
-    public void setVideoIds(String[] mVideoIds)
-    {
-        this.mVideoIds = mVideoIds;
+    private void setVideoIds(String commaSeparatedVideoIds) {
+        this.videoIds = commaSeparatedVideoIds.split(",");
     }
 
     @Override
     public int getItemCount() {
-        return mVideoIds.length;
+        return videoIds.length;
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
-        final YoutubePlayerAdapter mAdapter;
-
+    class ViewHolder extends RecyclerView.ViewHolder {
         private YouTubePlayerView youTubePlayerView;
-        @Nullable private YouTubePlayer youTubePlayer;
+        @Nullable
+        private YouTubePlayer youTubePlayer;
+        @Nullable
         private String currentVideoId;
 
-        ViewHolder(YouTubePlayerView playerView, YoutubePlayerAdapter adapter) {
+        ViewHolder(YouTubePlayerView playerView) {
             super(playerView);
-
             youTubePlayerView = playerView;
-            this.mAdapter = adapter;
-
-            youTubePlayer = null;
-            currentVideoId = "";
 
             youTubePlayerView.addYouTubePlayerListener(new AbstractYouTubePlayerListener() {
                 @Override
@@ -81,9 +72,8 @@ public class YoutubePlayerAdapter extends RecyclerView.Adapter<YoutubePlayerAdap
         void cueVideo(String videoId) {
             currentVideoId = videoId;
 
-            if(youTubePlayer == null) {
+            if(youTubePlayer == null)
                 return;
-            }
 
             youTubePlayer.cueVideo(videoId, 0);
         }

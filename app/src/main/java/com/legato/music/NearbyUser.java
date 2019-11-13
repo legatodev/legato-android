@@ -10,20 +10,24 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.annotations.Nullable;
 
 //A Model in MVVM
-class NearbyUser {
+public class NearbyUser {
 
     @NonNull private String distance;
     @NonNull
     private User user;
 
+    @NonNull private String[] youtubeVideoIds;
+
     public NearbyUser(User user, String distance) {
         this.distance = distance;
         this.user = user;
+        youtubeVideoIds = new String[] {};
     }
 
     public NearbyUser(String userId, String distance) {
         this.distance = distance;
         this.user = ChatSDK.db().fetchOrCreateEntityWithEntityID(User.class, userId);
+        youtubeVideoIds = new String[] {};
     }
 
     public String getUsername() {
@@ -87,6 +91,13 @@ class NearbyUser {
     public String getEmail() { return user.getEmail(); }
 
     public String getYoutube() { return user.metaStringForKey(Keys.youtube); }
+
+    public String[] getYoutubeVideoIds() {
+        if (youtubeVideoIds.length > 0)
+            return youtubeVideoIds;
+        else
+            return new String[] { getYoutube() };
+    }
 
     public User getUser() { return user;}
 
