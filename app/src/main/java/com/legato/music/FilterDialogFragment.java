@@ -14,7 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-import com.legato.music.R;
+import com.legato.music.view.adapter.NearbyUsersAdapter;
 import com.legato.music.utils.Keys;
 
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ public class FilterDialogFragment extends DialogFragment {
         this.adapter = adapter;
     }
 
-    interface FilterListener {
+    public interface FilterListener {
 
         void onFilter(Filters filters);
 

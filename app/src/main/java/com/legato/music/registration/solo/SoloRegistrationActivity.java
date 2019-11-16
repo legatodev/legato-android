@@ -19,7 +19,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.legato.music.utils.Keys;
-import com.legato.music.NearbyUsersActivity;
+import com.legato.music.view.activity.NearbyUsersActivity;
 import com.legato.music.R;
 import com.legato.music.registration.GenresFragment;
 import com.google.android.material.tabs.TabLayout;
@@ -28,8 +28,6 @@ import java.io.File;
 import java.net.URI;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

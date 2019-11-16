@@ -61,7 +61,7 @@
             android:label="@string/title_active_chats"
             android:theme="@style/NoActionBarTheme" />
         <activity
-            android:name="com.legato.music.NearbyUsersActivity"
+            android:name="com.legato.music.view.activity.NearbyUsersActivity"
             android:label="@string/title_nearby_users"
             android:theme="@style/NoActionBarTheme">
             <meta-data

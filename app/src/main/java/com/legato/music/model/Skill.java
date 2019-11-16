@@ -1,6 +1,6 @@
-package com.legato.music.registration.solo;
+package com.legato.music.model;
 
-class Skill {
+public class Skill {
 
     private String skill;
     private int skillLevel;

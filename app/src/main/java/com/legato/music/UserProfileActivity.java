@@ -2,9 +2,8 @@ package com.legato.music;
 
 import android.os.Bundle;
 
+import com.legato.music.repositories.GeofireClient;
 import androidx.lifecycle.ViewModelProviders;
-
-import com.legato.music.utils.GeofireHelper;
 import com.legato.music.viewmodels.UserProfileViewModel;
 
 import co.chatsdk.core.dao.Keys;
@@ -39,10 +38,15 @@ public class UserProfileActivity extends BaseActivity {
 
         String userEntityID = getIntent().getStringExtra(Keys.USER_ENTITY_ID);
         if (userEntityID != null && !userEntityID.isEmpty()) {
+            /*user =  ChatSDK.db().fetchUserWithEntityID(userEntityID);
+            distance = GeofireClient.getInstance().getDistanceToCurrentUser(userEntityID);
+            if (user != null) {
+                UserProfileFragment fragment = (UserProfileFragment) getSupportFragmentManager().findFragmentById(R.id.user_profile_fragment);
+                fragment.setUser(user);
+                fragment.setDistance(distance);
+                fragment.updateInterface();*/
             User user =  ChatSDK.db().fetchUserWithEntityID(userEntityID);
-            String distance = GeofireHelper.getInstance(userEntityID, null)
-                    .getDistanceToCurrentUser(userEntityID);
-
+            String distance = GeofireClient.getInstance().getDistanceToCurrentUser(userEntityID);
             if (user != null) {
                 if (userProfileViewModel != null) {
                     userProfileViewModel.setUser(user);

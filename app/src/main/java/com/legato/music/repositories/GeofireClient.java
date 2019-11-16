@@ -1,7 +1,10 @@
-package com.legato.music.utils;
+package com.legato.music.repositories;
 
 import android.location.Location;
 import android.util.Log;
+
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
@@ -11,52 +14,53 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.legato.music.model.NearbyUser;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
 
+import co.chatsdk.core.dao.User;
 import co.chatsdk.core.session.ChatSDK;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.annotations.Nullable;
 
-public class GeofireHelper {
-    public interface NearbyUserFoundListener {
-        void nearbyUserFound(String userId, String distance);
-    }
+public class GeofireClient {
+    private static final String TAG = "GeofireClient";
 
+    @Nullable private static GeofireClient mGeofireInstance;
     private String mUserId = "";
     private final GeoFire mGeoFire;
     @Nullable private Location mCurrentLocation = null;
-    private final HashMap<String, String> mNearHashMap; //TODO: maybe use sortedmap in order of distance.
+    private final HashMap<String, NearbyUser> mNearHashMap;
+    private MutableLiveData<NearbyUser> mNearbyUser;
 
-    @Nullable private NearbyUserFoundListener nearbyUserFoundListener;
 
-    private static @Nullable GeofireHelper sGeofireInstance;
-
-    private GeofireHelper(@Nullable NearbyUserFoundListener nearbyUserFoundListener) {
-        this.nearbyUserFoundListener = nearbyUserFoundListener;
+    private GeofireClient() {
         FirebaseDatabase mFirebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference userLocationDatabaseReference = mFirebaseDatabase.getReference().child("geofire");
         mGeoFire = new GeoFire(userLocationDatabaseReference);
-        mNearHashMap = new HashMap<String, String>();
+        mNearHashMap = new HashMap<String, NearbyUser>();
+        mNearbyUser = new MutableLiveData<>();
     }
 
-     public static GeofireHelper getInstance(String userId, @Nullable NearbyUserFoundListener nearbyUserFoundListener){
-        if(sGeofireInstance == null){
-            sGeofireInstance = new GeofireHelper(nearbyUserFoundListener);
+    public static GeofireClient getInstance() {
+        if(mGeofireInstance == null){
+            mGeofireInstance = new GeofireClient();
         }
-        else {
-            sGeofireInstance.nearbyUserFoundListener = nearbyUserFoundListener;
-        }
-         sGeofireInstance.mUserId = userId;
+        return mGeofireInstance;
+    }
 
-        return  sGeofireInstance;
-     }
+    public static void destroyGeofireHelper() {
+        mGeofireInstance = null;
+    }
 
-     public static void destroyGeofireHelper() {
-        sGeofireInstance = null;
-     }
+    public LiveData<NearbyUser> getNearbyUser(){
+        return mNearbyUser;
+    }
 
+    public void setUserId(String userId){
+        mUserId = userId;
+    }
     public void setLocation(@NonNull Location location) {
         mCurrentLocation = location;
         mGeoFire.setLocation(mUserId, new GeoLocation(mCurrentLocation.getLatitude(),
@@ -64,15 +68,60 @@ public class GeofireHelper {
             @Override
             public void onComplete(String key, DatabaseError error) {
                 if (error != null) {
-                    System.err.println("There was an error saving the location to GeoFire: " + error);
-                } else {
-                    System.out.println("Location saved on server successfully!");
+                    Log.e(TAG,"There was an error saving the location to GeoFire: " + error);
                 }
             }
         });
     }
 
-    //This function needs a unit test
+    public void searchNearbyUserByRadius(double searchRadius){
+        if (mCurrentLocation != null) {
+            GeoQuery geoQuery = mGeoFire.queryAtLocation(new GeoLocation(mCurrentLocation.getLatitude(),
+                                                         mCurrentLocation.getLongitude()), searchRadius);
+            geoQuery.addGeoQueryDataEventListener(new GeoQueryDataEventListener() {
+                @Override
+                public void onDataEntered(DataSnapshot dataSnapshot, GeoLocation geoLocation) {
+                    Location location = new Location("");
+                    location.setLatitude(geoLocation.latitude);
+                    location.setLongitude(geoLocation.longitude);
+                    final DecimalFormat df = new DecimalFormat("#.#");
+                    if (mCurrentLocation != null) {
+                        final String distanceTo = df.format(mCurrentLocation.distanceTo(location) / 1000.0);
+                        User user = ChatSDK.db().fetchOrCreateEntityWithEntityID(User.class, dataSnapshot.getKey());
+                        NearbyUser nearbyUser = new NearbyUser(user,distanceTo);
+                        mNearbyUser.setValue(nearbyUser);
+                        mNearHashMap.put(dataSnapshot.getKey(), nearbyUser);
+                    }
+                }
+                @Override
+                public void onDataExited(DataSnapshot dataSnapshot) {
+                }
+
+                @Override
+                public void onDataMoved(DataSnapshot dataSnapshot, GeoLocation location) {
+                }
+
+                @Override
+                public void onDataChanged(DataSnapshot dataSnapshot, GeoLocation location) {
+                    //Key %s changed within the search area to [%f,%f]", dataSnapshot.getKey(), location.latitude, location.longitude
+                }
+
+                @Override
+                public void onGeoQueryReady() {
+                    //All initial data has been loaded and events have been fired!
+                }
+
+                @Override
+                public void onGeoQueryError(DatabaseError error) {
+                    //There was an error with this query
+                }
+            });
+            } else {
+            Log.e("GeofireClient", "Current Location is not set. Nothing to query.");
+        }
+    }
+
+    /*//This function needs a unit test
     public void queryNeighbors(double searchRadius) {
         if (mCurrentLocation != null) {
             GeoQuery geoQuery = mGeoFire.queryAtLocation(new GeoLocation(mCurrentLocation.getLatitude(),
@@ -121,16 +170,16 @@ public class GeofireHelper {
             });
         }
         else {
-            Log.e("GeofireHelper", "Current Location is not set. Nothing to query.");
+            Log.e("GeofireClient", "Current Location is not set. Nothing to query.");
         }
-    }
-
-    public HashMap<String, String> getNearbyUsers() {
-        //Only return the list of user ids and in NearbyUser
-        return mNearHashMap;
-    }
+    }*/
 
     public String getDistanceToCurrentUser(String userEntityId) {
-        return mNearHashMap.get(userEntityId) != null?mNearHashMap.get(userEntityId):"error";
+        if(mNearHashMap.get(userEntityId)!= null){
+            return mNearHashMap.get(userEntityId).getDistance();
+        }else{
+            Log.e(TAG,"User not available in nearbyusers list");
+            return "NA";
+        }
     }
 }

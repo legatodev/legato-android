@@ -1,4 +1,4 @@
-package com.legato.music;
+package com.legato.music.model;
 
 import com.legato.music.utils.Keys;
 

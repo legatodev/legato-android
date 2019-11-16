@@ -1,12 +1,13 @@
-package com.legato.music;
+package com.legato.music.view.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.legato.music.utils.GeofireHelper;
-import com.legato.music.utils.Keys;
+import com.legato.music.Filters;
+import com.legato.music.view.adapter.holder.NearbyUserHolder;
+import com.legato.music.model.NearbyUser;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,10 +23,9 @@ import co.chatsdk.core.utils.DisposableList;
 import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
-class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
+public class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
 
     private List<NearbyUser> nearbyUsers;
-    @Nullable private List<NearbyUser> nearbyUsersFiltered;
     private final Context context;
     private final int itemResource;
     private DisposableList disposableList;
@@ -39,19 +39,11 @@ class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
         this.mfilters = null;
     }
 
-    @Nullable
-    public Filters getFilters() {
-        return mfilters;
-    }
-
     public void setFilters(Filters filters) {
+
         this.mfilters = filters;
     }
 
-    /*
-        TODO: Below look will have to be improved if nearbyUser list grows bigger
-        Maybe hashmap will be better???
-         */
     private Boolean isUserInNearbyUserList(User user){
 
         if(this.nearbyUsers.size()==0)
@@ -65,7 +57,7 @@ class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
         return false;
     }
 
-    public void addNearbyUserToRecyclerView(String userId, String distance) {
+    /*public void addNearbyUserToRecyclerView(String userId, String distance) {
         User user = ChatSDK.db().fetchOrCreateEntityWithEntityID(User.class, userId);
         Completable completable = ChatSDK.core().userOn(user);
         disposableList.add(completable.observeOn(AndroidSchedulers.mainThread()).subscribe(() -> {
@@ -74,6 +66,21 @@ class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
                 if(!isUserInNearbyUserList(user)){
                     NearbyUser nearbyUser = new NearbyUser(user, distance);
                     this.nearbyUsers.add(nearbyUser);
+                }
+                onFilter(mfilters);
+            }
+        }, throwable -> {
+
+        }));
+    }*/
+
+    public void addNearbyUser(NearbyUser nearbyuser){
+        Completable completable = ChatSDK.core().userOn(nearbyuser.getUser());
+        disposableList.add(completable.observeOn(AndroidSchedulers.mainThread()).subscribe(() -> {
+            // User object has now been populated and is ready to use
+            if (!nearbyuser.isMe()) {
+                if(!isUserInNearbyUserList(nearbyuser.getUser())){
+                    this.nearbyUsers.add(nearbyuser);
                 }
                 onFilter(mfilters);
             }
@@ -93,15 +100,15 @@ class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull NearbyUserHolder holder, int position) {
-        if (this.nearbyUsersFiltered != null) {
-            NearbyUser nearbyUser = this.nearbyUsersFiltered.get(position);
+        if (this.nearbyUsers != null) {
+            NearbyUser nearbyUser = this.nearbyUsers.get(position);
             holder.bindNearbyUser(nearbyUser);
         }
     }
 
     @Override
     public int getItemCount() {
-        return this.nearbyUsersFiltered != null?this.nearbyUsersFiltered.size():0;
+        return this.nearbyUsers != null?this.nearbyUsers.size():0;
     }
 
     public void onFilter(@Nullable Filters filters) {
@@ -110,17 +117,12 @@ class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
             /*
             This should be called when app loads for first time.
              */
-            this.nearbyUsersFiltered = this.nearbyUsers;
-            notifyItemInserted(this.nearbyUsersFiltered.size() - 1);
+            notifyItemInserted(this.nearbyUsers.size() - 1);
             return;
         }
 
         List<NearbyUser> filteredList = new ArrayList<>();
-        /*
-        1] GetSearchRadius.
-        2] If radius is different than previous , update User.MetaKey and get new list based on updated radius.
-        3] This should update nearbyUsers list
-         */
+
         for (NearbyUser row : nearbyUsers) {
             boolean addRow;
                 if (filters.hasLookingfor()&& row.getLookingfor() != null) {
@@ -153,10 +155,10 @@ class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
                 }
         }
 
-        nearbyUsersFiltered = filteredList;
+        nearbyUsers = filteredList;
 
         if (filters.hasSortBy()) {
-            Collections.sort(nearbyUsersFiltered, NearbyUser.sortByDistance);
+            Collections.sort(nearbyUsers, NearbyUser.sortByDistance);
         }
 
         notifyDataSetChanged();

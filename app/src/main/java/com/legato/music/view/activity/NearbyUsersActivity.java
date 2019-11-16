@@ -1,7 +1,6 @@
-package com.legato.music;
+package com.legato.music.view.activity;
 
 import android.Manifest;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -13,18 +12,26 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.legato.music.AppConstants;
+import com.legato.music.FilterDialogFragment;
+import com.legato.music.Filters;
+import com.legato.music.NearbyMessages;
+import com.legato.music.R;
+import com.legato.music.UserProfileActivity;
+import com.legato.music.model.NearbyUser;
+import com.legato.music.view.adapter.NearbyUsersAdapter;
 import com.legato.music.messaging.ActiveChatActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.legato.music.utils.GeofireHelper;
+import com.legato.music.viewmodel.NearbyUserViewModel;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,25 +45,28 @@ import co.chatsdk.core.utils.DisposableList;
 import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
-public class NearbyUsersActivity extends AppCompatActivity implements FilterDialogFragment.FilterListener, GeofireHelper.NearbyUserFoundListener  {
+public class NearbyUsersActivity extends AppCompatActivity implements
+        FilterDialogFragment.FilterListener  {
 
     @BindView(R.id.nearbyUserRecylerView)
     RecyclerView mNearbyUserRecyclerView;
 
-    private GeofireHelper geofireHelper;
     private NearbyUsersAdapter mNearbyUsersAdapter;
     private FilterDialogFragment mFilterDialog;
     private User mUser;
     final int REQUEST_FINE_LOCATION=0;
     private DisposableList disposableList = new DisposableList();
 
-    @Nullable NearbyMessages nearbyMessages;
+    @Nullable
+    NearbyMessages nearbyMessages;
+    private NearbyUserViewModel mNearbyUserViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nearby_users);
         ButterKnife.bind(this);
+        mNearbyUserViewModel = ViewModelProviders.of(this).get(NearbyUserViewModel.class);
         if (!isEmailVerified()) {
             createVerificationDialog();
         }
@@ -65,12 +75,10 @@ public class NearbyUsersActivity extends AppCompatActivity implements FilterDial
         if (mNearbyUserRecyclerView != null) {
             mNearbyUserRecyclerView.setAdapter(mNearbyUsersAdapter);
         }
-        mFilterDialog = new FilterDialogFragment(mNearbyUsersAdapter);
-
         DividerItemDecoration itemDecor = new DividerItemDecoration(mNearbyUserRecyclerView.getContext(), DividerItemDecoration.HORIZONTAL);
-        mNearbyUserRecyclerView.addItemDecoration(itemDecor);
-
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        mFilterDialog = new FilterDialogFragment(mNearbyUsersAdapter);
+        mNearbyUserRecyclerView.addItemDecoration(itemDecor);
         mNearbyUserRecyclerView.setLayoutManager(layoutManager);
 
         ChatSDK.hook().addHook(new Hook(data -> Completable.create(emitter -> {
@@ -78,6 +86,7 @@ public class NearbyUsersActivity extends AppCompatActivity implements FilterDial
             emitter.onComplete();
         })), HookEvent.WillLogout);
 
+        subscribeObservers();
         getLastLocation();
 
         String proximityAlert = ChatSDK.currentUser().metaStringForKey(com.legato.music.utils.Keys.proximityalert);
@@ -88,6 +97,16 @@ public class NearbyUsersActivity extends AppCompatActivity implements FilterDial
                 nearbyMessages.initialize();
             }
         }
+    }
+    private void subscribeObservers() {
+        mNearbyUserViewModel.getNearbyUser().observe(this, new Observer<NearbyUser>() {
+            @Override
+            public void onChanged(@Nullable NearbyUser nearbyUser) {
+                if (nearbyUser != null) {
+                    mNearbyUsersAdapter.addNearbyUser(nearbyUser);
+                }
+            }
+        });
     }
 
     private void logout() {
@@ -118,19 +137,17 @@ public class NearbyUsersActivity extends AppCompatActivity implements FilterDial
     }
 
     private boolean isEmailVerified() {
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        return firebaseUser.isEmailVerified();
+        return mNearbyUserViewModel.isEmailVerified();
     }
 
     private void sendEmailVerification() {
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        firebaseUser.sendEmailVerification();
+        mNearbyUserViewModel.sendEmailVerification();
     }
 
     @Override
     public void onFilter(Filters filters) {
         mNearbyUsersAdapter.setFilters(filters);
-        geofireHelper.queryNeighbors(Integer.parseInt(filters.getSearchRadius()));
+        mNearbyUserViewModel.searchNearbyUserByRadius(Integer.parseInt(filters.getSearchRadius()));
     }
 
     @OnClick(R.id.buttonFilter)
@@ -167,7 +184,6 @@ public class NearbyUsersActivity extends AppCompatActivity implements FilterDial
 
     private void getLastLocation() {
         mUser = ChatSDK.currentUser();
-        geofireHelper = GeofireHelper.getInstance(ChatSDK.currentUserID(), this);
         // Get last known recent location using new Google Play Services SDK (v11+)
         boolean havePermission = checkPermissions();
 
@@ -237,20 +253,14 @@ public class NearbyUsersActivity extends AppCompatActivity implements FilterDial
     }
 
     private void onLocationChanged(Location location) {
-        geofireHelper.setLocation(location);
+        mNearbyUserViewModel.setLocation(location);
         String searchRadius = AppConstants.DEFAULT_SEARCH_RADIUS;
         if (mUser != null) {
             searchRadius = mUser.metaStringForKey(com.legato.music.utils.Keys.searchradius);
             if (!(searchRadius != null && !searchRadius.isEmpty()))
                 searchRadius = AppConstants.DEFAULT_SEARCH_RADIUS;
         }
-
-        geofireHelper.queryNeighbors(Integer.parseInt(searchRadius));
-    }
-
-    @Override
-    public void nearbyUserFound(String userId, String distance) {
-        mNearbyUsersAdapter.addNearbyUserToRecyclerView(userId, distance);
+        mNearbyUserViewModel.searchNearbyUserByRadius(Integer.parseInt(searchRadius));
     }
 
     @Override
