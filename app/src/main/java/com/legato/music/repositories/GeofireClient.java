@@ -14,7 +14,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.legato.music.model.NearbyUser;
+import com.legato.music.models.NearbyUser;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;

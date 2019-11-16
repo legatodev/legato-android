@@ -19,7 +19,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.legato.music.utils.Keys;
-import com.legato.music.view.activity.NearbyUsersActivity;
+import com.legato.music.views.activity.NearbyUsersActivity;
 import com.legato.music.R;
 import com.legato.music.registration.GenresFragment;
 import com.google.android.material.tabs.TabLayout;

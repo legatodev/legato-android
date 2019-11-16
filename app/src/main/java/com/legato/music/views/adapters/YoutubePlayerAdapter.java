@@ -1,4 +1,4 @@
-package com.legato.music.adapters;
+package com.legato.music.views.adapters;
 
 
 import android.view.LayoutInflater;

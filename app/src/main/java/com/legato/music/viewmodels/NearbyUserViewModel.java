@@ -1,11 +1,11 @@
-package com.legato.music.viewmodel;
+package com.legato.music.viewmodels;
 
 import android.location.Location;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.legato.music.model.NearbyUser;
+import com.legato.music.models.NearbyUser;
 import com.legato.music.repositories.BaseRepository;
 
 public class NearbyUserViewModel extends ViewModel {

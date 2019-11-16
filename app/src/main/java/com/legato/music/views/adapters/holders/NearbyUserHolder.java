@@ -1,4 +1,4 @@
-package com.legato.music.view.adapter.holder;
+package com.legato.music.views.adapters.holders;
 
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -14,7 +14,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.youtube.player.YouTubeIntents;
 import com.legato.music.R;
 import com.legato.music.UserProfileActivity;
-import com.legato.music.model.NearbyUser;
+import com.legato.music.models.NearbyUser;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

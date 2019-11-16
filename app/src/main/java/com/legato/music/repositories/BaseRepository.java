@@ -5,9 +5,7 @@ import android.location.Location;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 
-import com.legato.music.model.NearbyUser;
-
-import co.chatsdk.core.session.ChatSDK;
+import com.legato.music.models.NearbyUser;
 
 public class BaseRepository {
 

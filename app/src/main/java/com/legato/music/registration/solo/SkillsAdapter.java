@@ -20,7 +20,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import com.legato.music.R;
-import com.legato.music.model.Skill;
+import com.legato.music.models.Skill;
 import com.legato.music.utils.SearchableSpinner;
 
 import java.util.Arrays;

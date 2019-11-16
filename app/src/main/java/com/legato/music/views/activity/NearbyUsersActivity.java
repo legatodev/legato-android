@@ -1,4 +1,4 @@
-package com.legato.music.view.activity;
+package com.legato.music.views.activity;
 
 import android.Manifest;
 import android.content.DialogInterface;
@@ -24,14 +24,14 @@ import com.legato.music.Filters;
 import com.legato.music.NearbyMessages;
 import com.legato.music.R;
 import com.legato.music.UserProfileActivity;
-import com.legato.music.model.NearbyUser;
-import com.legato.music.view.adapter.NearbyUsersAdapter;
+import com.legato.music.models.NearbyUser;
+import com.legato.music.views.adapters.NearbyUsersAdapter;
 import com.legato.music.messaging.ActiveChatActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.legato.music.viewmodel.NearbyUserViewModel;
+import com.legato.music.viewmodels.NearbyUserViewModel;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

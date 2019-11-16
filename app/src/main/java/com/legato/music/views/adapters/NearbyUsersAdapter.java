@@ -1,4 +1,4 @@
-package com.legato.music.view.adapter;
+package com.legato.music.views.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -6,8 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.legato.music.Filters;
-import com.legato.music.view.adapter.holder.NearbyUserHolder;
-import com.legato.music.model.NearbyUser;
+import com.legato.music.views.adapters.holders.NearbyUserHolder;
+import com.legato.music.models.NearbyUser;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
