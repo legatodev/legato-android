@@ -12,17 +12,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.legato.music.utils.Keys;
-import com.legato.music.views.activity.NearbyUsersActivity;
 import com.legato.music.R;
 import com.legato.music.registration.GenresFragment;
-import com.google.android.material.tabs.TabLayout;
+import com.legato.music.utils.Keys;
+import com.legato.music.views.activity.NearbyUsersActivity;
+import com.legato.music.viewmodels.SoloArtistViewModel;
 
 import java.io.File;
 import java.net.URI;
@@ -43,10 +45,11 @@ import io.reactivex.Single;
 import io.reactivex.SingleOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
+import io.reactivex.annotations.Nullable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-public class SoloRegistrationActivity extends AppCompatActivity implements SkillsFragment.FinishClickedListener{
+public class SoloRegistrationActivity extends AppCompatActivity implements SkillsFragment.FinishClickedListener {
 
     /**
      * The {@link androidx.core.view.PagerAdapter} that will provide
@@ -68,6 +71,9 @@ public class SoloRegistrationActivity extends AppCompatActivity implements Skill
     private Fragment skillsTab;
     private Fragment genresTab;
 
+    @Nullable
+    private SoloArtistViewModel soloArtistViewModel;
+
     private DisposableList disposableList;
     private String previousAvatarURL = "";
 
@@ -76,6 +82,9 @@ public class SoloRegistrationActivity extends AppCompatActivity implements Skill
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_solo_registration_tab);
         ButterKnife.bind(this);
+
+        soloArtistViewModel = ViewModelProviders.of(this).get(SoloArtistViewModel.class);
+        soloArtistViewModel.setUser(ChatSDK.currentUser());
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -98,6 +107,7 @@ public class SoloRegistrationActivity extends AppCompatActivity implements Skill
 
         disposableList = new DisposableList();
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -137,6 +147,10 @@ public class SoloRegistrationActivity extends AppCompatActivity implements Skill
         HashMap<String, String> profileInfo = ((SoloArtistBasicInfoFragment)soloRegistrationTab).extractData();
         profileInfo.put(Keys.genres, ((GenresFragment)genresTab).extractData());
         profileInfo.put(Keys.skills, ((SkillsFragment)skillsTab).extractData());
+
+        if (soloArtistViewModel != null) {
+            profileInfo.put(Keys.youtube, soloArtistViewModel.getYoutubeVideoIdsAsString());
+        }
 
         User user = ChatSDK.currentUser();
         previousAvatarURL = user.getAvatarURL();

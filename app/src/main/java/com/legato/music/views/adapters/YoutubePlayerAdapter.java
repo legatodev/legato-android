@@ -14,12 +14,14 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 
+import java.util.List;
+
 public class YoutubePlayerAdapter extends RecyclerView.Adapter<YoutubePlayerAdapter.ViewHolder> {
-    private String[] videoIds;
+    private List<String> videoIds;
     private Lifecycle lifecycle;
 
-    public YoutubePlayerAdapter(String commaSeparatedVideoIds, Lifecycle lifecycle) {
-        setVideoIds(commaSeparatedVideoIds);
+    public YoutubePlayerAdapter(List<String> videoIds, Lifecycle lifecycle) {
+        this.videoIds = videoIds;
         this.lifecycle = lifecycle;
     }
 
@@ -36,17 +38,13 @@ public class YoutubePlayerAdapter extends RecyclerView.Adapter<YoutubePlayerAdap
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
-        viewHolder.cueVideo(videoIds[position]);
+        viewHolder.cueVideo(videoIds.get(position));
 
-    }
-
-    private void setVideoIds(String commaSeparatedVideoIds) {
-        this.videoIds = commaSeparatedVideoIds.split(",");
     }
 
     @Override
     public int getItemCount() {
-        return videoIds.length;
+        return videoIds.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

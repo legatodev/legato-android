@@ -6,6 +6,7 @@ import com.legato.music.UserProfileInfo;
 import com.legato.music.models.UserProfile;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import co.chatsdk.core.dao.User;
 
@@ -49,10 +50,10 @@ public class UserProfileViewModel extends ViewModel {
         userProfile.setDistance(distance);
     }
 
-    public String getYoutubeVideoIds() {
+    public List<String> getYoutubeVideoIds() {
         return userProfile.getYoutubeVideoIds();
     }
-    public void setYoutubeVideoIds(String commaSeparatedVideoIds) {
-        userProfile.setYoutubeVideoIds(commaSeparatedVideoIds);
+    public void setYoutubeVideoIds(String videoIds) {
+        userProfile.setYoutubeVideoIds(videoIds);
     }
 }

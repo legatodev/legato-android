@@ -117,9 +117,9 @@ public class UserProfileFragment extends BaseFragment {
             youtubeGalleryView.setVisibility(View.GONE);
 
             if (youtubeRecyclerView != null) {
-                String youtubeVideoIds = userProfileViewModel.getYoutubeVideoIds();
+                List<String> youtubeVideoIds = userProfileViewModel.getYoutubeVideoIds();
 
-                if (!userProfileViewModel.getYoutubeVideoIds().isEmpty()) {
+                if (!youtubeVideoIds.isEmpty()) {
                     youtubePlayerAdapter = new YoutubePlayerAdapter(
                             youtubeVideoIds,
                             this.getLifecycle());
