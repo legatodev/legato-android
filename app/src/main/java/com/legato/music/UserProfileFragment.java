@@ -57,7 +57,7 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.annotations.Nullable;
 
 public class UserProfileFragment extends BaseFragment {
-    private static final String TAG = "UserProfileFragment";
+    private static final String TAG = UserProfileFragment.class.getSimpleName();
 
     @BindView(R.id.featuredArtistImageView)
     @Nullable protected ImageView featuredArtistImageView;

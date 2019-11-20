@@ -39,6 +39,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class LegatoAuthenticationHandler extends FirebaseAuthenticationHandler {
 
+    private String TAG = LegatoAuthenticationHandler.class.getSimpleName();
     @Nullable private AccountDetails accountDetails;
 
     public Completable deleteUser() {
@@ -81,14 +82,14 @@ public class LegatoAuthenticationHandler extends FirebaseAuthenticationHandler {
         FirebasePaths.userRef(currentUserId).removeValue().addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@androidx.annotation.NonNull Exception e) {
-                e.printStackTrace();
+                Log.e(TAG, "Failed to remove user details from Database", e);
             }
         });
 
         FirebasePaths.firebaseRef().child("searchIndex").child(currentUserId).removeValue().addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@androidx.annotation.NonNull Exception e) {
-                e.printStackTrace();
+                Log.e(TAG, "Failure getting searchIndex from Database", e);
             }
         });
 
@@ -96,7 +97,7 @@ public class LegatoAuthenticationHandler extends FirebaseAuthenticationHandler {
         mFirebaseDatabase.getReference().child("geofire").child(currentUserId).removeValue().addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@androidx.annotation.NonNull Exception e) {
-                e.printStackTrace();
+                Log.e(TAG, "Failure getting geofire", e);
             }
         });
     }
@@ -110,17 +111,17 @@ public class LegatoAuthenticationHandler extends FirebaseAuthenticationHandler {
                     storageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            Log.d("AuthenticationHandler", "onSuccess: deleted file");
+                            Log.d(TAG, "onSuccess: deleted file");
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception exception) {
-                            Log.d("AuthenticationHandler", "onFailure: did not delete file");
+                            Log.d(TAG, "onFailure: did not delete file");
                         }
                     });
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e(TAG, "Issue while deleting profile picture", e);
             }
         }
     }

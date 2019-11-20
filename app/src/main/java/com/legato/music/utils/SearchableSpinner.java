@@ -19,9 +19,10 @@ import com.toptoche.searchablespinnerlibrary.SearchableListDialog;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.appcompat.widget.AppCompatSpinner;
 import io.reactivex.annotations.Nullable;
 
-public class SearchableSpinner extends Spinner implements View.OnTouchListener,
+public class SearchableSpinner extends AppCompatSpinner implements View.OnTouchListener,
         SearchableListDialog.SearchableItem {
 
     public static final int NO_ITEM_SELECTED = -1;

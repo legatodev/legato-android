@@ -4,6 +4,8 @@ apply plugin: 'net.ltgt.errorprone'
 apply plugin: 'io.fabric'
 
 android {
+    signingConfigs {
+    }
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.legato.music"
@@ -19,6 +21,10 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
+        }
+        debug {
+            signingConfig signingConfigs.debug
         }
     }
 
@@ -41,9 +47,6 @@ android {
 
 configurations {
     all{
-        exclude module: 'listenablefuture'
-        exclude module: 'httpclient'
-        exclude module: 'commons-logging'
     }
 }
 
@@ -64,7 +67,9 @@ dependencies {
     def gridlayout_version = "1.0.0"
     def constraintlayout_version = "2.0.0-beta2"
     def cardview_version = "1.0.0"
-
+    def spotifyauth_version = "1.1.0"
+    def spotifywebapi_version = "0.4.1"
+    def gson_version = "2.8.5"
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "com.googlecode.libphonenumber:libphonenumber:$lib_phonenumber"
@@ -75,7 +80,6 @@ dependencies {
     api 'com.google.api-client:google-api-client-android:+'
     api 'com.google.api-client:google-api-client-gson:+'
     api 'com.facebook.android:facebook-android-sdk:+'
-    testImplementation 'junit:junit:4.12'
 
     // Library for Youtube Alternative Player
     implementation "com.pierfrancescosoffritti.androidyoutubeplayer:core:$alternate_youtube_service"
@@ -109,14 +113,12 @@ dependencies {
     implementation 'androidx.multidex:multidex:2.0.1'
 
     implementation "com.jakewharton:butterknife:$butterknife"
-    annotationProcessor "com.jakewharton:butterknife-compiler:$butterknife"
 
     implementation 'com.android.support:support-annotations:27.1.0'
 
     implementation 'id.zelory:compressor:2.1.0'
 
     implementation 'com.facebook.fresco:fresco:1.13.0'
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
     implementation 'com.google.android.gms:play-services-nearby:16.0.0'
 
 
@@ -131,14 +133,26 @@ dependencies {
     annotationProcessor "androidx.lifecycle:lifecycle-compiler:$lifecycle_version" // For Kotlin use kapt instead of annotationProcessor
     // optional - ReactiveStreams support for LiveData
     implementation "androidx.lifecycle:lifecycle-reactivestreams:$lifecycle_version" // For Kotlin use lifecycle-reactivestreams-ktx
-    // optional - Test helpers for LiveData
-    testImplementation "androidx.arch.core:core-testing:$lifecycle_version"
+
     implementation "androidx.recyclerview:recyclerview:$recyclerview_version"
     implementation "androidx.gridlayout:gridlayout:$gridlayout_version"
     implementation "androidx.constraintlayout:constraintlayout:$constraintlayout_version"
     implementation "androidx.cardview:cardview:$cardview_version"
 
+    //Spotify libraries
+    implementation "com.spotify.android:auth:$spotifyauth_version"
+    implementation "com.github.kaaes:spotify-web-api-android:$spotifywebapi_version"
 
+    implementation project(':spotify-app-remote')
+    implementation "com.google.code.gson:gson:$gson_version"
+
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
+
+    testImplementation 'junit:junit:4.12'
+    annotationProcessor "com.jakewharton:butterknife-compiler:$butterknife"
+    // optional - Test helpers for LiveData
+    testImplementation "androidx.arch.core:core-testing:$lifecycle_version"
+    //Libraries that help enforce code quality
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0-beta-3'
 
     annotationProcessor "com.uber.nullaway:nullaway:0.7.5"

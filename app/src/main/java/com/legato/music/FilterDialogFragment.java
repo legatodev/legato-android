@@ -28,7 +28,7 @@ import co.chatsdk.core.session.ChatSDK;
 
 public class FilterDialogFragment extends DialogFragment {
 
-    public static final String TAG = "FilterDialog";
+    public static final String TAG = FilterDialogFragment.class.getSimpleName();
     @Nullable private NearbyUsersAdapter adapter = null;
 
     public FilterDialogFragment(NearbyUsersAdapter adapter){

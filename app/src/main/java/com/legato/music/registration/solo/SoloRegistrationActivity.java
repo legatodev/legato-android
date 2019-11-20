@@ -51,6 +51,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class SoloRegistrationActivity extends AppCompatActivity implements SkillsFragment.FinishClickedListener {
 
+    private static final String TAG = SoloRegistrationActivity.class.getSimpleName();
     /**
      * The {@link androidx.core.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -214,12 +215,12 @@ public class SoloRegistrationActivity extends AppCompatActivity implements Skill
         storageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                Log.d("SoloRegActivity", "onSuccess: deleted file");
+                Log.d(TAG, "onSuccess: deleted file");
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
-                Log.d("SoloRegActivity", "onFailure: did not delete file");
+                Log.d(TAG, "onFailure: did not delete file");
             }
         });
     }

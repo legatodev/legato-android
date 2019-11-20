@@ -20,4 +20,5 @@ public class ActiveChatActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.activeChats, activeChats).commit();
 
     }
+
 }

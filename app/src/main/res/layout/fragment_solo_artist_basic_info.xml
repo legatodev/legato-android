@@ -242,7 +242,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/addSampleButton"
+            android:id="@+id/addYoutubeButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -266,7 +266,7 @@
             android:tint="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/addSampleButton"
+            app:layout_constraintTop_toBottomOf="@+id/addYoutubeButton"
             fresco:backgroundTint="@color/rounded_button_background"
             fresco:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
 
@@ -277,11 +277,11 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="4dp"
             android:layout_marginEnd="8dp"
-            android:layout_toEndOf="@id/addSampleButton"
+            android:layout_toEndOf="@id/addYoutubeButton"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/addSampleButton"
-            app:layout_constraintStart_toEndOf="@+id/addSampleButton"
+            app:layout_constraintLeft_toRightOf="@id/addYoutubeButton"
+            app:layout_constraintStart_toEndOf="@+id/addYoutubeButton"
             app:layout_constraintTop_toBottomOf="@+id/galleryTextView" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

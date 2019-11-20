@@ -1,6 +1,7 @@
 package com.legato.music.youtube;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.legato.music.AppConstants;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
@@ -17,6 +18,7 @@ import io.reactivex.annotations.Nullable;
 
 class ServiceTask extends AsyncTask<Object, Void, Object[]> implements
         ServiceTaskInterface {
+    private static final String TAG = ServiceTask.class.getSimpleName();
     @Nullable private ServerResponseListener mServerResponseListener = null;
     private final int mRequestCode;
     private final String mGoogleApiKey;
@@ -113,7 +115,7 @@ class ServiceTask extends AsyncTask<Object, Void, Object[]> implements
         } catch (IOException e) {
             System.err.println("There was an IO error: " + e.getCause() + " : " + e.getMessage());
         } catch (Throwable t) {
-            t.printStackTrace();
+           Log.e(TAG, "Getting youtube search results failed", t);
         }
 
         return null;

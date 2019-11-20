@@ -15,6 +15,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "142839384361-opkbe3e0mbelp6kmlubjijboqct9smre.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.legato.music",
+            "certificate_hash": "9749b424b075fc23f600663cd96dfd9ff144f6a1"
+          }
+        },
+        {
+          "client_id": "142839384361-d84tj12v88sgosj3sqo5tjrg6uqcvgi0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.legato.music",
+            "certificate_hash": "b4a40b29095c9fcaa855e774549381ee28b4af2a"
+          }
+        },
+        {
           "client_id": "142839384361-1o4dtstga6gtgliniaujnukorp4acia4.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

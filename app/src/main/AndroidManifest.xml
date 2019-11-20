@@ -13,7 +13,16 @@
         android:supportsRtl="true"
         android:name="com.legato.music.AppObject">
         <activity android:name="com.legato.music.AvatarActivity"
-            android:theme="@style/NoActionBarTheme"/>
+            android:theme="@style/NoActionBarTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="https"
+                    android:host="music.legato.com"
+                    android:path="/callback"/>
+            </intent-filter>
+        </activity>
         <activity android:name="com.legato.music.UserProfileActivity"
             android:hardwareAccelerated="true"
             android:theme="@style/NoActionBarTheme"/>
@@ -59,7 +68,8 @@
         <activity
             android:name="com.legato.music.messaging.ActiveChatActivity"
             android:label="@string/title_active_chats"
-            android:theme="@style/NoActionBarTheme" />
+            android:theme="@style/NoActionBarTheme">
+        </activity>
         <activity
             android:name="com.legato.music.views.activity.NearbyUsersActivity"
             android:label="@string/title_nearby_users"
@@ -72,6 +82,16 @@
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
         </activity>
-    </application>
+        <activity
+            android:name="com.spotify.sdk.android.authentication.LoginActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity
+            android:name="com.legato.music.spotify.SpotifySearchActivity"
+            android:label="@string/title_active_chats"
+            android:theme="@style/NoActionBarTheme">
+        </activity>
 
+        <service android:name=".spotify.PlayerService"/>
+
+    </application>
 </manifest>

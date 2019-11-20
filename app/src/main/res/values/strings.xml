@@ -11,6 +11,7 @@
 
     <string name="app_name">Legato</string>
 
+    <string name="spotify_client_id">b149232b49b84a8f9152292eb3ed3a03</string>
     <string name="facebook_application_id">239074277018835</string>
     <string name="facebook_login_protocol_scheme" translatable="false">fb239074277018835</string>
     <string name="login_email_label">Login with Email</string>
@@ -97,4 +98,7 @@
     <string name="alert_email_verification">Please verify your e-mail and sign back in</string>
     <string name="resend_verification">Resend Verification</string>
     <string name="instrument_owned">Do you own the instrument?</string>
+    <string name="cover_art_description">Cover art</string>
+
+    <string name="add_track">Add</string>
 </resources>

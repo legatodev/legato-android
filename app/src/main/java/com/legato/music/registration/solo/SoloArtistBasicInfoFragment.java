@@ -1,14 +1,18 @@
 package com.legato.music.registration.solo;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,12 +31,29 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
+import com.legato.music.AppConstants;
 import com.legato.music.R;
+import com.legato.music.spotify.Player;
+import com.legato.music.spotify.PlayerService;
 import com.legato.music.views.adapters.YoutubePlayerAdapter;
 import com.legato.music.utils.Keys;
 import com.legato.music.utils.RequestCodes;
 import com.legato.music.viewmodels.SoloArtistViewModel;
+import butterknife.OnClick;
+import id.zelory.compressor.Compressor;
+
+import com.legato.music.spotify.SpotifySearchActivity;
+import android.widget.ImageView;
+
+import co.chatsdk.core.dao.User;
+import co.chatsdk.ui.utils.ToastHelper;
+
+import com.google.common.base.Joiner;
 import com.legato.music.youtube.YoutubeActivity;
+import com.spotify.sdk.android.authentication.AuthenticationClient;
+import com.spotify.sdk.android.authentication.AuthenticationRequest;
+import com.spotify.sdk.android.authentication.AuthenticationResponse;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -44,7 +65,14 @@ import butterknife.ButterKnife;
 import co.chatsdk.core.session.ChatSDK;
 import co.chatsdk.core.utils.ImageUtils;
 import co.chatsdk.ui.chat.MediaSelector;
-import id.zelory.compressor.Compressor;
+import kaaes.spotify.webapi.android.SpotifyApi;
+import kaaes.spotify.webapi.android.SpotifyCallback;
+import kaaes.spotify.webapi.android.SpotifyError;
+import kaaes.spotify.webapi.android.SpotifyService;
+import kaaes.spotify.webapi.android.models.ArtistSimple;
+import kaaes.spotify.webapi.android.models.Image;
+import kaaes.spotify.webapi.android.models.Track;
+import retrofit.client.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -54,9 +82,11 @@ import id.zelory.compressor.Compressor;
  * Use the {@link SoloArtistBasicInfoFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SoloArtistBasicInfoFragment extends Fragment implements View.OnClickListener {
-    private boolean valid;
+public class SoloArtistBasicInfoFragment extends Fragment {
+    private static final String TAG = SoloArtistBasicInfoFragment.class.getSimpleName();
+    private static final int REQUEST_CODE = 1337;
 
+    private boolean valid;
     @BindView(R.id.proximityAlertSwitch)
     @Nullable Switch proximitySwitch;
     @BindView(R.id.jamCheckBox)
@@ -73,7 +103,7 @@ public class SoloArtistBasicInfoFragment extends Fragment implements View.OnClic
     @Nullable TextInputEditText facebookTextInputEditText;
     @BindView(R.id.youtubeTextInputEditText)
     @Nullable TextInputEditText youtubeTextInputEditText;
-    @BindView(R.id.addSampleButton)
+    @BindView(R.id.addYoutubeButton)
     @Nullable FloatingActionButton addSampleButton;
     @BindView(R.id.resetButton)
     @Nullable FloatingActionButton resetButton;
@@ -92,7 +122,23 @@ public class SoloArtistBasicInfoFragment extends Fragment implements View.OnClic
     @Nullable
     private SoloArtistViewModel soloArtistViewModel;
 
+    @Nullable private Player mPlayer;
+
+    private ServiceConnection mServiceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mPlayer = ((PlayerService.PlayerBinder) service).getService();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mPlayer = null;
+        }
+    };
+
     protected MediaSelector mediaSelector;
+    private String mAccessToken = "";
+    User user = ChatSDK.currentUser();
 
     public SoloArtistBasicInfoFragment() {
         valid = false;
@@ -137,9 +183,6 @@ public class SoloArtistBasicInfoFragment extends Fragment implements View.OnClic
             setOnCheckedChanged(jamCheckBox);
             setOnCheckedChanged(collaborateCheckBox);
             setOnCheckedChanged(startBandCheckBox);
-
-            if (addSampleButton != null)
-                addSampleButton.setOnClickListener(this);
 
             if (resetButton != null)
                 resetButton.setOnClickListener(new View.OnClickListener() {
@@ -209,16 +252,18 @@ public class SoloArtistBasicInfoFragment extends Fragment implements View.OnClic
                                 soloArtistViewModel.setAvatarUrl(Uri.fromFile(file).toString());
                             }
                         } catch (Exception e) {
-                            e.printStackTrace();
                             ChatSDK.logError(e);
                         }
                     });
                 });
             }
 
-
             if (youtubeRecyclerView != null) {
                 youtubeRecyclerView.setHasFixedSize(true);
+
+        if (user.metaStringForKey(Keys.spotify_track) != null) {
+            spotifyInitialize();
+        }
 
                 RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
                         getActivity(),
@@ -328,27 +373,133 @@ public class SoloArtistBasicInfoFragment extends Fragment implements View.OnClic
         return basicInfo;
     }
 
-    @Override
+    @OnClick(R.id.addYoutubeButton)
     public void onClick(View view) {
         Intent intent = new Intent(getActivity(), YoutubeActivity.class);
         startActivityForResult(intent, RequestCodes.RC_YOUTUBE_SEARCH);
     }
 
+    private void spotifyInitialize() {
+        // Request code will be used to verify if result comes from the login activity. Can be set to any integer.
+        AuthenticationRequest.Builder builder =
+                new AuthenticationRequest.Builder(getResources().getString(R.string.spotify_client_id), AuthenticationResponse.Type.TOKEN, AppConstants.SPOTIFY_REDIRECT_URI);
+
+        builder.setShowDialog(true);
+        builder.setScopes(new String[]{"streaming"});
+        AuthenticationRequest request = builder.build();
+
+        AuthenticationClient.openLoginActivity(getActivity(), REQUEST_CODE, request);
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == RequestCodes.RC_YOUTUBE_SEARCH && resultCode == Activity.RESULT_OK && data != null) {
-            if (soloArtistViewModel != null) {
-                soloArtistViewModel.addYoutubeVideoId(data.getStringExtra("youtube_video"));
-                InitializeYoutubeView();
+        if (data != null) {
+            if (requestCode == REQUEST_CODE) {
+                AuthenticationResponse response = AuthenticationClient.getResponse(resultCode, data);
+
+                switch (response.getType()) {
+                    // Response was successful and contains auth token
+                    case TOKEN:
+                        // Handle successful response
+                        mAccessToken = response.getAccessToken();
+                        showSpotifyTrack(user.metaStringForKey(Keys.spotify_track));
+                        Log.d(TAG, "Access Token: " + mAccessToken);
+                        break;
+
+                    // Auth flow returned an error
+                    case ERROR:
+                        // Handle error response
+                        Log.e(TAG, "Spotify authorization failed.");
+                        break;
+
+                    // Most likely auth flow was cancelled
+                    default:
+                        // Handle other cases
+                }
+            } else if (requestCode == RequestCodes.RC_YOUTUBE_SEARCH && resultCode == Activity.RESULT_OK && data != null) {
+                if (soloArtistViewModel != null) {
+                    soloArtistViewModel.addYoutubeVideoId(data.getStringExtra("youtube_video"));
+                    InitializeYoutubeView();
+                }
+            } else {
+                try {
+                    mediaSelector.handleResult(getActivity(), requestCode, resultCode, data);
+                } catch (Exception e) {
+                    ChatSDK.logError(e);
+                }
             }
         }
-        else {
-            try {
-                mediaSelector.handleResult(getActivity(), requestCode, resultCode, data);
-            } catch (Exception e) {
-                ChatSDK.logError(e);
-            }
+    }
+
+    //TODO: call when the spotify track adding button is clicked.
+    private void launchSpotifySearch() {
+        if (mAccessToken != null && !mAccessToken.isEmpty()) {
+            Intent intent = SpotifySearchActivity.createIntent(getActivity());
+            intent.putExtra(SpotifySearchActivity.EXTRA_TOKEN, mAccessToken);
+            startActivity(intent);
+        } else {
+            ToastHelper.show(getContext(), "Spotify search not available");
         }
+    }
+
+    private void showSpotifyTrack(String track) {
+        if (mAccessToken != null) {
+            SpotifyApi spotifyApi = new SpotifyApi();
+            spotifyApi.setAccessToken(mAccessToken);
+            SpotifyService spotifyService = spotifyApi.getService();
+
+            String trackId = track.replace("spotify:track:", "");
+            spotifyService.getTrack(trackId, new SpotifyCallback<Track>() {
+                @Override
+                public void success(Track track, Response response) {
+                    Image image = track.album.images.get(0);
+                    String trackName = track.name;
+                    List<String> names = new ArrayList<>();
+                    for (ArtistSimple i : track.artists) {
+                        names.add(i.name);
+                    }
+
+                    Joiner joiner = Joiner.on(", ");
+                    String artist = joiner.join(names);
+
+                    //TODO: After designers specify where to add the spotify track make UI changes.
+                    View spotifyView = null; //= layoutInflater.inflate(R.layout.view_spotify_track, mContainer, false);
+                    if (spotifyView != null) {
+                        ImageView albumCover = spotifyView.findViewById(R.id.track_album_cover);
+                        Picasso.with(getContext()).load(image.url).into(albumCover);
+                        TextView trackNameTextView = spotifyView.findViewById(R.id.track_title);
+                        trackNameTextView.setText(trackName);
+                        TextView artistTextView = spotifyView.findViewById(R.id.track_artist);
+                        artistTextView.setText(artist);
+                        //addView(spotifyView);
+                        spotifyView.setOnClickListener(v -> {
+                            if (mPlayer != null) {
+                                mPlayer.playTrack(track);
+                            } else {
+                                Log.e(TAG, "Player not initialized");
+                            }
+                        });
+                    }
+                }
+
+                @Override
+                public void failure(SpotifyError spotifyError) {
+                    Log.e(TAG, spotifyError.getMessage());
+                }
+            });
+        } else {
+            Log.e(TAG,"No valid access token");
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mPlayer != null) {
+            mPlayer.release();
+        }
+
+        getContext().unbindService(mServiceConnection);
     }
 
     private void InitializeYoutubeView() {

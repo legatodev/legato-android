@@ -7,13 +7,12 @@ import android.widget.GridView;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.legato.music.R;
 import com.squareup.picasso.Picasso;
 
 public class AvatarActivity extends AppCompatActivity {
 
     private ImageView mProfilePic;
+    private GridView mGridView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,16 +21,26 @@ public class AvatarActivity extends AppCompatActivity {
 
         mProfilePic = findViewById(R.id.profile_image);
 
-        GridView gridView = findViewById(R.id.avatarGridView);
+        mGridView = findViewById(R.id.avatarGridView);
         // Instance of ImageAdapter Class
         final AvatarImageAdapter avatarImageAdapter = new AvatarImageAdapter(this);
-        gridView.setAdapter(avatarImageAdapter);
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mGridView.setAdapter(avatarImageAdapter);
+        mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 displayProfilePic((Integer) avatarImageAdapter.getItem(position));
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
     }
 
     private void displayProfilePic(Integer imageId) {
@@ -41,4 +50,5 @@ public class AvatarActivity extends AppCompatActivity {
                     .fit()
                     .into(mProfilePic);
     }
+
 }

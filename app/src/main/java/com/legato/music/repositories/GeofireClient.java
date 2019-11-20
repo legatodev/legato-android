@@ -25,7 +25,7 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.annotations.Nullable;
 
 public class GeofireClient {
-    private static final String TAG = "GeofireClient";
+    private static final String TAG = GeofireClient.class.getSimpleName();
 
     @Nullable private static GeofireClient mGeofireInstance;
     private String mUserId = "";
@@ -117,62 +117,9 @@ public class GeofireClient {
                 }
             });
             } else {
-            Log.e("GeofireClient", "Current Location is not set. Nothing to query.");
+            Log.e(TAG, "Current Location is not set. Nothing to query.");
         }
     }
-
-    /*//This function needs a unit test
-    public void queryNeighbors(double searchRadius) {
-        if (mCurrentLocation != null) {
-            GeoQuery geoQuery = mGeoFire.queryAtLocation(new GeoLocation(mCurrentLocation.getLatitude(),
-                    mCurrentLocation.getLongitude()), searchRadius);
-            geoQuery.addGeoQueryDataEventListener(new GeoQueryDataEventListener() {
-                @Override
-                public void onDataEntered(DataSnapshot dataSnapshot, GeoLocation geoLocation) {
-                    if (!dataSnapshot.getKey().equals(mUserId)) {
-                        //Every point within the radius will call this function including the origin
-                        Location location = new Location("");
-                        location.setLatitude(geoLocation.latitude);
-                        location.setLongitude(geoLocation.longitude);
-                        final DecimalFormat df = new DecimalFormat("#.#");
-                        if (mCurrentLocation != null) {
-                            final String distanceTo = df.format(mCurrentLocation.distanceTo(location) / 1000.0);
-                            if (nearbyUserFoundListener != null) {
-                                nearbyUserFoundListener.nearbyUserFound(dataSnapshot.getKey(), distanceTo);
-                            }
-                            mNearHashMap.put(dataSnapshot.getKey(), distanceTo);
-                        }
-                    }
-                }
-
-                @Override
-                public void onDataExited(DataSnapshot dataSnapshot) {
-                }
-
-                @Override
-                public void onDataMoved(DataSnapshot dataSnapshot, GeoLocation location) {
-                }
-
-                @Override
-                public void onDataChanged(DataSnapshot dataSnapshot, GeoLocation location) {
-                    //Key %s changed within the search area to [%f,%f]", dataSnapshot.getKey(), location.latitude, location.longitude
-                }
-
-                @Override
-                public void onGeoQueryReady() {
-                    //All initial data has been loaded and events have been fired!
-                }
-
-                @Override
-                public void onGeoQueryError(DatabaseError error) {
-                    //There was an error with this query
-                }
-            });
-        }
-        else {
-            Log.e("GeofireClient", "Current Location is not set. Nothing to query.");
-        }
-    }*/
 
     public String getDistanceToCurrentUser(String userEntityId) {
         if(mNearHashMap.get(userEntityId)!= null){

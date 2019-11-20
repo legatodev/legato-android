@@ -2,6 +2,7 @@ package com.legato.music;
 
 import android.app.Application;
 import android.content.Context;
+import android.util.Log;
 
 import androidx.multidex.MultiDex;
 
@@ -24,7 +25,7 @@ import io.fabric.sdk.android.Fabric;
 import io.reactivex.plugins.RxJavaPlugins;
 
 public class AppObject extends Application {
-
+    private static final String TAG = AppObject.class.getSimpleName();
     @Override
     public void onCreate() {
         super.onCreate();
@@ -34,7 +35,7 @@ public class AppObject extends Application {
 
         RxJavaPlugins.setErrorHandler(error -> {
             //Log error or just ignore it
-            error.printStackTrace();
+            Log.e(TAG, "RX Java error", error);
         });
 
         // Initialize the Chat SDK
@@ -63,7 +64,7 @@ public class AppObject extends Application {
             FirebaseSocialLoginModule.activate(getApplicationContext());
         }
         catch (ChatSDKException e) {
-            e.printStackTrace();
+            ChatSDK.logError(e);
         }
 
         Fabric.with(context, new Crashlytics());

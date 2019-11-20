@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -48,6 +49,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 public class NearbyUsersActivity extends AppCompatActivity implements
         FilterDialogFragment.FilterListener  {
 
+    private static final String TAG = NearbyUsersActivity.class.getSimpleName();
     @BindView(R.id.nearbyUserRecylerView)
     RecyclerView mNearbyUserRecyclerView;
 
@@ -196,22 +198,26 @@ public class NearbyUsersActivity extends AppCompatActivity implements
         FusedLocationProviderClient locationClient = LocationServices.getFusedLocationProviderClient(this);
 
         if (locationClient != null) {
-            locationClient.getLastLocation()
-                    .addOnSuccessListener(new OnSuccessListener<Location>() {
-                        @Override
-                        public void onSuccess(Location location) {
-                            // GPS location can be null if GPS is switched off
-                            if (location != null) {
-                                onLocationChanged(location);
+            try {
+                locationClient.getLastLocation()
+                        .addOnSuccessListener(new OnSuccessListener<Location>() {
+                            @Override
+                            public void onSuccess(Location location) {
+                                // GPS location can be null if GPS is switched off
+                                if (location != null) {
+                                    onLocationChanged(location);
+                                }
                             }
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            //showSnackbar(R.string.location_failure);
-                        }
-                    });
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.e(TAG, getResources().getString(R.string.location_failure));
+                            }
+                        });
+            } catch (SecurityException e) {
+                Log.e(TAG, "Location permissions failure");
+            }
         }
     }
 

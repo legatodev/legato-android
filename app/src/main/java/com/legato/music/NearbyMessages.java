@@ -24,6 +24,7 @@ import co.chatsdk.core.session.ChatSDK;
 
 public class NearbyMessages {
 
+    private static final String TAG = NearbyMessages.class.getSimpleName();
     @Nullable MessageListener mMessageListener;
     @Nullable Message mActiveMessage;
     @Nullable Activity activity;
@@ -37,7 +38,7 @@ public class NearbyMessages {
         Nearby.getMessagesClient(activity).publish(mActiveMessage).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.println(1, "NearbyMessages", "publish failed");
+                Log.v(TAG, "publish failed");
             }
         });
     }
@@ -53,7 +54,7 @@ public class NearbyMessages {
         mMessageListener = new MessageListener() {
             @Override
             public void onFound(Message message) {
-                Log.println(1, "NearbyMessages", "Found a nearby user");
+                Log.v( TAG, "Found a nearby user");
                 if (activity != null) {
                     Context context = activity.getApplicationContext();
                     String userEntityID = new String(message.getContent());
@@ -75,7 +76,7 @@ public class NearbyMessages {
         Nearby.getMessagesClient(activity).subscribe(mMessageListener).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.println(1, "NearbyMessages", "subscribe failed");
+                Log.v( TAG, "subscribe failed");
             }
         });
     }
