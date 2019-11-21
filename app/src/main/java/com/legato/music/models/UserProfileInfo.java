@@ -1,4 +1,4 @@
-package com.legato.music;
+package com.legato.music.models;
 
 public class UserProfileInfo {
 

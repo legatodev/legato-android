@@ -2,7 +2,7 @@ package com.legato.music.viewmodels;
 
 import androidx.lifecycle.ViewModel;
 
-import com.legato.music.UserProfileInfo;
+import com.legato.music.models.UserProfileInfo;
 import com.legato.music.models.UserProfile;
 
 import java.util.ArrayList;

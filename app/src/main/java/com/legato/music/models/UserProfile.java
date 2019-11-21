@@ -2,7 +2,6 @@ package com.legato.music.models;
 
 import androidx.annotation.NonNull;
 
-import com.legato.music.UserProfileInfo;
 import com.legato.music.utils.Keys;
 
 import java.util.ArrayList;

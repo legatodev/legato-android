@@ -23,7 +23,7 @@
                     android:path="/callback"/>
             </intent-filter>
         </activity>
-        <activity android:name="com.legato.music.UserProfileActivity"
+        <activity android:name="com.legato.music.views.activity.UserProfileActivity"
             android:hardwareAccelerated="true"
             android:theme="@style/NoActionBarTheme"/>
         <activity
