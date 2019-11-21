@@ -1,12 +1,12 @@
 package com.legato.music.viewmodels;
 
 import android.location.Location;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
-
 import com.legato.music.models.NearbyUser;
 import com.legato.music.repositories.BaseRepository;
+
+import co.chatsdk.core.dao.User;
 
 public class NearbyUserViewModel extends ViewModel {
 
@@ -35,4 +35,13 @@ public class NearbyUserViewModel extends ViewModel {
     public void sendEmailVerification(){
         mBaseRepository.sendEmailVerification();
     }
+
+    public Boolean isProximityAlertEnabled(){
+        return mBaseRepository.isProximityAlertEnabled();
+    }
+
+    public String getSearchRadius(){
+        return mBaseRepository.getSearchRadius();
+    }
+
 }

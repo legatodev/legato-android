@@ -1,4 +1,4 @@
-package com.legato.music.registration;
+package com.legato.music.views.fragments;
 
 import android.os.Bundle;
 import android.util.SparseBooleanArray;
@@ -15,7 +15,7 @@ import androidx.fragment.app.Fragment;
 
 import com.legato.music.utils.Keys;
 import com.legato.music.R;
-import com.legato.music.registration.solo.SoloRegistrationActivity;
+import com.legato.music.views.activity.SoloRegistrationActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

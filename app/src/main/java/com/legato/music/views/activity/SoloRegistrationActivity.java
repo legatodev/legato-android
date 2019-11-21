@@ -1,4 +1,4 @@
-package com.legato.music.registration.solo;
+package com.legato.music.views.activity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -21,9 +21,10 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.legato.music.R;
-import com.legato.music.registration.GenresFragment;
+import com.legato.music.views.fragments.GenresFragment;
+import com.legato.music.views.fragments.SkillsFragment;
+import com.legato.music.views.fragments.SoloArtistBasicInfoFragment;
 import com.legato.music.utils.Keys;
-import com.legato.music.views.activity.NearbyUsersActivity;
 import com.legato.music.viewmodels.SoloArtistViewModel;
 
 import java.io.File;

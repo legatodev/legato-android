@@ -27,7 +27,7 @@
             android:hardwareAccelerated="true"
             android:theme="@style/NoActionBarTheme"/>
         <activity
-            android:name="com.legato.music.registration.solo.SoloRegistrationActivity"
+            android:name="com.legato.music.views.activity.SoloRegistrationActivity"
             android:label="@string/title_activity_solo_registration_tab"
             android:theme="@style/NoActionBarTheme"
             android:windowSoftInputMode="adjustPan" />
@@ -38,7 +38,7 @@
             android:theme="@style/NoActionBarTheme"
             android:windowSoftInputMode="adjustPan" />
 
-        <activity android:name="com.legato.music.registration.RegistrationActivity"
+        <activity android:name="com.legato.music.views.activity.RegistrationActivity"
             android:theme="@style/NoActionBarTheme"/>
 
         <meta-data

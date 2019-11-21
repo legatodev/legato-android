@@ -5,7 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.legato.music.Filters;
+import com.legato.music.models.Filters;
 import com.legato.music.views.adapters.holders.NearbyUserHolder;
 import com.legato.music.models.NearbyUser;
 

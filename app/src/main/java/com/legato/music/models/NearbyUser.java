@@ -102,6 +102,7 @@ public class NearbyUser {
     public User getUser() { return user;}
 
     public static Comparator<NearbyUser> sortByDistance = new Comparator<NearbyUser>() {
+        @Override
         public int compare(NearbyUser u1, NearbyUser u2){
                     return Double.parseDouble(u1.getDistance()) < Double.parseDouble(u2.getDistance())? -1
                     : Double.parseDouble(u1.getDistance()) > Double.parseDouble(u2.getDistance())? 1

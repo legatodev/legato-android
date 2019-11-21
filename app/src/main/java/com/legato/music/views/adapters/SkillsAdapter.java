@@ -1,4 +1,4 @@
-package com.legato.music.registration.solo;
+package com.legato.music.views.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -26,7 +26,7 @@ import com.legato.music.utils.SearchableSpinner;
 import java.util.Arrays;
 import java.util.List;
 
-class SkillsAdapter extends RecyclerView.Adapter<SkillsAdapter.SkillsHolder> {
+public class SkillsAdapter extends RecyclerView.Adapter<SkillsAdapter.SkillsHolder> {
 
     public interface SkillSelectedListener {
         void onSkillSelected(View v, int position);

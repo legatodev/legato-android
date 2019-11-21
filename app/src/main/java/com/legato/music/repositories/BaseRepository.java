@@ -7,6 +7,8 @@ import androidx.lifecycle.LiveData;
 
 import com.legato.music.models.NearbyUser;
 
+import co.chatsdk.core.dao.User;
+
 public class BaseRepository {
 
     @Nullable private static BaseRepository instance;
@@ -48,5 +50,13 @@ public class BaseRepository {
 
     public void sendEmailVerification(){
         mFirebaseClient.sendEmailVerification();
+    }
+
+    public Boolean isProximityAlertEnabled(){
+        return mChatSDKClient.isProximityAlertEnabled();
+    }
+
+    public String getSearchRadius(){
+        return mChatSDKClient.getMetaString(com.legato.music.utils.Keys.searchradius);
     }
 }

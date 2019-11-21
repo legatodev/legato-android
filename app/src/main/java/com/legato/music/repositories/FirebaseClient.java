@@ -24,7 +24,7 @@ public class FirebaseClient {
         return instance;
     }
 
-    private void FirebaseClient(){
+    private FirebaseClient(){
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mFirebaseAuth = FirebaseAuth.getInstance();
     }

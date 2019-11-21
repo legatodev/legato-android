@@ -1,4 +1,4 @@
-package com.legato.music;
+package com.legato.music.views.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -14,6 +14,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import com.legato.music.AppConstants;
+import com.legato.music.models.Filters;
+import com.legato.music.R;
 import com.legato.music.views.adapters.NearbyUsersAdapter;
 import com.legato.music.utils.Keys;
 
@@ -70,7 +73,7 @@ public class FilterDialogFragment extends DialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        mRootView = inflater.inflate(R.layout.dialog_filters, container, false);
+        mRootView = inflater.inflate(R.layout.fragment_filters, container, false);
         unbinder = ButterKnife.bind(this, mRootView);
 
         populateSkillsSpinner();

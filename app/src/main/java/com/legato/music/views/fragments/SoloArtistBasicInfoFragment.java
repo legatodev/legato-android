@@ -1,4 +1,4 @@
-package com.legato.music.registration.solo;
+package com.legato.music.views.fragments;
 
 import android.app.Activity;
 import android.content.ComponentName;
@@ -33,6 +33,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.legato.music.AppConstants;
 import com.legato.music.R;
+import com.legato.music.views.activity.SoloRegistrationActivity;
 import com.legato.music.spotify.Player;
 import com.legato.music.spotify.PlayerService;
 import com.legato.music.views.adapters.YoutubePlayerAdapter;

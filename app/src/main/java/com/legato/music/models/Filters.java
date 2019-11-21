@@ -1,6 +1,8 @@
-package com.legato.music;
+package com.legato.music.models;
 
 import android.text.TextUtils;
+
+import com.legato.music.AppConstants;
 
 import io.reactivex.annotations.Nullable;
 

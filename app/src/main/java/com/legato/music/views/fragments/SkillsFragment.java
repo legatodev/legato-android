@@ -1,4 +1,4 @@
-package com.legato.music.registration.solo;
+package com.legato.music.views.fragments;
 
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.legato.music.models.Skill;
 import com.legato.music.utils.Keys;
 import com.legato.music.R;
+import com.legato.music.views.adapters.SkillsAdapter;
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;

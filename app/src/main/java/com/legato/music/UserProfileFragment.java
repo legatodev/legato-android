@@ -29,7 +29,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.legato.music.models.NearbyUser;
 import com.legato.music.views.adapters.YoutubePlayerAdapter;
-import com.legato.music.registration.solo.SoloRegistrationActivity;
+import com.legato.music.views.activity.SoloRegistrationActivity;
 import com.legato.music.utils.LegatoAuthenticationHandler;
 import com.legato.music.viewmodels.UserProfileViewModel;
 

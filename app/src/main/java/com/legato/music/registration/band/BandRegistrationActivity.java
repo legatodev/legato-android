@@ -12,7 +12,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.legato.music.R;
-import com.legato.music.registration.GenresFragment;
+import com.legato.music.views.fragments.GenresFragment;
 import com.google.android.material.tabs.TabLayout;
 
 import butterknife.BindView;

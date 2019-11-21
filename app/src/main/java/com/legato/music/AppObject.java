@@ -7,7 +7,7 @@ import android.util.Log;
 import androidx.multidex.MultiDex;
 
 import com.crashlytics.android.Crashlytics;
-import com.legato.music.registration.RegistrationActivity;
+import com.legato.music.views.activity.RegistrationActivity;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.GoogleAuthProvider;
