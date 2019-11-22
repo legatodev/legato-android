@@ -76,4 +76,6 @@
         android:transcriptMode="alwaysScroll"
         android:layout_below="@id/filterBar"
         tools:listitem="@layout/item_nearbyuser"/>
+
+
 </RelativeLayout>
