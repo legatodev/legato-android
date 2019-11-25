@@ -28,16 +28,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.legato.music.R;
-import com.legato.music.models.UserProfileInfo;
-import com.legato.music.views.adapters.UserProfileInfoAdapter;
 import com.legato.music.models.NearbyUser;
-import com.legato.music.views.adapters.YoutubePlayerAdapter;
-import com.legato.music.views.activity.SoloRegistrationActivity;
 import com.legato.music.utils.LegatoAuthenticationHandler;
 import com.legato.music.viewmodels.UserProfileViewModel;
+import com.legato.music.views.activity.SoloRegistrationActivity;
+import com.legato.music.views.adapters.UserProfileInfoAdapter;
+import com.legato.music.views.adapters.YoutubePlayerAdapter;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -234,14 +231,6 @@ public class UserProfileFragment extends BaseFragment {
             userProfileViewModel.setYoutubeVideoIds(nearbyUser.getYoutube());
             updateYoutubePlayerView();
 
-            userProfileViewModel.setUserProfileInfo(
-                    new ArrayList<UserProfileInfo>(
-                            Arrays.asList(
-                                    new UserProfileInfo("Skills", nearbyUser.getSkills()),
-                                    new UserProfileInfo("Genres", nearbyUser.getGenres())
-                            )
-                    )
-            );
             userProfileInfoAdapter.notifyData(userProfileViewModel.getProfileInfo());
         }
     }
@@ -356,14 +345,14 @@ public class UserProfileFragment extends BaseFragment {
             return;
         }
 
-        userProfileViewModel.setSdkChat(true);
+        userProfileViewModel.setStartingSdkChat(true);
         User user = userProfileViewModel.getUser();
         disposableList.add(
             ChatSDK.thread().createThread("", user, ChatSDK.currentUser())
             .observeOn(AndroidSchedulers.mainThread())
             .doFinally(() -> {
                 dismissProgressDialog();
-                userProfileViewModel.setSdkChat(false);
+                userProfileViewModel.setStartingSdkChat(false);
             })
             .subscribe(thread -> {
                 ChatSDK.ui().startChatActivityForID(getContext(), thread.getEntityID());
@@ -383,13 +372,11 @@ public class UserProfileFragment extends BaseFragment {
     }
 
     @Override
-    public void onViewCreated(@androidx.annotation.NonNull View view,
-                              @androidx.annotation.Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view,
+                              @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         if (savedInstanceState != null && savedInstanceState.getString(Keys.UserId) != null) {
-            userProfileViewModel.fetchChatSdkUser(savedInstanceState.getString(Keys.UserId));
-
             disposableList.add(
                     ChatSDK.events().sourceOnMain().filter(
                             NetworkEvent.filterType(
