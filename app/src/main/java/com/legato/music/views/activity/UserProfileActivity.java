@@ -2,9 +2,9 @@ package com.legato.music.views.activity;
 
 import android.os.Bundle;
 
-import com.legato.music.R;
-
 import androidx.lifecycle.ViewModelProviders;
+
+import com.legato.music.R;
 import com.legato.music.viewmodels.UserProfileViewModel;
 import com.legato.music.views.fragments.UserProfileFragment;
 
