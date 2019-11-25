@@ -1,10 +1,6 @@
 package com.legato.music.repositories;
 
-import android.util.Log;
-
 import androidx.annotation.Nullable;
-
-import org.apache.commons.lang3.ObjectUtils;
 
 import co.chatsdk.core.dao.User;
 import co.chatsdk.core.session.ChatSDK;
@@ -29,12 +25,29 @@ public class ChatSDKClient {
         return instance;
     }
 
+    public User getCurrentUser() {
+        if (mCurrentUser != null)
+            return mCurrentUser;
+        else
+            return new User();
+    }
+
     public String getCurrentUserId(){
-        if(mCurrentUserId != null) {
-            return mCurrentUserId;
+        if(mCurrentUser != null) {
+            return mCurrentUser.getEntityID();
         }else{
             throw new NullPointerException("Current User Dao not initialized. Check ChatSDKClient instance");
         }
+    }
+
+    public User getEntityById(String entityId) {
+        User user = ChatSDK.db().fetchEntityWithEntityID(entityId, User.class);
+        if (user != null)
+            mCurrentUser = user;
+        else
+            mCurrentUser = new User();
+
+        return mCurrentUser;
     }
 
     public void setMetaString(String key, String value){
