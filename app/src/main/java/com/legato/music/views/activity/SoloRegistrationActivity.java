@@ -248,7 +248,7 @@ public class SoloRegistrationActivity extends AppCompatActivity implements Skill
         private int tabCount;
 
         SectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
+            super(fm, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
             tabCount = 1;
         }
 
