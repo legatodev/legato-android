@@ -2,58 +2,66 @@ package com.legato.music.viewmodels;
 
 import androidx.lifecycle.ViewModel;
 
+import com.legato.music.models.NearbyUser;
 import com.legato.music.models.UserProfileInfo;
-import com.legato.music.models.UserProfile;
+import com.legato.music.repositories.BaseRepository;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import co.chatsdk.core.dao.User;
 
 public class UserProfileViewModel extends ViewModel {
+    private BaseRepository baseRepository;
+    private NearbyUser nearbyUser;
 
-    private UserProfile userProfile;
+    private boolean startingChat;
 
     public UserProfileViewModel() {
-        userProfile = new UserProfile();
+        baseRepository = BaseRepository.getInstance();
+
+        nearbyUser = baseRepository.getCurrentUser();
+
+        startingChat = false;
     }
 
     public ArrayList<UserProfileInfo> getProfileInfo() {
-        return userProfile.getProfileInfo();
-    }
-    public void setUserProfileInfo(ArrayList<UserProfileInfo> newInfo) {
-        userProfile.setUserProfileInfo(newInfo);
+        return new ArrayList<>(Arrays.asList(
+            new UserProfileInfo("Skills", nearbyUser.getSkills()),
+            new UserProfileInfo("Genres", nearbyUser.getGenres())
+        ));
     }
 
-    public void setSdkChat(boolean state) {
-        userProfile.setStartingSdkChat(state);
-    }
     public boolean getStartingSdkChat() {
-        return userProfile.getStartingSdkChat();
+        return startingChat;
     }
+
+    public void setStartingSdkChat(boolean state) { startingChat = state; }
 
     public User getUser() {
-        return userProfile.getUser();
-    }
-    public void setUser(User user) {
-        userProfile.setUser(user);
+        return nearbyUser.getUser();
     }
 
-    public void fetchChatSdkUser(String userId) {
-        userProfile.fetchChatSdkUser(userId);
+    public NearbyUser getUserByEntityId(String entityId) {
+        nearbyUser.setUser(baseRepository.getUserByEntityId(entityId));
+
+        return nearbyUser;
     }
 
     public String getDistance() {
-        return userProfile.getDistance();
+        return nearbyUser.getDistance();
     }
+
     public void setDistance(String distance) {
-        userProfile.setDistance(distance);
+        nearbyUser.setDistance(distance);
     }
 
     public List<String> getYoutubeVideoIds() {
-        return userProfile.getYoutubeVideoIds();
+        return nearbyUser.getYoutubeVideoIds();
     }
+
     public void setYoutubeVideoIds(String videoIds) {
-        userProfile.setYoutubeVideoIds(videoIds);
+        nearbyUser.setYoutubeVideoIds(videoIds);
     }
 }
