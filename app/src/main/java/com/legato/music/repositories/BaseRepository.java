@@ -23,7 +23,8 @@ public class BaseRepository {
         }
         return instance;
     }
-    private BaseRepository(){
+
+    private BaseRepository() {
        mGeofireClient = GeofireClient.getInstance();
        mFirebaseClient = FirebaseClient.getInstance();
        mChatSDKClient = ChatSDKClient.getInstance();
@@ -33,8 +34,24 @@ public class BaseRepository {
     }
 
     public LiveData<NearbyUser> getNearbyUser(){
+        mGeofireClient.setUserId(mChatSDKClient.getCurrentUserId());
+
         return mGeofireClient.getNearbyUser();
     }
+
+    public NearbyUser getCurrentUser() {
+        User user = mChatSDKClient.getCurrentUser();
+
+        NearbyUser currentUser = new NearbyUser(
+                user,
+                mGeofireClient.getDistanceToCurrentUser(user.getEntityID())
+        );
+
+        return currentUser;
+    }
+
+    public User getUserByEntityId(String entityId) {
+        return mChatSDKClient.getEntityById(entityId); }
 
     public void searchNearbyUserByRadius(double searchRadius){
         mGeofireClient.searchNearbyUserByRadius(searchRadius);
