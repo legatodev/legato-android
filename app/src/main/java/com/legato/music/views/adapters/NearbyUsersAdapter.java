@@ -126,7 +126,7 @@ public class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
         for (NearbyUser row : nearbyUsers) {
             boolean addRow;
                 if (filters.hasLookingfor()&& row.getLookingfor() != null) {
-                    addRow = row.getLookingfor().contentEquals(filters.getLookingfor());
+                    addRow = row.getLookingfor().contains(filters.getLookingfor());
                 }
                 else {
                     addRow = true;
