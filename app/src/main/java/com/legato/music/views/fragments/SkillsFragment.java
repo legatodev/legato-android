@@ -47,8 +47,8 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
 
     private FinishClickedListener finishClickedListener;
 
-    public SkillsFragment(FinishClickedListener finishClickedListener) {
-        this.finishClickedListener = finishClickedListener;
+    public SkillsFragment() {
+        this.finishClickedListener = (FinishClickedListener) getActivity();
     }
 
     @Override
