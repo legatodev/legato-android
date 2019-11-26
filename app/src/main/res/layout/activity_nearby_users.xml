@@ -6,14 +6,15 @@
     android:layout_height="match_parent">
 
      <androidx.cardview.widget.CardView
-        android:id="@+id/filterBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+         android:id="@+id/filterBar"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
          android:elevation="@dimen/std_elevation"
-        android:foreground="?attr/selectableItemBackground"
+         android:foreground="?attr/selectableItemBackground"
          android:background="@color/white"
          android:layout_alignParentTop="true"
-         android:layout_margin="@dimen/std_margin">
+         android:layout_margin="@dimen/std_margin"
+         app:cardCornerRadius="@dimen/std_cornerRad">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -24,7 +25,7 @@
                 android:id="@+id/buttonSettings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
                 android:padding="@dimen/std_padding"
                 android:tint="@color/greySecondary"
@@ -47,7 +48,7 @@
                     android:layout_centerVertical="true"
                     android:layout_margin="@dimen/std_margin"
                     android:padding="@dimen/std_padding"
-                    android:layout_toRightOf="@+id/buttonFilter"
+                    android:layout_toEndOf="@+id/buttonFilter"
                     android:text="@string/header_filters"
                     android:textColor="@color/greySecondary"
                     tools:text="Filter" />
@@ -56,7 +57,7 @@
                 android:id="@+id/buttonActiveChats"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:padding="@dimen/std_padding"
                 android:tint="@color/greySecondary"
