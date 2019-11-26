@@ -2,6 +2,7 @@ package com.legato.music.views.fragments;
 
 import android.app.Activity;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.res.Resources;
@@ -18,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -31,25 +33,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.common.base.Joiner;
 import com.legato.music.AppConstants;
 import com.legato.music.R;
-import com.legato.music.views.activity.SoloRegistrationActivity;
 import com.legato.music.spotify.Player;
 import com.legato.music.spotify.PlayerService;
-import com.legato.music.views.adapters.YoutubePlayerAdapter;
+import com.legato.music.spotify.SpotifySearchActivity;
 import com.legato.music.utils.Keys;
 import com.legato.music.utils.RequestCodes;
 import com.legato.music.viewmodels.SoloArtistViewModel;
-import butterknife.OnClick;
-import id.zelory.compressor.Compressor;
-
-import com.legato.music.spotify.SpotifySearchActivity;
-import android.widget.ImageView;
-
-import co.chatsdk.core.dao.User;
-import co.chatsdk.ui.utils.ToastHelper;
-
-import com.google.common.base.Joiner;
+import com.legato.music.views.activity.SoloRegistrationActivity;
+import com.legato.music.views.adapters.YoutubePlayerAdapter;
 import com.legato.music.youtube.YoutubeActivity;
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
@@ -63,9 +57,13 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import co.chatsdk.core.dao.User;
 import co.chatsdk.core.session.ChatSDK;
 import co.chatsdk.core.utils.ImageUtils;
 import co.chatsdk.ui.chat.MediaSelector;
+import co.chatsdk.ui.utils.ToastHelper;
+import id.zelory.compressor.Compressor;
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyCallback;
 import kaaes.spotify.webapi.android.SpotifyError;
@@ -123,17 +121,19 @@ public class SoloArtistBasicInfoFragment extends Fragment {
     @Nullable
     private SoloArtistViewModel soloArtistViewModel;
 
-    @Nullable private Player mPlayer;
+    @Nullable private Player mPlayerBoundService;
+
+    private boolean mSpotifyPlayerBound = false;
 
     private ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            mPlayer = ((PlayerService.PlayerBinder) service).getService();
+            mPlayerBoundService = ((PlayerService.PlayerBinder) service).getService();
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            mPlayer = null;
+            mPlayerBoundService = null;
         }
     };
 
@@ -262,10 +262,6 @@ public class SoloArtistBasicInfoFragment extends Fragment {
             if (youtubeRecyclerView != null) {
                 youtubeRecyclerView.setHasFixedSize(true);
 
-        if (user.metaStringForKey(Keys.spotify_track) != null) {
-            spotifyInitialize();
-        }
-
                 RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
                         getActivity(),
                         LinearLayoutManager.HORIZONTAL,
@@ -275,6 +271,10 @@ public class SoloArtistBasicInfoFragment extends Fragment {
                 if (!soloArtistViewModel.getYoutubeVideoIds().isEmpty()) {
                     InitializeYoutubeView();
                 }
+            }
+
+            if (user.metaStringForKey(Keys.spotify_track) != null) {
+                spotifyInitialize();
             }
 
             validate();
@@ -390,6 +390,8 @@ public class SoloArtistBasicInfoFragment extends Fragment {
         AuthenticationRequest request = builder.build();
 
         AuthenticationClient.openLoginActivity(getActivity(), REQUEST_CODE, request);
+
+        doBindService();
     }
 
     @Override
@@ -474,8 +476,8 @@ public class SoloArtistBasicInfoFragment extends Fragment {
                         artistTextView.setText(artist);
                         //addView(spotifyView);
                         spotifyView.setOnClickListener(v -> {
-                            if (mPlayer != null) {
-                                mPlayer.playTrack(track);
+                            if (mPlayerBoundService != null) {
+                                mPlayerBoundService.playTrack(track);
                             } else {
                                 Log.e(TAG, "Player not initialized");
                             }
@@ -496,11 +498,6 @@ public class SoloArtistBasicInfoFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        if (mPlayer != null) {
-            mPlayer.release();
-        }
-
-        getContext().unbindService(mServiceConnection);
     }
 
     private void InitializeYoutubeView() {
@@ -514,5 +511,27 @@ public class SoloArtistBasicInfoFragment extends Fragment {
             youtubePlayerAdapter = new YoutubePlayerAdapter(youtubeVideoIds, this.getLifecycle());
             youtubeRecyclerView.setAdapter(youtubePlayerAdapter);
         }
+    }
+
+    private void doBindService() {
+        if (getActivity().bindService(
+                new Intent(getActivity(), Player.class),
+                mServiceConnection, Context.BIND_AUTO_CREATE)) {
+            mSpotifyPlayerBound = true;
+        }
+    }
+
+    private void doUnbindService() {
+        if (mSpotifyPlayerBound) {
+            getActivity().unbindService(mServiceConnection);
+            mSpotifyPlayerBound = false;
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        doUnbindService();
     }
 }
