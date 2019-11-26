@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:layout_marginBottom="5dp"
+              android:layout_margin="@dimen/std_margin"
               android:background="?android:attr/selectableItemBackground"
               android:orientation="vertical">
 
@@ -11,24 +11,22 @@
         android:id="@+id/track_album_cover"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:layout_alignParentTop="true"
         android:scaleType="fitXY"
         android:contentDescription="Album Cover"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/track_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:gravity="left"
+            android:layout_margin="@dimen/std_margin"
+            android:gravity="start"
             android:text="@string/video_title"
-            android:padding="5dp"
+            android:padding="@dimen/std_padding"
             android:singleLine="true"
             android:ellipsize="end"
             android:textColor="@android:color/black" />
@@ -37,8 +35,8 @@
             android:id="@+id/track_artist"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="left"
-            android:padding="5dp"
+            android:gravity="start"
+            android:padding="@dimen/std_padding"
             android:text="@string/video_description"
             android:maxLines="2"
             android:ellipsize="end"

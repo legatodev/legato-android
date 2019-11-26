@@ -19,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/band_inactive"
-        android:layout_marginTop="20dp"
+        android:layout_margin="@dimen/std_margin"
         android:onClick="onBand"/>
 
 </LinearLayout>

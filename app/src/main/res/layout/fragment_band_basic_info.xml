@@ -2,12 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="@dimen/std_margin"
     android:background="@color/white">
-
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="24dp">
 
     <TextView
         android:id="@+id/bandnameTextView"
@@ -21,8 +17,8 @@
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/bandnameTextView"
-        android:layout_marginLeft="24dp">
+        android:layout_toEndOf="@+id/bandnameTextView"
+        android:layout_margin="@dimen/std_margin">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
@@ -34,7 +30,7 @@
         android:id="@+id/openTo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_margin="@dimen/std_margin"
         android:text="Open to..."
         android:layout_below="@+id/bandnameTextView"/>
 
@@ -44,7 +40,7 @@
         android:layout_height="wrap_content"
         android:text="Jam Session"
         android:layout_below="@+id/openTo"
-        android:layout_marginTop="16dp"/>
+        android:layout_margin="@dimen/std_margin"/>
 
     <CheckBox
         android:id="@+id/bandCollaborateCheckBox"
@@ -57,7 +53,7 @@
         android:id="@+id/searchRadiusTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_margin="@dimen/std_margin"
         android:text="Search Radius"
         android:layout_below="@+id/bandCollaborateCheckBox"/>
 
@@ -65,10 +61,9 @@
         android:id="@+id/bandSearchRadiusSeekBar"
         android:layout_width="194dp"
         android:layout_height="20dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_margin="@dimen/std_margin"
         android:max="100"
-        android:layout_toRightOf="@id/searchRadiusTextView"
+        android:layout_toEndOf="@id/searchRadiusTextView"
         android:layout_below="@+id/bandCollaborateCheckBox"
         android:progress="50"/>
 
@@ -76,17 +71,16 @@
         android:id="@+id/bandSearchRadiusValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="2dp"
-        android:layout_marginTop="16dp"
+        android:layout_margin="@dimen/std_margin"
         android:text="50mi"
-        android:layout_toRightOf="@+id/bandSearchRadiusSeekBar"
+        android:layout_toEndOf="@+id/bandSearchRadiusSeekBar"
         android:layout_below="@+id/bandCollaborateCheckBox"/>
 
     <Switch
         android:id="@+id/bandProximityAlertSwitch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_margin="@dimen/std_margin"
         android:text="Enable Proximity Alerts"
         android:layout_below="@+id/searchRadiusTextView" />
 
@@ -94,16 +88,15 @@
             android:id="@+id/proximityRadiusTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_margin="@dimen/std_margin"
             android:text="Proximity Radius"
             android:layout_below="@+id/bandProximityAlertSwitch"/>
 
     <SeekBar
         android:id="@+id/bandProximityRadiusSeekBar"
-        android:layout_width="186dp"
+        android:layout_width="194dp"
         android:layout_height="20dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginLeft="16dp"
+        android:layout_margin="@dimen/std_margin"
         android:max="100"
         android:layout_toRightOf="@id/proximityRadiusTextView"
         android:layout_below="@+id/bandProximityAlertSwitch"/>
@@ -112,11 +105,9 @@
         android:id="@+id/bandProximityRadiusValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="2dp"
-        android:layout_marginTop="8dp"
+        android:layout_margin="@dimen/std_margin"
         android:text=""
         android:layout_below="@+id/bandProximityAlertSwitch"
         android:layout_toRightOf="@+id/bandProximityRadiusSeekBar" />
 
     </RelativeLayout>
-</RelativeLayout>

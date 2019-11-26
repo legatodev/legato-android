@@ -104,7 +104,7 @@ public class SoloRegistrationActivity extends AppCompatActivity implements Skill
 
         soloRegistrationTab = new SoloArtistBasicInfoFragment();
         genresTab = new GenresFragment();
-        skillsTab = new SkillsFragment(this);
+        skillsTab = new SkillsFragment();
 
         disposableList = new DisposableList();
     }

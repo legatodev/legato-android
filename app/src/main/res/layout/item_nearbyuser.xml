@@ -6,15 +6,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingHorizontal="8dp"
-    android:paddingBottom="8dp">
+    android:padding="@dimen/std_padding"
+    android:elevation="@dimen/std_elevation">
 
     <androidx.cardview.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/nearbyUserCardView"
         android:layout_width="match_parent"
-        android:layout_height="140dp"
+        android:layout_height="144dp"
         android:layout_gravity="center"
-        card_view:cardElevation="4dp">
+        card_view:cardElevation="@dimen/std_elevation"
+        app:cardCornerRadius="@dimen/std_cornerRad">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -30,8 +31,7 @@
                 fresco:roundingBorderColor="@color/activity_background"
                 fresco:roundingBorderWidth="2dp"
                 android:layout_alignParentTop="true"
-                android:layout_marginTop="8dp"
-                android:layout_marginLeft="12dp"/>
+                android:layout_margin="@dimen/std_margin"/>
 
             <TextView
                 android:id="@+id/nearbyUserNameTextView"
@@ -39,18 +39,16 @@
                 android:layout_height="wrap_content"
                 android:textSize="18sp"
                 android:textColor="@color/activity_background"
-                android:layout_toRightOf="@id/nearbyUserPhotoImageView"
+                android:layout_toEndOf="@id/nearbyUserPhotoImageView"
                 tools:text="Name"
-                android:layout_marginLeft="12dp"
-                android:layout_marginTop="8dp"/>
+                android:layout_margin="@dimen/std_margin"/>
 
             <ImageView
                 android:id="@+id/nearbyUserAvailability"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:layout_toRightOf="@id/nearbyUserNameTextView"
-                android:layout_marginLeft="12dp"
-                android:layout_marginTop="8dp"
+                android:layout_toEndOf="@id/nearbyUserNameTextView"
+                android:layout_margin="@dimen/std_margin"
                 app:srcCompat="@drawable/icn_20_online" />
 
             <ImageView
@@ -58,30 +56,27 @@
                 android:layout_width="28dp"
                 android:layout_height="28dp"
                 android:src="@drawable/instagram_icon"
-                android:layout_toRightOf="@id/nearbyUserPhotoImageView"
+                android:layout_toEndOf="@id/nearbyUserPhotoImageView"
                 android:layout_below="@id/nearbyUserNameTextView"
-                android:layout_marginLeft="12dp"
-                android:layout_marginTop="8dp"/>
+                android:layout_margin="@dimen/std_margin"/>
 
             <ImageView
                 android:id="@+id/nearbyUserFacebookView"
                 android:layout_width="28dp"
                 android:layout_height="28dp"
                 android:src="@drawable/facebook_icon"
-                android:layout_toRightOf="@id/nearbyUserInstagramView"
+                android:layout_toEndOf="@id/nearbyUserInstagramView"
                 android:layout_below="@id/nearbyUserNameTextView"
-                android:layout_marginLeft="12dp"
-                android:layout_marginTop="8dp"/>
+                android:layout_margin="@dimen/std_margin"/>
 
             <ImageView
                 android:id="@+id/nearbyUserYoutubeView"
                 android:layout_width="28dp"
                 android:layout_height="28dp"
                 android:src="@drawable/youtube_icon"
-                android:layout_toRightOf="@id/nearbyUserFacebookView"
+                android:layout_toEndOf="@id/nearbyUserFacebookView"
                 android:layout_below="@id/nearbyUserNameTextView"
-                android:layout_marginLeft="12dp"
-                android:layout_marginTop="8dp"/>
+                android:layout_margin="@dimen/std_margin"/>
 
             <TextView
                 android:id="@+id/nearbyUserDistanceTextView"
@@ -89,11 +84,11 @@
                 android:layout_height="wrap_content"
                 android:textSize="18sp"
                 android:textColor="@color/distance"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 tools:text="Distance"
                 android:drawableTop="@drawable/location_pin"
-                android:layout_marginRight="12dp"/>
+                android:layout_margin="@dimen/std_margin"/>
 
             <TextView
                 android:id="@+id/nearbyUserGenresTextView"
@@ -103,7 +98,7 @@
                 tools:text="Genres"
                 android:layout_below="@id/nearbyUserPhotoImageView"
                 android:layout_marginTop="4dp"
-                android:layout_marginLeft="12dp"/>
+                android:layout_marginStart="12dp"/>
 
             <TextView
                 android:id="@+id/nearbyUserSkillsTextView"
@@ -113,7 +108,7 @@
                 android:layout_below="@id/nearbyUserGenresTextView"
                 tools:text="Skills"
                 android:layout_marginTop="4dp"
-                android:layout_marginLeft="12dp"/>
+                android:layout_marginStart="12dp"/>
 
         </RelativeLayout>
 

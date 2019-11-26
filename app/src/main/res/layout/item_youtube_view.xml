@@ -5,7 +5,8 @@
     android:id="@+id/youtube_recycler_item"
     android:layout_width="320dp"
     android:layout_height="wrap_content"
-    android:padding="6dp"
+    android:padding="@dimen/std_padding"
+    android:layout_margin="@dimen/std_margin"
     app:autoPlay="false"
     app:showFullScreenButton="false"
     app:useWebUi="true" />

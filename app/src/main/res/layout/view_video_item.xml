@@ -10,15 +10,15 @@
         android:layout_width="match_parent"
         android:layout_height="290dp"
         android:layout_gravity="center"
-        card_view:cardElevation="2sp"
-        card_view:cardCornerRadius="4dp">
+        card_view:cardElevation="@dimen/std_elevation"
+        card_view:cardCornerRadius="@dimen/std_cornerRad">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <ImageView
-                android:layout_marginTop="5dp"
+                android:layout_margin="@dimen/std_margin"
                 android:id="@+id/video_thumbnail_imv"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
@@ -36,10 +36,10 @@
                     android:id="@+id/video_title_txv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:gravity="left"
+                    android:layout_margin="@dimen/std_margin"
+                    android:gravity="start"
                     android:text="@string/video_title"
-                    android:padding="5dp"
+                    android:padding="@dimen/std_padding"
                     android:singleLine="true"
                     android:ellipsize="end"
                     android:textColor="@android:color/black" />
@@ -48,8 +48,9 @@
                     android:id="@+id/video_desc_txv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="left"
-                    android:padding="5dp"
+                    android:layout_margin="@dimen/std_margin"
+                    android:gravity="start"
+                    android:padding="@dimen/std_padding"
                     android:text="@string/video_description"
                     android:maxLines="2"
                     android:ellipsize="end"
