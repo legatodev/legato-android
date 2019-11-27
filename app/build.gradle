@@ -7,6 +7,11 @@ android {
     signingConfigs {
     }
     compileSdkVersion 28
+
+    dataBinding {
+        enabled = true
+    }
+
     defaultConfig {
         applicationId "com.legato.music"
         minSdkVersion 21
