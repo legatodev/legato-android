@@ -1,298 +1,300 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<layout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/soloArtistLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:padding="8dp">
-
-        <RelativeLayout
-            android:id="@+id/soloArtistProfilePictureLayout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <com.facebook.drawee.view.SimpleDraweeView
-                android:id="@+id/soloArtistProfilePictureImageView"
-                android:layout_width="120dp"
-                android:layout_height="160dp"
-                android:layout_alignParentTop="true"
-                android:adjustViewBounds="true"
-                android:background="@drawable/com_facebook_profile_picture_blank_portrait"
-                android:scaleType="centerCrop"
-                app:roundedCornerRadius="2dp" />
-
-            <TextView
-                android:id="@+id/soloArtistAddEditProfilePictureTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/soloArtistProfilePictureImageView"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="4dp"
-                android:text="@string/add_profile_pic"
-                android:textSize="12sp" />
-        </RelativeLayout>
-
-        <LinearLayout
-            android:id="@+id/usernameLinearLayout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="8dp"
-            android:layout_toEndOf="@+id/soloArtistProfilePictureLayout"
-            android:orientation="horizontal"
-            android:weightSum="2"
-            app:layout_constraintBottom_toTopOf="@id/lookingforLayout"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/soloArtistProfilePictureLayout"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_goneMarginTop="8dp">
-
-            <TextView
-                android:id="@+id/usernameTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/displayname" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/soloDisplayNameTextInputLayout"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_weight="2"
-                app:counterMaxLength="20"
-                app:hintEnabled="false">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/soloDisplayNameTextInputEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:maxLines="1" />
-            </com.google.android.material.textfield.TextInputLayout>
-        </LinearLayout>
-
-        <RelativeLayout
-            android:id="@+id/lookingforLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/usernameLinearLayout"
-            android:layout_marginStart="8dp"
-            android:layout_toEndOf="@+id/soloArtistProfilePictureLayout"
-            app:layout_constraintLeft_toRightOf="@id/soloArtistProfilePictureLayout"
-            app:layout_constraintTop_toBottomOf="@id/usernameLinearLayout">
-
-            <TextView
-                android:id="@+id/openTo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="Open to..." />
-
-            <CheckBox
-                android:id="@+id/jamCheckBox"
-                android:layout_width="128dp"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/openTo"
-                android:layout_marginTop="4dp"
-                android:text="Jam Session" />
-
-            <CheckBox
-                android:id="@+id/collaborateCheckBox"
-                android:layout_width="128dp"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/jamCheckBox"
-                android:text="Collaborate" />
-
-            <CheckBox
-                android:id="@+id/startBandCheckBox"
-                android:layout_width="128dp"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/collaborateCheckBox"
-                android:text="Start a band" />
-        </RelativeLayout>
-
-        <Switch
-            android:id="@+id/proximityAlertSwitch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/lookingforLayout"
-            android:layout_marginTop="8dp"
-            android:text="Enable Proximity Alerts"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/soloArtistProfilePictureLayout" />
-
-
-        <LinearLayout
-            android:id="@+id/instagramLinearLayout"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/proximityAlertSwitch"
-            android:layout_marginTop="4dp"
-            android:orientation="horizontal"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/proximityAlertSwitch">
-
-            <TextView
-                android:id="@+id/instagramTextView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/instagram" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/instagramTextInputLayout"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_weight="2"
-                app:hintEnabled="false">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/instagramTextInputEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:maxLines="1" />
-            </com.google.android.material.textfield.TextInputLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/facebookLinearLayout"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/instagramLinearLayout"
-            android:layout_marginTop="4dp"
-            android:orientation="horizontal"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/instagramLinearLayout">
-
-            <TextView
-                android:id="@+id/facebookTextView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/facebook" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/facebookTextInputLayout"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_weight="2"
-                app:hintEnabled="false">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/facebookTextInputEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:maxLines="1" />
-            </com.google.android.material.textfield.TextInputLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/youtubeLinearLayout"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/facebookLinearLayout"
-            android:layout_marginTop="4dp"
-            android:orientation="horizontal"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/facebookLinearLayout">
-
-            <TextView
-                android:id="@+id/youtubeTextView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/youtube_channel" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/youtubeTextInputLayout"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_weight="2"
-                app:hintEnabled="false">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/youtubeTextInputEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignStart="@+id/youtubeTextInputLayout"
-                    android:maxLines="1" />
-            </com.google.android.material.textfield.TextInputLayout>
-        </LinearLayout>
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/galleryLayout"
+            android:id="@+id/soloArtistLayout"
             android:layout_width="match_parent"
-            android:layout_height="232dp"
-            android:layout_below="@id/youtubeLinearLayout"
-            android:layout_marginTop="4dp"
-            android:background="@color/skills_card_view_background"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/youtubeLinearLayout">
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:padding="8dp">
 
-            <TextView
-                android:id="@+id/galleryTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="4dp"
-                android:text="Gallery"
-                android:textColor="@color/black"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/addYoutubeButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:tint="@color/white"
-                app:backgroundTint="@color/rounded_button_background"
-                app:layout_constraintBottom_toTopOf="@+id/resetButton"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/galleryTextView"
-                app:srcCompat="@android:drawable/ic_menu_add" />
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/resetButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:tint="@color/white"
-                app:backgroundTint="@color/rounded_button_background"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/addYoutubeButton"
-                app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/youtubeRecyclerView"
+            <RelativeLayout
+                android:id="@+id/soloArtistProfilePictureLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/soloArtistProfilePictureImageView"
+                    android:layout_width="120dp"
+                    android:layout_height="160dp"
+                    android:layout_alignParentTop="true"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/com_facebook_profile_picture_blank_portrait"
+                    android:scaleType="centerCrop"
+                    app:roundedCornerRadius="2dp" />
+
+                <TextView
+                    android:id="@+id/soloArtistAddEditProfilePictureTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/soloArtistProfilePictureImageView"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/add_profile_pic"
+                    android:textSize="12sp" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/usernameLinearLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginEnd="8dp"
-                android:layout_toEndOf="@id/addYoutubeButton"
+                android:layout_toEndOf="@+id/soloArtistProfilePictureLayout"
                 android:orientation="horizontal"
+                android:weightSum="2"
+                app:layout_constraintBottom_toTopOf="@id/lookingforLayout"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintLeft_toRightOf="@id/addYoutubeButton"
-                app:layout_constraintStart_toEndOf="@+id/addYoutubeButton"
-                app:layout_constraintTop_toBottomOf="@+id/galleryTextView" />
+                app:layout_constraintStart_toEndOf="@+id/soloArtistProfilePictureLayout"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_goneMarginTop="8dp">
+
+                <TextView
+                    android:id="@+id/usernameTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/displayname" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/soloDisplayNameTextInputLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="2"
+                    app:counterMaxLength="20"
+                    app:hintEnabled="false">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/soloDisplayNameTextInputEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/lookingforLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/usernameLinearLayout"
+                android:layout_marginStart="8dp"
+                android:layout_toEndOf="@+id/soloArtistProfilePictureLayout"
+                app:layout_constraintLeft_toRightOf="@id/soloArtistProfilePictureLayout"
+                app:layout_constraintTop_toBottomOf="@id/usernameLinearLayout">
+
+                <TextView
+                    android:id="@+id/openTo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Open to..." />
+
+                <CheckBox
+                    android:id="@+id/jamCheckBox"
+                    android:layout_width="128dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/openTo"
+                    android:layout_marginTop="4dp"
+                    android:text="Jam Session" />
+
+                <CheckBox
+                    android:id="@+id/collaborateCheckBox"
+                    android:layout_width="128dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/jamCheckBox"
+                    android:text="Collaborate" />
+
+                <CheckBox
+                    android:id="@+id/startBandCheckBox"
+                    android:layout_width="128dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/collaborateCheckBox"
+                    android:text="Start a band" />
+            </RelativeLayout>
+
+            <Switch
+                android:id="@+id/proximityAlertSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/lookingforLayout"
+                android:layout_marginTop="8dp"
+                android:text="Enable Proximity Alerts"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/soloArtistProfilePictureLayout" />
+
+
+            <LinearLayout
+                android:id="@+id/instagramLinearLayout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/proximityAlertSwitch"
+                android:layout_marginTop="4dp"
+                android:orientation="horizontal"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/proximityAlertSwitch">
+
+                <TextView
+                    android:id="@+id/instagramTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/instagram" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/instagramTextInputLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="2"
+                    app:hintEnabled="false">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/instagramTextInputEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/facebookLinearLayout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/instagramLinearLayout"
+                android:layout_marginTop="4dp"
+                android:orientation="horizontal"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/instagramLinearLayout">
+
+                <TextView
+                    android:id="@+id/facebookTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/facebook" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/facebookTextInputLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="2"
+                    app:hintEnabled="false">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/facebookTextInputEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/youtubeLinearLayout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/facebookLinearLayout"
+                android:layout_marginTop="4dp"
+                android:orientation="horizontal"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/facebookLinearLayout">
+
+                <TextView
+                    android:id="@+id/youtubeTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/youtube_channel" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/youtubeTextInputLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="2"
+                    app:hintEnabled="false">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/youtubeTextInputEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignStart="@+id/youtubeTextInputLayout"
+                        android:maxLines="1" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/galleryLayout"
+                android:layout_width="match_parent"
+                android:layout_height="232dp"
+                android:layout_below="@id/youtubeLinearLayout"
+                android:layout_marginTop="4dp"
+                android:background="@color/skills_card_view_background"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/youtubeLinearLayout">
+
+                <TextView
+                    android:id="@+id/galleryTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="4dp"
+                    android:text="Gallery"
+                    android:textColor="@color/black"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/addYoutubeButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:tint="@color/white"
+                    app:backgroundTint="@color/rounded_button_background"
+                    app:layout_constraintBottom_toTopOf="@+id/resetButton"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/galleryTextView"
+                    app:srcCompat="@android:drawable/ic_menu_add" />
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/resetButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:tint="@color/white"
+                    app:backgroundTint="@color/rounded_button_background"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/addYoutubeButton"
+                    app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/youtubeRecyclerView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_toEndOf="@id/addYoutubeButton"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintLeft_toRightOf="@id/addYoutubeButton"
+                    app:layout_constraintStart_toEndOf="@+id/addYoutubeButton"
+                    app:layout_constraintTop_toBottomOf="@+id/galleryTextView" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView>
+    </ScrollView>
+</layout>
