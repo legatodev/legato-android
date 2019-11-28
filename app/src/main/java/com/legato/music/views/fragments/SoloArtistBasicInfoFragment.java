@@ -474,17 +474,21 @@ public class SoloArtistBasicInfoFragment extends Fragment {
     }
 
     private void doBindService() {
-        if (getActivity().bindService(
-                new Intent(getActivity(), Player.class),
-                mServiceConnection, Context.BIND_AUTO_CREATE)) {
-            mSpotifyPlayerBound = true;
+        if (getActivity() != null) {
+            if (getActivity().bindService(
+                    new Intent(getActivity(), Player.class),
+                    mServiceConnection, Context.BIND_AUTO_CREATE)) {
+                mSpotifyPlayerBound = true;
+            }
         }
     }
 
     private void doUnbindService() {
-        if (mSpotifyPlayerBound) {
-            getActivity().unbindService(mServiceConnection);
-            mSpotifyPlayerBound = false;
+        if (getActivity() != null) {
+            if (mSpotifyPlayerBound) {
+                getActivity().unbindService(mServiceConnection);
+                mSpotifyPlayerBound = false;
+            }
         }
     }
 
