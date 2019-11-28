@@ -25,6 +25,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -36,6 +37,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.common.base.Joiner;
 import com.legato.music.AppConstants;
 import com.legato.music.R;
+import com.legato.music.databinding.FragmentSoloArtistBasicInfoBinding;
 import com.legato.music.spotify.Player;
 import com.legato.music.spotify.PlayerService;
 import com.legato.music.spotify.SpotifySearchActivity;
@@ -85,41 +87,12 @@ public class SoloArtistBasicInfoFragment extends Fragment {
     private static final String TAG = SoloArtistBasicInfoFragment.class.getSimpleName();
     private static final int REQUEST_CODE = 1337;
 
+    @NonNull private FragmentSoloArtistBasicInfoBinding binding;
     private boolean valid;
-    @BindView(R.id.proximityAlertSwitch)
-    @Nullable Switch proximitySwitch;
-    @BindView(R.id.jamCheckBox)
-    @Nullable CheckBox jamCheckBox;
-    @BindView(R.id.collaborateCheckBox)
-    @Nullable CheckBox collaborateCheckBox;
-    @BindView(R.id.startBandCheckBox)
-    @Nullable CheckBox startBandCheckBox;
-    @BindView(R.id.soloDisplayNameTextInputEditText)
-    @Nullable TextInputEditText soloDisplayNameTextInputEditText;
-    @BindView(R.id.instagramTextInputEditText)
-    @Nullable TextInputEditText instagramTextInputEditText;
-    @BindView(R.id.facebookTextInputEditText)
-    @Nullable TextInputEditText facebookTextInputEditText;
-    @BindView(R.id.youtubeTextInputEditText)
-    @Nullable TextInputEditText youtubeTextInputEditText;
-    @BindView(R.id.addYoutubeButton)
-    @Nullable FloatingActionButton addSampleButton;
-    @BindView(R.id.resetButton)
-    @Nullable FloatingActionButton resetButton;
-    @BindView(R.id.soloArtistProfilePictureImageView)
-    @Nullable SimpleDraweeView soloArtisitProfilePicImageView;
-    @BindView(R.id.soloArtistAddEditProfilePictureTextView)
-    @Nullable TextView soloArtistAddEditProfilePicTextView;
 
-    @BindView(R.id.youtubeRecyclerView)
-    @Nullable
-    protected RecyclerView youtubeRecyclerView;
+    @NonNull private SoloArtistViewModel soloArtistViewModel;
 
-    @Nullable
-    private YoutubePlayerAdapter youtubePlayerAdapter;
-
-    @Nullable
-    private SoloArtistViewModel soloArtistViewModel;
+    @Nullable YoutubePlayerAdapter youtubePlayerAdapter;
 
     @Nullable private Player mPlayerBoundService;
 
@@ -150,135 +123,124 @@ public class SoloArtistBasicInfoFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) { super.onCreate(savedInstanceState); }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_solo_artist_basic_info, container, false);
-        ButterKnife.bind(this, view);
+
+        binding = DataBindingUtil.inflate(
+                inflater, R.layout.fragment_solo_artist_basic_info, container, false);
+
+        ButterKnife.bind(this, binding.getRoot());
 
         soloArtistViewModel = ViewModelProviders.of(getActivity()).get(SoloArtistViewModel.class);
 
-        return view;
+        return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if (soloArtistViewModel != null) {
+        Resources res = getResources();
+        String[] rlookingfor = res.getStringArray(R.array.looking_for);
+        String dblookingfor = soloArtistViewModel.getLookingFor();
 
-            Resources res = getResources();
-            String[] rlookingfor = res.getStringArray(R.array.looking_for);
-            String dblookingfor = soloArtistViewModel.getLookingFor();
+        if (dblookingfor != null) {
+            if (dblookingfor.contains(rlookingfor[0]) && binding.jamCheckBox != null)
+                binding.jamCheckBox.setChecked(true);
 
-            if (dblookingfor != null) {
-                if (dblookingfor.contains(rlookingfor[0]) && jamCheckBox != null)
-                    jamCheckBox.setChecked(true);
+            if (dblookingfor.contains(rlookingfor[1]) && binding.collaborateCheckBox != null)
+                binding.collaborateCheckBox.setChecked(true);
 
-                if (dblookingfor.contains(rlookingfor[1]) && collaborateCheckBox != null)
-                    collaborateCheckBox.setChecked(true);
-
-                if (dblookingfor.contains(rlookingfor[2]) && startBandCheckBox != null)
-                    startBandCheckBox.setChecked(true);
-            }
-
-            setOnCheckedChanged(jamCheckBox);
-            setOnCheckedChanged(collaborateCheckBox);
-            setOnCheckedChanged(startBandCheckBox);
-
-            if (resetButton != null)
-                resetButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (soloArtistViewModel != null) {
-                            soloArtistViewModel.resetYoutubeVideoIds();
-                            InitializeYoutubeView();
-                        }
-                    }
-                });
-
-            if (proximitySwitch != null) {
-                proximitySwitch.setOnCheckedChangeListener((buttonView, isChecked) -> validate());
-            }
-
-            setTextView(soloDisplayNameTextInputEditText, soloArtistViewModel.getUser().getName());
-
-            if (soloDisplayNameTextInputEditText != null) {
-                soloDisplayNameTextInputEditText.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                        //Do nothing
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable s) {
-                        validate();
-                    }
-                });
-            }
-
-            setTextView(instagramTextInputEditText, soloArtistViewModel.getInstagram());
-            setTextView(facebookTextInputEditText, soloArtistViewModel.getFacebook());
-            setTextView(youtubeTextInputEditText, soloArtistViewModel.getYoutubeChannel());
-
-            String avatarUrl = soloArtistViewModel.getAvatarUrl();
-            if (avatarUrl != null && !avatarUrl.isEmpty()) {
-                setImageURI(soloArtisitProfilePicImageView, avatarUrl);
-                setTextView(soloArtistAddEditProfilePicTextView, R.string.edit_profile_pic);
-            } else {
-                extractProfilePicFromFacebook();
-            }
-
-            if (soloArtisitProfilePicImageView != null) {
-                soloArtisitProfilePicImageView.setOnClickListener(tempView -> {
-                    mediaSelector.startChooseImageActivity(getActivity(), MediaSelector.CropType.Circle, result -> {
-
-                        try {
-                            File compress = new Compressor(ChatSDK.shared().context())
-                                    .setMaxHeight(ChatSDK.config().imageMaxThumbnailDimension)
-                                    .setMaxWidth(ChatSDK.config().imageMaxThumbnailDimension)
-                                    .compressToFile(new File(result));
-
-                            Bitmap bitmap = BitmapFactory.decodeFile(compress.getPath());
-
-                            // Cache the file
-                            File file = ImageUtils.compressImageToFile(ChatSDK.shared().context(), bitmap, ChatSDK.currentUserID(), ".png");
-                            setImageURI(soloArtisitProfilePicImageView, Uri.fromFile(file));
-                            setTextView(soloArtistAddEditProfilePicTextView, R.string.edit_profile_pic);
-
-                            if (soloArtistViewModel != null) {
-                                soloArtistViewModel.setAvatarUrl(Uri.fromFile(file).toString());
-                            }
-                        } catch (Exception e) {
-                            ChatSDK.logError(e);
-                        }
-                    });
-                });
-            }
-
-            if (youtubeRecyclerView != null) {
-                youtubeRecyclerView.setHasFixedSize(true);
-
-                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
-                        getActivity(),
-                        LinearLayoutManager.HORIZONTAL,
-                        false);
-                youtubeRecyclerView.setLayoutManager(layoutManager);
-
-                if (!soloArtistViewModel.getYoutubeVideoIds().isEmpty()) {
-                    InitializeYoutubeView();
-                }
-            }
-
-            if (user.metaStringForKey(Keys.spotify_track) != null) {
-                spotifyInitialize();
-            }
-
-            validate();
+            if (dblookingfor.contains(rlookingfor[2]) && binding.startBandCheckBox != null)
+                binding.startBandCheckBox.setChecked(true);
         }
+
+        setOnCheckedChanged(binding.jamCheckBox);
+        setOnCheckedChanged(binding.collaborateCheckBox);
+        setOnCheckedChanged(binding.startBandCheckBox);
+
+        binding.resetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                soloArtistViewModel.resetYoutubeVideoIds();
+                InitializeYoutubeView();
+            }
+        });
+
+        binding.proximityAlertSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> validate());
+
+        setTextView(binding.soloDisplayNameTextInputEditText, soloArtistViewModel.getUser().getName());
+
+        binding.soloDisplayNameTextInputEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                //Do nothing
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                validate();
+            }
+        });
+
+        setTextView(binding.instagramTextInputEditText, soloArtistViewModel.getInstagram());
+        setTextView(binding.facebookTextInputEditText, soloArtistViewModel.getFacebook());
+        setTextView(binding.youtubeTextInputEditText, soloArtistViewModel.getYoutubeChannel());
+
+        String avatarUrl = soloArtistViewModel.getAvatarUrl();
+        if (avatarUrl != null && !avatarUrl.isEmpty()) {
+            setImageURI(binding.soloArtistProfilePictureImageView, avatarUrl);
+            setTextView(binding.soloArtistAddEditProfilePictureTextView, R.string.edit_profile_pic);
+        } else {
+            extractProfilePicFromFacebook();
+        }
+
+        binding.soloArtistProfilePictureImageView.setOnClickListener(tempView -> {
+            if (getActivity() != null)
+            mediaSelector.startChooseImageActivity(getActivity(), MediaSelector.CropType.Circle, result -> {
+
+                try {
+                    File compress = new Compressor(ChatSDK.shared().context())
+                            .setMaxHeight(ChatSDK.config().imageMaxThumbnailDimension)
+                            .setMaxWidth(ChatSDK.config().imageMaxThumbnailDimension)
+                            .compressToFile(new File(result));
+
+                    Bitmap bitmap = BitmapFactory.decodeFile(compress.getPath());
+
+                    // Cache the file
+                    File file = ImageUtils.compressImageToFile(ChatSDK.shared().context(), bitmap, ChatSDK.currentUserID(), ".png");
+                    setImageURI(binding.soloArtistProfilePictureImageView, Uri.fromFile(file));
+                    setTextView(binding.soloArtistAddEditProfilePictureTextView, R.string.edit_profile_pic);
+
+                    soloArtistViewModel.setAvatarUrl(Uri.fromFile(file).toString());
+                } catch (Exception e) {
+                    ChatSDK.logError(e);
+                }
+            });
+        });
+
+        binding.youtubeRecyclerView.setHasFixedSize(true);
+
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
+                getActivity(),
+                LinearLayoutManager.HORIZONTAL,
+                false);
+        binding.youtubeRecyclerView.setLayoutManager(layoutManager);
+
+        if (!soloArtistViewModel.getYoutubeVideoIds().isEmpty()) {
+            InitializeYoutubeView();
+        }
+
+        if (user.metaStringForKey(Keys.spotify_track) != null) {
+            spotifyInitialize();
+        }
+
+        validate();
     }
 
     private void setImageURI(@Nullable SimpleDraweeView view, String uri) {
@@ -313,14 +275,8 @@ public class SoloArtistBasicInfoFragment extends Fragment {
     }
 
     private void extractProfilePicFromFacebook() {
-        if (soloArtisitProfilePicImageView == null ||
-                soloArtistAddEditProfilePicTextView == null ||
-                soloArtistViewModel == null) {
-            return;
-        }
-
-        setImageURI(soloArtisitProfilePicImageView, soloArtistViewModel.getPhotoUrl());
-        setTextView(soloArtistAddEditProfilePicTextView, R.string.edit_profile_pic);
+        setImageURI(binding.soloArtistProfilePictureImageView, soloArtistViewModel.getPhotoUrl());
+        setTextView(binding.soloArtistAddEditProfilePictureTextView, R.string.edit_profile_pic);
     }
 
     public boolean isInputValid() {
@@ -328,12 +284,16 @@ public class SoloArtistBasicInfoFragment extends Fragment {
     }
 
     private void validate() {
-        valid = (isCheckBoxChecked(jamCheckBox) || isCheckBoxChecked(collaborateCheckBox) || isCheckBoxChecked(startBandCheckBox));
-        if (soloDisplayNameTextInputEditText != null) {
-            valid = valid && !soloDisplayNameTextInputEditText.getText().toString().trim().isEmpty();
-        }
+        String displayName = (binding.soloDisplayNameTextInputEditText.getText() != null) ?
+                binding.soloDisplayNameTextInputEditText.getText().toString().trim() : "";
 
-        ((SoloRegistrationActivity) getActivity()).setVisibleTabCount();
+        valid = (isCheckBoxChecked(binding.jamCheckBox) ||
+                 isCheckBoxChecked(binding.collaborateCheckBox) ||
+                 isCheckBoxChecked(binding.startBandCheckBox));
+        valid = valid && !displayName.isEmpty();
+
+        if (getActivity() != null)
+            ((SoloRegistrationActivity) getActivity()).setVisibleTabCount();
     }
 
     private boolean isCheckBoxChecked(@Nullable CheckBox checkbox) {
@@ -347,29 +307,34 @@ public class SoloArtistBasicInfoFragment extends Fragment {
     public HashMap<String, String> extractData() {
         Resources res = getResources();
         HashMap<String, String> basicInfo = new HashMap<>();
-        if (soloDisplayNameTextInputEditText != null)
-            basicInfo.put(co.chatsdk.core.dao.Keys.Name, soloDisplayNameTextInputEditText.getText().toString().trim());
+
+        String displayName = (binding.soloDisplayNameTextInputEditText.getText() != null) ?
+                binding.soloDisplayNameTextInputEditText.getText().toString().trim() : "";
+        basicInfo.put(co.chatsdk.core.dao.Keys.Name, displayName);
 
         String[] lookingForArray = res.getStringArray(R.array.looking_for);
-        String lookingfor = isCheckBoxChecked(jamCheckBox)?lookingForArray[0]+"|":"";
-        lookingfor += isCheckBoxChecked(collaborateCheckBox)?lookingForArray[1]+"|":"";
-        lookingfor += isCheckBoxChecked(startBandCheckBox)?lookingForArray[2]+"|":"";
+        String lookingfor = isCheckBoxChecked(binding.jamCheckBox)?lookingForArray[0]+"|":"";
+        lookingfor += isCheckBoxChecked(binding.collaborateCheckBox)?lookingForArray[1]+"|":"";
+        lookingfor += isCheckBoxChecked(binding.startBandCheckBox)?lookingForArray[2]+"|":"";
 
         basicInfo.put(Keys.lookingfor, lookingfor);
-        if (instagramTextInputEditText != null)
-            basicInfo.put(Keys.instagram, instagramTextInputEditText.getText().toString().trim());
-        if (facebookTextInputEditText != null)
-            basicInfo.put(Keys.facebook, facebookTextInputEditText.getText().toString().trim());
-        if (youtubeTextInputEditText != null)
-            basicInfo.put(Keys.youtube_channel, youtubeTextInputEditText.getText().toString().trim());
-        if (proximitySwitch != null) {
-            basicInfo.put(Keys.proximityalert, Boolean.toString(proximitySwitch.isEnabled()));
-        }
 
-        if (soloArtistViewModel != null) {
-            basicInfo.put(Keys.youtube, soloArtistViewModel.getYoutubeVideoIdsAsString());
-            basicInfo.put(co.chatsdk.core.dao.Keys.AvatarURL, soloArtistViewModel.getAvatarUrl());
-        }
+        String instagram = (binding.instagramTextInputEditText.getText() != null) ?
+                binding.instagramTextInputEditText.getText().toString().trim() : "";
+        basicInfo.put(Keys.instagram, instagram);
+
+        String facebook = (binding.facebookTextInputEditText.getText() != null) ?
+                binding.facebookTextInputEditText.getText().toString().trim() : "";
+        basicInfo.put(Keys.facebook, facebook);
+
+        String youtubeChannel = (binding.youtubeTextInputEditText.getText() != null) ?
+                binding.youtubeTextInputEditText.getText().toString().trim() : "";
+        basicInfo.put(Keys.youtube_channel, youtubeChannel);
+
+        basicInfo.put(Keys.proximityalert, Boolean.toString(binding.proximityAlertSwitch.isEnabled()));
+
+        basicInfo.put(Keys.youtube, soloArtistViewModel.getYoutubeVideoIdsAsString());
+        basicInfo.put(co.chatsdk.core.dao.Keys.AvatarURL, soloArtistViewModel.getAvatarUrl());
 
         return basicInfo;
     }
@@ -389,7 +354,8 @@ public class SoloArtistBasicInfoFragment extends Fragment {
         builder.setScopes(new String[]{"streaming"});
         AuthenticationRequest request = builder.build();
 
-        AuthenticationClient.openLoginActivity(getActivity(), REQUEST_CODE, request);
+        if (getActivity() != null)
+            AuthenticationClient.openLoginActivity(getActivity(), REQUEST_CODE, request);
 
         doBindService();
     }
@@ -419,11 +385,9 @@ public class SoloArtistBasicInfoFragment extends Fragment {
                     default:
                         // Handle other cases
                 }
-            } else if (requestCode == RequestCodes.RC_YOUTUBE_SEARCH && resultCode == Activity.RESULT_OK && data != null) {
-                if (soloArtistViewModel != null) {
-                    soloArtistViewModel.addYoutubeVideoId(data.getStringExtra("youtube_video"));
-                    InitializeYoutubeView();
-                }
+            } else if (requestCode == RequestCodes.RC_YOUTUBE_SEARCH && resultCode == Activity.RESULT_OK) {
+                soloArtistViewModel.addYoutubeVideoId(data.getStringExtra("youtube_video"));
+                InitializeYoutubeView();
             } else {
                 try {
                     mediaSelector.handleResult(getActivity(), requestCode, resultCode, data);
@@ -501,16 +465,12 @@ public class SoloArtistBasicInfoFragment extends Fragment {
     }
 
     private void InitializeYoutubeView() {
-        if (youtubeRecyclerView != null) {
-            List<String> youtubeVideoIds = new ArrayList<>();
+        List<String> youtubeVideoIds = new ArrayList<>();
 
-            if (soloArtistViewModel != null) {
-                youtubeVideoIds = soloArtistViewModel.getYoutubeVideoIds();
-            }
+        youtubeVideoIds = soloArtistViewModel.getYoutubeVideoIds();
 
-            youtubePlayerAdapter = new YoutubePlayerAdapter(youtubeVideoIds, this.getLifecycle());
-            youtubeRecyclerView.setAdapter(youtubePlayerAdapter);
-        }
+        youtubePlayerAdapter = new YoutubePlayerAdapter(youtubeVideoIds, this.getLifecycle());
+        binding.youtubeRecyclerView.setAdapter(youtubePlayerAdapter);
     }
 
     private void doBindService() {
