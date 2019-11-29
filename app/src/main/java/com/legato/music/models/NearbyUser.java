@@ -182,6 +182,9 @@ public class NearbyUser {
             and brackets from json arrays that could be returned with comma separated values
             e.g., "[videoId1,videoId2,videoId3]"
          */
+        if(videoIds == null)
+            return " ";
+
         return videoIds
                 .replace(" ", "")
                 .replace("[","")

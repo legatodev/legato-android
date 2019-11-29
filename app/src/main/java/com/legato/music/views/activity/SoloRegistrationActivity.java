@@ -69,12 +69,11 @@ public class SoloRegistrationActivity extends AppCompatActivity implements Skill
     @BindView(R.id.soloViewPager)
     ViewPager mViewPager;
 
-    private Fragment soloRegistrationTab;
-    private Fragment skillsTab;
-    private Fragment genresTab;
+    private Fragment mSoloRegistrationTab;
+    private Fragment mSkillsTab;
+    private Fragment mGenresTab;
 
-    @Nullable
-    private SoloArtistViewModel soloArtistViewModel;
+    private SoloArtistViewModel mSoloArtistViewModel;
 
     private DisposableList disposableList;
     private String previousAvatarURL = "";
@@ -85,8 +84,7 @@ public class SoloRegistrationActivity extends AppCompatActivity implements Skill
         setContentView(R.layout.activity_solo_registration_tab);
         ButterKnife.bind(this);
 
-        soloArtistViewModel = ViewModelProviders.of(this).get(SoloArtistViewModel.class);
-
+        mSoloArtistViewModel = ViewModelProviders.of(this).get(SoloArtistViewModel.class);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -102,13 +100,12 @@ public class SoloRegistrationActivity extends AppCompatActivity implements Skill
         TabLayout tabLayout = findViewById(R.id.soloRegistrationTablayout);
         tabLayout.setupWithViewPager(mViewPager);
 
-        soloRegistrationTab = new SoloArtistBasicInfoFragment();
-        genresTab = new GenresFragment();
-        skillsTab = new SkillsFragment();
-
+        mSoloRegistrationTab = new SoloArtistBasicInfoFragment();
+        mGenresTab = new GenresFragment();
+        mSkillsTab = new SkillsFragment();
         disposableList = new DisposableList();
-    }
 
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -134,9 +131,9 @@ public class SoloRegistrationActivity extends AppCompatActivity implements Skill
     public void setVisibleTabCount() {
         int countTab = 1;
 
-        if (((SoloArtistBasicInfoFragment)soloRegistrationTab).isInputValid()) {
+        if (((SoloArtistBasicInfoFragment) mSoloRegistrationTab).isInputValid()) {
             countTab = 2;
-            if (((GenresFragment)genresTab).isInputValid()) {
+            if (((GenresFragment) mGenresTab).isInputValid()) {
                 countTab = 3;
             }
         }
@@ -145,18 +142,17 @@ public class SoloRegistrationActivity extends AppCompatActivity implements Skill
     }
 
     public void submitData() {
-        HashMap<String, String> profileInfo = ((SoloArtistBasicInfoFragment)soloRegistrationTab).extractData();
-        profileInfo.put(Keys.genres, ((GenresFragment)genresTab).extractData());
-        profileInfo.put(Keys.skills, ((SkillsFragment)skillsTab).extractData());
+        HashMap<String, String> profileInfo = ((SoloArtistBasicInfoFragment) mSoloRegistrationTab).extractData();
+        profileInfo.put(Keys.genres, ((GenresFragment) mGenresTab).extractData());
+        profileInfo.put(Keys.skills, ((SkillsFragment) mSkillsTab).extractData());
 
-        if (soloArtistViewModel != null) {
-            profileInfo.put(Keys.youtube, soloArtistViewModel.getYoutubeVideoIdsAsString());
+        if (mSoloArtistViewModel != null) {
+            profileInfo.put(Keys.youtube, mSoloArtistViewModel.getYoutubeVideoIdsAsString());
         }
 
-        User user = ChatSDK.currentUser();
-        previousAvatarURL = user.getAvatarURL();
+        previousAvatarURL = mSoloArtistViewModel.getAvatarUrl();
 
-        user.setMetaMap(profileInfo);
+        mSoloArtistViewModel.setMetaMap(profileInfo);
         disposableList.add(pushProfilePic()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(() -> {
@@ -166,15 +162,15 @@ public class SoloRegistrationActivity extends AppCompatActivity implements Skill
 
     private Completable pushProfilePic() {
             return Single.create((SingleOnSubscribe<User>) e -> {
-                String url = ChatSDK.currentUser().getAvatarURL();
+                String url = mSoloArtistViewModel.getAvatarUrl();
                 if (url == null || url.isEmpty()) {
                     e.onSuccess(ChatSDK.currentUser());
                 } else {
                     // Check to see if the avatar URL is local or remote
-                    File avatar = new File(new URI(ChatSDK.currentUser().getAvatarURL()).getPath());
+                    File avatar = new File(new URI(mSoloArtistViewModel.getAvatarUrl()).getPath());
                     Bitmap bitmap = BitmapFactory.decodeFile(avatar.getPath());
 
-                    if (new URL(ChatSDK.currentUser().getAvatarURL()).getHost() != null && bitmap != null && ChatSDK.upload() != null) {
+                    if (new URL(mSoloArtistViewModel.getAvatarUrl()).getHost() != null && bitmap != null && ChatSDK.upload() != null) {
                         // Upload the image
                         ChatSDK.upload().uploadImage(bitmap).subscribe(new Observer<FileUploadResult>() {
                             @Override
@@ -184,7 +180,7 @@ public class SoloRegistrationActivity extends AppCompatActivity implements Skill
                             @Override
                             public void onNext(@NonNull FileUploadResult fileUploadResult) {
                                 if (fileUploadResult.urlValid()) {
-                                    ChatSDK.currentUser().setAvatarURL(fileUploadResult.url);
+                                    mSoloArtistViewModel.setAvatarUrl(fileUploadResult.url);
                                     ChatSDK.currentUser().update();
                                     ChatSDK.events().source().onNext(NetworkEvent.userMetaUpdated(ChatSDK.currentUser()));
                                 }
@@ -236,7 +232,7 @@ public class SoloRegistrationActivity extends AppCompatActivity implements Skill
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        soloRegistrationTab.onActivityResult(requestCode, resultCode, data);
+        mSoloRegistrationTab.onActivityResult(requestCode, resultCode, data);
     }
 
     /**
@@ -257,15 +253,15 @@ public class SoloRegistrationActivity extends AppCompatActivity implements Skill
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return soloRegistrationTab;
+                    return mSoloRegistrationTab;
                 case 1:
-                    return genresTab;
+                    return mGenresTab;
                 case 2:
-                    return skillsTab;
+                    return mSkillsTab;
             }
 
             //TODO: should we return an error if position exceeds the number of tabs available.
-            return soloRegistrationTab;
+            return mSoloRegistrationTab;
         }
 
         @Override

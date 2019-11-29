@@ -179,7 +179,7 @@ public class SoloArtistBasicInfoFragment extends Fragment {
 
         proximityAlertSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> validate());
 
-        setTextView(soloDisplayNameTextInputEditText, soloArtistViewModel.getUser().getName());
+        setTextView(soloDisplayNameTextInputEditText, soloArtistViewModel.getUserName());
 
         soloDisplayNameTextInputEditText.addTextChangedListener(new TextWatcher() {
             @Override

@@ -9,73 +9,65 @@ import com.google.firebase.auth.UserInfo;
 import com.legato.music.models.NearbyUser;
 import com.legato.music.repositories.BaseRepository;
 
+import java.util.HashMap;
 import java.util.List;
 
-import co.chatsdk.core.dao.User;
-
 public class SoloArtistViewModel extends ViewModel {
-    private BaseRepository baseRepository;
-    private NearbyUser nearbyUser;
-    private String previousAvatarURL = "";
-    private String avatarUrl = "";
+    private BaseRepository mBaseRepository;
+    private NearbyUser mUser;
     private FirebaseUser firebaseUser;
 
     public SoloArtistViewModel() {
-        this.baseRepository = BaseRepository.getInstance();
-        this.nearbyUser = baseRepository.getCurrentUser();
+        this.mBaseRepository = BaseRepository.getInstance();
+        this.mUser = mBaseRepository.getCurrentUser();
+        /*
+        TODO: No direct call to data source. Remove Firebase Call to mBaseRepository
+         */
         this.firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
     }
 
-    public User getUser() {
-        return nearbyUser.getUser();
-    }
-
-    public String getPreviousAvatarURL() {
-        return previousAvatarURL;
-    }
-
-    public void setPreviousAvatarURL(String previousAvatarURL) {
-        this.previousAvatarURL = previousAvatarURL;
-    }
-
     public String getAvatarUrl() {
-        return avatarUrl;
+        return mUser.getAvatarUrl();
     }
 
     public void setAvatarUrl(String avatarUrl) {
-        getUser().setAvatarURL(avatarUrl);
+        mUser.setAvatarUrl(avatarUrl);
     }
 
     public boolean addYoutubeVideoId(String newVideoId) {
-        return nearbyUser.addYoutubeVideoId(newVideoId);
+        return mUser.addYoutubeVideoId(newVideoId);
     }
 
     public List<String> getYoutubeVideoIds() {
-        return nearbyUser.getYoutubeVideoIds();
+        return mUser.getYoutubeVideoIds();
     }
 
     public void resetYoutubeVideoIds() {
-        nearbyUser.resetYoutubeVideoIds();
+        mUser.resetYoutubeVideoIds();
+    }
+
+    public String getUserName() {
+        return mUser.getUsername();
     }
 
     public String getYoutubeVideoIdsAsString() {
-        return nearbyUser.getYoutubeVideoIdsAsString();
+        return mUser.getYoutubeVideoIdsAsString();
     }
 
     public String getLookingFor() {
-        return nearbyUser.getLookingfor();
+        return mUser.getLookingfor();
     }
 
     public String getInstagram() {
-        return nearbyUser.getInstagram();
+        return mUser.getInstagram();
     }
 
     public String getFacebook() {
-        return nearbyUser.getFacebook();
+        return mUser.getFacebook();
     }
 
     public String getYoutubeChannel() {
-        return nearbyUser.getYoutubeChannel();
+        return mUser.getYoutubeChannel();
     }
 
     public String getPhotoUrl() {
@@ -99,5 +91,11 @@ public class SoloArtistViewModel extends ViewModel {
         return facebookUserId;
     }
 
-    public String getSpotifyTrack() { return nearbyUser.getSpotifyTrack(); }
+    public String getSpotifyTrack() {
+        return mUser.getSpotifyTrack();
+    }
+
+    public void setMetaMap(HashMap<String, String> map){
+        mBaseRepository.setMetaMap(map);
+    }
 }

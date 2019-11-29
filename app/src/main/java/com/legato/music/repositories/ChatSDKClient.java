@@ -2,6 +2,8 @@ package com.legato.music.repositories;
 
 import androidx.annotation.Nullable;
 
+import java.util.HashMap;
+
 import co.chatsdk.core.dao.User;
 import co.chatsdk.core.session.ChatSDK;
 
@@ -61,6 +63,14 @@ public class ChatSDKClient {
     public String getMetaString(String key){
         if(mCurrentUser != null) {
             return mCurrentUser.metaStringForKey(key);
+        }else{
+            throw new NullPointerException("Current User Dao not initialized. Check ChatSDKClient instance");
+        }
+    }
+
+    public void setMetaMap(HashMap<String, String> map){
+        if(mCurrentUser != null) {
+            mCurrentUser.setMetaMap(map);
         }else{
             throw new NullPointerException("Current User Dao not initialized. Check ChatSDKClient instance");
         }

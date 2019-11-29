@@ -7,6 +7,8 @@ import androidx.lifecycle.LiveData;
 
 import com.legato.music.models.NearbyUser;
 
+import java.util.HashMap;
+
 import co.chatsdk.core.dao.User;
 
 public class BaseRepository {
@@ -75,5 +77,9 @@ public class BaseRepository {
 
     public String getSearchRadius(){
         return mChatSDKClient.getMetaString(com.legato.music.utils.Keys.searchradius);
+    }
+
+    public void setMetaMap(HashMap<String, String> map){
+        mChatSDKClient.setMetaMap(map);
     }
 }
