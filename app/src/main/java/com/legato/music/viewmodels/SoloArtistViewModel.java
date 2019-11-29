@@ -98,4 +98,6 @@ public class SoloArtistViewModel extends ViewModel {
 
         return facebookUserId;
     }
+
+    public String getSpotifyTrack() { return nearbyUser.getSpotifyTrack(); }
 }

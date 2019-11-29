@@ -101,6 +101,8 @@ public class NearbyUser {
         return this.user.metaStringForKey(Keys.youtube_channel);
     }
 
+    public String getSpotifyTrack() { return user.metaStringForKey(Keys.spotify_track); }
+
     public boolean isMe() { return user.isMe(); }
 
     public String getEmail() { return user.getEmail(); }
