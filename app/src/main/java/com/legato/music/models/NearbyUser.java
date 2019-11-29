@@ -19,14 +19,23 @@ public class NearbyUser {
 
     @NonNull private String distance = "0";
     @NonNull private User user = new User();
-
-    @NonNull private ArrayList<String> youtubeVideoIds;
+    private MusicSamples youtubeSamples;
+    private MusicSamples spotifySamples;
 
     public NearbyUser(User user, String distance) {
         setDistance(distance);
         setUser(user);
 
         updateYoutubeVideoIds();
+        updateSpotifyTrackIds();
+    }
+
+    private void updateYoutubeVideoIds() {
+        youtubeSamples = new MusicSamples(Keys.youtube);
+    }
+
+    private void updateSpotifyTrackIds() {
+        spotifySamples = new MusicSamples(Keys.spotify_track);
     }
 
     public NearbyUser(String userId, String distance) {
@@ -34,6 +43,7 @@ public class NearbyUser {
         setUser(userId);
 
         updateYoutubeVideoIds();
+        updateSpotifyTrackIds();
     }
 
     public String getUsername() {
@@ -101,97 +111,14 @@ public class NearbyUser {
         return this.user.metaStringForKey(Keys.youtube_channel);
     }
 
-    public String getSpotifyTrack() { return user.metaStringForKey(Keys.spotify_track); }
-
     public boolean isMe() { return user.isMe(); }
 
     public String getEmail() { return user.getEmail(); }
 
     public String getYoutube() { return user.metaStringForKey(Keys.youtube); }
 
-    public boolean addYoutubeVideoId(String newVideoId) {
-        boolean bSuccess = false;
-
-        if (youtubeVideoIds.size() < 6) {
-            if (!youtubeVideoIds.contains(newVideoId)) {
-                youtubeVideoIds.add(newVideoId);
-            }
-            bSuccess = true;
-        }
-
-        return bSuccess;
-    }
-
-    public boolean removeYoutubeVideoId(int position) {
-        boolean bSuccess = false;
-
-        if (!youtubeVideoIds.isEmpty()) {
-            youtubeVideoIds.remove(position);
-
-            bSuccess = true;
-        }
-
-        return bSuccess;
-    }
-
-    public List<String> getYoutubeVideoIds() {
-        if (youtubeVideoIds.isEmpty()) {
-            setYoutubeVideoIds(user.metaStringForKey(Keys.youtube));
-        }
-
-        if (!youtubeVideoIds.isEmpty() && !youtubeVideoIds.get(0).isEmpty()) {
-            return youtubeVideoIds;
-        }
-
-        youtubeVideoIds = new ArrayList<>();
-
-        return youtubeVideoIds;
-    }
-
-    public String getYoutubeVideoIdsAsString() {
-        return sanitizeVideoIdsString(getYoutubeVideoIds().toString());
-    }
-
-    public void setYoutubeVideoIds(String videoIds) {
-        videoIds = sanitizeVideoIdsString(videoIds);
-
-        if (videoIds.contains(",")) {
-            youtubeVideoIds = new ArrayList<>(Arrays.asList(videoIds.split(",")));
-        }
-        else {
-            youtubeVideoIds = new ArrayList<>(Arrays.asList(videoIds));
-        }
-    }
-
-    private void updateYoutubeVideoIds() {
-        youtubeVideoIds = new ArrayList<>();
-
-        if (this.user != null)
-            setYoutubeVideoIds(this.user.metaStringForKey(Keys.youtube));
-    }
-
-    public void resetYoutubeVideoIds() {
-        user.setMetaString(Keys.youtube, "");
-        youtubeVideoIds = new ArrayList<>();
-    }
-
-    private String sanitizeVideoIdsString(String videoIds) {
-        /*
-            This function is used to clean up strings within the ChatSdk that could have added
-            space characters between elements, such as a List<>.toString() call,
-            and brackets from json arrays that could be returned with comma separated values
-            e.g., "[videoId1,videoId2,videoId3]"
-         */
-        if (videoIds != null)
-            videoIds = videoIds
-                    .replace(" ", "")
-                    .replace("[","")
-                    .replace("]","");
-        else
-            videoIds = "";
-
-        return videoIds;
-    }
+    public MusicSamples getYoutubeSamples() { return youtubeSamples; }
+    public MusicSamples getSpotifySamples() { return spotifySamples; }
 
     public User getUser() { return user;}
 
@@ -212,5 +139,94 @@ public class NearbyUser {
                 u1Dist > u2Dist ? 1 : 0;
     };
 
+    public class MusicSamples {
+        @androidx.annotation.NonNull
+        private ArrayList<String> trackIds;
+        @androidx.annotation.NonNull
+        private String key;
 
+        MusicSamples(@androidx.annotation.NonNull String key) {
+            this.key = key;
+            trackIds = new ArrayList<>();
+            setTrackIds(user.metaStringForKey(this.key));
+        }
+
+        public boolean addTrackId(String newTrackId) {
+            boolean bSuccess = false;
+
+            if (trackIds.size() < 6) {
+                if (!trackIds.contains(newTrackId)) {
+                    trackIds.add(newTrackId);
+                }
+                bSuccess = true;
+            }
+
+            return bSuccess;
+        }
+
+        public boolean removeTrackId(int position) {
+            boolean bSuccess = false;
+
+            if (!trackIds.isEmpty()) {
+                trackIds.remove(position);
+
+                bSuccess = true;
+            }
+
+            return bSuccess;
+        }
+
+        public List<String> getTrackIds() {
+            if (trackIds.isEmpty()) {
+                setTrackIds(user.metaStringForKey(key));
+            }
+
+            if (!trackIds.isEmpty() && !trackIds.get(0).isEmpty()) {
+                return trackIds;
+            }
+
+            trackIds.clear();
+
+            return trackIds;
+        }
+
+        public String getTrackIdsAsString() {
+            return sanitizeTrackIdsString(getTrackIds().toString());
+        }
+
+        public void setTrackIds(String trackIdsString) {
+            trackIdsString = sanitizeTrackIdsString(trackIdsString);
+
+            if (trackIds.contains(",")) {
+                trackIds = new ArrayList<>(Arrays.asList(trackIdsString.split(",")));
+            }
+            else {
+                trackIds = new ArrayList<>(Arrays.asList(trackIdsString));
+            }
+        }
+
+        public void resetTrackIds() {
+            user.setMetaString(key, "");
+            trackIds.clear();
+        }
+
+        private String sanitizeTrackIdsString(String trackIds) {
+        /*
+            This function is used to clean up strings within the ChatSdk that could have added
+            space characters between elements, such as a List<>.toString() call,
+            and brackets from json arrays that could be returned with comma separated values
+            e.g., "[videoId1,videoId2,videoId3]"
+         */
+            if (trackIds != null) {
+                trackIds =  trackIds
+                        .replace(" ", "")
+                        .replace("[", "")
+                        .replace("]", "");
+            } else {
+                trackIds = "";
+            }
+            
+            return trackIds;
+        }
+    }
 }

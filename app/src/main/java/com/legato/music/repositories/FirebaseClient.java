@@ -11,7 +11,7 @@ import com.google.firebase.database.FirebaseDatabase;
 Any interaction with FireBase frame should be done by this class
 */
 
-public class FirebaseClient {
+class FirebaseClient {
 
     @Nullable private  static FirebaseClient instance;
     @Nullable private FirebaseDatabase mFirebaseDatabase;

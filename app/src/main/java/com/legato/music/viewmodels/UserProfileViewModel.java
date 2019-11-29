@@ -58,10 +58,18 @@ public class UserProfileViewModel extends ViewModel {
     }
 
     public List<String> getYoutubeVideoIds() {
-        return nearbyUser.getYoutubeVideoIds();
+        return nearbyUser.getYoutubeSamples().getTrackIds();
     }
 
     public void setYoutubeVideoIds(String videoIds) {
-        nearbyUser.setYoutubeVideoIds(videoIds);
+        nearbyUser.getYoutubeSamples().setTrackIds(videoIds);
+    }
+
+    public List<String> getSpotifyTrackIds() {
+        return nearbyUser.getSpotifySamples().getTrackIds();
+    }
+
+    public void setSpotifyTrackIds(String trackIds) {
+        nearbyUser.getSpotifySamples().setTrackIds(trackIds);
     }
 }

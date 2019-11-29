@@ -30,6 +30,10 @@ public class SoloArtistViewModel extends ViewModel {
         return nearbyUser.getUser();
     }
 
+    public void setUser(User user) {
+        nearbyUser.setUser(user);
+    }
+
     public String getPreviousAvatarURL() {
         return previousAvatarURL;
     }
@@ -47,19 +51,19 @@ public class SoloArtistViewModel extends ViewModel {
     }
 
     public boolean addYoutubeVideoId(String newVideoId) {
-        return nearbyUser.addYoutubeVideoId(newVideoId);
+        return nearbyUser.getYoutubeSamples().addTrackId(newVideoId);
     }
 
     public List<String> getYoutubeVideoIds() {
-        return nearbyUser.getYoutubeVideoIds();
+        return nearbyUser.getYoutubeSamples().getTrackIds();
     }
 
     public void resetYoutubeVideoIds() {
-        nearbyUser.resetYoutubeVideoIds();
+        nearbyUser.getYoutubeSamples().resetTrackIds();
     }
 
     public String getYoutubeVideoIdsAsString() {
-        return nearbyUser.getYoutubeVideoIdsAsString();
+        return nearbyUser.getYoutubeSamples().getTrackIdsAsString();
     }
 
     public String getLookingFor() {
@@ -99,5 +103,19 @@ public class SoloArtistViewModel extends ViewModel {
         return facebookUserId;
     }
 
-    public String getSpotifyTrack() { return nearbyUser.getSpotifyTrack(); }
+    public boolean addSpotifyTrackId(String trackId) {
+        return nearbyUser.getSpotifySamples().addTrackId(trackId);
+    }
+
+    public List<String> getSpotifyTrackIds() {
+        return nearbyUser.getSpotifySamples().getTrackIds();
+    }
+
+    public void resetSpotifyTrackIds() {
+        nearbyUser.getSpotifySamples().resetTrackIds();
+    }
+
+    public String getSpotifyTrackIdsAsString() {
+        return nearbyUser.getSpotifySamples().getTrackIdsAsString();
+    }
 }

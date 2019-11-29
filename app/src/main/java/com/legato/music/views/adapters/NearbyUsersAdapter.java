@@ -57,23 +57,6 @@ public class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
         return false;
     }
 
-    /*public void addNearbyUserToRecyclerView(String userId, String distance) {
-        User user = ChatSDK.db().fetchOrCreateEntityWithEntityID(User.class, userId);
-        Completable completable = ChatSDK.core().userOn(user);
-        disposableList.add(completable.observeOn(AndroidSchedulers.mainThread()).subscribe(() -> {
-            // User object has now been populated and is ready to use
-            if (!user.isMe()) {
-                if(!isUserInNearbyUserList(user)){
-                    NearbyUser nearbyUser = new NearbyUser(user, distance);
-                    this.nearbyUsers.add(nearbyUser);
-                }
-                onFilter(mfilters);
-            }
-        }, throwable -> {
-
-        }));
-    }*/
-
     public void addNearbyUser(NearbyUser nearbyuser){
         Completable completable = ChatSDK.core().userOn(nearbyuser.getUser());
         disposableList.add(completable.observeOn(AndroidSchedulers.mainThread()).subscribe(() -> {

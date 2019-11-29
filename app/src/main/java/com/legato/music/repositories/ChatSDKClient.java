@@ -5,7 +5,7 @@ import androidx.annotation.Nullable;
 import co.chatsdk.core.dao.User;
 import co.chatsdk.core.session.ChatSDK;
 
-public class ChatSDKClient {
+class ChatSDKClient {
     private static final String TAG = "ChatSDKClient";
 
     @Nullable private static ChatSDKClient instance;

@@ -70,6 +70,7 @@ import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.ArtistSimple;
 import kaaes.spotify.webapi.android.models.Image;
 import kaaes.spotify.webapi.android.models.Track;
+import retrofit.client.Request;
 import retrofit.client.Response;
 
 /**
@@ -134,7 +135,7 @@ public class SoloArtistBasicInfoFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container,
                              Bundle savedInstanceState) {
-        
+
         View view = inflater.inflate(R.layout.fragment_solo_artist_basic_info, container, false);
         ButterKnife.bind(this, view);
 
@@ -153,7 +154,6 @@ public class SoloArtistBasicInfoFragment extends Fragment {
         Resources res = getResources();
         String[] rlookingfor = res.getStringArray(R.array.looking_for);
         String dblookingfor = soloArtistViewModel.getLookingFor();
-
         if (dblookingfor != null) {
             if (dblookingfor.contains(rlookingfor[0]))
                 jamCheckBox.setChecked(true);
@@ -178,9 +178,7 @@ public class SoloArtistBasicInfoFragment extends Fragment {
         });
 
         proximityAlertSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> validate());
-
         setTextView(soloDisplayNameTextInputEditText, soloArtistViewModel.getUser().getName());
-
         soloDisplayNameTextInputEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -211,26 +209,26 @@ public class SoloArtistBasicInfoFragment extends Fragment {
 
         soloArtistProfilePictureImageView.setOnClickListener(tempView -> {
             if (getActivity() != null)
-            mediaSelector.startChooseImageActivity(getActivity(), MediaSelector.CropType.Circle, result -> {
+                mediaSelector.startChooseImageActivity(getActivity(), MediaSelector.CropType.Circle, result -> {
 
-                try {
-                    File compress = new Compressor(ChatSDK.shared().context())
-                            .setMaxHeight(ChatSDK.config().imageMaxThumbnailDimension)
-                            .setMaxWidth(ChatSDK.config().imageMaxThumbnailDimension)
-                            .compressToFile(new File(result));
+                    try {
+                        File compress = new Compressor(ChatSDK.shared().context())
+                                .setMaxHeight(ChatSDK.config().imageMaxThumbnailDimension)
+                                .setMaxWidth(ChatSDK.config().imageMaxThumbnailDimension)
+                                .compressToFile(new File(result));
 
-                    Bitmap bitmap = BitmapFactory.decodeFile(compress.getPath());
+                        Bitmap bitmap = BitmapFactory.decodeFile(compress.getPath());
 
-                    // Cache the file
-                    File file = ImageUtils.compressImageToFile(ChatSDK.shared().context(), bitmap, ChatSDK.currentUserID(), ".png");
-                    setImageURI(soloArtistProfilePictureImageView, Uri.fromFile(file));
-                    setTextView(soloArtistAddEditProfilePictureTextView, R.string.edit_profile_pic);
+                        // Cache the file
+                        File file = ImageUtils.compressImageToFile(ChatSDK.shared().context(), bitmap, ChatSDK.currentUserID(), ".png");
+                        setImageURI(soloArtistProfilePictureImageView, Uri.fromFile(file));
+                        setTextView(soloArtistAddEditProfilePictureTextView, R.string.edit_profile_pic);
 
-                    soloArtistViewModel.setAvatarUrl(Uri.fromFile(file).toString());
-                } catch (Exception e) {
-                    ChatSDK.logError(e);
-                }
-            });
+                        soloArtistViewModel.setAvatarUrl(Uri.fromFile(file).toString());
+                    } catch (Exception e) {
+                        ChatSDK.logError(e);
+                    }
+                });
         });
 
         youtubeRecyclerView.setHasFixedSize(true);
@@ -240,12 +238,11 @@ public class SoloArtistBasicInfoFragment extends Fragment {
                 LinearLayoutManager.HORIZONTAL,
                 false);
         youtubeRecyclerView.setLayoutManager(layoutManager);
-
         if (!soloArtistViewModel.getYoutubeVideoIds().isEmpty()) {
             InitializeYoutubeView();
         }
 
-        if (soloArtistViewModel.getSpotifyTrack() != null) {
+        if (!soloArtistViewModel.getSpotifyTrackIds().isEmpty()) {
             spotifyInitialize();
         }
 
@@ -297,8 +294,8 @@ public class SoloArtistBasicInfoFragment extends Fragment {
                 soloDisplayNameTextInputEditText.getText().toString().trim() : "";
 
         valid = (isCheckBoxChecked(jamCheckBox) ||
-                 isCheckBoxChecked(collaborateCheckBox) ||
-                 isCheckBoxChecked(startBandCheckBox));
+                isCheckBoxChecked(collaborateCheckBox) ||
+                isCheckBoxChecked(startBandCheckBox));
         valid = valid && !displayName.isEmpty();
 
         if (getActivity() != null)
@@ -380,7 +377,7 @@ public class SoloArtistBasicInfoFragment extends Fragment {
                     case TOKEN:
                         // Handle successful response
                         mAccessToken = response.getAccessToken();
-                        showSpotifyTrack(soloArtistViewModel.getSpotifyTrack());
+                        showSpotifyTrack(soloArtistViewModel.getSpotifyTrackIds());
                         Log.d(TAG, "Access Token: " + mAccessToken);
                         break;
 
@@ -397,6 +394,8 @@ public class SoloArtistBasicInfoFragment extends Fragment {
             } else if (requestCode == RequestCodes.RC_YOUTUBE_SEARCH && resultCode == Activity.RESULT_OK) {
                 soloArtistViewModel.addYoutubeVideoId(data.getStringExtra("youtube_video"));
                 InitializeYoutubeView();
+            } else if (requestCode == RequestCodes.RC_SPOTIFY_TRACK && resultCode == Activity.RESULT_OK) {
+                soloArtistViewModel.addSpotifyTrackId(data.getStringExtra("spotify_track"));
             } else {
                 try {
                     mediaSelector.handleResult(getActivity(), requestCode, resultCode, data);
@@ -412,57 +411,59 @@ public class SoloArtistBasicInfoFragment extends Fragment {
         if (mAccessToken != null && !mAccessToken.isEmpty()) {
             Intent intent = SpotifySearchActivity.createIntent(getActivity());
             intent.putExtra(SpotifySearchActivity.EXTRA_TOKEN, mAccessToken);
-            startActivity(intent);
+            startActivityForResult(intent, RequestCodes.RC_SPOTIFY_TRACK);
         } else {
             ToastHelper.show(getContext(), "Spotify search not available");
         }
     }
 
-    private void showSpotifyTrack(String track) {
+    private void showSpotifyTrack(List<String> tracks) {
         if (mAccessToken != null) {
             SpotifyApi spotifyApi = new SpotifyApi();
             spotifyApi.setAccessToken(mAccessToken);
             SpotifyService spotifyService = spotifyApi.getService();
 
-            String trackId = track.replace("spotify:track:", "");
-            spotifyService.getTrack(trackId, new SpotifyCallback<Track>() {
-                @Override
-                public void success(Track track, Response response) {
-                    Image image = track.album.images.get(0);
-                    String trackName = track.name;
-                    List<String> names = new ArrayList<>();
-                    for (ArtistSimple i : track.artists) {
-                        names.add(i.name);
+            for (String track: tracks) {
+                String trackId = track.replace("spotify:track:", "");
+                spotifyService.getTrack(trackId, new SpotifyCallback<Track>() {
+                    @Override
+                    public void success(Track track, Response response) {
+                        Image image = track.album.images.get(0);
+                        String trackName = track.name;
+                        List<String> names = new ArrayList<>();
+                        for (ArtistSimple i : track.artists) {
+                            names.add(i.name);
+                        }
+
+                        Joiner joiner = Joiner.on(", ");
+                        String artist = joiner.join(names);
+
+                        //TODO: After designers specify where to add the spotify track make UI changes.
+                        View spotifyView = null; //= layoutInflater.inflate(R.layout.view_spotify_track, mContainer, false);
+                        if (spotifyView != null) {
+                            ImageView albumCover = spotifyView.findViewById(R.id.track_album_cover);
+                            Picasso.with(getContext()).load(image.url).into(albumCover);
+                            TextView trackNameTextView = spotifyView.findViewById(R.id.track_title);
+                            trackNameTextView.setText(trackName);
+                            TextView artistTextView = spotifyView.findViewById(R.id.track_artist);
+                            artistTextView.setText(artist);
+                            //addView(spotifyView);
+                            spotifyView.setOnClickListener(v -> {
+                                if (mPlayerBoundService != null) {
+                                    mPlayerBoundService.playTrack(track);
+                                } else {
+                                    Log.e(TAG, "Player not initialized");
+                                }
+                            });
+                        }
                     }
 
-                    Joiner joiner = Joiner.on(", ");
-                    String artist = joiner.join(names);
-
-                    //TODO: After designers specify where to add the spotify track make UI changes.
-                    View spotifyView = null; //= layoutInflater.inflate(R.layout.view_spotify_track, mContainer, false);
-                    if (spotifyView != null) {
-                        ImageView albumCover = spotifyView.findViewById(R.id.track_album_cover);
-                        Picasso.with(getContext()).load(image.url).into(albumCover);
-                        TextView trackNameTextView = spotifyView.findViewById(R.id.track_title);
-                        trackNameTextView.setText(trackName);
-                        TextView artistTextView = spotifyView.findViewById(R.id.track_artist);
-                        artistTextView.setText(artist);
-                        //addView(spotifyView);
-                        spotifyView.setOnClickListener(v -> {
-                            if (mPlayerBoundService != null) {
-                                mPlayerBoundService.playTrack(track);
-                            } else {
-                                Log.e(TAG, "Player not initialized");
-                            }
-                        });
+                    @Override
+                    public void failure(SpotifyError spotifyError) {
+                        Log.e(TAG, spotifyError.getMessage());
                     }
-                }
-
-                @Override
-                public void failure(SpotifyError spotifyError) {
-                    Log.e(TAG, spotifyError.getMessage());
-                }
-            });
+                });
+            }
         } else {
             Log.e(TAG,"No valid access token");
         }

@@ -24,7 +24,7 @@ import co.chatsdk.core.session.ChatSDK;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.annotations.Nullable;
 
-public class GeofireClient {
+class GeofireClient {
     private static final String TAG = GeofireClient.class.getSimpleName();
 
     @Nullable private static GeofireClient mGeofireInstance;

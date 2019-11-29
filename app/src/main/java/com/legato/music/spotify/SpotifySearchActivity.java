@@ -1,5 +1,6 @@
 package com.legato.music.spotify;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,7 +15,6 @@ import java.util.List;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import co.chatsdk.core.session.ChatSDK;
 import kaaes.spotify.webapi.android.models.Track;
 
 public class SpotifySearchActivity extends AppCompatActivity implements Search.View {
@@ -77,7 +77,9 @@ public class SpotifySearchActivity extends AppCompatActivity implements Search.V
         mAdapter = new SearchResultsAdapter(this, new SearchResultsAdapter.TrackSelectedListener() {
             @Override
             public void onTrackSelected(View itemView, Track item) {
-                ChatSDK.currentUser().setMetaString(Keys.spotify_track, item.uri);
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra("spotify_track", item.uri);
+                setResult(Activity.RESULT_OK, resultIntent);
                 finish();
             }
 
