@@ -1,4 +1,4 @@
-package com.legato.music;
+package com.legato.music.views.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,6 +7,9 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.legato.music.views.adapters.holders.UserProfileInfoHolder;
+import com.legato.music.models.UserProfileInfo;
 
 import java.util.ArrayList;
 import java.util.List;

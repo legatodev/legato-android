@@ -6,33 +6,28 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
-import com.legato.music.models.UserProfile;
-import com.legato.music.utils.Keys;
+import com.legato.music.models.NearbyUser;
+import com.legato.music.repositories.BaseRepository;
 
 import java.util.List;
 
 import co.chatsdk.core.dao.User;
 
 public class SoloArtistViewModel extends ViewModel {
-    private UserProfile userProfile;
+    private BaseRepository baseRepository;
+    private NearbyUser nearbyUser;
     private String previousAvatarURL = "";
     private String avatarUrl = "";
     private FirebaseUser firebaseUser;
 
     public SoloArtistViewModel() {
-        this.userProfile = new UserProfile();
+        this.baseRepository = BaseRepository.getInstance();
+        this.nearbyUser = baseRepository.getCurrentUser();
         this.firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
     }
 
     public User getUser() {
-        return userProfile.getUser();
-    }
-
-    public void setUser(User user) {
-        userProfile.setUser(user);
-
-        userProfile.setYoutubeVideoIds(
-                user.metaStringForKey(Keys.youtube));
+        return nearbyUser.getUser();
     }
 
     public String getPreviousAvatarURL() {
@@ -40,7 +35,7 @@ public class SoloArtistViewModel extends ViewModel {
     }
 
     public void setPreviousAvatarURL(String previousAvatarURL) {
-        this.previousAvatarURL = userProfile.getUser().getAvatarURL();
+        this.previousAvatarURL = previousAvatarURL;
     }
 
     public String getAvatarUrl() {
@@ -48,39 +43,39 @@ public class SoloArtistViewModel extends ViewModel {
     }
 
     public void setAvatarUrl(String avatarUrl) {
-        this.avatarUrl = avatarUrl;
+        getUser().setAvatarURL(avatarUrl);
     }
 
     public boolean addYoutubeVideoId(String newVideoId) {
-        return userProfile.addYoutubeVideoId(newVideoId);
+        return nearbyUser.addYoutubeVideoId(newVideoId);
     }
 
     public List<String> getYoutubeVideoIds() {
-        return userProfile.getYoutubeVideoIds();
+        return nearbyUser.getYoutubeVideoIds();
     }
 
     public void resetYoutubeVideoIds() {
-        userProfile.resetYoutubeVideoIds();
+        nearbyUser.resetYoutubeVideoIds();
     }
 
     public String getYoutubeVideoIdsAsString() {
-        return userProfile.getYoutubeVideoIdsAsString();
+        return nearbyUser.getYoutubeVideoIdsAsString();
     }
 
     public String getLookingFor() {
-        return userProfile.getUser().metaStringForKey(Keys.lookingfor);
+        return nearbyUser.getLookingfor();
     }
 
     public String getInstagram() {
-        return userProfile.getUser().metaStringForKey(Keys.instagram);
+        return nearbyUser.getInstagram();
     }
 
     public String getFacebook() {
-        return userProfile.getUser().metaStringForKey(Keys.facebook);
+        return nearbyUser.getFacebook();
     }
 
     public String getYoutubeChannel() {
-        return userProfile.getUser().metaStringForKey(Keys.youtube_channel);
+        return nearbyUser.getYoutubeChannel();
     }
 
     public String getPhotoUrl() {
@@ -103,4 +98,6 @@ public class SoloArtistViewModel extends ViewModel {
 
         return facebookUserId;
     }
+
+    public String getSpotifyTrack() { return nearbyUser.getSpotifyTrack(); }
 }

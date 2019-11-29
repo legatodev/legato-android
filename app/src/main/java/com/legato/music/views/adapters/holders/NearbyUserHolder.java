@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.youtube.player.YouTubeIntents;
 import com.legato.music.R;
-import com.legato.music.UserProfileActivity;
+import com.legato.music.views.activity.UserProfileActivity;
 import com.legato.music.models.NearbyUser;
 
 import butterknife.BindView;

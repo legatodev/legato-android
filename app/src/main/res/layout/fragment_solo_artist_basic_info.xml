@@ -293,6 +293,8 @@
                 app:layout_constraintLeft_toRightOf="@id/addYoutubeButton"
                 app:layout_constraintStart_toEndOf="@+id/addYoutubeButton"
                 app:layout_constraintTop_toBottomOf="@+id/galleryTextView" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

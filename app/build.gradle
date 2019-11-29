@@ -7,13 +7,18 @@ android {
     signingConfigs {
     }
     compileSdkVersion 28
+
+    dataBinding {
+        enabled = true
+    }
+
     defaultConfig {
         applicationId "com.legato.music"
         minSdkVersion 21
         targetSdkVersion 28
         versionCode 9
         versionName "1.08"
-        //testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
     }
@@ -166,6 +171,7 @@ import net.ltgt.gradle.errorprone.CheckSeverity
 
 tasks.withType(JavaCompile).configureEach {
     options.compilerArgs << "-Xlint:all"
+    options.errorprone.errorproneArgs << "-XepOpt:NullAway:ExcludedFieldAnnotations=javax.inject.Inject,butterknife"
     options.errorprone.errorproneArgs << "-XepExcludedPaths:.*/build/generated/.*"
     options.errorprone.errorproneArgs << "-Xep:NullAway:ERROR" << "-XepOpt:NullAway:AnnotatedPackages=com.legato.music"
 }

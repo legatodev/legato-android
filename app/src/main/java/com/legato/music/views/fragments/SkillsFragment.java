@@ -33,12 +33,10 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
         void onFinish();
     }
 
-    @BindView(R.id.skillsRecyclerView)
-    @Nullable RecyclerView mSkillsRecyclerView;
-    @BindView(R.id.finishSoloRegistrationButton)
-    @Nullable Button finishButton;
-    @BindView(R.id.addSkillButton)
-    @Nullable Button addSkillButton;
+    @BindView(R.id.skillsRecyclerView) RecyclerView mSkillsRecyclerView;
+    @BindView(R.id.finishSoloRegistrationButton) Button finishButton;
+    @BindView(R.id.addSkillButton) Button addSkillButton;
+
     @Nullable private SkillsAdapter mSkillsAdapter;
     private ArrayList<Skill> mSkillArrayList = new ArrayList<>();
     private boolean skillSelected;
@@ -47,21 +45,45 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
 
     private FinishClickedListener finishClickedListener;
 
-    public SkillsFragment() {
-        this.finishClickedListener = (FinishClickedListener) getActivity();
-    }
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_skills, container, false);
         ButterKnife.bind(this, view);
+
+        this.finishClickedListener = (FinishClickedListener) getActivity();
+
         skillSelected = false;
         User user = ChatSDK.currentUser();
         Resources res = getResources();
         populateCurrentSkills(user, res);
 
         return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        if (view == null) { return; }
+
+        if(mSkillArrayList.size()==0) {
+            Skill skill = new Skill("Choose Skill", 0);
+            mSkillArrayList.add(skill);
+        }
+        mSkillsAdapter = new SkillsAdapter(getContext(), this, R.layout.item_skill, mSkillArrayList);
+        mSkillsRecyclerView.setAdapter(mSkillsAdapter);
+        DividerItemDecoration itemDecor = new DividerItemDecoration(mSkillsRecyclerView.getContext(), DividerItemDecoration.HORIZONTAL);
+        mSkillsRecyclerView.addItemDecoration(itemDecor);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+        mSkillsRecyclerView.setLayoutManager(layoutManager);
+
+        addSkillButton.setOnClickListener(this);
+        addSkillButton.setEnabled(false);
+
+        finishButton.setOnClickListener(this);
+
+        validate();
     }
 
     private void populateCurrentSkills(User user, Resources res) {
@@ -116,42 +138,9 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
         return s.replaceAll("[^\\d]", "");
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        //TODO: Why does this need to be in onActivityCreated? Why can't it be in OnCreateView?
-        super.onActivityCreated(savedInstanceState);
-        View view = getView();
-
-        if (view == null) { return; }
-
-        if(mSkillArrayList.size()==0) {
-            Skill skill = new Skill("Choose Skill", 0);
-            mSkillArrayList.add(skill);
-        }
-        mSkillsAdapter = new SkillsAdapter(getContext(), this, R.layout.item_skill, mSkillArrayList);
-        if (mSkillsRecyclerView != null) {
-            mSkillsRecyclerView.setAdapter(mSkillsAdapter);
-            DividerItemDecoration itemDecor = new DividerItemDecoration(mSkillsRecyclerView.getContext(), DividerItemDecoration.HORIZONTAL);
-            mSkillsRecyclerView.addItemDecoration(itemDecor);
-            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
-            mSkillsRecyclerView.setLayoutManager(layoutManager);
-        }
-
-        if (addSkillButton != null) {
-            addSkillButton.setOnClickListener(this);
-            addSkillButton.setEnabled(false);
-        }
-
-        if (finishButton != null)
-            finishButton.setOnClickListener(this);
-
-        validate();
-    }
-
     private void validate() {
         valid = skillSelected;
-        if (finishButton != null)
-            finishButton.setEnabled(valid);
+        finishButton.setEnabled(valid);
     }
 
     @Override
@@ -162,8 +151,7 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
                     mSkillArrayList.add(new Skill("Choose Skill", 0));
                     mSkillsAdapter.notifyItemInserted(mSkillArrayList.size() - 1);
                 } else {
-                    if (addSkillButton != null)
-                        addSkillButton.setEnabled(false);
+                    addSkillButton.setEnabled(false);
                 }
 
                 break;
@@ -177,15 +165,14 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
     public void onSkillSelected(View v, int position) {
         //TODO: call this when a skill is chosen.
         skillSelected = true;
-        if (addSkillButton != null)
-            addSkillButton.setEnabled(true);
+        addSkillButton.setEnabled(true);
         validate();
     }
 
     public String extractData() {
         String skills = "";
 
-        if (mSkillsAdapter != null && mSkillsRecyclerView != null) {
+        if (mSkillsAdapter != null) {
             for (int i = 0; i < mSkillsAdapter.getItemCount(); i++) {
                 SkillsAdapter.SkillsHolder holder = (SkillsAdapter.SkillsHolder) mSkillsRecyclerView.findViewHolderForAdapterPosition(i);
                 if (holder != null) {

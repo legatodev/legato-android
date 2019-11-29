@@ -86,7 +86,6 @@ public class SoloRegistrationActivity extends AppCompatActivity implements Skill
         ButterKnife.bind(this);
 
         soloArtistViewModel = ViewModelProviders.of(this).get(SoloArtistViewModel.class);
-        soloArtistViewModel.setUser(ChatSDK.currentUser());
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -249,7 +248,7 @@ public class SoloRegistrationActivity extends AppCompatActivity implements Skill
         private int tabCount;
 
         SectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
+            super(fm, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
             tabCount = 1;
         }
 

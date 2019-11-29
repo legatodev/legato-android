@@ -24,7 +24,6 @@ import com.legato.music.views.fragments.FilterDialogFragment;
 import com.legato.music.models.Filters;
 import com.legato.music.NearbyMessages;
 import com.legato.music.R;
-import com.legato.music.UserProfileActivity;
 import com.legato.music.models.NearbyUser;
 import com.legato.music.views.adapters.NearbyUsersAdapter;
 import com.legato.music.messaging.ActiveChatActivity;

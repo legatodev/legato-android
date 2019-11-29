@@ -2,7 +2,12 @@ package com.legato.music.models;
 
 import com.legato.music.utils.Keys;
 
+import org.apache.commons.lang3.ObjectUtils;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 
 import co.chatsdk.core.dao.User;
 import co.chatsdk.core.session.ChatSDK;
@@ -12,22 +17,23 @@ import io.reactivex.annotations.Nullable;
 //A Model in MVVM
 public class NearbyUser {
 
-    @NonNull private String distance;
-    @NonNull
-    private User user;
+    @NonNull private String distance = "0";
+    @NonNull private User user = new User();
 
-    @NonNull private String[] youtubeVideoIds;
+    @NonNull private ArrayList<String> youtubeVideoIds;
 
     public NearbyUser(User user, String distance) {
-        this.distance = distance;
-        this.user = user;
-        youtubeVideoIds = new String[] {};
+        setDistance(distance);
+        setUser(user);
+
+        updateYoutubeVideoIds();
     }
 
     public NearbyUser(String userId, String distance) {
-        this.distance = distance;
-        this.user = ChatSDK.db().fetchOrCreateEntityWithEntityID(User.class, userId);
-        youtubeVideoIds = new String[] {};
+        setDistance(distance);
+        setUser(userId);
+
+        updateYoutubeVideoIds();
     }
 
     public String getUsername() {
@@ -51,14 +57,17 @@ public class NearbyUser {
     }
 
     public void setDistance(String distance) {
-        this.distance = distance;
+        if (distance != null)
+            this.distance = distance;
     }
 
     public String getGenres() {
         return user.metaStringForKey(Keys.genres);
     }
 
-    public void setGenres(@Nullable String genres) {    this.user.setMetaString(Keys.genres, genres);   }
+    public void setGenres(@Nullable String genres) {
+        this.user.setMetaString(Keys.genres, genres);
+    }
 
     public String getSkills() {
         return user.metaStringForKey(Keys.skills);
@@ -80,11 +89,19 @@ public class NearbyUser {
 
     public String getAvailability() { return this.user.getAvailability(); }
 
+    public String getAvatarUrl() { return user.getAvatarURL(); }
+
+    public void setAvatarUrl(String avatarUrl) { user.setAvatarURL(avatarUrl); }
+
     public String getInstagram() { return this.user.metaStringForKey(Keys.instagram); }
 
     public String getFacebook() { return this.user.metaStringForKey(Keys.facebook); }
 
-    public String getYoutubeChannel() { return this.user.metaStringForKey(Keys.youtube_channel); }
+    public String getYoutubeChannel() {
+        return this.user.metaStringForKey(Keys.youtube_channel);
+    }
+
+    public String getSpotifyTrack() { return user.metaStringForKey(Keys.spotify_track); }
 
     public boolean isMe() { return user.isMe(); }
 
@@ -92,22 +109,107 @@ public class NearbyUser {
 
     public String getYoutube() { return user.metaStringForKey(Keys.youtube); }
 
-    public String[] getYoutubeVideoIds() {
-        if (youtubeVideoIds.length > 0)
+    public boolean addYoutubeVideoId(String newVideoId) {
+        boolean bSuccess = false;
+
+        if (youtubeVideoIds.size() < 6) {
+            if (!youtubeVideoIds.contains(newVideoId)) {
+                youtubeVideoIds.add(newVideoId);
+            }
+            bSuccess = true;
+        }
+
+        return bSuccess;
+    }
+
+    public boolean removeYoutubeVideoId(int position) {
+        boolean bSuccess = false;
+
+        if (!youtubeVideoIds.isEmpty()) {
+            youtubeVideoIds.remove(position);
+
+            bSuccess = true;
+        }
+
+        return bSuccess;
+    }
+
+    public List<String> getYoutubeVideoIds() {
+        if (youtubeVideoIds.isEmpty()) {
+            setYoutubeVideoIds(user.metaStringForKey(Keys.youtube));
+        }
+
+        if (!youtubeVideoIds.isEmpty() && !youtubeVideoIds.get(0).isEmpty()) {
             return youtubeVideoIds;
+        }
+
+        youtubeVideoIds = new ArrayList<>();
+
+        return youtubeVideoIds;
+    }
+
+    public String getYoutubeVideoIdsAsString() {
+        return sanitizeVideoIdsString(getYoutubeVideoIds().toString());
+    }
+
+    public void setYoutubeVideoIds(String videoIds) {
+        videoIds = sanitizeVideoIdsString(videoIds);
+
+        if (videoIds.contains(",")) {
+            youtubeVideoIds = new ArrayList<>(Arrays.asList(videoIds.split(",")));
+        }
+        else {
+            youtubeVideoIds = new ArrayList<>(Arrays.asList(videoIds));
+        }
+    }
+
+    private void updateYoutubeVideoIds() {
+        youtubeVideoIds = new ArrayList<>();
+
+        if (this.user != null)
+            setYoutubeVideoIds(this.user.metaStringForKey(Keys.youtube));
+    }
+
+    public void resetYoutubeVideoIds() {
+        user.setMetaString(Keys.youtube, "");
+        youtubeVideoIds = new ArrayList<>();
+    }
+
+    private String sanitizeVideoIdsString(String videoIds) {
+        /*
+            This function is used to clean up strings within the ChatSdk that could have added
+            space characters between elements, such as a List<>.toString() call,
+            and brackets from json arrays that could be returned with comma separated values
+            e.g., "[videoId1,videoId2,videoId3]"
+         */
+        if (videoIds != null)
+            videoIds = videoIds
+                    .replace(" ", "")
+                    .replace("[","")
+                    .replace("]","");
         else
-            return new String[] { getYoutube() };
+            videoIds = "";
+
+        return videoIds;
     }
 
     public User getUser() { return user;}
 
-    public static Comparator<NearbyUser> sortByDistance = new Comparator<NearbyUser>() {
-        @Override
-        public int compare(NearbyUser u1, NearbyUser u2){
-                    return Double.parseDouble(u1.getDistance()) < Double.parseDouble(u2.getDistance())? -1
-                    : Double.parseDouble(u1.getDistance()) > Double.parseDouble(u2.getDistance())? 1
-                    :0;
-        }
+    public void setUser(String userId) {
+        this.user = ChatSDK.db().fetchOrCreateEntityWithEntityID(User.class, userId);
+    }
+
+    public void setUser(User user) {
+        if (user != null)
+            this.user = user;
+    }
+
+    public static Comparator<NearbyUser> sortByDistance = (u1, u2) -> {
+        Double u1Dist = Double.parseDouble(u1.getDistance());
+        Double u2Dist = Double.parseDouble(u2.getDistance());
+
+        return u1Dist < u2Dist ? -1 :
+                u1Dist > u2Dist ? 1 : 0;
     };
 
 
