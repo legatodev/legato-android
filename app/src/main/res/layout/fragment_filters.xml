@@ -25,7 +25,7 @@
             style="@style/AppTheme.FilterIcon"
             android:layout_centerVertical="true"
             android:tint="@color/greySecondary"
-            app:srcCompat="@drawable/ic_fastfood_white_24dp" />
+            app:srcCompat="@drawable/ic_lookingfor" />
 
         <Spinner
             android:id="@+id/lookfor"
@@ -43,7 +43,7 @@
             style="@style/AppTheme.FilterIcon"
             android:layout_centerVertical="true"
             android:tint="@color/greySecondary"
-            app:srcCompat="@drawable/ic_fastfood_white_24dp" />
+            app:srcCompat="@drawable/ic_genres" />
 
         <Spinner
             android:id="@+id/genres"
@@ -62,7 +62,7 @@
             style="@style/AppTheme.FilterIcon"
             android:layout_centerVertical="true"
             android:tint="@color/greySecondary"
-            app:srcCompat="@drawable/ic_fastfood_white_24dp" />
+            app:srcCompat="@drawable/ic_skills" />
 
         <Spinner
             android:id="@+id/skills"

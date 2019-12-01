@@ -14,12 +14,12 @@
         android:background="@drawable/solo_active"
         android:onClick="onSolo"/>
 
-    <Button
+<!--    <Button
         android:id="@+id/band"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/band_inactive"
         android:layout_margin="@dimen/std_margin"
-        android:onClick="onBand"/>
+        android:onClick="onBand"/>-->
 
 </LinearLayout>

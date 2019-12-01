@@ -1,6 +1,6 @@
 <resources>
     <style name="ActionBarTheme" parent="Theme.AppCompat.Light">
-        <item name="android:windowBackground">@drawable/background_gradient</item>
+        <item name="android:windowBackground">@drawable/legato_bg</item>
         <item name="checkboxStyle">@style/legato_checkbox</item>
     </style>
 
@@ -20,7 +20,7 @@
     </style>
 
     <style name="NoActionBarTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:windowBackground">@drawable/background_gradient</item>
+        <item name="android:windowBackground">@drawable/legato_bg</item>
         <item name="checkboxStyle">@style/legato_checkbox</item>
     </style>
 

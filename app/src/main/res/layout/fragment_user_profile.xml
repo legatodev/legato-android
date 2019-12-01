@@ -25,102 +25,13 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <RelativeLayout
-                android:id="@+id/featuredArtistLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:background="@drawable/background_gradient">
-
-                <RelativeLayout
-                    android:id="@+id/featureArtistLayout"
-                    android:layout_width="185dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp">
-
-                    <TextView
-                        android:id="@+id/featuredArtistTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
-                        android:text="Featured Artist"
-                        android:textColor="@color/white"
-                        android:textSize="16sp" />
-
-                    <com.facebook.drawee.view.SimpleDraweeView
-                        android:id="@+id/featuredArtistImageView"
-                        android:layout_width="match_parent"
-                        android:layout_height="120dp"
-                        android:layout_below="@+id/featuredArtistTextView"
-                        android:layout_marginBottom="8dp"
-                        android:adjustViewBounds="true"
-                        android:scaleType="centerCrop"
-                        fresco:roundedCornerRadius="2dp" />
-
-                    <TextView
-                        android:id="@+id/featuredArtistNameTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/featuredArtistImageView"
-                        android:layout_centerHorizontal="false"
-                        android:layout_marginBottom="8dp"
-                        android:text="Test"
-                        android:textColor="@color/white"
-                        android:textSize="18sp" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/featuredBandLayout"
-                    android:layout_width="185dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:layout_toEndOf="@id/featureArtistLayout">
-
-                    <TextView
-                        android:id="@+id/featuredBandTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
-                        android:text="Featured Band"
-                        android:textColor="@color/white"
-                        android:textSize="16sp" />
-
-                    <com.facebook.drawee.view.SimpleDraweeView
-                        android:id="@+id/featuredBandImageView"
-                        android:layout_width="match_parent"
-                        android:layout_height="120dp"
-                        android:layout_below="@id/featuredBandTextView"
-                        android:layout_marginBottom="8dp"
-                        android:adjustViewBounds="true"
-                        android:scaleType="centerCrop"
-                        fresco:roundedCornerRadius="2dp" />
-
-                    <TextView
-                        android:id="@+id/featuredBandNameTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/featuredBandImageView"
-                        android:layout_centerHorizontal="false"
-                        android:layout_marginBottom="8dp"
-                        android:text="Test"
-                        android:textColor="@color/white"
-                        android:textSize="18sp" />
-
-                </RelativeLayout>
-            </RelativeLayout>
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="8dp">>
 
             <RelativeLayout
                 android:id="@+id/profileInfoLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/featuredArtistLayout"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:background="@color/skills_card_view_background">

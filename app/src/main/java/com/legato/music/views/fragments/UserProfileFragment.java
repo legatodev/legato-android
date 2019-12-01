@@ -61,18 +61,10 @@ import io.reactivex.annotations.Nullable;
 public class UserProfileFragment extends BaseFragment {
     private static final String TAG = UserProfileFragment.class.getSimpleName();
 
-    @BindView(R.id.featuredArtistImageView)
-    @Nullable protected ImageView featuredArtistImageView;
-    @BindView(R.id.featuredBandImageView)
-    @Nullable protected ImageView featuredBandImageView;
     @BindView(R.id.profilePhotoImageView)
     @Nullable protected SimpleDraweeView profilePhotoImageView;
     @BindView(R.id.profileUserAvailabilityImageView)
     @Nullable protected ImageView profileUserAvailabilityImageView;
-    @BindView(R.id.featuredArtistNameTextView)
-    @Nullable protected TextView featuredArtistNameTextView;
-    @BindView(R.id.featuredBandNameTextView)
-    @Nullable protected TextView featuredBandNameTextView;
     @BindView(R.id.connectOrRemoveButton)
     @Nullable protected Button connectOrRemoveButton;
     @BindView(R.id.editProfileButton)

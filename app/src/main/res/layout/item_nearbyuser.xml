@@ -6,8 +6,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="@dimen/std_padding"
-    android:elevation="@dimen/std_elevation">
+    android:elevation="@dimen/std_elevation"
+    android:layout_marginHorizontal="@dimen/std_margin"
+    android:layout_marginBottom="@dimen/std_margin">
 
     <androidx.cardview.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/nearbyUserCardView"
@@ -82,12 +83,12 @@
                 android:id="@+id/nearbyUserDistanceTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:textColor="@color/distance"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 tools:text="Distance"
-                android:drawableTop="@drawable/location_pin"
+                android:drawableTop="@drawable/ic_location"
                 android:layout_margin="@dimen/std_margin"/>
 
             <TextView
