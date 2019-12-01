@@ -7,7 +7,7 @@
               android:orientation="vertical">
 
     <ImageView
-        android:layout_marginTop="5dp"
+        android:layout_margin="@dimen/std_margin"
         android:id="@+id/track_album_cover"
         android:layout_width="match_parent"
         android:layout_height="200dp"

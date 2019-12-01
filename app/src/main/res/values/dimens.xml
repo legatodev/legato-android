@@ -1,17 +1,30 @@
 <resources>
     <!-- activity_avatar; activity_nearby_users; item_nearbyuser; activity_active_chats; item_spotify_search
          fragment_band_basic_info; fragment_band_members; activity_registration; item_userprofileinfo
-          item_skill; item_filter_spinner; view_spotify_track; view_video_item; item_youtube_view-->
+          item_skill; item_filter_spinner; view_spotify_track; view_video_item; item_youtube_view
+          activity_youtube; fragment_skills; fragment_user_profile; item_band_members-->
     <dimen name="std_margin">8dp</dimen>
 
+    <!-- fragment_solo_artist_basic_info; fragment_user_profile; item_nearbyuser -->
+    <dimen name="std_marginSmall">4dp</dimen>
+
     <!-- activity_spotify_search; custom_actionbar; activity_nearby_users; view_video_item; item_youtube_view
-     view_spotify_track; item_filer_spinner-->
+     view_spotify_track; item_filter_spinner; fragment_filters; item_nearby_user-->
     <dimen name="std_padding">4dp</dimen>
 
     <!-- activity_nearby_users; item_nearbyuser; item_skill; item_band_members; view_video_item -->
     <dimen name="std_elevation">4dp</dimen>
 
-    <!-- item_band_members; item_nearbyuser; item_skill-->
+    <!-- item_band_members; item_nearbyuser; item_skill; activity_nearby_users; fragment_user_profile-->
     <dimen name="std_cornerRad">8dp</dimen>
+
+    <!-- fragment_user_profile; item_nearbyuser; fragment_filters; item_userprofileinfo -->
+    <dimen name="headerText">20sp</dimen>
+
+    <!-- item_nearbyuser; fragment_user_profile -->
+    <dimen name="labelText">16sp</dimen>
+
+    <!-- fragment_solo_artist_info-->
+    <dimen name="smallText">12sp</dimen>
 
 </resources>

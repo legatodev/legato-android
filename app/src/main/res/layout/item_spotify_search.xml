@@ -7,9 +7,7 @@
 
     <ImageView
         android:id="@+id/entity_image"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_margin="@dimen/std_margin"
+        style="@style/iconImage"
         android:contentDescription="@string/cover_art_description"/>
 
     <LinearLayout
@@ -42,8 +40,7 @@
 
     <Button
         android:id="@+id/add_track_button"
-        android:layout_width="wrap_content"
-        android:layout_height="36dp"
+        style="@style/stdButton"
         android:text="@string/add_track"
         android:textColor="@color/white"
         android:background="@drawable/rounded_button"

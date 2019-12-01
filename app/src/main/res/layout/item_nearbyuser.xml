@@ -24,21 +24,19 @@
 
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/nearbyUserPhotoImageView"
-                android:layout_width="68dp"
-                android:layout_height="68dp"
+                style="@style/iconImage"
                 fresco:roundAsCircle="true"
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
                 fresco:roundingBorderColor="@color/activity_background"
                 fresco:roundingBorderWidth="2dp"
-                android:layout_alignParentTop="true"
-                android:layout_margin="@dimen/std_margin"/>
+                android:layout_alignParentTop="true"/>
 
             <TextView
                 android:id="@+id/nearbyUserNameTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="18sp"
+                android:textSize="@dimen/headerText"
                 android:textColor="@color/activity_background"
                 android:layout_toEndOf="@id/nearbyUserPhotoImageView"
                 tools:text="Name"
@@ -46,44 +44,36 @@
 
             <ImageView
                 android:id="@+id/nearbyUserAvailability"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                style="@style/availability"
                 android:layout_toEndOf="@id/nearbyUserNameTextView"
-                android:layout_margin="@dimen/std_margin"
                 app:srcCompat="@drawable/icn_20_online" />
 
             <ImageView
                 android:id="@+id/nearbyUserInstagramView"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
                 android:src="@drawable/instagram_icon"
                 android:layout_toEndOf="@id/nearbyUserPhotoImageView"
                 android:layout_below="@id/nearbyUserNameTextView"
-                android:layout_margin="@dimen/std_margin"/>
+                style="@style/socialMedia"/>
 
             <ImageView
                 android:id="@+id/nearbyUserFacebookView"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
                 android:src="@drawable/facebook_icon"
                 android:layout_toEndOf="@id/nearbyUserInstagramView"
                 android:layout_below="@id/nearbyUserNameTextView"
-                android:layout_margin="@dimen/std_margin"/>
+                style="@style/socialMedia"/>
 
             <ImageView
                 android:id="@+id/nearbyUserYoutubeView"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
                 android:src="@drawable/youtube_icon"
                 android:layout_toEndOf="@id/nearbyUserFacebookView"
                 android:layout_below="@id/nearbyUserNameTextView"
-                android:layout_margin="@dimen/std_margin"/>
+                style="@style/socialMedia"/>
 
             <TextView
                 android:id="@+id/nearbyUserDistanceTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
+                android:textSize="@dimen/labelText"
                 android:textColor="@color/distance"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
@@ -95,21 +85,19 @@
                 android:id="@+id/nearbyUserGenresTextView"
                 android:layout_width="280dp"
                 android:layout_height="wrap_content"
-                android:textSize="18sp"
+                android:textSize="@dimen/labelText"
                 tools:text="Genres"
                 android:layout_below="@id/nearbyUserPhotoImageView"
-                android:layout_marginTop="4dp"
-                android:layout_marginStart="12dp"/>
+                android:layout_margin="@dimen/std_marginSmall"/>
 
             <TextView
                 android:id="@+id/nearbyUserSkillsTextView"
                 android:layout_width="280dp"
                 android:layout_height="wrap_content"
-                android:textSize="18sp"
+                android:textSize="@dimen/labelText"
                 android:layout_below="@id/nearbyUserGenresTextView"
                 tools:text="Skills"
-                android:layout_marginTop="4dp"
-                android:layout_marginStart="12dp"/>
+                android:layout_margin="@dimen/std_marginSmall"/>
 
         </RelativeLayout>
 

@@ -36,4 +36,40 @@
         <item name="colorButtonNormal">@color/colorPrimary</item>
     </style>
 
+    <!-- fragment_user_profile; item_spotify_search -->
+    <style name="stdButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">36dp</item>
+        <item name="android:layout_margin">@dimen/std_margin</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <!-- fragment_user_profile; item_nearby_user -->
+    <style name="availability">
+        <item name="android:layout_width">20dp</item>
+        <item name="android:layout_height">20dp</item>
+        <item name="android:layout_margin">@dimen/std_marginSmall</item>
+    </style>
+
+    <!-- item_nearbyuser -->>
+    <style name="socialMedia">
+        <item name="android:layout_width">28dp</item>
+        <item name="android:layout_height">28dp</item>
+        <item name="android:layout_margin">@dimen/std_marginSmall</item>
+    </style>
+
+    <!-- item_skill; fragment_band_basic_info; fragment_filters -->
+    <style name="seekBar">
+        <item name="android:layout_width">194dp</item>
+        <item name="android:layout_height">20dp</item>
+        <item name="android:layout_margin">@dimen/std_margin</item>
+    </style>
+
+    <!-- item_nearbyuser; item_spotify_search -->
+    <style name="iconImage">
+        <item name="android:layout_width">68dp</item>
+        <item name="android:layout_height">68dp</item>
+        <item name="android:layout_margin">@dimen/std_margin</item>
+    </style>
+
 </resources>
