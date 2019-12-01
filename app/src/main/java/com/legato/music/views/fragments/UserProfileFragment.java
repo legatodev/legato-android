@@ -7,8 +7,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
@@ -97,6 +99,10 @@ public class UserProfileFragment extends BaseFragment {
 
     @NonNull private UserProfileViewModel userProfileViewModel;
 
+    @BindView(R.id.profileProgressBar)
+    @Nullable
+    ProgressBar profileProgressBar = null;
+
     @Override
     public View onCreateView(
             LayoutInflater inflater,
@@ -151,6 +157,7 @@ public class UserProfileFragment extends BaseFragment {
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        showProgressBar(profileProgressBar);
                         List<Thread> allThreads = ChatSDK.thread()
                                 .getThreads(ThreadType.Private1to1);
                         for (Thread thread : allThreads) {
@@ -242,6 +249,7 @@ public class UserProfileFragment extends BaseFragment {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
+                            removeProgressBar(profileProgressBar);
                             ChatSDK.ui().startSplashScreenActivity(
                                     getActivity().getApplicationContext());
                         } else {
@@ -347,11 +355,12 @@ public class UserProfileFragment extends BaseFragment {
 
         userProfileViewModel.setStartingSdkChat(true);
         User user = userProfileViewModel.getUser();
+        showProgressBar(profileProgressBar);
         disposableList.add(
             ChatSDK.thread().createThread("", user, ChatSDK.currentUser())
             .observeOn(AndroidSchedulers.mainThread())
             .doFinally(() -> {
-                dismissProgressDialog();
+                removeProgressBar(profileProgressBar);
                 userProfileViewModel.setStartingSdkChat(false);
             })
             .subscribe(thread -> {
@@ -423,5 +432,19 @@ public class UserProfileFragment extends BaseFragment {
 
         disposableList.dispose();
     }
-}
 
+    private void showProgressBar(@Nullable ProgressBar progressBar) {
+        if (progressBar != null && progressBar.getVisibility() == View.GONE) {
+            progressBar.setVisibility(View.VISIBLE);
+            getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        }
+    }
+
+    private void removeProgressBar(@Nullable ProgressBar progressBar) {
+        if (progressBar != null && progressBar.getVisibility() == View.VISIBLE) {
+            progressBar.setVisibility(View.GONE);
+            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        }
+    }
+}

@@ -1,14 +1,15 @@
 package com.legato.music.youtube;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -34,7 +35,8 @@ public class YoutubeActivity extends AppCompatActivity implements View.OnClickLi
 
     @Nullable private YtAdapter mYtAdapter = null;
     @Nullable private ServiceTask mYtServiceTask = null;
-    @Nullable private ProgressDialog mLoadingDialog = null;
+    @BindView(R.id.youtubeProgressBar)
+    @Nullable ProgressBar mLoadingDialog = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,8 +101,15 @@ public class YoutubeActivity extends AppCompatActivity implements View.OnClickLi
                 break;
         }
 
-        if (mLoadingDialog != null && !mLoadingDialog.isShowing())
-            mLoadingDialog = ProgressDialog.show(this, DIALOG_TITLE, dialogMsg, true, true);
+        showProgressBar(mLoadingDialog);
+    }
+
+    private void showProgressBar(@Nullable ProgressBar progressBar) {
+        if (progressBar != null && progressBar.getVisibility() == View.GONE) {
+            progressBar.setVisibility(View.VISIBLE);
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        }
     }
 
     @Override
@@ -111,8 +120,7 @@ public class YoutubeActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void completedRequest(Object... objects) {
         // Dismiss the dialog
-        if (mLoadingDialog != null && mLoadingDialog.isShowing())
-            mLoadingDialog.dismiss();
+        removeProgressBar(mLoadingDialog);
 
         // Parse the response based upon type of request
         Integer reqCode = (Integer) objects[0];
@@ -134,6 +142,13 @@ public class YoutubeActivity extends AppCompatActivity implements View.OnClickLi
                 }
 
                 break;
+        }
+    }
+
+    private void removeProgressBar(@Nullable ProgressBar progressBar) {
+        if (progressBar != null && progressBar.getVisibility() == View.VISIBLE) {
+            progressBar.setVisibility(View.GONE);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         }
     }
 }
