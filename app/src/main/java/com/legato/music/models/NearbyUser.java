@@ -197,12 +197,7 @@ public class NearbyUser {
         public void setTrackIds(String trackIdsString) {
             trackIdsString = sanitizeTrackIdsString(trackIdsString);
 
-            if (trackIds.contains(",")) {
-                trackIds = new ArrayList<>(Arrays.asList(trackIdsString.split(",")));
-            }
-            else {
-                trackIds = new ArrayList<>(Arrays.asList(trackIdsString));
-            }
+            trackIds = new ArrayList<>(Arrays.asList(trackIdsString.split(",")));
         }
 
         public void resetTrackIds() {
