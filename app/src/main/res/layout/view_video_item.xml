@@ -8,7 +8,7 @@
     <androidx.cardview.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/nearbyUserCardView"
         android:layout_width="match_parent"
-        android:layout_height="290dp"
+        android:layout_height="280dp"
         android:layout_gravity="center"
         card_view:cardElevation="@dimen/std_elevation"
         card_view:cardCornerRadius="@dimen/std_cornerRad">
@@ -18,7 +18,7 @@
             android:layout_height="match_parent">
 
             <ImageView
-                android:layout_margin="@dimen/std_margin"
+                android:layout_marginTop="@dimen/std_margin"
                 android:id="@+id/video_thumbnail_imv"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
@@ -29,20 +29,20 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_below="@id/video_thumbnail_imv">
 
                 <TextView
                     android:id="@+id/video_title_txv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/std_margin"
                     android:gravity="start"
                     android:text="@string/video_title"
                     android:padding="@dimen/std_padding"
                     android:singleLine="true"
                     android:ellipsize="end"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@android:color/black"
+                    android:layout_marginTop="@dimen/std_margin"/>
 
                 <TextView
                     android:id="@+id/video_desc_txv"
@@ -50,7 +50,6 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/std_margin"
                     android:gravity="start"
-                    android:padding="@dimen/std_padding"
                     android:text="@string/video_description"
                     android:maxLines="2"
                     android:ellipsize="end"

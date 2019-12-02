@@ -16,7 +16,7 @@
     <dimen name="std_elevation">4dp</dimen>
 
     <!-- item_band_members; item_nearbyuser; item_skill; activity_nearby_users; fragment_user_profile-->
-    <dimen name="std_cornerRad">8dp</dimen>
+    <dimen name="std_cornerRad">4dp</dimen>
 
     <!-- fragment_user_profile; item_nearbyuser; fragment_filters; item_userprofileinfo -->
     <dimen name="headerText">20sp</dimen>
