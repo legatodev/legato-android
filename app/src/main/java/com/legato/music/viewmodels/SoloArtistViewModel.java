@@ -17,7 +17,6 @@ public class SoloArtistViewModel extends ViewModel {
     private BaseRepository baseRepository;
     private NearbyUser nearbyUser;
     private String previousAvatarURL = "";
-    private String avatarUrl = "";
     private FirebaseUser firebaseUser;
 
     public SoloArtistViewModel() {
@@ -43,7 +42,7 @@ public class SoloArtistViewModel extends ViewModel {
     }
 
     public String getAvatarUrl() {
-        return avatarUrl;
+        return nearbyUser.getAvatarUrl();
     }
 
     public void setAvatarUrl(String avatarUrl) {

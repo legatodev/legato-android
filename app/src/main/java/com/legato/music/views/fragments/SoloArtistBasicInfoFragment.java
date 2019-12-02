@@ -139,6 +139,7 @@ public class SoloArtistBasicInfoFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_solo_artist_basic_info, container, false);
         ButterKnife.bind(this, view);
 
+        // TODO: Switch getActivity() to requireActivity()
         soloArtistViewModel = ViewModelProviders.of(getActivity()).get(SoloArtistViewModel.class);
         youtubePlayerAdapter = new YoutubePlayerAdapter(
                 soloArtistViewModel.getYoutubeVideoIds(),
