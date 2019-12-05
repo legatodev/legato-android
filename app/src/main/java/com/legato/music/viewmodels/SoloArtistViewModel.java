@@ -69,13 +69,15 @@ public class SoloArtistViewModel extends ViewModel {
         return nearbyUser.getLookingfor();
     }
 
+    public String getDescription() { return nearbyUser.getDescription(); }
+
+    public void setDescription(String newDescription) { nearbyUser.setDescription(newDescription); }
+
     public String getInstagram() {
         return nearbyUser.getInstagram();
     }
 
-    public String getFacebook() {
-        return nearbyUser.getFacebook();
-    }
+    public String getFacebook() { return nearbyUser.getFacebook(); }
 
     public String getYoutubeChannel() {
         return nearbyUser.getYoutubeChannel();

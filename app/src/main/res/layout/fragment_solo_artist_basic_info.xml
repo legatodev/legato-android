@@ -2,6 +2,7 @@
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -92,7 +93,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/std_marginSmall"
-                android:text="Open to..." />
+                android:text="@string/open_to" />
 
             <CheckBox
                 android:id="@+id/jamCheckBox"
@@ -100,7 +101,7 @@
                 android:layout_margin="@dimen/std_marginSmall"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/openTo"
-                android:text="Jam Session" />
+                android:text="@string/jam_session" />
 
             <CheckBox
                 android:id="@+id/collaborateCheckBox"
@@ -108,7 +109,7 @@
                 android:layout_margin="@dimen/std_marginSmall"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/jamCheckBox"
-                android:text="Collaborate" />
+                android:text="@string/collaborate" />
 
             <CheckBox
                 android:id="@+id/startBandCheckBox"
@@ -116,7 +117,7 @@
                 android:layout_margin="@dimen/std_marginSmall"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/collaborateCheckBox"
-                android:text="Start a band" />
+                android:text="@string/start_a_band" />
         </RelativeLayout>
 
         <Switch
@@ -125,10 +126,40 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/lookingforLayout"
             android:layout_margin="@dimen/std_marginSmall"
-            android:text="Enable Proximity Alerts"
+            android:text="@string/enable_proximity_alerts"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/lookingforLayout" />
 
+        <LinearLayout
+            android:id="@+id/descriptionLayout"
+            app:layout_constraintTop_toBottomOf="@id/proximityAlertSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/std_marginSmall"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/short_description" />
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/userDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/std_marginSmall"
+                android:ems="10"
+                android:gravity="start|top"
+                android:hint="@string/a_short_description_of_yourself"
+                android:importantForAutofill="no"
+                android:inputType="textMultiLine"
+                android:lines="4"
+                android:textSize="@dimen/smallText"
+                android:maxLength="@integer/short_description_character_limit"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/userSummary" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/instagramLinearLayout"
@@ -138,7 +169,7 @@
             android:layout_margin="@dimen/std_marginSmall"
             android:orientation="horizontal"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/proximityAlertSwitch">
+            app:layout_constraintTop_toBottomOf="@id/descriptionLayout">
 
             <TextView
                 android:id="@+id/instagramTextView"
@@ -250,7 +281,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/std_margin"
-                android:text="Gallery"
+                android:text="@string/gallery"
                 android:textColor="@color/black"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

@@ -150,6 +150,7 @@ public class SoloRegistrationActivity extends AppCompatActivity implements Skill
         profileInfo.put(Keys.skills, ((SkillsFragment)skillsTab).extractData());
 
         if (soloArtistViewModel != null) {
+            profileInfo.put(Keys.user_description, soloArtistViewModel.getDescription());
             profileInfo.put(Keys.youtube, soloArtistViewModel.getYoutubeVideoIdsAsString());
         }
 

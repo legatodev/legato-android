@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
@@ -16,10 +17,7 @@
         android:indeterminateTint="@color/white"
         android:visibility="gone"/>
 
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:fresco="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -38,20 +36,28 @@
                     android:id="@+id/profilePhotoImageView"
                     android:layout_width="72dp"
                     android:layout_height="72dp"
+                    android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
-                    android:layout_margin="@dimen/std_margin"
+                    android:layout_marginStart="@dimen/std_margin"
+                    android:layout_marginTop="@dimen/std_margin"
+                    android:layout_marginEnd="@dimen/std_margin"
+                    android:layout_marginBottom="@dimen/std_margin"
                     android:adjustViewBounds="true"
                     android:scaleType="centerCrop"
-                    fresco:placeholderImage="@color/white"
-                    fresco:roundAsCircle="true"
-                    fresco:roundingBorderColor="@color/activity_background"
-                    fresco:roundingBorderWidth="2dp" />
+                    app:placeholderImage="@color/white"
+                    app:roundAsCircle="true"
+                    app:roundingBorderColor="@color/activity_background"
+                    app:roundingBorderWidth="2dp" />
 
                 <TextView
                     android:id="@+id/profileUserNameTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/std_margin"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="@dimen/std_marginSmall"
+                    android:layout_marginTop="@dimen/std_margin"
+                    android:layout_marginEnd="@dimen/std_marginSmall"
+                    android:layout_marginBottom="@dimen/std_marginSmall"
                     android:layout_toEndOf="@id/profilePhotoImageView"
                     android:textColor="@color/activity_background"
                     android:textSize="@dimen/headerText"
@@ -60,6 +66,8 @@
                 <ImageView
                     android:id="@+id/profileUserAvailabilityImageView"
                     style="@style/availability"
+                    android:layout_alignBottom="@+id/profileUserNameTextView"
+                    android:layout_marginBottom="@dimen/std_margin"
                     android:layout_toEndOf="@id/profileUserNameTextView"
                     android:contentDescription="TODO"
                     app:srcCompat="@drawable/icn_20_online" />
@@ -94,13 +102,34 @@
                     android:text="@string/edit"
                     android:textColor="@color/white"
                     android:visibility="visible" />
+
             </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/userInfoLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_below="@id/profileInfoLayout"
+                android:background="@color/skills_card_view_background">
+
+                <TextView
+                    android:id="@+id/userDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/std_margin"
+                    android:lines="4"
+                    android:maxLength="@integer/short_description_character_limit"
+                    android:text="@string/a_short_description_of_yourself"
+                    android:textColor="@color/black" />
+
+            </LinearLayout>
 
             <RelativeLayout
                 android:id="@+id/youtubeGalleryLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/profileInfoLayout"
+                android:layout_below="@id/userInfoLayout"
                 android:background="@color/skills_card_view_background">
 
                 <TextView

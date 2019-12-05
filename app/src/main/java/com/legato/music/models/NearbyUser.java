@@ -103,6 +103,10 @@ public class NearbyUser {
 
     public void setAvatarUrl(String avatarUrl) { user.setAvatarURL(avatarUrl); }
 
+    public String getDescription() { return this.user.metaStringForKey(Keys.user_description); }
+
+    public void setDescription(String newDescription) { this.user.setMetaString(Keys.user_description, newDescription); }
+
     public String getInstagram() { return this.user.metaStringForKey(Keys.instagram); }
 
     public String getFacebook() { return this.user.metaStringForKey(Keys.facebook); }

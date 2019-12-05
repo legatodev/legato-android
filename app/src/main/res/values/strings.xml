@@ -89,6 +89,15 @@
     <string name="edit">Edit</string>
     <string name="remove">Remove</string>
 
+    <string name="enable_proximity_alerts">Enable Proximity Alerts</string>
+    <string name="start_a_band">Start a band</string>
+    <string name="collaborate">Collaborate</string>
+    <string name="jam_session">Jam Session</string>
+    <string name="open_to">Open to...</string>
+
+    <string name="single_line_summary_of_yourself">Single line summary of yourself</string>
+    <string name="a_short_description_of_yourself">Add a short description of yourself.</string>
+
     <string name="instagram">Instagram Page</string>
     <string name="facebook">Facebook Page</string>
     <string name="youtube_channel">Youtube Channel</string>
@@ -101,4 +110,8 @@
     <string name="cover_art_description">Cover art</string>
 
     <string name="add_track">Add</string>
+
+    <string name="gallery">Gallery</string>
+    <string name="short_summary">Summary</string>
+    <string name="short_description">Description</string>
 </resources>

@@ -13,4 +13,5 @@ public class Keys {
     public static final String facebook = "facebook";
     public static final String youtube_channel = "youtube_channel";
     public static final String spotify_track = "spotify_track";
+    public static final String user_description = "user_description";
 }

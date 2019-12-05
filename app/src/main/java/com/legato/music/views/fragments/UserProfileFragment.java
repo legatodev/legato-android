@@ -62,27 +62,29 @@ public class UserProfileFragment extends BaseFragment {
     private static final String TAG = UserProfileFragment.class.getSimpleName();
 
     @BindView(R.id.profilePhotoImageView)
-    @Nullable protected SimpleDraweeView profilePhotoImageView;
+    protected SimpleDraweeView profilePhotoImageView;
     @BindView(R.id.profileUserAvailabilityImageView)
-    @Nullable protected ImageView profileUserAvailabilityImageView;
+    protected ImageView profileUserAvailabilityImageView;
     @BindView(R.id.connectOrRemoveButton)
-    @Nullable protected Button connectOrRemoveButton;
+    protected Button connectOrRemoveButton;
     @BindView(R.id.editProfileButton)
-    @Nullable protected Button editProfileButton;
+    protected Button editProfileButton;
+    @BindView(R.id.userDescription)
+    protected TextView userDescriptionTextView;
     @BindView(R.id.profileInfoRecyclerView)
-    @Nullable protected RecyclerView userInfoRecyclerView;
+    protected RecyclerView userInfoRecyclerView;
     @BindView(R.id.profileUserNameTextView)
-    @Nullable protected TextView profileUserNameTextView;
+    protected TextView profileUserNameTextView;
     @BindView(R.id.emailTextView)
-    @Nullable protected TextView emailTextView;
+    protected TextView emailTextView;
     @BindView(R.id.logoutButton)
-    @Nullable protected Button logoutButton;
+    protected Button logoutButton;
     @BindView(R.id.deleteAccountButton)
-    @Nullable protected Button deleteAccountButton;
+    protected Button deleteAccountButton;
     @BindView(R.id.youtubeRecyclerView)
-    @Nullable protected RecyclerView youtubeRecyclerView;
+    protected RecyclerView youtubeRecyclerView;
     @BindView(R.id.youtubeGalleryLayout)
-    @Nullable protected View youtubeGalleryView;
+    protected View youtubeGalleryView;
 
     private DisposableList disposableList = new DisposableList();
 
@@ -92,7 +94,6 @@ public class UserProfileFragment extends BaseFragment {
     @NonNull private UserProfileViewModel userProfileViewModel;
 
     @BindView(R.id.profileProgressBar)
-    @Nullable
     ProgressBar profileProgressBar = null;
 
     @Override
@@ -105,12 +106,12 @@ public class UserProfileFragment extends BaseFragment {
         mainView = inflater.inflate(R.layout.fragment_user_profile, container, false);
         ButterKnife.bind(this, mainView);
 
-        userProfileViewModel = ViewModelProviders.of(getActivity()).get(UserProfileViewModel.class);
+        userProfileViewModel = ViewModelProviders.of(requireActivity()).get(UserProfileViewModel.class);
 
         return mainView;
     }
 
-    public void updateYoutubePlayerView() {
+    private void updateYoutubePlayerView() {
         if (youtubeGalleryView != null) {
             youtubeGalleryView.setVisibility(View.GONE);
 
@@ -129,15 +130,15 @@ public class UserProfileFragment extends BaseFragment {
         }
     }
 
-    protected void setViewVisibility(View view, int visibility) {
+    private void setViewVisibility(View view, int visibility) {
         if (view != null) view.setVisibility(visibility);
     }
 
-    protected void setViewVisibility(View view, boolean visible) {
+    private void setViewVisibility(View view, boolean visible) {
         setViewVisibility(view, visible ? View.VISIBLE : View.INVISIBLE);
     }
 
-    protected void setViewText(@Nullable TextView textView, String text) {
+    private void setViewText(@Nullable TextView textView, String text) {
         if (textView != null) textView.setText(text);
     }
 
@@ -171,7 +172,7 @@ public class UserProfileFragment extends BaseFragment {
         startActivity(intent);
     }
 
-    public void updateInterface() {
+    private void updateInterface() {
         User user = userProfileViewModel.getUser();
 
         if (user == null) {
@@ -216,9 +217,7 @@ public class UserProfileFragment extends BaseFragment {
 
             String availability = nearbyUser.getAvailability();
             if (profileUserAvailabilityImageView != null) {
-                if (availability != null &&
-                        !isCurrentUser &&
-                        profileUserAvailabilityImageView != null) {
+                if (availability != null && !isCurrentUser) {
                     profileUserAvailabilityImageView.setImageResource(
                             AvailabilityHelper.imageResourceIdForAvailability(availability));
                     setViewVisibility(profileUserAvailabilityImageView, true);
@@ -226,6 +225,8 @@ public class UserProfileFragment extends BaseFragment {
                     setViewVisibility(profileUserAvailabilityImageView, false);
                 }
             }
+
+            userDescriptionTextView.setText(nearbyUser.getDescription());
 
             userProfileViewModel.setYoutubeVideoIds(nearbyUser.getYoutube());
             updateYoutubePlayerView();
@@ -295,7 +296,7 @@ public class UserProfileFragment extends BaseFragment {
         return null;
     }
 
-    public AuthCredential getFbCredentials() {
+    private AuthCredential getFbCredentials() {
         AccessToken token = AccessToken.getCurrentAccessToken();
         return FacebookAuthProvider.getCredential(token.getToken());
     }
@@ -339,7 +340,7 @@ public class UserProfileFragment extends BaseFragment {
         updateYoutubePlayerView();
     }
 
-    public void startChat () {
+    private void startChat() {
         boolean startingChat = userProfileViewModel.getStartingSdkChat();
         if (startingChat) {
             return;

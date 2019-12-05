@@ -91,6 +91,7 @@ public class SoloArtistBasicInfoFragment extends Fragment {
     @BindView(R.id.collaborateCheckBox) CheckBox collaborateCheckBox;
     @BindView(R.id.startBandCheckBox) CheckBox startBandCheckBox;
     @BindView(R.id.soloDisplayNameTextInputEditText) TextInputEditText soloDisplayNameTextInputEditText;
+    @BindView(R.id.userDescription) TextInputEditText userDescriptionTextInputEditText;
     @BindView(R.id.instagramTextInputEditText) TextInputEditText instagramTextInputEditText;
     @BindView(R.id.facebookTextInputEditText) TextInputEditText facebookTextInputEditText;
     @BindView(R.id.youtubeTextInputEditText) TextInputEditText youtubeTextInputEditText;
@@ -195,6 +196,21 @@ public class SoloArtistBasicInfoFragment extends Fragment {
                 validate();
             }
         });
+
+        userDescriptionInputEditText.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) { }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                soloArtistViewModel.setDescription(s.toString());
+            }
+        });
+        setTextView(userDescriptionInputEditText, soloArtistViewModel.getDescription());
 
         setTextView(instagramTextInputEditText, soloArtistViewModel.getInstagram());
         setTextView(facebookTextInputEditText, soloArtistViewModel.getFacebook());
