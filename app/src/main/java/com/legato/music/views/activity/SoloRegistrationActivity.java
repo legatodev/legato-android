@@ -21,11 +21,11 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.legato.music.R;
+import com.legato.music.utils.Keys;
+import com.legato.music.viewmodels.SoloArtistViewModel;
 import com.legato.music.views.fragments.GenresFragment;
 import com.legato.music.views.fragments.SkillsFragment;
 import com.legato.music.views.fragments.SoloArtistBasicInfoFragment;
-import com.legato.music.utils.Keys;
-import com.legato.music.viewmodels.SoloArtistViewModel;
 
 import java.io.File;
 import java.net.URI;
@@ -46,7 +46,6 @@ import io.reactivex.Single;
 import io.reactivex.SingleOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
-import io.reactivex.annotations.Nullable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -69,12 +68,11 @@ public class SoloRegistrationActivity extends AppCompatActivity implements Skill
     @BindView(R.id.soloViewPager)
     ViewPager mViewPager;
 
-    private Fragment soloRegistrationTab;
-    private Fragment skillsTab;
-    private Fragment genresTab;
+    private SoloArtistBasicInfoFragment soloRegistrationTab;
+    private SkillsFragment skillsTab;
+    private GenresFragment genresTab;
 
-    @Nullable
-    private SoloArtistViewModel soloArtistViewModel;
+    @NonNull private SoloArtistViewModel soloArtistViewModel;
 
     private DisposableList disposableList;
     private String previousAvatarURL = "";
@@ -109,7 +107,6 @@ public class SoloRegistrationActivity extends AppCompatActivity implements Skill
         disposableList = new DisposableList();
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -134,9 +131,11 @@ public class SoloRegistrationActivity extends AppCompatActivity implements Skill
     public void setVisibleTabCount() {
         int countTab = 1;
 
-        if (((SoloArtistBasicInfoFragment)soloRegistrationTab).isInputValid()) {
+        if (soloRegistrationTab.isInputValid() ||
+                soloArtistViewModel.getNearbyUser() != null) {
             countTab = 2;
-            if (((GenresFragment)genresTab).isInputValid()) {
+            if (genresTab.isInputValid() ||
+                    soloArtistViewModel.hasSelectedGenres()) {
                 countTab = 3;
             }
         }

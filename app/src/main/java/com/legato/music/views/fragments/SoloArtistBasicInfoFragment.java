@@ -70,7 +70,6 @@ import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.ArtistSimple;
 import kaaes.spotify.webapi.android.models.Image;
 import kaaes.spotify.webapi.android.models.Track;
-import retrofit.client.Request;
 import retrofit.client.Response;
 
 /**
@@ -85,7 +84,6 @@ public class SoloArtistBasicInfoFragment extends Fragment {
     private static final String TAG = SoloArtistBasicInfoFragment.class.getSimpleName();
     private static final int REQUEST_CODE = 1337;
 
-    private boolean valid;
     @BindView(R.id.proximityAlertSwitch) Switch proximityAlertSwitch;
     @BindView(R.id.jamCheckBox) CheckBox jamCheckBox;
     @BindView(R.id.collaborateCheckBox) CheckBox collaborateCheckBox;
@@ -125,7 +123,6 @@ public class SoloArtistBasicInfoFragment extends Fragment {
     private String mAccessToken = "";
 
     public SoloArtistBasicInfoFragment() {
-        valid = false;
         mediaSelector = new MediaSelector();
     }
 
@@ -262,6 +259,11 @@ public class SoloArtistBasicInfoFragment extends Fragment {
         if (!soloArtistViewModel.getSpotifyTrackIds().isEmpty()) {
             spotifyInitialize();
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
 
         validate();
     }
@@ -303,18 +305,21 @@ public class SoloArtistBasicInfoFragment extends Fragment {
     }
 
     public boolean isInputValid() {
+        boolean valid = false;
+
+        if (this.getView() != null) {
+            String displayName = (soloDisplayNameTextInputEditText.getText() != null) ?
+                    soloDisplayNameTextInputEditText.getText().toString().trim() : "";
+
+            valid = (isCheckBoxChecked(jamCheckBox) ||
+                    isCheckBoxChecked(collaborateCheckBox) ||
+                    isCheckBoxChecked(startBandCheckBox));
+            valid = valid && !displayName.isEmpty();
+        }
         return valid;
     }
 
     private void validate() {
-        String displayName = (soloDisplayNameTextInputEditText.getText() != null) ?
-                soloDisplayNameTextInputEditText.getText().toString().trim() : "";
-
-        valid = (isCheckBoxChecked(jamCheckBox) ||
-                isCheckBoxChecked(collaborateCheckBox) ||
-                isCheckBoxChecked(startBandCheckBox));
-        valid = valid && !displayName.isEmpty();
-
         if (getActivity() != null)
             ((SoloRegistrationActivity) getActivity()).setVisibleTabCount();
     }

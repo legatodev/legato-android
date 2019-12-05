@@ -13,8 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.legato.music.utils.Keys;
 import com.legato.music.R;
+import com.legato.music.utils.Keys;
 import com.legato.music.views.activity.SoloRegistrationActivity;
 
 import butterknife.BindView;
@@ -26,10 +26,8 @@ public class GenresFragment extends Fragment {
     @BindView(R.id.genresListView) ListView genresListView;
 
     @Nullable private ArrayAdapter<CharSequence> adapter;
-    private boolean valid;
 
     public GenresFragment() {
-        valid = false;
         adapter = null;
     }
 
@@ -39,10 +37,18 @@ public class GenresFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_genres, container, false);
         ButterKnife.bind(this, view);
-        User user = ChatSDK.currentUser();
-        String dbgenres = user.metaStringForKey(Keys.genres);
+
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         if (getContext() != null) {
+            User user = ChatSDK.currentUser();
+            String dbgenres = user.metaStringForKey(Keys.genres);
+
             adapter = ArrayAdapter.createFromResource(getContext(),
                     R.array.genres_array, android.R.layout.simple_list_item_multiple_choice);
 
@@ -63,15 +69,16 @@ public class GenresFragment extends Fragment {
                 }
             });
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
 
         validate();
-
-        return view;
     }
 
     private void validate() {
-        int checkedCount = genresListView.getCheckedItemCount();
-        valid = (checkedCount > 0);
         if (getActivity() != null) {
             ((SoloRegistrationActivity) getActivity()).setVisibleTabCount();
         }
@@ -105,6 +112,12 @@ public class GenresFragment extends Fragment {
     }
 
     public boolean isInputValid() {
+        boolean valid = false;
+
+        if (getView() != null) {
+            valid = (genresListView.getCheckedItemCount() > 0);
+        }
+
         return valid;
     }
 }

@@ -25,6 +25,8 @@ public class SoloArtistViewModel extends ViewModel {
         this.firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
     }
 
+    public NearbyUser getNearbyUser() { return nearbyUser; }
+
     public User getUser() {
         return nearbyUser.getUser();
     }
@@ -63,6 +65,10 @@ public class SoloArtistViewModel extends ViewModel {
 
     public String getYoutubeVideoIdsAsString() {
         return nearbyUser.getYoutubeSamples().getTrackIdsAsString();
+    }
+
+    public boolean hasSelectedGenres() {
+        return !nearbyUser.getGenres().isEmpty();
     }
 
     public String getLookingFor() {
