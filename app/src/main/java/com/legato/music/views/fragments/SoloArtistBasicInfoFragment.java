@@ -194,7 +194,7 @@ public class SoloArtistBasicInfoFragment extends Fragment {
             }
         });
 
-        userDescriptionInputEditText.addTextChangedListener(new TextWatcher() {
+        userDescriptionTextInputEditText.addTextChangedListener(new TextWatcher() {
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
@@ -207,7 +207,7 @@ public class SoloArtistBasicInfoFragment extends Fragment {
                 soloArtistViewModel.setDescription(s.toString());
             }
         });
-        setTextView(userDescriptionInputEditText, soloArtistViewModel.getDescription());
+        setTextView(userDescriptionTextInputEditText, soloArtistViewModel.getDescription());
 
         setTextView(instagramTextInputEditText, soloArtistViewModel.getInstagram());
         setTextView(facebookTextInputEditText, soloArtistViewModel.getFacebook());
