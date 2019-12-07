@@ -13,10 +13,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.legato.music.AppConstants;
 import com.legato.music.models.Filters;
 import com.legato.music.R;
+import com.legato.music.viewmodels.NearbyUsersViewModel;
+import com.legato.music.views.activity.NearbyUsersActivity;
 import com.legato.music.views.adapters.NearbyUsersAdapter;
 import com.legato.music.utils.Keys;
 
@@ -32,11 +35,34 @@ import co.chatsdk.core.session.ChatSDK;
 public class FilterDialogFragment extends DialogFragment {
 
     public static final String TAG = FilterDialogFragment.class.getSimpleName();
-    @Nullable private NearbyUsersAdapter adapter = null;
 
-    public FilterDialogFragment(NearbyUsersAdapter adapter){
-        this.adapter = adapter;
-    }
+    private static final String SELECTED_SKILL = "selected_skill";
+    private static final String SELECTED_GENRE = "selected_genre";
+    private static final String SELECTED_LOOKING_FOR = "selected_looking_for";
+    private static final String SELECTED_SORT_BY = "selected_sort_by";
+    private static final String SELECTED_SEARCH_RADIUS = "selected_search_radius";
+
+
+    @BindView(R.id.lookfor)
+    Spinner mLookingfor;
+    @BindView(R.id.genres)
+    Spinner mGenres;
+    @BindView(R.id.skills)
+    Spinner mSkills;
+    @BindView(R.id.sortby)
+    Spinner mSortBy;
+    @BindView(R.id.searchRadiusValue)
+    TextView mSearchRadiusValue;
+    @BindView(R.id.searchRadiusSeekBar)
+    SeekBar mSeekBarSearch;
+
+    private View mRootView;
+
+    @Nullable private FilterListener mFilterListener;
+
+    @NonNull private NearbyUsersViewModel nearbyUsersViewModel;
+
+    private Unbinder unbinder;
 
     public interface FilterListener {
 
@@ -44,31 +70,6 @@ public class FilterDialogFragment extends DialogFragment {
 
     }
 
-    private View mRootView;
-
-    @BindView(R.id.lookfor)
-    Spinner mLookingfor;
-
-    @BindView(R.id.genres)
-    Spinner mGenres;
-
-    @BindView(R.id.skills)
-    Spinner mSkills;
-
-    @BindView(R.id.sortby)
-    Spinner mSortBy;
-
-    @BindView(R.id.searchRadiusValue)
-    @Nullable TextView searchRadiusValue;
-    @BindView(R.id.searchRadiusSeekBar)
-    SeekBar seekBarSearch;
-
-
-    @Nullable private FilterListener mFilterListener;
-
-    private Unbinder unbinder;
-
-    @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
@@ -76,14 +77,62 @@ public class FilterDialogFragment extends DialogFragment {
         mRootView = inflater.inflate(R.layout.fragment_filters, container, false);
         unbinder = ButterKnife.bind(this, mRootView);
 
+        nearbyUsersViewModel = ViewModelProviders.of(requireActivity()).get(NearbyUsersViewModel.class);
+
+        return mRootView;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
         populateSkillsSpinner();
         populateGenresSpinner();
         populateLookingForSpinner();
         populateSortBy();
         populateSearchSeekBar();
 
-        return mRootView;
+        if (savedInstanceState != null) {
+            loadSavedState(savedInstanceState);
+        }
+        else if (getActivity() != null) {
+            loadSavedState(
+                    nearbyUsersViewModel.getDialogSavedStateBundle());
+        }
     }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState = getSavedState();
+    }
+
+    private Bundle getSavedState() {
+        Bundle outState = new Bundle();
+
+        outState.putInt(SELECTED_LOOKING_FOR, mLookingfor.getSelectedItemPosition());
+        outState.putInt(SELECTED_GENRE, mGenres.getSelectedItemPosition());
+        outState.putInt(SELECTED_SKILL, mSkills.getSelectedItemPosition());
+        outState.putInt(SELECTED_SORT_BY, mSortBy.getSelectedItemPosition());
+        outState.putInt(SELECTED_SEARCH_RADIUS, mSeekBarSearch.getProgress());
+
+        return outState;
+    }
+
+    private void loadSavedState(@Nullable Bundle savedState) {
+        if (savedState != null) {
+            mLookingfor.setSelection(savedState.getInt(SELECTED_LOOKING_FOR));
+            mGenres.setSelection(savedState.getInt(SELECTED_GENRE));
+            mSkills.setSelection(savedState.getInt(SELECTED_SKILL));
+            mSortBy.setSelection(savedState.getInt(SELECTED_SORT_BY));
+
+            int searchRadius = savedState.getInt(SELECTED_SEARCH_RADIUS);
+            mSearchRadiusValue.setText(Integer.toString(searchRadius));
+            mSeekBarSearch.setProgress(searchRadius);
+        }
+    }
+
     private void setTextView(@Nullable TextView view, String text) {
         if (view != null) { view.setText(text); }
     }
@@ -130,13 +179,14 @@ public class FilterDialogFragment extends DialogFragment {
 
         mSortBy.setAdapter(sortByAdapter);
     }
+
     private void populateSearchSeekBar(){
 
-        if (seekBarSearch != null) {
-            seekBarSearch.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        if (mSeekBarSearch != null) {
+            mSeekBarSearch.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    setTextView(searchRadiusValue, progress + "mi");
+                    setTextView(mSearchRadiusValue, progress + "mi");
                 }
 
                 @Override
@@ -154,8 +204,8 @@ public class FilterDialogFragment extends DialogFragment {
         if (ChatSDK.currentUser().metaStringForKey(Keys.searchradius) != null && !ChatSDK.currentUser().metaStringForKey(Keys.searchradius).isEmpty()) {
             searchRadius = ChatSDK.currentUser().metaStringForKey(Keys.searchradius);
         }
-        if (seekBarSearch != null) {
-            seekBarSearch.setProgress(Integer.parseInt(searchRadius));
+        if (mSeekBarSearch != null) {
+            mSeekBarSearch.setProgress(Integer.parseInt(searchRadius));
         }
     }
 
@@ -180,11 +230,15 @@ public class FilterDialogFragment extends DialogFragment {
 
     @Override
     public void onDestroyView() {
-        super.onDestroyView();
+        if (getActivity() != null) {
+            nearbyUsersViewModel.setDialogSavedStateBundle(getSavedState());
+        }
 
         if (unbinder != null) {
             unbinder.unbind();
         }
+
+        super.onDestroyView();
     }
 
     @OnClick(R.id.buttonSearch)
@@ -240,7 +294,7 @@ public class FilterDialogFragment extends DialogFragment {
     }
 
     private  String getSelectedSearchRadius() {
-            return Integer.toString(seekBarSearch.getProgress());
+            return Integer.toString(mSeekBarSearch.getProgress());
     }
 
     public void resetFilters() {
@@ -251,7 +305,6 @@ public class FilterDialogFragment extends DialogFragment {
             mSortBy.setSelection(0);
         }
     }
-
 
     public Filters getFilters() {
         Filters filters = new Filters();

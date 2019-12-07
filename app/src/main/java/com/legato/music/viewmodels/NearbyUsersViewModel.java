@@ -1,6 +1,9 @@
 package com.legato.music.viewmodels;
 
 import android.location.Location;
+import android.os.Bundle;
+
+import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 import com.legato.music.models.NearbyUser;
@@ -8,13 +11,14 @@ import com.legato.music.repositories.BaseRepository;
 
 import co.chatsdk.core.dao.User;
 
-public class NearbyUserViewModel extends ViewModel {
+public class NearbyUsersViewModel extends ViewModel {
 
     private BaseRepository mBaseRepository;
 
-    public NearbyUserViewModel(){
-        mBaseRepository = BaseRepository.getInstance();
-    }
+    @Nullable
+    private Bundle mDialogSavedStateBundle = null;
+
+    public NearbyUsersViewModel(){ mBaseRepository = BaseRepository.getInstance(); }
 
     public LiveData<NearbyUser> getNearbyUser() {
         return mBaseRepository.getNearbyUser();
@@ -44,4 +48,12 @@ public class NearbyUserViewModel extends ViewModel {
         return mBaseRepository.getSearchRadius();
     }
 
+    @Nullable
+    public Bundle getDialogSavedStateBundle() {
+        return mDialogSavedStateBundle;
+    }
+
+    public void setDialogSavedStateBundle(Bundle savedState) {
+        mDialogSavedStateBundle = savedState;
+    }
 }

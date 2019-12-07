@@ -31,7 +31,7 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.legato.music.viewmodels.NearbyUserViewModel;
+import com.legato.music.viewmodels.NearbyUsersViewModel;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -52,10 +52,9 @@ public class NearbyUsersActivity extends AppCompatActivity implements
     RecyclerView mNearbyUserRecyclerView;
 
     private NearbyUsersAdapter mNearbyUsersAdapter;
-    private FilterDialogFragment mFilterDialog;
     private DisposableList disposableList = new DisposableList();
     @Nullable NearbyMessages nearbyMessages;
-    private NearbyUserViewModel mNearbyUserViewModel;
+    private NearbyUsersViewModel mNearbyUsersViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,18 +62,16 @@ public class NearbyUsersActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_nearby_users);
         ButterKnife.bind(this);
 
-        mNearbyUserViewModel = ViewModelProviders.of(this).get(NearbyUserViewModel.class);
+        mNearbyUsersViewModel = ViewModelProviders.of(this).get(NearbyUsersViewModel.class);
         if (!isEmailVerified()) {
             createVerificationDialog();
         }
 
         mNearbyUsersAdapter = new NearbyUsersAdapter(this, R.layout.item_nearbyuser);
-        if (mNearbyUserRecyclerView != null) {
-            mNearbyUserRecyclerView.setAdapter(mNearbyUsersAdapter);
-        }
+        mNearbyUserRecyclerView.setAdapter(mNearbyUsersAdapter);
+
         DividerItemDecoration itemDecor = new DividerItemDecoration(mNearbyUserRecyclerView.getContext(), DividerItemDecoration.HORIZONTAL);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        mFilterDialog = new FilterDialogFragment(mNearbyUsersAdapter);
         mNearbyUserRecyclerView.addItemDecoration(itemDecor);
         mNearbyUserRecyclerView.setLayoutManager(layoutManager);
 
@@ -89,7 +86,7 @@ public class NearbyUsersActivity extends AppCompatActivity implements
     }
 
     private void initProximityAlert(){
-        if (mNearbyUserViewModel.isProximityAlertEnabled()) {
+        if (mNearbyUsersViewModel.isProximityAlertEnabled()) {
             nearbyMessages = new NearbyMessages(this);
             nearbyMessages.initialize();
         }else{
@@ -98,7 +95,7 @@ public class NearbyUsersActivity extends AppCompatActivity implements
     }
 
     private void subscribeObservers() {
-        mNearbyUserViewModel.getNearbyUser().observe(this, new Observer<NearbyUser>() {
+        mNearbyUsersViewModel.getNearbyUser().observe(this, new Observer<NearbyUser>() {
             @Override
             public void onChanged(@Nullable NearbyUser nearbyUser) {
                 if (nearbyUser != null) {
@@ -138,11 +135,11 @@ public class NearbyUsersActivity extends AppCompatActivity implements
     }
 
     private boolean isEmailVerified() {
-        return mNearbyUserViewModel.isEmailVerified();
+        return mNearbyUsersViewModel.isEmailVerified();
     }
 
     private void sendEmailVerification() {
-        mNearbyUserViewModel.sendEmailVerification();
+        mNearbyUsersViewModel.sendEmailVerification();
     }
 
     private void getLastLocation() {
@@ -221,25 +218,26 @@ public class NearbyUsersActivity extends AppCompatActivity implements
     }
 
     private void onLocationChanged(Location location) {
-        mNearbyUserViewModel.setLocation(location);
+        mNearbyUsersViewModel.setLocation(location);
 
-        String searchRadius = mNearbyUserViewModel.getSearchRadius();
+        String searchRadius = mNearbyUsersViewModel.getSearchRadius();
         if (!(searchRadius != null && !searchRadius.isEmpty()))
             searchRadius = AppConstants.DEFAULT_SEARCH_RADIUS;
 
-        mNearbyUserViewModel.searchNearbyUserByRadius(Integer.parseInt(searchRadius));
+        mNearbyUsersViewModel.searchNearbyUserByRadius(Integer.parseInt(searchRadius));
     }
 
     @OnClick(R.id.buttonFilter)
     public void onFilterClicked() {
         // Show the dialog containing filter options
-        mFilterDialog.show(getSupportFragmentManager(), FilterDialogFragment.TAG);
+        FilterDialogFragment filterDialog = new FilterDialogFragment();
+        filterDialog.show(getSupportFragmentManager(), FilterDialogFragment.TAG);
     }
 
     @Override
     public void onFilter(Filters filters) {
         mNearbyUsersAdapter.setFilters(filters);
-        mNearbyUserViewModel.searchNearbyUserByRadius(Integer.parseInt(filters.getSearchRadius()));
+        mNearbyUsersViewModel.searchNearbyUserByRadius(Integer.parseInt(filters.getSearchRadius()));
     }
 
     @OnClick(R.id.buttonActiveChats)
