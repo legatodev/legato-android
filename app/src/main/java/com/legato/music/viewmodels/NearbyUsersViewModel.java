@@ -9,6 +9,8 @@ import androidx.lifecycle.ViewModel;
 import com.legato.music.models.NearbyUser;
 import com.legato.music.repositories.BaseRepository;
 
+import java.util.List;
+
 import co.chatsdk.core.dao.User;
 
 public class NearbyUsersViewModel extends ViewModel {
@@ -20,8 +22,8 @@ public class NearbyUsersViewModel extends ViewModel {
 
     public NearbyUsersViewModel(){ mBaseRepository = BaseRepository.getInstance(); }
 
-    public LiveData<NearbyUser> getNearbyUser() {
-        return mBaseRepository.getNearbyUser();
+    public LiveData<List<NearbyUser>> getNearbyUsers() {
+        return mBaseRepository.getNearbyUsers();
     }
 
     public void searchNearbyUserByRadius(double searchRadius){

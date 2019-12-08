@@ -33,6 +33,8 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.legato.music.viewmodels.NearbyUsersViewModel;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -95,11 +97,11 @@ public class NearbyUsersActivity extends AppCompatActivity implements
     }
 
     private void subscribeObservers() {
-        mNearbyUsersViewModel.getNearbyUser().observe(this, new Observer<NearbyUser>() {
+        mNearbyUsersViewModel.getNearbyUsers().observe(this, new Observer<List<NearbyUser>>() {
             @Override
-            public void onChanged(@Nullable NearbyUser nearbyUser) {
-                if (nearbyUser != null) {
-                    mNearbyUsersAdapter.addNearbyUser(nearbyUser);
+            public void onChanged(@Nullable List<NearbyUser> nearbyUsers) {
+                if (nearbyUsers != null) {
+                    mNearbyUsersAdapter.updateNearbyUsers(nearbyUsers);
                 }
             }
         });

@@ -17,15 +17,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import co.chatsdk.core.dao.User;
-import co.chatsdk.core.session.ChatSDK;
 import co.chatsdk.core.utils.DisposableList;
+
 import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
+
 public class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
 
-    private List<NearbyUser> nearbyUsers;
+    @Nullable private List<NearbyUser> mNearbyUsers;
     private final Context context;
     private final int itemResource;
     private DisposableList disposableList;
@@ -35,7 +35,6 @@ public class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
         this.disposableList = new DisposableList();
         this.context = context;
         this.itemResource = itemResource;
-        this.nearbyUsers = new ArrayList<>();
         this.mfilters = null;
     }
 
@@ -44,33 +43,17 @@ public class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
         this.mfilters = filters;
     }
 
-    private Boolean isUserInNearbyUserList(User user){
+    public void updateNearbyUsers(List<NearbyUser> nearbyusers){
 
-        if(this.nearbyUsers.size()==0)
-            return false;
+        mNearbyUsers = (ArrayList<NearbyUser>)((ArrayList<NearbyUser>)nearbyusers).clone();
 
-        for(NearbyUser u: this.nearbyUsers){
-            if(u.getEntityID().equals(user.getEntityID())){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public void addNearbyUser(NearbyUser nearbyuser){
-        Completable completable = ChatSDK.core().userOn(nearbyuser.getUser());
-        disposableList.add(completable.observeOn(AndroidSchedulers.mainThread()).subscribe(() -> {
-            // User object has now been populated and is ready to use
-            if (!nearbyuser.isMe()) {
-                if(!isUserInNearbyUserList(nearbyuser.getUser())){
-                    this.nearbyUsers.add(nearbyuser);
-                }
-                onFilter(mfilters);
-            }
-        }, throwable -> {
-
-        }));
-    }
+        Completable completable = Completable.complete();
+        disposableList.add(completable
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(() -> {
+                    onFilter();
+                }));
+     }
 
     @NonNull
     @Override
@@ -83,72 +66,76 @@ public class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull NearbyUserHolder holder, int position) {
-        if (this.nearbyUsers != null) {
-            NearbyUser nearbyUser = this.nearbyUsers.get(position);
+        if (this.mNearbyUsers != null) {
+            NearbyUser nearbyUser = this.mNearbyUsers.get(position);
             holder.bindNearbyUser(nearbyUser);
         }
     }
 
     @Override
     public int getItemCount() {
-        return this.nearbyUsers != null?this.nearbyUsers.size():0;
+        return this.mNearbyUsers != null?this.mNearbyUsers.size():0;
     }
 
-    public void onFilter(@Nullable Filters filters) {
+    private void onFilter() {
 
-        if(filters == null){
-            /*
-            This should be called when app loads for first time.
-             */
-            notifyItemInserted(this.nearbyUsers.size() - 1);
+        if(mNearbyUsers == null)
+            return;
+
+        if(mfilters == null){
+        /*
+        This should be called when app loads for first time.
+         */
+            notifyItemInserted(this.mNearbyUsers.size() - 1);
             return;
         }
 
         List<NearbyUser> filteredList = new ArrayList<>();
 
-        for (NearbyUser row : nearbyUsers) {
+        for (NearbyUser row : mNearbyUsers) {
             boolean addRow;
-                if (filters.hasLookingfor()&& row.getLookingfor() != null) {
-                    addRow = row.getLookingfor().contains(filters.getLookingfor());
+            if (mfilters.hasLookingfor() && row.getLookingfor() != null) {
+                addRow = row.getLookingfor().contains(mfilters.getLookingfor());
+            }
+            else {
+                addRow = true;
+            }
+
+            if (addRow) {
+                if (mfilters.hasGenres() && row.getGenres() != null) {
+                    addRow = row.getGenres().contains(mfilters.getGenres());
                 }
                 else {
                     addRow = true;
                 }
+            }
 
-                if (addRow) {
-                    if (filters.hasGenres() && row.getGenres() != null) {
-                        addRow = row.getGenres().contains(filters.getGenres());
-                    }
-                    else {
-                        addRow = true;
-                    }
+            if (addRow) {
+                if (mfilters.hasSkills() && row.getSkills() != null) {
+                    addRow = row.getSkills().contains(mfilters.getSkills());
                 }
+                else {
+                    addRow = true;
+                }
+            }
 
-                if (addRow) {
-                    if (filters.hasSkills() && row.getSkills() != null) {
-                        addRow = row.getSkills().contains(filters.getSkills());
-                    }
-                    else {
-                        addRow = true;
-                    }
-                }
-
-                if (addRow) {
-                    filteredList.add(row);
-                }
+            if (addRow) {
+                filteredList.add(row);
+            }
         }
 
-        nearbyUsers = filteredList;
+        mNearbyUsers = filteredList;
 
-        if (filters.hasSortBy()) {
-            Collections.sort(nearbyUsers, NearbyUser.sortByDistance);
+        if (mfilters.hasSortBy()) {
+            Collections.sort(mNearbyUsers, NearbyUser.sortByDistance);
         }
 
         notifyDataSetChanged();
     }
 
     public void onDestroy() {
-        nearbyUsers.clear();
+        if(mNearbyUsers != null)
+            mNearbyUsers.clear();
         disposableList.dispose();
     }
 }

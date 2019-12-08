@@ -17,7 +17,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.legato.music.models.NearbyUser;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import co.chatsdk.core.dao.User;
 import co.chatsdk.core.session.ChatSDK;
@@ -32,7 +34,7 @@ class GeofireClient {
     private final GeoFire mGeoFire;
     @Nullable private Location mCurrentLocation = null;
     private final HashMap<String, NearbyUser> mNearHashMap;
-    private MutableLiveData<NearbyUser> mNearbyUser;
+    private MutableLiveData<List<NearbyUser>> mNearbyUsers;
 
 
     private GeofireClient() {
@@ -40,7 +42,7 @@ class GeofireClient {
         DatabaseReference userLocationDatabaseReference = mFirebaseDatabase.getReference().child("geofire");
         mGeoFire = new GeoFire(userLocationDatabaseReference);
         mNearHashMap = new HashMap<String, NearbyUser>();
-        mNearbyUser = new MutableLiveData<>();
+        mNearbyUsers = new MutableLiveData<>();
     }
 
     public static GeofireClient getInstance() {
@@ -54,8 +56,8 @@ class GeofireClient {
         mGeofireInstance = null;
     }
 
-    public LiveData<NearbyUser> getNearbyUser(){
-        return mNearbyUser;
+    public LiveData<List<NearbyUser>> getNearbyUsers(){
+        return mNearbyUsers;
     }
 
     public void setUserId(String userId){
@@ -76,6 +78,7 @@ class GeofireClient {
 
     public void searchNearbyUserByRadius(double searchRadius){
         if (mCurrentLocation != null) {
+            mNearHashMap.clear();
             GeoQuery geoQuery = mGeoFire.queryAtLocation(new GeoLocation(mCurrentLocation.getLatitude(),
                                                          mCurrentLocation.getLongitude()), searchRadius);
             geoQuery.addGeoQueryDataEventListener(new GeoQueryDataEventListener() {
@@ -89,8 +92,8 @@ class GeofireClient {
                         final String distanceTo = df.format(mCurrentLocation.distanceTo(location) / 1000.0);
                         User user = ChatSDK.db().fetchOrCreateEntityWithEntityID(User.class, dataSnapshot.getKey());
                         NearbyUser nearbyUser = new NearbyUser(user,distanceTo);
-                        mNearbyUser.setValue(nearbyUser);
-                        mNearHashMap.put(dataSnapshot.getKey(), nearbyUser);
+                        if (!nearbyUser.isMe())
+                            mNearHashMap.put(dataSnapshot.getKey(), nearbyUser);
                     }
                 }
                 @Override
@@ -109,6 +112,7 @@ class GeofireClient {
                 @Override
                 public void onGeoQueryReady() {
                     //All initial data has been loaded and events have been fired!
+                    mNearbyUsers.postValue(new ArrayList<NearbyUser>(mNearHashMap.values()));
                 }
 
                 @Override

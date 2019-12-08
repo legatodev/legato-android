@@ -7,6 +7,8 @@ import androidx.lifecycle.LiveData;
 
 import com.legato.music.models.NearbyUser;
 
+import java.util.List;
+
 import co.chatsdk.core.dao.User;
 
 public class BaseRepository {
@@ -33,8 +35,8 @@ public class BaseRepository {
        mGeofireClient.setUserId(mChatSDKClient.getCurrentUserId());
     }
 
-    public LiveData<NearbyUser> getNearbyUser(){
-        return mGeofireClient.getNearbyUser();
+    public LiveData<List<NearbyUser>> getNearbyUsers(){
+        return mGeofireClient.getNearbyUsers();
     }
 
     public NearbyUser getCurrentUser() {
