@@ -1,6 +1,7 @@
 package com.legato.music.views.activity;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.lifecycle.ViewModelProviders;
 
@@ -14,6 +15,7 @@ import co.chatsdk.ui.utils.ToastHelper;
 import io.reactivex.annotations.Nullable;
 
 public class UserProfileActivity extends BaseActivity {
+    private static final String TAG = UserProfileActivity.class.getSimpleName();
 
     @Nullable
     UserProfileViewModel userProfileViewModel;
@@ -36,11 +38,19 @@ public class UserProfileActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
 
-        String userEntityID = getIntent().getStringExtra(Keys.USER_ENTITY_ID);
+        @Nullable String userEntityID = getIntent().getStringExtra(Keys.USER_ENTITY_ID);
         if (userProfileViewModel != null) {
             if (userEntityID != null && !userEntityID.isEmpty()) {
                 if (userProfileViewModel.getUserByEntityId(userEntityID) != null) {
+                    @Nullable String distance = getIntent().getStringExtra(com.legato.music.utils.Keys.distance);
+                    if (distance != null && !distance.isEmpty()) {
+                        userProfileViewModel.setDistance(distance);
+                    } else {
+                        Log.d(TAG, "Distance not available");
+                    }
                     return;
+                } else {
+                    Log.e(TAG, "User entity does not exist in View Model");
                 }
             }
 

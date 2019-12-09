@@ -40,7 +40,7 @@
     <style name="stdButton">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">36dp</item>
-        <item name="android:layout_margin">@dimen/std_margin</item>
+        <item name="android:layout_margin">@dimen/std_marginSmall</item>
         <item name="android:textSize">12sp</item>
     </style>
 
@@ -53,9 +53,15 @@
 
     <!-- item_nearbyuser -->>
     <style name="socialMedia">
-        <item name="android:layout_width">28dp</item>
-        <item name="android:layout_height">28dp</item>
+        <item name="android:layout_width">32dp</item>
+        <item name="android:layout_height">32dp</item>
         <item name="android:layout_margin">@dimen/std_marginSmall</item>
+    </style>
+
+    <!-- userprofilefragment -->>
+    <style name="socialMediaBig">
+        <item name="android:layout_width">72dp</item>
+        <item name="android:layout_height">72dp</item>
     </style>
 
     <!-- item_skill; fragment_band_basic_info; fragment_filters -->

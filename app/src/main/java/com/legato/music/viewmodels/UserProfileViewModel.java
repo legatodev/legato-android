@@ -29,7 +29,8 @@ public class UserProfileViewModel extends ViewModel {
     public ArrayList<UserProfileInfo> getProfileInfo() {
         return new ArrayList<>(Arrays.asList(
             new UserProfileInfo("Skills", nearbyUser.getSkills()),
-            new UserProfileInfo("Genres", nearbyUser.getGenres())
+            new UserProfileInfo("Genres", nearbyUser.getGenres()),
+            new UserProfileInfo("Looking for", nearbyUser.getLookingfor())
         ));
     }
 

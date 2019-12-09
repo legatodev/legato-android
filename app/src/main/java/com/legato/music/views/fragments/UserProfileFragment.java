@@ -1,7 +1,9 @@
 package com.legato.music.views.fragments;
 
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,8 +23,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.facebook.AccessToken;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.youtube.player.YouTubeIntents;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FacebookAuthProvider;
@@ -85,6 +89,18 @@ public class UserProfileFragment extends BaseFragment {
     protected RecyclerView youtubeRecyclerView;
     @BindView(R.id.youtubeGalleryLayout)
     protected View youtubeGalleryView;
+
+    @BindView(R.id.userProfileInstagramView)
+    ImageView userProfileInstagramView;
+
+    @BindView(R.id.userProfileFacebookView)
+    ImageView userProfileFacebookView;
+
+    @BindView(R.id.userProfileYoutubeView)
+    ImageView userProfileYoutubeView;
+
+    @BindView(R.id.userProfileDistanceTextView)
+    TextView userProfileDistanceTextView;
 
     private DisposableList disposableList = new DisposableList();
 
@@ -226,12 +242,91 @@ public class UserProfileFragment extends BaseFragment {
                 }
             }
 
-            userDescriptionTextView.setText(nearbyUser.getDescription());
+            if (nearbyUser.getDescription() != null && nearbyUser.getDescription().isEmpty()) {
+                userDescriptionTextView.setVisibility(View.VISIBLE);
+                userDescriptionTextView.setText(nearbyUser.getDescription());
+            }
 
             userProfileViewModel.setYoutubeVideoIds(nearbyUser.getYoutube());
             updateYoutubePlayerView();
 
+            setInstagramOnClick(nearbyUser);
+            setFacebookOnClick(nearbyUser);
+            setYoutubeOnClick(nearbyUser);
+            if (!isCurrentUser) {
+                userProfileDistanceTextView.setVisibility(View.VISIBLE);
+                userProfileDistanceTextView.setText(nearbyUser.getDistance() + " mi");
+            }
+
             userProfileInfoAdapter.notifyData(userProfileViewModel.getProfileInfo());
+        }
+    }
+
+    private void setInstagramOnClick(NearbyUser nearbyUser) {
+        if (this.userProfileInstagramView != null && nearbyUser != null) {
+            String instagram = nearbyUser.getInstagram();
+            if (instagram != null && !instagram.isEmpty()) {
+                this.userProfileInstagramView.setVisibility(View.VISIBLE);
+                this.userProfileInstagramView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Uri uri = Uri.parse("http://instagram.com/_u/" + instagram);
+                        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                        intent.setPackage("com.instagram.android");
+                        try {
+                            getActivity().startActivity(intent);
+                        } catch (ActivityNotFoundException e) {
+                            getActivity().startActivity(new Intent(Intent.ACTION_VIEW,
+                                    Uri.parse("http://instagram.com/" + instagram)));
+                        }
+                    }
+                });
+            } else {
+                this.userProfileInstagramView.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    private void setFacebookOnClick(NearbyUser nearbyUser) {
+        if (this.userProfileFacebookView != null && nearbyUser != null) {
+            String facebook = nearbyUser.getFacebook();
+            if (facebook != null && !facebook.isEmpty()) {
+                this.userProfileFacebookView.setVisibility(View.VISIBLE);
+                this.userProfileFacebookView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                        try {
+                            getActivity().getPackageManager()
+                                    .getPackageInfo("com.facebook.katana", 0); //Checks if FB is even installed.
+                            intent.setData(Uri.parse("fb://page/" + facebook));
+                        } catch (Exception e) {
+                            intent.setData(Uri.parse("https://www.facebook.com/" + facebook)); //catches and opens a url to the desired page
+                        }
+                        getActivity().startActivity(intent);
+                    }
+                });
+            }
+            else
+                this.userProfileFacebookView.setVisibility(View.GONE);
+        }
+    }
+
+    private void setYoutubeOnClick(NearbyUser nearbyUser) {
+        if (this.userProfileYoutubeView != null && nearbyUser != null) {
+            String youtube_channel = nearbyUser.getYoutubeChannel();
+            if (youtube_channel != null && !youtube_channel.isEmpty()) {
+                this.userProfileYoutubeView.setVisibility(View.VISIBLE);
+                this.userProfileYoutubeView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = YouTubeIntents.createUserIntent(v.getContext(), youtube_channel);
+                        v.getContext().startActivity(intent);
+                    }
+                });
+            }
+            else
+                this.userProfileYoutubeView.setVisibility(View.GONE);
         }
     }
 
