@@ -61,6 +61,7 @@ public class SkillsAdapter extends RecyclerView.Adapter<SkillsAdapter.SkillsHold
 
     @Override
     public int getItemCount() {
+
         return this.skills.size();
     }
 
@@ -142,17 +143,18 @@ public class SkillsAdapter extends RecyclerView.Adapter<SkillsAdapter.SkillsHold
 
         }
 
-        public String getSkill() {
-            String skill = "";
-            String ownsInstrument = "No";
-            if (mOwnsInstrumentSwitch != null && mOwnsInstrumentSwitch.isChecked()) {
-                ownsInstrument = "Yes";
-            }
-            if (mSkillSpinner != null && !((String) mSkillSpinner.getSelectedItem()).isEmpty() && mSkillLevelSeekBar != null) {
-                skill += (mSkillSpinner.getSelectedItem() + "(" + ownsInstrument + ")" + " - " + mSkillLevelSeekBar.getProgress() + "|");
-            }
+        @Nullable
+        public Skill getSkill() {
+            if (mSkillSpinner != null &&
+                !((String) mSkillSpinner.getSelectedItem()).isEmpty() &&
+                mSkillLevelSeekBar != null &&
+                mOwnsInstrumentSwitch != null) {
 
-            return skill;
+                return (new Skill(mSkillSpinner.getSelectedItem().toString(),
+                                                 mSkillLevelSeekBar.getProgress(),
+                                                 mOwnsInstrumentSwitch.isChecked()));
+            }
+            return null;
         }
 
         @Override

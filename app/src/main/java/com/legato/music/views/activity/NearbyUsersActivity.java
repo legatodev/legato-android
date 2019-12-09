@@ -65,10 +65,23 @@ public class NearbyUsersActivity extends AppCompatActivity implements
         ButterKnife.bind(this);
 
         mNearbyUsersViewModel = ViewModelProviders.of(this).get(NearbyUsersViewModel.class);
+
         if (!isEmailVerified()) {
             createVerificationDialog();
         }
 
+        ChatSDK.hook().addHook(new Hook(data -> Completable.create(emitter -> {
+            this.finish();
+            emitter.onComplete();
+        })), HookEvent.WillLogout);
+
+        initRecyclerView();
+        subscribeObservers();
+        getLastLocation();
+        initProximityAlert();
+    }
+
+    private void initRecyclerView() {
         mNearbyUsersAdapter = new NearbyUsersAdapter(this, R.layout.item_nearbyuser);
         mNearbyUserRecyclerView.setAdapter(mNearbyUsersAdapter);
 
@@ -76,15 +89,6 @@ public class NearbyUsersActivity extends AppCompatActivity implements
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         mNearbyUserRecyclerView.addItemDecoration(itemDecor);
         mNearbyUserRecyclerView.setLayoutManager(layoutManager);
-
-        ChatSDK.hook().addHook(new Hook(data -> Completable.create(emitter -> {
-            this.finish();
-            emitter.onComplete();
-        })), HookEvent.WillLogout);
-
-        subscribeObservers();
-        getLastLocation();
-        initProximityAlert();
     }
 
     private void initProximityAlert(){

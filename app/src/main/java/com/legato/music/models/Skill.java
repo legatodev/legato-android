@@ -1,5 +1,7 @@
 package com.legato.music.models;
 
+import java.util.Comparator;
+
 public class Skill {
 
     private String skill;
@@ -46,4 +48,12 @@ public class Skill {
     public void setOwnsInstrument(boolean ownsInstrument) {
         this.ownsInstrument = ownsInstrument;
     }
+
+    public static Comparator<Skill> sortBySkillLevel = (u1, u2) -> {
+        Integer u1SkillLevel = u1.getSkillLevel();
+        Integer u2SkillLevel = u2.getSkillLevel();
+
+        return u1SkillLevel > u2SkillLevel ? -1 :
+               u1SkillLevel < u2SkillLevel ? 1 : 0;
+    };
 }

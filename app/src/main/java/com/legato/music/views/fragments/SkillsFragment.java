@@ -20,6 +20,8 @@ import com.legato.music.R;
 import com.legato.music.views.adapters.SkillsAdapter;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -135,6 +137,7 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
     }
 
     private String getSkillLevel(String s) {
+
         return s.replaceAll("[^\\d]", "");
     }
 
@@ -169,19 +172,39 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
         validate();
     }
 
-    public String extractData() {
+   public String extractData() {
         String skills = "";
+
+        ArrayList<Skill> extractedSkillList = new ArrayList<>();
 
         if (mSkillsAdapter != null) {
             for (int i = 0; i < mSkillsAdapter.getItemCount(); i++) {
                 SkillsAdapter.SkillsHolder holder = (SkillsAdapter.SkillsHolder) mSkillsRecyclerView.findViewHolderForAdapterPosition(i);
                 if (holder != null) {
-                    skills += holder.getSkill();
+                    Skill s = holder.getSkill();
+                    if(s != null)
+                        extractedSkillList.add(s);
                 }
             }
-        }
 
+            if(extractedSkillList.size() > 0){
+                Collections.sort(extractedSkillList, Skill.sortBySkillLevel);
+                skills = formulateSkillString(extractedSkillList);
+            }
+        }
         return skills;
+   }
+
+    private String formulateSkillString(List<Skill> extractedSkillList){
+        String skillString = "";
+        for(Skill skill: extractedSkillList){
+            String ownsInstrument = "No";
+            if (skill.getOwnsInstrument()) {
+                ownsInstrument = "Yes";
+            }
+            skillString += (skill.getSkill() + "(" + ownsInstrument + ")" + " - " + skill.getSkillLevel() + "|");
+        }
+        return skillString;
     }
 
     public boolean isInputValid() {
