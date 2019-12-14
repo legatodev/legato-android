@@ -4,26 +4,28 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProviders;
 
-import com.legato.music.utils.Keys;
 import com.legato.music.R;
 import com.legato.music.registration.band.BandRegistrationActivity;
-
-import co.chatsdk.core.session.ChatSDK;
+import com.legato.music.viewmodels.RegistrationViewModel;
 
 public class RegistrationActivity extends AppCompatActivity {
+
+    @NonNull private RegistrationViewModel registrationViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (ChatSDK.currentUser() != null) {
-            if (ChatSDK.currentUser().metaStringForKey(Keys.skills) != null && !ChatSDK.currentUser().metaStringForKey(Keys.skills).isEmpty()) {
-                Intent intent = new Intent(this, NearbyUsersActivity.class);
-                startActivity(intent);
-                finish();
-            }
+        registrationViewModel = ViewModelProviders.of(this).get(RegistrationViewModel.class);
+
+        if (registrationViewModel.hasUser()) {
+            Intent intent = new Intent(this, NearbyUsersActivity.class);
+            startActivity(intent);
+            finish();
         }
 
         setContentView(R.layout.activity_registration);

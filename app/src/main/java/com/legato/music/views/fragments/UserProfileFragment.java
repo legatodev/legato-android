@@ -307,8 +307,9 @@ public class UserProfileFragment extends BaseFragment {
                     }
                 });
             }
-            else
+            else {
                 this.userProfileFacebookView.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -325,8 +326,9 @@ public class UserProfileFragment extends BaseFragment {
                     }
                 });
             }
-            else
+            else {
                 this.userProfileYoutubeView.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -435,7 +437,7 @@ public class UserProfileFragment extends BaseFragment {
         updateYoutubePlayerView();
     }
 
-    private void startChat() {
+    private void startChat () {
         boolean startingChat = userProfileViewModel.getStartingSdkChat();
         if (startingChat) {
             return;

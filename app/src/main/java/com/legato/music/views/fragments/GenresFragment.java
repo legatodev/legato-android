@@ -1,35 +1,31 @@
 package com.legato.music.views.fragments;
 
 import android.os.Bundle;
-import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.legato.music.R;
+import com.legato.music.viewmodels.GenresViewModel;
 import com.legato.music.utils.Keys;
 import com.legato.music.views.activity.SoloRegistrationActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import co.chatsdk.core.dao.User;
-import co.chatsdk.core.session.ChatSDK;
 
 public class GenresFragment extends Fragment {
     @BindView(R.id.genresListView) ListView genresListView;
 
-    @Nullable private ArrayAdapter<CharSequence> adapter;
+    @Nullable private ArrayAdapter<CharSequence> adapter = null;
 
-    public GenresFragment() {
-        adapter = null;
-    }
+    @NonNull private GenresViewModel genresViewModel;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -38,6 +34,8 @@ public class GenresFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_genres, container, false);
         ButterKnife.bind(this, view);
 
+        genresViewModel = ViewModelProviders.of(requireActivity()).get(GenresViewModel.class);
+
         return view;
     }
 
@@ -45,61 +43,28 @@ public class GenresFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if (getContext() != null) {
-            User user = ChatSDK.currentUser();
-            String dbgenres = user.metaStringForKey(Keys.genres);
+        adapter = ArrayAdapter.createFromResource(
+                getContext(),
+                R.array.genres_array,
+                android.R.layout.simple_list_item_multiple_choice);
 
-            adapter = ArrayAdapter.createFromResource(getContext(),
-                    R.array.genres_array, android.R.layout.simple_list_item_multiple_choice);
+        genresListView = genresViewModel.setCheckedItems(genresListView, adapter);
 
-            genresListView.setAdapter(adapter);
-            int listCount = genresListView.getCount();
-            if (dbgenres != null) {
-                for (int i = 0; i < listCount; i++) {
-                    if (dbgenres.contains(adapter.getItem(i).toString())) {
-                        genresListView.setItemChecked(i, true);
-                    }
-                }
-            }
-
-            genresListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    validate();
-                }
-            });
-        }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
+        genresListView.setOnItemClickListener((parent, view1, position, id) -> validate());
 
         validate();
     }
 
     private void validate() {
+        genresViewModel.updateValidList(genresListView);
+
         if (getActivity() != null) {
             ((SoloRegistrationActivity) getActivity()).setVisibleTabCount();
         }
     }
 
     public String extractData() {
-        String genres = "";
-        if (genresListView != null && adapter != null) {
-            SparseBooleanArray checked = genresListView.getCheckedItemPositions();
-            for (int i = 0; i < checked.size(); i++) {
-                int position = checked.keyAt(i);
-                if (checked.valueAt(i)) {
-                    if (adapter.getItem(position) != null) {
-                        String genre = adapter.getItem(position).toString();
-                        genres += (genre + "|");
-                    }
-                }
-            }
-        }
-
-        return genres;
+        return genresViewModel.extractData(genresListView, adapter);
     }
 
     //Called when the user navigates to this tab
@@ -112,12 +77,9 @@ public class GenresFragment extends Fragment {
     }
 
     public boolean isInputValid() {
-        boolean valid = false;
+        if (genresViewModel != null)
+            return genresViewModel.getValid();
 
-        if (getView() != null) {
-            valid = (genresListView.getCheckedItemCount() > 0);
-        }
-
-        return valid;
+        return false;
     }
 }
