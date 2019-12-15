@@ -50,6 +50,11 @@ public class BaseRepository {
         return currentUser;
     }
 
+    public String getDistanceFromCurrentUser() {
+        User user = mChatSDKClient.getCurrentUser();
+        return mGeofireClient.getDistanceToCurrentUser(user.getEntityID());
+    }
+
     public User getUserByEntityId(String entityId) {
         return mChatSDKClient.getEntityById(entityId); }
 

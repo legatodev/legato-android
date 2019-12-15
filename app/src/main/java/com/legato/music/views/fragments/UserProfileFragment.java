@@ -475,7 +475,7 @@ public class UserProfileFragment extends BaseFragment {
                               @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if (savedInstanceState != null && savedInstanceState.getString(Keys.UserId) != null) {
+        if (savedInstanceState != null && savedInstanceState.getString(Keys.USER_ENTITY_ID) != null) {
             disposableList.add(
                     ChatSDK.events().sourceOnMain().filter(
                             NetworkEvent.filterType(

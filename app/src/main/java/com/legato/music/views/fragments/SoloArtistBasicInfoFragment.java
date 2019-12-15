@@ -61,8 +61,10 @@ import butterknife.OnClick;
 import co.chatsdk.core.session.ChatSDK;
 import co.chatsdk.core.utils.ImageUtils;
 import co.chatsdk.ui.chat.MediaSelector;
+import co.chatsdk.ui.utils.ImagePickerUploader;
 import co.chatsdk.ui.utils.ToastHelper;
 import id.zelory.compressor.Compressor;
+import io.reactivex.disposables.Disposable;
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyCallback;
 import kaaes.spotify.webapi.android.SpotifyError;
@@ -222,27 +224,19 @@ public class SoloArtistBasicInfoFragment extends Fragment {
         }
 
         soloArtistProfilePictureImageView.setOnClickListener(tempView -> {
-            if (getActivity() != null)
-                mediaSelector.startChooseImageActivity(getActivity(), MediaSelector.CropType.Circle, result -> {
-
-                    try {
-                        File compress = new Compressor(ChatSDK.shared().context())
-                                .setMaxHeight(ChatSDK.config().imageMaxThumbnailDimension)
-                                .setMaxWidth(ChatSDK.config().imageMaxThumbnailDimension)
-                                .compressToFile(new File(result));
-
-                        Bitmap bitmap = BitmapFactory.decodeFile(compress.getPath());
-
-                        // Cache the file
-                        File file = ImageUtils.compressImageToFile(ChatSDK.shared().context(), bitmap, ChatSDK.currentUserID(), ".png");
+            if (getActivity() != null) {
+                ImagePickerUploader uploader = new ImagePickerUploader(MediaSelector.CropType.Circle);
+                Disposable d = uploader.choosePhoto(getActivity()).subscribe((result, throwable) -> {
+                    if (throwable == null) {
+                        File file = new File(result.uri);
                         setImageURI(soloArtistProfilePictureImageView, Uri.fromFile(file));
                         setTextView(soloArtistAddEditProfilePictureTextView, R.string.edit_profile_pic);
-
                         soloArtistViewModel.setAvatarUrl(Uri.fromFile(file).toString());
-                    } catch (Exception e) {
-                        ChatSDK.logError(e);
+                    } else {
+                        ToastHelper.show(getActivity(), throwable.getLocalizedMessage());
                     }
                 });
+            }
         });
 
         youtubeRecyclerView.setHasFixedSize(true);

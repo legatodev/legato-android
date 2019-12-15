@@ -14,7 +14,7 @@ android {
 
     defaultConfig {
         applicationId "com.legato.music"
-        minSdkVersion 21
+        minSdkVersion 17
         targetSdkVersion 28
         versionCode 9
         versionName "1.08"
@@ -61,7 +61,7 @@ dependencies {
     def google_youtube_service = "v3-rev120-1.19.0"
     def google_http_client = "1.29.0"
     def alternate_youtube_service = "10.0.5"
-    def chatsdk = "4.7.1"
+    def chatsdk = "4.7.4"
     def butterknife = "10.1.0"
     def googleapiclient = "1.30.5"
     def facebooksdk = "5.11.0"

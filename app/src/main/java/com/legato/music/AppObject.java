@@ -13,6 +13,7 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.legato.music.utils.FirebaseUIModule;
 import com.legato.music.utils.LegatoAuthenticationHandler;
+import com.legato.music.views.activity.UserChatActivity;
 
 import co.chatsdk.core.error.ChatSDKException;
 import co.chatsdk.core.session.ChatSDK;
@@ -53,6 +54,8 @@ public class AppObject extends Application {
             config.firebaseRootPath("prod");
             config.logoDrawableResourceID(R.drawable.legato_logo);
             config.defaultUserAvatarUrl("");
+            config.groupsEnabled(false);
+            config.threadDetailsEnabled(false);
 
             // Start the Chat SDK and pass in the interface adapter and network adapter. By subclassing either
             // of these classes you could modify deep functionality withing the Chat SDK
@@ -71,6 +74,7 @@ public class AppObject extends Application {
 
         FirebaseUIModule.activate(EmailAuthProvider.PROVIDER_ID, GoogleAuthProvider.PROVIDER_ID, FacebookAuthProvider.PROVIDER_ID);
         ChatSDK.ui().setMainActivity(RegistrationActivity.class);
+        ChatSDK.ui().setChatActivity(UserChatActivity.class);
     }
 
     @Override

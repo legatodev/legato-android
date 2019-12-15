@@ -212,7 +212,7 @@ public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.On
         if (nearbyUser != null) {
             Intent intent = new Intent(this.context, UserProfileActivity.class);
             intent.putExtra(Keys.USER_ENTITY_ID, nearbyUser.getEntityID());
-            intent.putExtra("distance", nearbyUser.getDistance());
+            intent.putExtra(com.legato.music.utils.Keys.distance, nearbyUser.getDistance());
             context.startActivity(intent);
         }
     }

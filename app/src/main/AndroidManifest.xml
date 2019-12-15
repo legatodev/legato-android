@@ -91,6 +91,11 @@
             android:theme="@style/NoActionBarTheme">
         </activity>
 
+        <activity android:name="com.legato.music.views.activity.UserChatActivity"
+            android:launchMode = "singleTop"
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:theme="@style/ChatSDKSlidingTransactionTheme"/>
+
         <service android:name=".spotify.PlayerService"/>
 
     </application>
