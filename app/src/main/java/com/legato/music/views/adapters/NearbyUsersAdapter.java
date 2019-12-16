@@ -1,6 +1,7 @@
 package com.legato.music.views.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import co.chatsdk.core.session.ChatSDK;
 import co.chatsdk.core.utils.DisposableList;
 
 import io.reactivex.Completable;
@@ -24,6 +26,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 
 
 public class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
+
+    public static final String TAG = NearbyUsersAdapter.class.getSimpleName();
 
     @Nullable private List<NearbyUser> mNearbyUsers;
     private final Context context;
@@ -36,6 +40,7 @@ public class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
         this.context = context;
         this.itemResource = itemResource;
         this.mfilters = null;
+        this.mNearbyUsers = new ArrayList<>();
     }
 
     public void setFilters(Filters filters) {
@@ -45,15 +50,35 @@ public class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
 
     public void updateNearbyUsers(List<NearbyUser> nearbyusers){
 
-        mNearbyUsers = (ArrayList<NearbyUser>)((ArrayList<NearbyUser>)nearbyusers).clone();
+        if(mNearbyUsers != null)
+            mNearbyUsers.clear();
 
-        Completable completable = Completable.complete();
-        disposableList.add(completable
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(() -> {
-                    onFilter();
-                }));
-     }
+        for(NearbyUser nearbyUser: nearbyusers){
+            Completable completable = ChatSDK.core().userOn(nearbyUser.getUser());
+            disposableList.add(completable.observeOn(AndroidSchedulers.mainThread())
+                                          .subscribe(() -> {
+                                            /* User object has now been populated and is ready to use.
+                                               ChatSDK populates User Meta information is a separate thread.
+                                               So its necessary to wait for User object to be completely Ready.
+                                               Hence ChatSDK.core().userOn.
+                                             */
+                                            if(mfilters != null)
+                                                onFilter(nearbyUser);
+                                            else{
+                                                /*
+                                                This will be executed when Filter object has not been created yet.
+                                                E.g.: When app loads for the first time
+                                                 */
+                                                if(mNearbyUsers != null)
+                                                    mNearbyUsers.add(nearbyUser);
+                                                notifyDataSetChanged();
+                                            }
+                                          }, throwable -> {
+                                                Log.e(TAG,"Exception occured in ChatSDK core at time populating meta field for User obj");
+                                             }
+                                          ));
+        }
+    }
 
     @NonNull
     @Override
@@ -77,23 +102,14 @@ public class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
         return this.mNearbyUsers != null?this.mNearbyUsers.size():0;
     }
 
-    private void onFilter() {
+    private void onFilter(NearbyUser row) {
 
-        if(mNearbyUsers == null)
-            return;
-
-        if(mfilters == null){
-        /*
-        This should be called when app loads for first time.
-         */
-            notifyItemInserted(this.mNearbyUsers.size() - 1);
+        if(mNearbyUsers == null || mfilters == null) {
+            Log.e(TAG,"Exit. NearbyUser list or selected filter is Null.");
             return;
         }
 
-        List<NearbyUser> filteredList = new ArrayList<>();
-
-        for (NearbyUser row : mNearbyUsers) {
-            boolean addRow;
+        boolean addRow;
             if (mfilters.hasLookingfor() && row.getLookingfor() != null) {
                 addRow = row.getLookingfor().contains(mfilters.getLookingfor());
             }
@@ -120,11 +136,8 @@ public class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
             }
 
             if (addRow) {
-                filteredList.add(row);
+                mNearbyUsers.add(row);
             }
-        }
-
-        mNearbyUsers = filteredList;
 
         if (mfilters.hasSortBy()) {
             Collections.sort(mNearbyUsers, NearbyUser.sortByDistance);
