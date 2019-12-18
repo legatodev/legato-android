@@ -30,6 +30,7 @@ public class SkillsAdapter extends RecyclerView.Adapter<SkillsAdapter.SkillsHold
 
     public interface SkillSelectedListener {
         void onSkillSelected(View v, int position);
+        void onSkillDeleteValidate(View v, int position);
     }
 
     private final List<Skill> skills;
@@ -170,6 +171,9 @@ public class SkillsAdapter extends RecyclerView.Adapter<SkillsAdapter.SkillsHold
                 }
                 if (mSkillLevelSeekBar != null) {
                     this.mSkillLevelSeekBar.setEnabled(false);
+                }
+                if(skills.size() == 0){
+                    mOnSkillSelectedListener.onSkillDeleteValidate(view,position);
                 }
             }
         }

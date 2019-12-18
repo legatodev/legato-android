@@ -1,5 +1,6 @@
 package com.legato.music.views.fragments;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -86,8 +88,7 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
     }
 
     private void validate() {
-        finishButton.setEnabled(
-                skillsViewModel.isSkillSelected());
+        finishButton.setEnabled(skillsViewModel.isSkillSelected());
     }
 
     @Override
@@ -95,7 +96,7 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
         switch (view.getId()) {
             case R.id.addSkillButton:
                 if (mSkillsAdapter != null && skillsViewModel.isValidSkillsArray()) {
-                    skillsViewModel.addSkill(new Skill("Choose Skill", 0));
+                    skillsViewModel.addSkill(new Skill(getContext().getResources().getString(R.string.default_skill), 0));
                     mSkillsAdapter.notifyItemInserted(skillsViewModel.getSkillsCount() - 1);
                 } else {
                     addSkillButton.setEnabled(false);
@@ -103,7 +104,22 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
 
                 break;
             case R.id.finishSoloRegistrationButton:
-                finishClickedListener.onFinish();
+                /*
+                  Below alert will pop only when All skills are deleted except default skill
+                  i.e. 'Choose Skill'
+                */
+                if(skillsViewModel.getSkillsCount() == 1 &&
+                   (skillsViewModel.getSkillsList().get(0).getSkill() ==
+                    getContext().getResources().getString(R.string.default_skill)
+                   )){
+                        new AlertDialog.Builder(getContext())
+                            .setMessage(getContext().getResources().getString(R.string.alert_select_one_skill))
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .setPositiveButton(android.R.string.ok, null)
+                            .show();
+                }else {
+                    finishClickedListener.onFinish();
+                }
                 break;
         }
     }
@@ -114,6 +130,12 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
         skillsViewModel.setSkillSelected(true);
 
         addSkillButton.setEnabled(skillsViewModel.isSkillSelected());
+        validate();
+    }
+
+    @Override
+    public void onSkillDeleteValidate(View v, int position) {
+        skillsViewModel.setSkillSelected(false);
         validate();
     }
 

@@ -81,6 +81,7 @@
     <string name="header_filters">Filter</string>
     <string name="apply">Apply</string>
     <string name="finish">Finish</string>
+    <string name="default_skill">Choose Skill</string>
 
     <string name="block">Block</string>
     <string name="unblock">Unblock</string>
@@ -108,6 +109,7 @@
     <string name="resend_verification">Resend Verification</string>
     <string name="instrument_owned">Do you own the instrument?</string>
     <string name="cover_art_description">Cover art</string>
+    <string name="alert_select_one_skill">Please choose a skill</string>
 
     <string name="add_track">Add</string>
 
