@@ -42,6 +42,7 @@
         <item name="android:layout_height">36dp</item>
         <item name="android:layout_margin">@dimen/std_marginSmall</item>
         <item name="android:textSize">12sp</item>
+        <item name="android:padding">2dp</item>
     </style>
 
     <!-- fragment_user_profile; item_nearby_user -->
@@ -53,15 +54,16 @@
 
     <!-- item_nearbyuser -->>
     <style name="socialMedia">
-        <item name="android:layout_width">32dp</item>
-        <item name="android:layout_height">32dp</item>
+        <item name="android:layout_width">24dp</item>
+        <item name="android:layout_height">24dp</item>
         <item name="android:layout_margin">@dimen/std_marginSmall</item>
     </style>
 
     <!-- userprofilefragment -->>
     <style name="socialMediaBig">
-        <item name="android:layout_width">72dp</item>
-        <item name="android:layout_height">72dp</item>
+        <item name="android:layout_width">56dp</item>
+        <item name="android:layout_height">56dp</item>
+        <item name="android:layout_margin">@dimen/std_marginSmall</item>
     </style>
 
     <!-- item_skill; fragment_band_basic_info; fragment_filters -->

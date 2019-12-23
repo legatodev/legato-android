@@ -10,6 +10,7 @@ import com.legato.music.models.NearbyUser;
 import java.util.List;
 
 import co.chatsdk.core.dao.User;
+import io.reactivex.Completable;
 
 public class BaseRepository {
 
@@ -81,4 +82,14 @@ public class BaseRepository {
     public String getSearchRadius(){
         return mChatSDKClient.getMetaString(com.legato.music.utils.Keys.searchradius);
     }
+
+    public Completable addContact(User user) {
+        return mChatSDKClient.addContact(user);
+    }
+
+    public Completable deleteContact(User user) {
+        return mChatSDKClient.deleteContact(user);
+    }
+
+    public boolean isFriend(User user) { return mChatSDKClient.isFriend(user); }
 }

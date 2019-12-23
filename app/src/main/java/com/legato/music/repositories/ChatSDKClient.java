@@ -1,9 +1,16 @@
 package com.legato.music.repositories;
 
+import com.legato.music.R;
+import com.legato.music.spotify.SearchPager;
+
 import androidx.annotation.Nullable;
 
 import co.chatsdk.core.dao.User;
 import co.chatsdk.core.session.ChatSDK;
+import co.chatsdk.core.types.ConnectionType;
+import co.chatsdk.ui.utils.ToastHelper;
+import io.reactivex.Completable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 class ChatSDKClient {
     private static final String TAG = "ChatSDKClient";
@@ -75,5 +82,17 @@ class ChatSDKClient {
         } else {
             throw new NullPointerException("Current User Dao not initialized. Check ChatSDKClient instance");
         }
+    }
+
+    public Completable addContact(User user) {
+        return ChatSDK.contact().addContact(user, ConnectionType.Contact);
+    }
+
+    public Completable deleteContact(User user) {
+        return ChatSDK.contact().deleteContact(user, ConnectionType.Contact);
+    }
+
+    public boolean isFriend(User user) {
+        return ChatSDK.contact().exists(user);
     }
 }

@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -33,6 +34,8 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.legato.music.AppConstants;
+import com.legato.music.BuildConfig;
 import com.legato.music.R;
 import com.legato.music.models.NearbyUser;
 import com.legato.music.utils.LegatoAuthenticationHandler;
@@ -54,6 +57,7 @@ import co.chatsdk.core.events.NetworkEvent;
 import co.chatsdk.core.interfaces.ThreadType;
 import co.chatsdk.core.session.ChatSDK;
 import co.chatsdk.core.types.AccountDetails;
+import co.chatsdk.core.types.ConnectionType;
 import co.chatsdk.core.utils.DisposableList;
 import co.chatsdk.ui.main.BaseFragment;
 import co.chatsdk.ui.utils.AvailabilityHelper;
@@ -89,6 +93,15 @@ public class UserProfileFragment extends BaseFragment {
     protected RecyclerView youtubeRecyclerView;
     @BindView(R.id.youtubeGalleryLayout)
     protected View youtubeGalleryView;
+
+    @BindView(R.id.addOrRemoveContactImageButton)
+    protected ImageButton addOrRemoveContactImageButton;
+
+    @BindView(R.id.appVersionTextView)
+    protected TextView appVersionTextView;
+
+    @BindView(R.id.privacyPolicyButton)
+    protected Button privacyPolicyButton;
 
     @BindView(R.id.userProfileInstagramView)
     ImageView userProfileInstagramView;
@@ -259,7 +272,22 @@ public class UserProfileFragment extends BaseFragment {
             }
 
             userProfileInfoAdapter.notifyData(userProfileViewModel.getProfileInfo());
+
+            if (!isCurrentUser && addOrRemoveContactImageButton != null) {
+                addOrRemoveContactImageButton.setVisibility(View.VISIBLE);
+                updateContactButton(userProfileViewModel.isFriend());
+                addOrRemoveContactImageButton.setOnClickListener(view -> toggleFriends());
+            }
+
+            appVersionTextView.setText("Versiom: "+BuildConfig.VERSION_NAME);
         }
+    }
+
+    @OnClick(R.id.privacyPolicyButton)
+    public void privacyPolicyButtonClicked() {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(AppConstants.PRIVACY_POLICY_URL));
+        startActivity(intent);
     }
 
     private void setInstagramOnClick(NearbyUser nearbyUser) {
@@ -535,6 +563,39 @@ public class UserProfileFragment extends BaseFragment {
         if (progressBar != null && progressBar.getVisibility() == View.VISIBLE) {
             progressBar.setVisibility(View.GONE);
             getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        }
+    }
+
+    protected void toggleFriends() {
+        if (userProfileViewModel.isFriend()) deleteContact();
+        else addContact();
+    }
+
+    protected void addContact() {
+        disposableList.add(userProfileViewModel.addContact()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(() -> {
+                    updateContactButton(true);
+                }, throwable -> {
+                    ChatSDK.logError(throwable);
+                }));
+    }
+
+    protected void deleteContact() {
+        disposableList.add(ChatSDK.contact().deleteContact(userProfileViewModel.getUser(), ConnectionType.Contact)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(() -> {
+                    updateContactButton(false);
+                }, throwable -> {
+                    ChatSDK.logError(throwable);
+                }));
+    }
+
+    protected void updateContactButton(boolean contact) {
+        if (contact) {
+            addOrRemoveContactImageButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_cancel));
+        } else {
+            addOrRemoveContactImageButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_plus));
         }
     }
 }

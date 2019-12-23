@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import co.chatsdk.core.dao.User;
+import io.reactivex.Completable;
 
 public class UserProfileViewModel extends ViewModel {
     private BaseRepository baseRepository;
@@ -73,5 +74,17 @@ public class UserProfileViewModel extends ViewModel {
 
     public void setSpotifyTrackIds(String trackIds) {
         nearbyUser.getSpotifySamples().setTrackIds(trackIds);
+    }
+
+    public Completable addContact() {
+        return baseRepository.addContact(nearbyUser.getUser());
+    }
+
+    public Completable deleteContact() {
+        return baseRepository.deleteContact(nearbyUser.getUser());
+    }
+
+    public boolean isFriend() {
+        return baseRepository.isFriend(nearbyUser.getUser());
     }
 }

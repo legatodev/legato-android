@@ -55,21 +55,21 @@
                 style="@style/socialMedia"
                 android:layout_below="@id/nearbyUserNameTextView"
                 android:layout_toEndOf="@id/nearbyUserPhotoImageView"
-                android:src="@drawable/instagram_icon" />
+                app:srcCompat="@drawable/ic_instagram" />
 
             <ImageView
                 android:id="@+id/nearbyUserFacebookView"
                 style="@style/socialMedia"
                 android:layout_below="@id/nearbyUserNameTextView"
                 android:layout_toEndOf="@id/nearbyUserInstagramView"
-                android:src="@drawable/ic_facebook_icon" />
+                app:srcCompat="@drawable/ic_facebook_icon" />
 
             <ImageView
                 android:id="@+id/nearbyUserYoutubeView"
                 style="@style/socialMedia"
                 android:layout_below="@id/nearbyUserNameTextView"
                 android:layout_toEndOf="@id/nearbyUserFacebookView"
-                android:src="@drawable/ic_youtube_icon" />
+                app:srcCompat="@drawable/ic_youtube_icon" />
 
             <TextView
                 android:id="@+id/nearbyUserDistanceTextView"
