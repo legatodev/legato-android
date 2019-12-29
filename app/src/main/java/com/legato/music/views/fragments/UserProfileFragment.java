@@ -83,8 +83,6 @@ public class UserProfileFragment extends BaseFragment {
     protected RecyclerView userInfoRecyclerView;
     @BindView(R.id.profileUserNameTextView)
     protected TextView profileUserNameTextView;
-    @BindView(R.id.emailTextView)
-    protected TextView emailTextView;
     @BindView(R.id.logoutButton)
     protected Button logoutButton;
     @BindView(R.id.deleteAccountButton)
@@ -239,7 +237,6 @@ public class UserProfileFragment extends BaseFragment {
 
         if (!nearbyUser.getUsername().isEmpty()) {
             setViewText(profileUserNameTextView, nearbyUser.getUsername());
-            setViewText(emailTextView, nearbyUser.getEmail());
             if (profilePhotoImageView != null && nearbyUser.getPhotoUrl() != null) {
                 profilePhotoImageView.setImageURI(nearbyUser.getPhotoUrl());
             }

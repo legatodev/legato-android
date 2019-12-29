@@ -84,16 +84,6 @@
                     android:visibility="gone"/>
 
                 <TextView
-                    android:id="@+id/emailTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/profileUserNameTextView"
-                    android:layout_margin="@dimen/std_marginSmall"
-                    android:layout_toEndOf="@id/profilePhotoImageView"
-                    android:text="E-Mail"
-                    android:textColor="@color/black" />
-
-                <TextView
                     android:id="@+id/userProfileDistanceTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
