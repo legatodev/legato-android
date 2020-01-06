@@ -30,20 +30,20 @@ public class NearbyUser {
         updateSpotifyTrackIds();
     }
 
-    private void updateYoutubeVideoIds() {
-        youtubeSamples = new MusicSamples(Keys.youtube);
-    }
-
-    private void updateSpotifyTrackIds() {
-        spotifySamples = new MusicSamples(Keys.spotify_track);
-    }
-
     public NearbyUser(String userId, String distance) {
         setDistance(distance);
         setUser(userId);
 
         updateYoutubeVideoIds();
         updateSpotifyTrackIds();
+    }
+
+    private void updateYoutubeVideoIds() {
+        youtubeSamples = new MusicSamples(Keys.youtube);
+    }
+
+    private void updateSpotifyTrackIds() {
+        spotifySamples = new MusicSamples(Keys.spotify_track);
     }
 
     public String getUsername() {
@@ -120,6 +120,7 @@ public class NearbyUser {
     public String getEmail() { return user.getEmail(); }
 
     public String getYoutube() { return user.metaStringForKey(Keys.youtube); }
+    public String getSpotify() { return user.metaStringForKey(Keys.spotify_track); }
 
     public MusicSamples getYoutubeSamples() { return youtubeSamples; }
     public MusicSamples getSpotifySamples() { return spotifySamples; }
@@ -158,7 +159,7 @@ public class NearbyUser {
         public boolean addTrackId(String newTrackId) {
             boolean bSuccess = false;
 
-            if (trackIds.size() < 6) {
+            if (newTrackId != null && !newTrackId.isEmpty() && trackIds.size() < 6) {
                 if (!trackIds.contains(newTrackId)) {
                     trackIds.add(newTrackId);
                 }
@@ -168,11 +169,11 @@ public class NearbyUser {
             return bSuccess;
         }
 
-        public boolean removeTrackId(int position) {
+        public boolean removeTrackId(String trackId) {
             boolean bSuccess = false;
 
-            if (!trackIds.isEmpty()) {
-                trackIds.remove(position);
+            if (trackId != null && !trackId.isEmpty() && !trackIds.isEmpty()) {
+                trackIds.remove(trackId);
 
                 bSuccess = true;
             }
@@ -181,10 +182,6 @@ public class NearbyUser {
         }
 
         public List<String> getTrackIds() {
-            if (trackIds.isEmpty()) {
-                setTrackIds(user.metaStringForKey(key));
-            }
-
             if (!trackIds.isEmpty() && !trackIds.get(0).isEmpty()) {
                 return trackIds;
             }

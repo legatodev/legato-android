@@ -143,14 +143,16 @@ public class SoloRegistrationActivity extends AppCompatActivity implements Skill
         mSectionsPagerAdapter.setCount(countTab);
     }
 
+    //TODO: we shouldn't be extracting data and pushing into chatsdk user here.
     public void submitData() {
-        HashMap<String, String> profileInfo = ((SoloArtistBasicInfoFragment)soloRegistrationTab).extractData();
-        profileInfo.put(Keys.genres, ((GenresFragment)genresTab).extractData());
-        profileInfo.put(Keys.skills, ((SkillsFragment)skillsTab).extractData());
+        HashMap<String, String> profileInfo = soloRegistrationTab.extractData();
+        profileInfo.put(Keys.genres, genresTab.extractData());
+        profileInfo.put(Keys.skills, skillsTab.extractData());
 
         if (soloArtistViewModel != null) {
             profileInfo.put(Keys.user_description, soloArtistViewModel.getDescription());
             profileInfo.put(Keys.youtube, soloArtistViewModel.getYoutubeVideoIdsAsString());
+            profileInfo.put(Keys.spotify_track, soloArtistViewModel.getSpotifyTrackIdsAsString());
         }
 
         User user = ChatSDK.currentUser();
@@ -160,7 +162,7 @@ public class SoloRegistrationActivity extends AppCompatActivity implements Skill
         disposableList.add(pushProfilePic()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(() -> {
-                    //dismiss update progress bar
+                    //TODO: dismiss update progress bar
                 }));
     }
 

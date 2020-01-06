@@ -80,4 +80,19 @@
         <item name="android:layout_margin">@dimen/std_margin</item>
     </style>
 
+    <style name="trackView">
+        <item name="android:layout_width">280dp</item>
+        <item name="android:layout_height">200dp</item>
+        <item name="android:layout_margin">@dimen/std_marginSmall</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:padding">@dimen/std_padding</item>
+    </style>
+
+    <style name="mediaDeleteButton">
+        <item name="android:layout_width">28dp</item>
+        <item name="android:layout_height">28dp</item>
+        <item name="android:src">@drawable/icn_36_delete</item>
+        <item name="android:layout_gravity">right</item>
+    </style>
+
 </resources>

@@ -1,10 +1,14 @@
 package com.legato.music.views.fragments;
 
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +28,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.facebook.AccessToken;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.youtube.player.YouTubeIntents;
@@ -38,12 +41,18 @@ import com.legato.music.AppConstants;
 import com.legato.music.BuildConfig;
 import com.legato.music.R;
 import com.legato.music.models.NearbyUser;
+import com.legato.music.spotify.Player;
+import com.legato.music.spotify.PlayerService;
 import com.legato.music.utils.LegatoAuthenticationHandler;
 import com.legato.music.viewmodels.UserProfileViewModel;
 import com.legato.music.views.activity.SoloRegistrationActivity;
 import com.legato.music.views.adapters.UserProfileInfoAdapter;
-import com.legato.music.views.adapters.YoutubePlayerAdapter;
+import com.legato.music.views.adapters.MediaPlayerAdapter;
+import com.spotify.sdk.android.authentication.AuthenticationClient;
+import com.spotify.sdk.android.authentication.AuthenticationRequest;
+import com.spotify.sdk.android.authentication.AuthenticationResponse;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -65,9 +74,12 @@ import co.chatsdk.ui.utils.ToastHelper;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.annotations.Nullable;
+import kaaes.spotify.webapi.android.SpotifyApi;
+import kaaes.spotify.webapi.android.SpotifyService;
 
 public class UserProfileFragment extends BaseFragment {
     private static final String TAG = UserProfileFragment.class.getSimpleName();
+    private static final int REQUEST_CODE = 1337;
 
     @BindView(R.id.profilePhotoImageView)
     protected SimpleDraweeView profilePhotoImageView;
@@ -87,10 +99,10 @@ public class UserProfileFragment extends BaseFragment {
     protected Button logoutButton;
     @BindView(R.id.deleteAccountButton)
     protected Button deleteAccountButton;
-    @BindView(R.id.youtubeRecyclerView)
-    protected RecyclerView youtubeRecyclerView;
-    @BindView(R.id.youtubeGalleryLayout)
-    protected View youtubeGalleryView;
+    @BindView(R.id.mediaRecyclerView)
+    protected RecyclerView mediaRecyclerView;
+    @BindView(R.id.mediaGalleryLayout)
+    protected View mediaGalleryView;
 
     @BindView(R.id.addOrRemoveContactImageButton)
     protected ImageButton addOrRemoveContactImageButton;
@@ -116,12 +128,31 @@ public class UserProfileFragment extends BaseFragment {
     private DisposableList disposableList = new DisposableList();
 
     private UserProfileInfoAdapter userProfileInfoAdapter;
-    @Nullable private YoutubePlayerAdapter youtubePlayerAdapter;
+    @Nullable private MediaPlayerAdapter mediaPlayerAdapter;
 
     @NonNull private UserProfileViewModel userProfileViewModel;
 
     @BindView(R.id.profileProgressBar)
     ProgressBar profileProgressBar = null;
+
+    private List<String> trackIds = new ArrayList<>();
+
+    @androidx.annotation.Nullable
+    private Player mPlayerBoundService;
+    private boolean mSpotifyPlayerBound = false;
+    private boolean initializingSpotify = false;
+
+    private ServiceConnection mServiceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mPlayerBoundService = ((PlayerService.PlayerBinder) service).getService();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mPlayerBoundService = null;
+        }
+    };
 
     @Override
     public View onCreateView(
@@ -136,25 +167,6 @@ public class UserProfileFragment extends BaseFragment {
         userProfileViewModel = ViewModelProviders.of(requireActivity()).get(UserProfileViewModel.class);
 
         return mainView;
-    }
-
-    private void updateYoutubePlayerView() {
-        if (youtubeGalleryView != null) {
-            youtubeGalleryView.setVisibility(View.GONE);
-
-            if (youtubeRecyclerView != null) {
-                List<String> youtubeVideoIds = userProfileViewModel.getYoutubeVideoIds();
-
-                if (!youtubeVideoIds.isEmpty()) {
-                    youtubePlayerAdapter = new YoutubePlayerAdapter(
-                            youtubeVideoIds,
-                            this.getLifecycle());
-                    youtubeRecyclerView.setAdapter(youtubePlayerAdapter);
-
-                    youtubeGalleryView.setVisibility(View.VISIBLE);
-                }
-            }
-        }
     }
 
     private void setViewVisibility(View view, int visibility) {
@@ -258,7 +270,8 @@ public class UserProfileFragment extends BaseFragment {
             }
 
             userProfileViewModel.setYoutubeVideoIds(nearbyUser.getYoutube());
-            updateYoutubePlayerView();
+            userProfileViewModel.setSpotifyTrackIds(nearbyUser.getSpotify());
+            updateMediaPlayerView();
 
             setInstagramOnClick(nearbyUser);
             setFacebookOnClick(nearbyUser);
@@ -277,6 +290,128 @@ public class UserProfileFragment extends BaseFragment {
             }
 
             appVersionTextView.setText("Versiom: "+BuildConfig.VERSION_NAME);
+        }
+    }
+
+    private void updateMediaPlayerView() {
+        if (mediaGalleryView != null) {
+            mediaGalleryView.setVisibility(View.GONE);
+
+            if (mediaRecyclerView != null) {
+                trackIds.clear();
+                trackIds.addAll(userProfileViewModel.getYoutubeVideoIds());
+                if (!userProfileViewModel.getSpotifyTrackIds().isEmpty()) {
+                    spotifyInitialize();
+                } else {
+                    if (!trackIds.isEmpty()) {
+                        mediaPlayerAdapter = new MediaPlayerAdapter(
+                                trackIds,
+                                this.getLifecycle(),
+                                false,
+                                null);
+                        mediaRecyclerView.setAdapter(mediaPlayerAdapter);
+
+                        mediaGalleryView.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+        }
+    }
+
+    private void spotifyInitialize() {
+        if (!initializingSpotify) {
+            if (userProfileViewModel.getSpotifyAccessToken().isEmpty()) {
+                // Request code will be used to verify if result comes from the login activity. Can be set to any integer.
+                AuthenticationRequest.Builder builder =
+                        new AuthenticationRequest.Builder(getResources().getString(R.string.spotify_client_id), AuthenticationResponse.Type.TOKEN, AppConstants.SPOTIFY_REDIRECT_URI);
+
+                builder.setShowDialog(true);
+                builder.setScopes(new String[]{"streaming"});
+                AuthenticationRequest request = builder.build();
+                AuthenticationClient.openLoginActivity(getActivity(), REQUEST_CODE, request);
+                initializingSpotify = true;
+            } else {
+                addSpotifyTracks();
+            }
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (data != null) {
+            if (requestCode == REQUEST_CODE) {
+                initializingSpotify = false;
+                AuthenticationResponse response = AuthenticationClient.getResponse(resultCode, data);
+
+                switch (response.getType()) {
+                    // Response was successful and contains auth token
+                    case TOKEN:
+                        // Handle successful response
+                        userProfileViewModel.setSpotifyAccessToken(response.getAccessToken());
+                        addSpotifyTracks();
+                        Log.d(TAG, "Access Token: " + userProfileViewModel.getSpotifyAccessToken());
+                        break;
+
+                    // Auth flow returned an error
+                    case ERROR:
+                        // Handle error response
+                        Log.e(TAG, "Spotify authorization failed.");
+
+                        // Most likely auth flow was cancelled
+                    default:
+                        // Handle other cases
+                        mediaPlayerAdapter = new MediaPlayerAdapter(
+                                trackIds,
+                                this.getLifecycle(),
+                                false,
+                                null);
+                        mediaRecyclerView.setAdapter(mediaPlayerAdapter);
+                        mediaGalleryView.setVisibility(View.VISIBLE);
+                }
+            }
+        }
+    }
+
+    private void addSpotifyTracks() {
+        String spotifyAccessToken = userProfileViewModel.getSpotifyAccessToken();
+        if (!spotifyAccessToken.isEmpty()) {
+            doBindService();
+            trackIds.addAll(userProfileViewModel.getSpotifyTrackIds());
+            SpotifyApi spotifyApi = new SpotifyApi();
+            spotifyApi.setAccessToken(spotifyAccessToken);
+            SpotifyService spotifyService = spotifyApi.getService();
+            mediaPlayerAdapter = new MediaPlayerAdapter(
+                    trackIds,
+                    this.getLifecycle(),
+                    spotifyService,
+                    mPlayerBoundService,
+                    false,
+                    null);
+        } else{
+            mediaPlayerAdapter = new MediaPlayerAdapter(
+                    trackIds,
+                    this.getLifecycle(),
+                    false,
+                    null);
+        }
+
+        mediaRecyclerView.setAdapter(mediaPlayerAdapter);
+        mediaGalleryView.setVisibility(View.VISIBLE);
+    }
+
+    private void doBindService() {
+        if (getContext().bindService(
+                PlayerService.getIntent(getContext()),
+                mServiceConnection,
+                Activity.BIND_AUTO_CREATE)) {
+            mSpotifyPlayerBound = true;
+        }
+    }
+
+    private void doUnbindService() {
+        if (mSpotifyPlayerBound) {
+            getContext().unbindService(mServiceConnection);
+            mSpotifyPlayerBound = false;
         }
     }
 
@@ -426,14 +561,14 @@ public class UserProfileFragment extends BaseFragment {
     private void deleteUser(FirebaseUser firebaseUser, String currentUserId) {
         LegatoAuthenticationHandler authHandler = (LegatoAuthenticationHandler) ChatSDK.auth();
         disposableList.add(authHandler.deleteUser()
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(() -> {
-                    deleteUserAuthentication(firebaseUser);
-                    ChatSDK.ui().startSplashScreenActivity(getContext());
-                },
-                throwable -> {
-                    ChatSDK.logError(throwable);
-                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(() -> {
+                            deleteUserAuthentication(firebaseUser);
+                            ChatSDK.ui().startSplashScreenActivity(getContext());
+                        },
+                        throwable -> {
+                            ChatSDK.logError(throwable);
+                        })
         );
     }
 
@@ -444,10 +579,10 @@ public class UserProfileFragment extends BaseFragment {
 
     private void logout() {
         disposableList.add(ChatSDK.auth().logout()
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(() -> ChatSDK.ui().startSplashScreenActivity(
-                getActivity().getApplicationContext()),
-                throwable -> ChatSDK.logError(throwable))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(() -> ChatSDK.ui().startSplashScreenActivity(
+                        getActivity().getApplicationContext()),
+                        throwable -> ChatSDK.logError(throwable))
         );
     }
 
@@ -459,7 +594,6 @@ public class UserProfileFragment extends BaseFragment {
     @Override
     public void reloadData() {
         updateInterface();
-        updateYoutubePlayerView();
     }
 
     private void startChat () {
@@ -472,15 +606,15 @@ public class UserProfileFragment extends BaseFragment {
         User user = userProfileViewModel.getUser();
         showProgressBar(profileProgressBar);
         disposableList.add(
-            ChatSDK.thread().createThread("", user, ChatSDK.currentUser())
-            .observeOn(AndroidSchedulers.mainThread())
-            .doFinally(() -> {
-                removeProgressBar(profileProgressBar);
-                userProfileViewModel.setStartingSdkChat(false);
-            })
-            .subscribe(thread -> {
-                ChatSDK.ui().startChatActivityForID(getContext(), thread.getEntityID());
-            }, throwable -> ToastHelper.show(getContext(), throwable.getLocalizedMessage())));
+                ChatSDK.thread().createThread("", user, ChatSDK.currentUser())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .doFinally(() -> {
+                            removeProgressBar(profileProgressBar);
+                            userProfileViewModel.setStartingSdkChat(false);
+                        })
+                        .subscribe(thread -> {
+                            ChatSDK.ui().startChatActivityForID(getContext(), thread.getEntityID());
+                        }, throwable -> ToastHelper.show(getContext(), throwable.getLocalizedMessage())));
     }
 
     @Override
@@ -530,14 +664,14 @@ public class UserProfileFragment extends BaseFragment {
             userInfoRecyclerView.setLayoutManager(layoutManager);
         }
 
-        if (youtubeRecyclerView != null) {
-            youtubeRecyclerView.setHasFixedSize(true);
+        if (mediaRecyclerView != null) {
+            mediaRecyclerView.setHasFixedSize(true);
 
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(
                     getActivity(),
                     LinearLayoutManager.HORIZONTAL,
                     false);
-            youtubeRecyclerView.setLayoutManager(layoutManager);
+            mediaRecyclerView.setLayoutManager(layoutManager);
         }
     }
 

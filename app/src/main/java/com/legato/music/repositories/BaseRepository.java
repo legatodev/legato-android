@@ -11,6 +11,7 @@ import java.util.List;
 
 import co.chatsdk.core.dao.User;
 import io.reactivex.Completable;
+import kaaes.spotify.webapi.android.SpotifyService;
 
 public class BaseRepository {
 
@@ -18,6 +19,7 @@ public class BaseRepository {
     private GeofireClient mGeofireClient;
     private FirebaseClient mFirebaseClient;
     private ChatSDKClient mChatSDKClient;
+    private SpotifyClient mSpotifyClient;
 
 
     public static BaseRepository getInstance(){
@@ -31,7 +33,7 @@ public class BaseRepository {
        mGeofireClient = GeofireClient.getInstance();
        mFirebaseClient = FirebaseClient.getInstance();
        mChatSDKClient = ChatSDKClient.getInstance();
-
+       mSpotifyClient = SpotifyClient.getInstance();
 
        mGeofireClient.setUserId(mChatSDKClient.getCurrentUserId());
     }
@@ -92,4 +94,12 @@ public class BaseRepository {
     }
 
     public boolean isFriend(User user) { return mChatSDKClient.isFriend(user); }
+
+    public String getSpotifyAccessToken() {
+        return mSpotifyClient.getSpotifyAccessToken();
+    }
+
+    public void setSpotifyAccessToken(String accessToken) {
+        mSpotifyClient.setSpotifyAccessToken(accessToken);
+    }
 }

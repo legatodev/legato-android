@@ -133,7 +133,6 @@ public class SearchPresenter implements Search.ActionListener {
     }
 
     private void logMessage(String msg) {
-        Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
         Log.d(TAG, msg);
     }
 }

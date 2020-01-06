@@ -87,4 +87,12 @@ public class UserProfileViewModel extends ViewModel {
     public boolean isFriend() {
         return baseRepository.isFriend(nearbyUser.getUser());
     }
+
+    public String getSpotifyAccessToken() {
+        return baseRepository.getSpotifyAccessToken();
+    }
+
+    public void setSpotifyAccessToken(String spotifyAccessToken) {
+        baseRepository.setSpotifyAccessToken(spotifyAccessToken);
+    }
 }

@@ -140,7 +140,7 @@
             </LinearLayout>
 
             <RelativeLayout
-                android:id="@+id/youtubeGalleryLayout"
+                android:id="@+id/mediaGalleryLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/userInfoLayout"
@@ -156,7 +156,7 @@
                     android:textStyle="bold" />
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/youtubeRecyclerView"
+                    android:id="@+id/mediaRecyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/galleryTextView"
@@ -169,7 +169,7 @@
                 android:id="@+id/profileInfoRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="fill_parent"
-                android:layout_below="@id/youtubeGalleryLayout"
+                android:layout_below="@id/mediaGalleryLayout"
                 android:background="@color/white"
                 android:divider="@android:color/black"
                 android:transcriptMode="alwaysScroll"

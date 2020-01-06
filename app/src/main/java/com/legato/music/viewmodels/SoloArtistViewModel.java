@@ -6,9 +6,11 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
+import com.legato.music.AppConstants;
 import com.legato.music.models.NearbyUser;
 import com.legato.music.repositories.BaseRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import co.chatsdk.core.dao.User;
@@ -51,12 +53,8 @@ public class SoloArtistViewModel extends ViewModel {
         getUser().setAvatarURL(avatarUrl);
     }
 
-    public boolean addYoutubeVideoId(String newVideoId) {
-        return nearbyUser.getYoutubeSamples().addTrackId(newVideoId);
-    }
-
     public List<String> getYoutubeVideoIds() {
-        return nearbyUser.getYoutubeSamples().getTrackIds();
+        return new ArrayList<>(nearbyUser.getYoutubeSamples().getTrackIds());
     }
 
     public void resetYoutubeVideoIds() {
@@ -110,12 +108,24 @@ public class SoloArtistViewModel extends ViewModel {
         return facebookUserId;
     }
 
-    public boolean addSpotifyTrackId(String trackId) {
-        return nearbyUser.getSpotifySamples().addTrackId(trackId);
+    public boolean addTrackId(String trackId) {
+        if (trackId.contains(AppConstants.SPOTIFY)) {
+            return nearbyUser.getSpotifySamples().addTrackId(trackId);
+        } else {
+            return nearbyUser.getYoutubeSamples().addTrackId(trackId);
+        }
+    }
+
+    public boolean removeTrackId(String trackId) {
+        if (trackId.contains(AppConstants.SPOTIFY)) {
+            return nearbyUser.getSpotifySamples().removeTrackId(trackId);
+        } else {
+            return nearbyUser.getYoutubeSamples().removeTrackId(trackId);
+        }
     }
 
     public List<String> getSpotifyTrackIds() {
-        return nearbyUser.getSpotifySamples().getTrackIds();
+        return new ArrayList<>(nearbyUser.getSpotifySamples().getTrackIds());
     }
 
     public void resetSpotifyTrackIds() {
@@ -124,5 +134,13 @@ public class SoloArtistViewModel extends ViewModel {
 
     public String getSpotifyTrackIdsAsString() {
         return nearbyUser.getSpotifySamples().getTrackIdsAsString();
+    }
+
+    public String getSpotifyAccessToken() {
+        return baseRepository.getSpotifyAccessToken();
+    }
+
+    public void setSpotifyAccessToken(String spotifyAccessToken) {
+        baseRepository.setSpotifyAccessToken(spotifyAccessToken);
     }
 }

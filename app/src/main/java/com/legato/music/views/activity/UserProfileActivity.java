@@ -1,5 +1,6 @@
 package com.legato.music.views.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -17,10 +18,7 @@ import io.reactivex.annotations.Nullable;
 public class UserProfileActivity extends BaseActivity {
     private static final String TAG = UserProfileActivity.class.getSimpleName();
 
-    @Nullable
     UserProfileViewModel userProfileViewModel;
-
-    @Nullable
     UserProfileFragment userProfileFragment;
 
     @Override
@@ -70,5 +68,11 @@ public class UserProfileActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        userProfileFragment.onActivityResult(requestCode, resultCode, data);
     }
 }
