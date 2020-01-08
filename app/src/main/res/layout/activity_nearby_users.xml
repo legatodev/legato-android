@@ -74,7 +74,16 @@
         android:divider="@android:color/black"
         android:transcriptMode="alwaysScroll"
         android:layout_below="@id/filterBar"
-        tools:listitem="@layout/item_nearbyuser"/>
+        tools:listitem="@layout/item_nearbyuser"
+        android:visibility="gone"/>
 
+    <TextView
+        android:id="@+id/noNearbyUsersTextView"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center"
+        android:visibility="visible"
+        android:text="@string/no_nearby_users_available"
+        android:textSize="@dimen/headerText"/>
 
 </RelativeLayout>

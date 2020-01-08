@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -104,8 +103,8 @@ public class UserProfileFragment extends BaseFragment {
     @BindView(R.id.mediaGalleryLayout)
     protected View mediaGalleryView;
 
-    @BindView(R.id.addOrRemoveContactImageButton)
-    protected ImageButton addOrRemoveContactImageButton;
+    @BindView(R.id.addOrRemoveContactImageView)
+    protected ImageView addOrRemoveContactImageView;
 
     @BindView(R.id.appVersionTextView)
     protected TextView appVersionTextView;
@@ -283,10 +282,10 @@ public class UserProfileFragment extends BaseFragment {
 
             userProfileInfoAdapter.notifyData(userProfileViewModel.getProfileInfo());
 
-            if (!isCurrentUser && addOrRemoveContactImageButton != null) {
-                addOrRemoveContactImageButton.setVisibility(View.VISIBLE);
+            if (!isCurrentUser) {
+                addOrRemoveContactImageView.setVisibility(View.VISIBLE);
                 updateContactButton(userProfileViewModel.isFriend());
-                addOrRemoveContactImageButton.setOnClickListener(view -> toggleFriends());
+                addOrRemoveContactImageView.setOnClickListener(view -> toggleFriends());
             }
 
             appVersionTextView.setText("Versiom: "+BuildConfig.VERSION_NAME);
@@ -724,9 +723,9 @@ public class UserProfileFragment extends BaseFragment {
 
     protected void updateContactButton(boolean contact) {
         if (contact) {
-            addOrRemoveContactImageButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_cancel));
+            addOrRemoveContactImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorited));
         } else {
-            addOrRemoveContactImageButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_plus));
+            addOrRemoveContactImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_not_favorited));
         }
     }
 }

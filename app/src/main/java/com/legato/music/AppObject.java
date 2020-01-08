@@ -57,6 +57,7 @@ public class AppObject extends Application {
             config.defaultUserAvatarUrl("");
             config.groupsEnabled(false);
             config.threadDetailsEnabled(false);
+            config.pushNotificationImageDefaultResourceId(R.drawable.legato_logo);
 
             // Start the Chat SDK and pass in the interface adapter and network adapter. By subclassing either
             // of these classes you could modify deep functionality withing the Chat SDK

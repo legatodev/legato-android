@@ -41,6 +41,7 @@ import com.legato.music.utils.Keys;
 import com.legato.music.utils.RequestCodes;
 import com.legato.music.viewmodels.SoloArtistViewModel;
 import com.legato.music.views.activity.SoloRegistrationActivity;
+import com.legato.music.views.activity.UserProfileActivity;
 import com.legato.music.views.adapters.MediaPlayerAdapter;
 import com.legato.music.youtube.YoutubeActivity;
 import com.spotify.sdk.android.authentication.AuthenticationClient;

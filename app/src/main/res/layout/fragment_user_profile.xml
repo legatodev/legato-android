@@ -74,12 +74,12 @@
                     android:contentDescription="TODO"
                     app:srcCompat="@drawable/icn_20_online" />
 
-                <ImageButton
-                    android:id="@+id/addOrRemoveContactImageButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_plus"
+                <ImageView
+                    android:id="@+id/addOrRemoveContactImageView"
+                    style="@style/availability"
+                    app:srcCompat="@drawable/ic_not_favorited"
                     android:contentDescription="@string/add_contacts"
+                    android:layout_alignBottom="@+id/profileUserNameTextView"
                     android:layout_toEndOf="@id/profileUserAvailabilityImageView"
                     android:visibility="gone"/>
 

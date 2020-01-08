@@ -7,6 +7,8 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -52,6 +54,8 @@ public class NearbyUsersActivity extends AppCompatActivity implements
     private static final String TAG = NearbyUsersActivity.class.getSimpleName();
     @BindView(R.id.nearbyUserRecylerView)
     RecyclerView mNearbyUserRecyclerView;
+    @BindView(R.id.noNearbyUsersTextView)
+    TextView noNearbyUsersTextView;
 
     private NearbyUsersAdapter mNearbyUsersAdapter;
     private DisposableList disposableList = new DisposableList();
@@ -105,6 +109,8 @@ public class NearbyUsersActivity extends AppCompatActivity implements
             @Override
             public void onChanged(@Nullable List<NearbyUser> nearbyUsers) {
                 if (nearbyUsers != null) {
+                    noNearbyUsersTextView.setVisibility(View.GONE);
+                    mNearbyUserRecyclerView.setVisibility(View.VISIBLE);
                     mNearbyUsersAdapter.updateNearbyUsers(nearbyUsers);
                 }
             }
