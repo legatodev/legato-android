@@ -8,7 +8,10 @@ import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -56,6 +59,8 @@ public class NearbyUsersActivity extends AppCompatActivity implements
     RecyclerView mNearbyUserRecyclerView;
     @BindView(R.id.noNearbyUsersTextView)
     TextView noNearbyUsersTextView;
+    @BindView(R.id.nearbyUserProgressBar)
+    ProgressBar nearbyUserProgressBar;
 
     private NearbyUsersAdapter mNearbyUsersAdapter;
     private DisposableList disposableList = new DisposableList();
@@ -70,19 +75,19 @@ public class NearbyUsersActivity extends AppCompatActivity implements
 
         mNearbyUsersViewModel = ViewModelProviders.of(this).get(NearbyUsersViewModel.class);
 
+        initRecyclerView();
         if (!isEmailVerified()) {
             createVerificationDialog();
+        } else {
+            ChatSDK.hook().addHook(new Hook(data -> Completable.create(emitter -> {
+                this.finish();
+                emitter.onComplete();
+            })), HookEvent.WillLogout);
+
+            subscribeObservers();
+            getLastLocation();
+            initProximityAlert();
         }
-
-        ChatSDK.hook().addHook(new Hook(data -> Completable.create(emitter -> {
-            this.finish();
-            emitter.onComplete();
-        })), HookEvent.WillLogout);
-
-        initRecyclerView();
-        subscribeObservers();
-        getLastLocation();
-        initProximityAlert();
     }
 
     private void initRecyclerView() {
@@ -118,12 +123,28 @@ public class NearbyUsersActivity extends AppCompatActivity implements
     }
 
     private void logout() {
+        showProgressBar(nearbyUserProgressBar);
         disposableList.add(ChatSDK.auth().logout()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(() -> ChatSDK.ui().startSplashScreenActivity(this.getApplicationContext()), throwable -> {
                     ChatSDK.logError(throwable);
                 })
         );
+    }
+
+    private void showProgressBar(@io.reactivex.annotations.Nullable ProgressBar progressBar) {
+        if (progressBar != null && progressBar.getVisibility() == View.GONE) {
+            progressBar.setVisibility(View.VISIBLE);
+            this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        }
+    }
+
+    private void removeProgressBar(@io.reactivex.annotations.Nullable ProgressBar progressBar) {
+        if (progressBar != null && progressBar.getVisibility() == View.VISIBLE) {
+            progressBar.setVisibility(View.GONE);
+            this.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        }
     }
 
     public void createVerificationDialog() {
@@ -216,9 +237,8 @@ public class NearbyUsersActivity extends AppCompatActivity implements
                     this.onLocationPermissionsGranted();
 
                 } else {
-                    /*  permission denied, boo!
-                        TODO: Should try another time with additional explaination?
-                     */
+                    //TODO: allow user to choose location
+                    Toast.makeText(this, "Location permissions are needed for Legato to work", Toast.LENGTH_SHORT).show();
                     Log.e(TAG,"Location tracking permission denied");
 
                 }

@@ -16,11 +16,12 @@ android {
         applicationId "com.legato.music"
         minSdkVersion 17
         targetSdkVersion 28
-        versionCode 9
-        versionName "1.08"
+        versionCode 14
+        versionName "1.13"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
+        resConfigs "en"
     }
     buildTypes {
         release {
@@ -152,6 +153,8 @@ dependencies {
 
     implementation project(':spotify-app-remote')
     implementation "com.google.code.gson:gson:$gson_version"
+
+    implementation 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
 
     implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
 

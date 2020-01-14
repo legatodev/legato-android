@@ -46,7 +46,14 @@ public class SoloArtistViewModel extends ViewModel {
     }
 
     public String getAvatarUrl() {
-        return nearbyUser.getAvatarUrl();
+        String avatarUrl = nearbyUser.getAvatarUrl();
+        if (avatarUrl.isEmpty()) {
+            String facebookUserId = getFacebookUserId();
+            if (!facebookUserId.isEmpty())
+                avatarUrl = "https://graph.facebook.com/" + facebookUserId + "/picture?height=500";
+        }
+
+        return avatarUrl;
     }
 
     public void setAvatarUrl(String avatarUrl) {
@@ -87,12 +94,6 @@ public class SoloArtistViewModel extends ViewModel {
         return nearbyUser.getYoutubeChannel();
     }
 
-    public String getPhotoUrl() {
-        String photoUrl = "https://graph.facebook.com/" + getFacebookUserId() + "/picture?height=500";
-        setAvatarUrl(photoUrl);
-
-        return photoUrl;
-    }
 
     public String getFacebookUserId() {
         String facebookUserId = "";

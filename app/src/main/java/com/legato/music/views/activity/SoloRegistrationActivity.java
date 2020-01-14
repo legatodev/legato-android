@@ -266,7 +266,6 @@ public class SoloRegistrationActivity extends AppCompatActivity implements Skill
                     return skillsTab;
             }
 
-            //TODO: should we return an error if position exceeds the number of tabs available.
             return soloRegistrationTab;
         }
 

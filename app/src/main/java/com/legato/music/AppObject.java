@@ -3,6 +3,7 @@ package com.legato.music;
 import android.app.Application;
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.multidex.MultiDex;
 
@@ -23,6 +24,7 @@ import co.chatsdk.firebase.FirebaseNetworkAdapter;
 import co.chatsdk.firebase.file_storage.FirebaseFileStorageModule;
 import co.chatsdk.firebase.social_login.FirebaseSocialLoginModule;
 import co.chatsdk.ui.manager.BaseInterfaceAdapter;
+import co.chatsdk.ui.utils.ToastHelper;
 import io.fabric.sdk.android.Fabric;
 import io.reactivex.plugins.RxJavaPlugins;
 
@@ -69,6 +71,7 @@ public class AppObject extends Application {
             FirebaseSocialLoginModule.activate(getApplicationContext());
         }
         catch (ChatSDKException e) {
+            Toast.makeText(getApplicationContext(), "Cannot Initialize Legato", Toast.LENGTH_SHORT).show();
             ChatSDK.logError(e);
         }
 

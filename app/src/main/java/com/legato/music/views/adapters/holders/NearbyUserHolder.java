@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.amulyakhare.textdrawable.TextDrawable;
+import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.youtube.player.YouTubeIntents;
 import com.legato.music.R;
@@ -25,7 +27,7 @@ import io.reactivex.annotations.Nullable;
 public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
     @BindView(R.id.nearbyUserPhotoImageView)
-    @Nullable SimpleDraweeView nearbyUserPhoto;
+    SimpleDraweeView nearbyUserPhoto;
 
     @BindView(R.id.nearbyUserNameTextView)
     @Nullable TextView nearbyUserName;
@@ -180,8 +182,18 @@ public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.On
         final int TRIM_STRING_LENGTH = 25;
 
         if (this.nearbyUser != null) {
-            if (this.nearbyUser.getPhotoUrl() != null &&  this.nearbyUserPhoto != null)
-                this.nearbyUserPhoto.setImageURI(this.nearbyUser.getPhotoUrl());
+            if (!this.nearbyUser.getAvatarUrl().isEmpty()) {
+                this.nearbyUserPhoto.setImageURI(this.nearbyUser.getAvatarUrl());
+            } else {
+                ColorGenerator generator = ColorGenerator.MATERIAL; // or use DEFAULT
+                int color = generator.getColor(nearbyUser.getEmail());
+
+                TextDrawable drawable = TextDrawable.builder()
+                        .buildRoundRect(nearbyUser.getUsername().substring(0,1), color, 30);
+
+                this.nearbyUserPhoto.setImageDrawable(drawable);
+            }
+
             if (this.nearbyUser.getUsername() != null)
                 setTextView(this.nearbyUserName, this.nearbyUser.getUsername());
             if (this.nearbyUser.getDistance() != null)

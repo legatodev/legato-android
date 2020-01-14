@@ -54,14 +54,6 @@ public class NearbyUser {
         this.user.setName(username);
     }
 
-    public String getPhotoUrl() {
-        return user.getAvatarURL();
-    }
-
-    public void setPhotoUrl(String photoUrl) {
-        this.user.setAvatarURL(photoUrl);
-    }
-
     public String getDistance() {
         return distance;
     }

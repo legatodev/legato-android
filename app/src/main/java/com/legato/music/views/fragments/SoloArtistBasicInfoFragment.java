@@ -57,6 +57,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import co.chatsdk.core.session.ChatSDK;
+import co.chatsdk.core.utils.DisposableList;
 import co.chatsdk.ui.chat.MediaSelector;
 import co.chatsdk.ui.utils.ImagePickerUploader;
 import co.chatsdk.ui.utils.ToastHelper;
@@ -98,6 +99,8 @@ public class SoloArtistBasicInfoFragment extends Fragment implements MediaPlayer
     @Nullable private Player mPlayerBoundService;
     private boolean mSpotifyPlayerBound = false;
     private boolean mSearchSpotifyTrack = false;
+    private boolean initializingSpotify = false;
+    private DisposableList disposableList = new DisposableList();
 
     List<String> trackIds = new ArrayList<>();
 
@@ -207,16 +210,16 @@ public class SoloArtistBasicInfoFragment extends Fragment implements MediaPlayer
         soloArtistProfilePictureImageView.setOnClickListener(tempView -> {
             if (getActivity() != null) {
                 ImagePickerUploader uploader = new ImagePickerUploader(MediaSelector.CropType.Circle);
-                Disposable d = uploader.choosePhoto(getActivity()).subscribe((result, throwable) -> {
+                disposableList.add(uploader.choosePhoto(getActivity()).subscribe((result, throwable) -> {
                     if (throwable == null) {
                         File file = new File(result.uri);
+                        soloArtistViewModel.setAvatarUrl(Uri.fromFile(file).toString()); //TODO: as soon as I set the view model the view should update. should not require another function call.
                         setImageURI(soloArtistProfilePictureImageView, Uri.fromFile(file));
                         setTextView(soloArtistAddEditProfilePictureTextView, R.string.edit_profile_pic);
-                        soloArtistViewModel.setAvatarUrl(Uri.fromFile(file).toString());
                     } else {
                         ToastHelper.show(getActivity(), throwable.getLocalizedMessage());
                     }
-                });
+                }));
             }
         });
 
@@ -271,7 +274,7 @@ public class SoloArtistBasicInfoFragment extends Fragment implements MediaPlayer
     }
 
     private void extractProfilePicFromFacebook() {
-        setImageURI(soloArtistProfilePictureImageView, soloArtistViewModel.getPhotoUrl());
+        setImageURI(soloArtistProfilePictureImageView, soloArtistViewModel.getAvatarUrl());
         setTextView(soloArtistAddEditProfilePictureTextView, R.string.edit_profile_pic);
     }
 
@@ -369,6 +372,7 @@ public class SoloArtistBasicInfoFragment extends Fragment implements MediaPlayer
                     // Response was successful and contains auth token
                     case TOKEN:
                         // Handle successful response
+                        initializingSpotify = false;
                         soloArtistViewModel.setSpotifyAccessToken(response.getAccessToken());
                         if (mSearchSpotifyTrack)
                         {
@@ -385,7 +389,7 @@ public class SoloArtistBasicInfoFragment extends Fragment implements MediaPlayer
                     // Auth flow returned an error
                     case ERROR:
                         // Handle error response
-                        Log.e(TAG, "Spotify authorization failed.");
+                        Log.e(TAG, "Spotify authorization failed."+response.getError());
 
                     // Most likely auth flow was cancelled
                     default:
@@ -441,7 +445,6 @@ public class SoloArtistBasicInfoFragment extends Fragment implements MediaPlayer
         galleryView.setVisibility(View.VISIBLE);
     }
 
-    //TODO: call when the spotify track adding button is clicked.
     private void launchSpotifySearch() {
         String accessToken = soloArtistViewModel.getSpotifyAccessToken();
         if (accessToken == null || accessToken.isEmpty()) {
@@ -488,6 +491,7 @@ public class SoloArtistBasicInfoFragment extends Fragment implements MediaPlayer
             builder.setScopes(new String[]{"streaming"});
             AuthenticationRequest request = builder.build();
             AuthenticationClient.openLoginActivity(getActivity(), REQUEST_CODE, request);
+            initializingSpotify = true;
         } else {
             addSpotifyTracks();
         }
@@ -513,6 +517,7 @@ public class SoloArtistBasicInfoFragment extends Fragment implements MediaPlayer
     public void onDestroy() {
         super.onDestroy();
 
+        disposableList.dispose();
         doUnbindService();
     }
 

@@ -57,7 +57,6 @@ public class TrackPlayer implements Player, MediaPlayer.OnCompletionListener {
         }
 
         if (url == null || url.isEmpty()) {
-            //TODO: pass this error on to be displayed in an activity to the user.
             Log.e(TAG, "Track doesn't have a preview");
             return;
         }

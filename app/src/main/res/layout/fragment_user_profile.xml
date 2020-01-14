@@ -7,17 +7,6 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 
-    <ProgressBar
-        android:id="@+id/profileProgressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:indeterminate="true"
-        android:indeterminateTintMode="src_atop"
-        android:indeterminateTint="@color/white"
-        android:visibility="gone"/>
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -71,7 +60,6 @@
                     android:layout_alignBottom="@+id/profileUserNameTextView"
                     android:layout_marginBottom="@dimen/std_margin"
                     android:layout_toEndOf="@id/profileUserNameTextView"
-                    android:contentDescription="TODO"
                     app:srcCompat="@drawable/icn_20_online" />
 
                 <ImageView
@@ -228,7 +216,8 @@
                 app:cardCornerRadius="@dimen/std_cornerRad"
                 android:layout_below="@+id/logoutButton"
                 android:padding="@dimen/std_padding"
-                android:layout_marginBottom="@dimen/std_margin">
+                android:layout_marginBottom="@dimen/std_margin"
+                android:visibility="gone">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -272,4 +261,13 @@
 
         </RelativeLayout>
     </ScrollView>
+
+    <ProgressBar
+        android:id="@+id/profileProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:indeterminate="true"
+        android:visibility="gone"/>
 </RelativeLayout>

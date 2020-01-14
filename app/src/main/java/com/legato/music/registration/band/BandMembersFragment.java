@@ -79,8 +79,7 @@ public class BandMembersFragment extends Fragment implements View.OnClickListene
     public void onClick(View view) {
         if (mBandMembersAdapter != null && mBandMemberArrayList.size() < MAX_SKILLS) {
             mBandMemberArrayList.add(new BandMember("Choose Skill", ""));
-            mBandMembersAdapter.notifyItemInserted(mBandMemberArrayList.size() - 1); //TODO: We do't need to refresh the whole adapter and have it refreshed. Only add.
-            //TODO: how to remove a skill?
+            mBandMembersAdapter.notifyItemInserted(mBandMemberArrayList.size() - 1);
         }
     }
 }

@@ -116,7 +116,6 @@ public class BandRegistrationActivity extends AppCompatActivity {
                 case 2:
                     return "Band Members";
                 default:
-                    //TODO: should we be throwing an error here instead?
                     return "Band";
             }
         }

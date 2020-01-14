@@ -6,6 +6,7 @@ import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -20,12 +21,16 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.cardview.widget.CardView;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.amulyakhare.textdrawable.TextDrawable;
+import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.facebook.AccessToken;
+import com.facebook.common.util.UriUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -124,6 +129,9 @@ public class UserProfileFragment extends BaseFragment {
     @BindView(R.id.userProfileDistanceTextView)
     TextView userProfileDistanceTextView;
 
+    @BindView(R.id.privacyPolicyCardView)
+    CardView privacyPolicyCardView;
+
     private DisposableList disposableList = new DisposableList();
 
     private UserProfileInfoAdapter userProfileInfoAdapter;
@@ -221,35 +229,35 @@ public class UserProfileFragment extends BaseFragment {
 
         boolean isCurrentUser = user.isMe();
 
-        if(!isCurrentUser && editProfileButton != null)
-            editProfileButton.setVisibility(View.GONE);
+        editProfileButton.setVisibility(isCurrentUser ? View.VISIBLE : View.INVISIBLE);
+        logoutButton.setVisibility(isCurrentUser ? View.VISIBLE : View.INVISIBLE);
+        deleteAccountButton.setVisibility(isCurrentUser ? View.VISIBLE : View.INVISIBLE);
+        privacyPolicyCardView.setVisibility(isCurrentUser ? View.VISIBLE : View.INVISIBLE);
 
         setHasOptionsMenu(isCurrentUser);
-        if (logoutButton != null) {
-            logoutButton.setVisibility(isCurrentUser ? View.VISIBLE : View.INVISIBLE);
-        }
+        connectOrRemoveButton.setVisibility(isCurrentUser ? View.INVISIBLE : View.VISIBLE);
 
-        if (deleteAccountButton != null) {
-            deleteAccountButton.setVisibility(isCurrentUser ? View.VISIBLE : View.INVISIBLE);
-        }
-
-        if (connectOrRemoveButton != null) {
-            connectOrRemoveButton.setVisibility(isCurrentUser ? View.INVISIBLE : View.VISIBLE);
-
-            connectOrRemoveButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startChat();
-                }
-            });
-        }
+        connectOrRemoveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startChat();
+            }
+        });
 
         NearbyUser nearbyUser = new NearbyUser(user, distance);
 
         if (!nearbyUser.getUsername().isEmpty()) {
             setViewText(profileUserNameTextView, nearbyUser.getUsername());
-            if (profilePhotoImageView != null && nearbyUser.getPhotoUrl() != null) {
-                profilePhotoImageView.setImageURI(nearbyUser.getPhotoUrl());
+            if (!nearbyUser.getAvatarUrl().isEmpty()) {
+                profilePhotoImageView.setImageURI(nearbyUser.getAvatarUrl());
+            } else {
+                ColorGenerator generator = ColorGenerator.MATERIAL; // or use DEFAULT
+                int color = generator.getColor(nearbyUser.getEmail());
+
+                TextDrawable drawable = TextDrawable.builder()
+                        .buildRoundRect(nearbyUser.getUsername().substring(0,1), color, 30);
+
+                profilePhotoImageView.setImageDrawable(drawable);
             }
 
             String availability = nearbyUser.getAvailability();
@@ -299,7 +307,7 @@ public class UserProfileFragment extends BaseFragment {
             if (mediaRecyclerView != null) {
                 trackIds.clear();
                 trackIds.addAll(userProfileViewModel.getYoutubeVideoIds());
-                if (!userProfileViewModel.getSpotifyTrackIds().isEmpty()) {
+                if (!userProfileViewModel.getSpotifyTrackIds().isEmpty() && !initializingSpotify) {
                     spotifyInitialize();
                 } else {
                     if (!trackIds.isEmpty()) {
@@ -318,7 +326,6 @@ public class UserProfileFragment extends BaseFragment {
     }
 
     private void spotifyInitialize() {
-        if (!initializingSpotify) {
             if (userProfileViewModel.getSpotifyAccessToken().isEmpty()) {
                 // Request code will be used to verify if result comes from the login activity. Can be set to any integer.
                 AuthenticationRequest.Builder builder =
@@ -332,14 +339,12 @@ public class UserProfileFragment extends BaseFragment {
             } else {
                 addSpotifyTracks();
             }
-        }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (data != null) {
             if (requestCode == REQUEST_CODE) {
-                initializingSpotify = false;
                 AuthenticationResponse response = AuthenticationClient.getResponse(resultCode, data);
 
                 switch (response.getType()) {
@@ -348,13 +353,14 @@ public class UserProfileFragment extends BaseFragment {
                         // Handle successful response
                         userProfileViewModel.setSpotifyAccessToken(response.getAccessToken());
                         addSpotifyTracks();
+                        initializingSpotify = false;
                         Log.d(TAG, "Access Token: " + userProfileViewModel.getSpotifyAccessToken());
                         break;
 
                     // Auth flow returned an error
                     case ERROR:
                         // Handle error response
-                        Log.e(TAG, "Spotify authorization failed.");
+                        Log.e(TAG, "Spotify authorization failed."+response.getError());
 
                         // Most likely auth flow was cancelled
                     default:
@@ -577,6 +583,7 @@ public class UserProfileFragment extends BaseFragment {
     }
 
     private void logout() {
+        showProgressBar(profileProgressBar);
         disposableList.add(ChatSDK.auth().logout()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(() -> ChatSDK.ui().startSplashScreenActivity(

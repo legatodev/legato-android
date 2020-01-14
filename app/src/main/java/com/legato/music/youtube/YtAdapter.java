@@ -40,7 +40,6 @@ class YtAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int i) {
-        //TODO: Throw an error. Perhaps array out of bounds error.
         if (mVideoList!=null && mVideoList.size()>i)
             return mVideoList.get(i);
 

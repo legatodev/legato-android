@@ -126,7 +126,6 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
 
     @Override
     public void onSkillSelected(View v, int position) {
-        //TODO: call this when a skill is chosen.
         skillsViewModel.setSkillSelected(true);
 
         addSkillButton.setEnabled(skillsViewModel.isSkillSelected());
