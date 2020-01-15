@@ -271,7 +271,7 @@ public class UserProfileFragment extends BaseFragment {
                 }
             }
 
-            if (nearbyUser.getDescription() != null && nearbyUser.getDescription().isEmpty()) {
+            if (nearbyUser.getDescription() != null && !nearbyUser.getDescription().isEmpty()) {
                 userDescriptionTextView.setVisibility(View.VISIBLE);
                 userDescriptionTextView.setText(nearbyUser.getDescription());
             }
