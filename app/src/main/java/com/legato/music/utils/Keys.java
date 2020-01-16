@@ -11,6 +11,7 @@ public class Keys {
     public static final String proximityalert = "proximityalert";
     public static final String instagram = "instagram";
     public static final String facebook = "facebook";
+    public static final String facebook_page_id = "facebook_page_id";
     public static final String youtube_channel = "youtube_channel";
     public static final String spotify_track = "spotify_track";
     public static final String user_description = "user_description";

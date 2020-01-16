@@ -10,7 +10,9 @@
 
     <!-- activity_spotify_search; custom_actionbar; activity_nearby_users; view_video_item; item_youtube_view
      view_spotify_track; item_filter_spinner; fragment_filters; item_nearby_user-->
-    <dimen name="std_padding">4dp</dimen>
+    <dimen name="std_padding">8dp</dimen>
+
+    <dimen name="std_paddingSmall">4dp</dimen>
 
     <!-- activity_nearby_users; item_nearbyuser; item_skill; item_band_members; view_video_item -->
     <dimen name="std_elevation">4dp</dimen>

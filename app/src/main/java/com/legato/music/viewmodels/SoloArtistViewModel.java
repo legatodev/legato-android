@@ -1,7 +1,14 @@
 package com.legato.music.viewmodels;
 
+import android.os.Bundle;
+import android.util.Log;
+
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -10,21 +17,32 @@ import com.legato.music.AppConstants;
 import com.legato.music.models.NearbyUser;
 import com.legato.music.repositories.BaseRepository;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import co.chatsdk.core.dao.User;
 
 public class SoloArtistViewModel extends ViewModel {
+    private static final String TAG = SoloArtistViewModel.class.getSimpleName();
+
     private BaseRepository baseRepository;
     private NearbyUser nearbyUser;
     private String previousAvatarURL = "";
     private FirebaseUser firebaseUser;
 
+    MutableLiveData<Boolean> queryingFbPageId = new MutableLiveData<>();
+
     public SoloArtistViewModel() {
         this.baseRepository = BaseRepository.getInstance();
         this.nearbyUser = baseRepository.getCurrentUser();
         this.firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (nearbyUser.getFacebookPageId().isEmpty() && !nearbyUser.getFacebook().isEmpty()) {
+            queryFacebookPageId(nearbyUser.getFacebook());
+        }
     }
 
     public NearbyUser getNearbyUser() { return nearbyUser; }
@@ -90,10 +108,66 @@ public class SoloArtistViewModel extends ViewModel {
 
     public String getFacebook() { return nearbyUser.getFacebook(); }
 
+    public String getFacebookPageId() {
+        return (nearbyUser.getFacebookPageId() != null) ?
+                nearbyUser.getFacebookPageId() :
+                "";
+    }
+
+    public LiveData<Boolean> getQueryingFbPageId() {
+        return queryingFbPageId;
+    }
+
+    public void queryFacebookPageId(String facebookPageTitle) {
+        queryingFbPageId.setValue(true);
+        nearbyUser.setFacebookPageId("");
+
+        GraphRequest request = GraphRequest.newGraphPathRequest(
+            AccessToken.getCurrentAccessToken(),
+            "/me/accounts",
+            response -> {
+                // Try to get the async response and parse the data for the page title
+                // in order to get the page id.
+                try {
+                    JSONArray pages = response
+                            .getJSONObject()
+                            .getJSONArray("data");
+
+                    boolean pageFound = false;
+
+                    for (int i = 0; i < pages.length(); i++) {
+                        JSONObject pageDetails = pages.getJSONObject(i);
+
+                        if (pageDetails.getString("name")
+                                .equals(facebookPageTitle)) {
+
+                            nearbyUser.setFacebookPageId(
+                                    pageDetails.getString("id")
+                            );
+                            pageFound = true;
+                        }
+                    }
+
+                    if (!pageFound) {
+                        nearbyUser.setFacebookPageId("");
+                    }
+                } catch (Exception e) {
+                    Log.d(TAG, "Unable to find facebook page.\n".concat(e.getMessage()));
+                }
+
+                queryingFbPageId.setValue(false);
+            });
+
+        // Set up the parameters for the API query.
+        Bundle parameters = new Bundle();
+        parameters.putString("fields", "name,id");
+        request.setParameters(parameters);
+        request.executeAsync();
+    }
+
     public String getYoutubeChannel() {
         return nearbyUser.getYoutubeChannel();
     }
-
 
     public String getFacebookUserId() {
         String facebookUserId = "";

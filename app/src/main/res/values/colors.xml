@@ -11,4 +11,7 @@
     <color name="distance">#2ecc71</color>
     <color name="rounded_button_background">#154680</color>
     <color name="red">#FF0000</color>
+    <color name="font_green">#04CC80</color>
+    <color name="font_red">#CC0000</color>
+
 </resources>

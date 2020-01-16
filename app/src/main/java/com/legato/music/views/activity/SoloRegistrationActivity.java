@@ -151,6 +151,7 @@ public class SoloRegistrationActivity extends AppCompatActivity implements Skill
 
         if (soloArtistViewModel != null) {
             profileInfo.put(Keys.user_description, soloArtistViewModel.getDescription());
+            profileInfo.put(Keys.facebook_page_id, soloArtistViewModel.getFacebookPageId());
             profileInfo.put(Keys.youtube, soloArtistViewModel.getYoutubeVideoIdsAsString());
             profileInfo.put(Keys.spotify_track, soloArtistViewModel.getSpotifyTrackIdsAsString());
         }

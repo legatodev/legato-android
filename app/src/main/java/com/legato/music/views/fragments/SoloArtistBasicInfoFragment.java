@@ -3,7 +3,6 @@ package com.legato.music.views.fragments;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.res.Resources;
@@ -19,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -41,7 +41,6 @@ import com.legato.music.utils.Keys;
 import com.legato.music.utils.RequestCodes;
 import com.legato.music.viewmodels.SoloArtistViewModel;
 import com.legato.music.views.activity.SoloRegistrationActivity;
-import com.legato.music.views.activity.UserProfileActivity;
 import com.legato.music.views.adapters.MediaPlayerAdapter;
 import com.legato.music.youtube.YoutubeActivity;
 import com.spotify.sdk.android.authentication.AuthenticationClient;
@@ -61,7 +60,6 @@ import co.chatsdk.core.utils.DisposableList;
 import co.chatsdk.ui.chat.MediaSelector;
 import co.chatsdk.ui.utils.ImagePickerUploader;
 import co.chatsdk.ui.utils.ToastHelper;
-import io.reactivex.disposables.Disposable;
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
 
@@ -91,6 +89,8 @@ public class SoloArtistBasicInfoFragment extends Fragment implements MediaPlayer
     @BindView(R.id.soloArtistAddEditProfilePictureTextView) TextView soloArtistAddEditProfilePictureTextView;
     @BindView(R.id.mediaRecyclerView) RecyclerView mediaRecyclerView;
     @BindView(R.id.galleryLayout) View galleryView;
+    @BindView(R.id.soloArtistProgressBar) ProgressBar progressBar;
+    @BindView(R.id.facebookPageValidImageView) ImageView facebookPageValidImageView;
 
     @NonNull private SoloArtistViewModel soloArtistViewModel;
 
@@ -136,6 +136,7 @@ public class SoloArtistBasicInfoFragment extends Fragment implements MediaPlayer
         ButterKnife.bind(this, view);
 
         soloArtistViewModel = ViewModelProviders.of(requireActivity()).get(SoloArtistViewModel.class);
+        observeViewModel();
 
         return view;
     }
@@ -196,7 +197,22 @@ public class SoloArtistBasicInfoFragment extends Fragment implements MediaPlayer
         setTextView(userDescriptionTextInputEditText, soloArtistViewModel.getDescription());
 
         setTextView(instagramTextInputEditText, soloArtistViewModel.getInstagram());
+
+        facebookTextInputEditText.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                soloArtistViewModel.queryFacebookPageId(s.toString());
+            }
+        });
         setTextView(facebookTextInputEditText, soloArtistViewModel.getFacebook());
+
         setTextView(youtubeTextInputEditText, soloArtistViewModel.getYoutubeChannel());
 
         String avatarUrl = soloArtistViewModel.getAvatarUrl();
@@ -526,5 +542,33 @@ public class SoloArtistBasicInfoFragment extends Fragment implements MediaPlayer
         String trackId = trackIds.get(position);
         soloArtistViewModel.removeTrackId(trackId);
         InitializeMediaView();
+    }
+
+    private void observeViewModel() {
+        soloArtistViewModel.getQueryingFbPageId().observe(this, (searching) -> {
+            if (searching) {
+                progressBar.setVisibility(View.VISIBLE);
+            }
+            else {
+                progressBar.setVisibility(View.GONE);
+                if (soloArtistViewModel.getFacebookPageId().isEmpty()) {
+                    facebookPageValidImageView.setImageDrawable(
+                            getResources().getDrawable(R.drawable.ic_cancel_red_24dp));
+
+                    if(!facebookTextInputEditText.getText().toString().isEmpty()) {
+                        facebookPageValidImageView.setVisibility(View.VISIBLE);
+                    }
+                    else {
+                        facebookPageValidImageView.setVisibility(View.INVISIBLE);
+                    }
+                }
+                else {
+                    facebookPageValidImageView.setImageDrawable(
+                            getResources().getDrawable(R.drawable.ic_check_circle_green_24dp));
+
+                    facebookPageValidImageView.setVisibility(View.VISIBLE);
+                }
+            }
+        });
     }
 }

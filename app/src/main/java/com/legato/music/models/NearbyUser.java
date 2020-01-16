@@ -2,8 +2,6 @@ package com.legato.music.models;
 
 import com.legato.music.utils.Keys;
 
-import org.apache.commons.lang3.ObjectUtils;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -102,6 +100,12 @@ public class NearbyUser {
     public String getInstagram() { return this.user.metaStringForKey(Keys.instagram); }
 
     public String getFacebook() { return this.user.metaStringForKey(Keys.facebook); }
+
+    public void setFacebookPageId(String pageId) {
+        this.user.setMetaString(Keys.facebook_page_id, pageId);
+    }
+
+    public String getFacebookPageId() { return this.user.metaStringForKey(Keys.facebook_page_id); }
 
     public String getYoutubeChannel() {
         return this.user.metaStringForKey(Keys.youtube_channel);

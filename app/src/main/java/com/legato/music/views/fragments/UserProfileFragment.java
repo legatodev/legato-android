@@ -6,7 +6,6 @@ import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -30,7 +29,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.facebook.AccessToken;
-import com.facebook.common.util.UriUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -50,8 +48,8 @@ import com.legato.music.spotify.PlayerService;
 import com.legato.music.utils.LegatoAuthenticationHandler;
 import com.legato.music.viewmodels.UserProfileViewModel;
 import com.legato.music.views.activity.SoloRegistrationActivity;
-import com.legato.music.views.adapters.UserProfileInfoAdapter;
 import com.legato.music.views.adapters.MediaPlayerAdapter;
+import com.legato.music.views.adapters.UserProfileInfoAdapter;
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
@@ -454,8 +452,8 @@ public class UserProfileFragment extends BaseFragment {
 
     private void setFacebookOnClick(NearbyUser nearbyUser) {
         if (this.userProfileFacebookView != null && nearbyUser != null) {
-            String facebook = nearbyUser.getFacebook();
-            if (facebook != null && !facebook.isEmpty()) {
+            String facebookPageId = nearbyUser.getFacebookPageId();
+            if (facebookPageId != null && !facebookPageId.isEmpty()) {
                 this.userProfileFacebookView.setVisibility(View.VISIBLE);
                 this.userProfileFacebookView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -464,9 +462,9 @@ public class UserProfileFragment extends BaseFragment {
                         try {
                             getActivity().getPackageManager()
                                     .getPackageInfo("com.facebook.katana", 0); //Checks if FB is even installed.
-                            intent.setData(Uri.parse("fb://page/" + facebook));
+                            intent.setData(Uri.parse("fb://page/" + facebookPageId));
                         } catch (Exception e) {
-                            intent.setData(Uri.parse("https://www.facebook.com/" + facebook)); //catches and opens a url to the desired page
+                            intent.setData(Uri.parse("https://www.facebook.com/" + facebookPageId)); //catches and opens a url to the desired page
                         }
                         getActivity().startActivity(intent);
                     }
