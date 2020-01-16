@@ -6,6 +6,7 @@ import com.legato.music.models.NearbyUser;
 import com.legato.music.models.UserProfileInfo;
 import com.legato.music.repositories.BaseRepository;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -28,11 +29,18 @@ public class UserProfileViewModel extends ViewModel {
     }
 
     public ArrayList<UserProfileInfo> getProfileInfo() {
-        return new ArrayList<>(Arrays.asList(
-            new UserProfileInfo("Skills", nearbyUser.getSkills()),
-            new UserProfileInfo("Genres", nearbyUser.getGenres()),
-            new UserProfileInfo("Looking for", nearbyUser.getLookingfor())
-        ));
+        ArrayList<UserProfileInfo> userProfileInfos = new ArrayList<>();
+        if (nearbyUser.getSkills() != null) {
+            userProfileInfos.add(new UserProfileInfo("Skills", nearbyUser.getSkills()));
+        }
+        if (nearbyUser.getGenres() != null) {
+            userProfileInfos.add(new UserProfileInfo("Genres", nearbyUser.getGenres()));
+        }
+        if (nearbyUser.getLookingfor() != null) {
+            userProfileInfos.add(new UserProfileInfo("Looking for", nearbyUser.getLookingfor()));
+        }
+
+        return userProfileInfos;
     }
 
     public boolean getStartingSdkChat() {

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.legato.music.AppConstants;
@@ -56,7 +57,7 @@ public class TrackPlayer implements Player, MediaPlayer.OnCompletionListener {
             mMediaPlayer.release();
         }
 
-        if (url == null || url.isEmpty()) {
+        if (TextUtils.isEmpty(url)) {
             Log.e(TAG, "Track doesn't have a preview");
             return;
         }

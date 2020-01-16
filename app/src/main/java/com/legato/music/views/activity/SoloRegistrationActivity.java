@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -170,7 +171,7 @@ public class SoloRegistrationActivity extends AppCompatActivity implements Skill
     private Completable pushProfilePic() {
             return Single.create((SingleOnSubscribe<User>) e -> {
                 String url = ChatSDK.currentUser().getAvatarURL();
-                if (url == null || url.isEmpty()) {
+                if (TextUtils.isEmpty(url)) {
                     e.onSuccess(ChatSDK.currentUser());
                 } else {
                     // Check to see if the avatar URL is local or remote

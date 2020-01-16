@@ -1,5 +1,8 @@
 package com.legato.music.viewmodels;
 
+import android.text.TextUtils;
+import android.util.Log;
+
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModel;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,6 +19,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class SkillsViewModel extends ViewModel {
+    private static final String TAG = SkillsViewModel.class.getSimpleName();
+
     private BaseRepository mBaseRepository = BaseRepository.getInstance();
     private NearbyUser nearbyUser;
 
@@ -43,7 +48,7 @@ public class SkillsViewModel extends ViewModel {
 
         String currentSkills = nearbyUser.getSkills();
 
-        if (currentSkills != null && !currentSkills.isEmpty()) {
+        if (!TextUtils.isEmpty(currentSkills)) {
             String[] currentSkillsArray = currentSkills.split("\\|", -1);
             for (int i = 0; i < skillsArr.length; i++) {
                 for (int j = 0; j < currentSkillsArray.length; j++) {
@@ -60,6 +65,8 @@ public class SkillsViewModel extends ViewModel {
                     }
                 }
             }
+        } else {
+            Log.e(TAG, "Nearby user does not have any skills");
         }
     }
 

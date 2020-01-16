@@ -1,6 +1,7 @@
 package com.legato.music.views.adapters;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -147,7 +148,7 @@ public class SkillsAdapter extends RecyclerView.Adapter<SkillsAdapter.SkillsHold
         @Nullable
         public Skill getSkill() {
             if (mSkillSpinner != null &&
-                !((String) mSkillSpinner.getSelectedItem()).isEmpty() &&
+                !TextUtils.isEmpty((String) mSkillSpinner.getSelectedItem()) &&
                 mSkillLevelSeekBar != null &&
                 mOwnsInstrumentSwitch != null) {
 

@@ -1,5 +1,7 @@
 package com.legato.music.models;
 
+import android.text.TextUtils;
+
 import com.legato.music.utils.Keys;
 
 import java.util.ArrayList;
@@ -61,7 +63,7 @@ public class NearbyUser {
             this.distance = distance;
     }
 
-    public String getGenres() {
+    public @Nullable String getGenres() {
         return user.metaStringForKey(Keys.genres);
     }
 
@@ -69,7 +71,7 @@ public class NearbyUser {
         this.user.setMetaString(Keys.genres, genres);
     }
 
-    public String getSkills() {
+    public @Nullable String getSkills() {
         return user.metaStringForKey(Keys.skills);
     }
 
@@ -123,6 +125,7 @@ public class NearbyUser {
 
     public User getUser() { return user;}
 
+    //TODO: Why chatsdk being accessed directly?
     public void setUser(String userId) {
         this.user = ChatSDK.db().fetchOrCreateEntityWithEntityID(User.class, userId);
     }
@@ -155,7 +158,7 @@ public class NearbyUser {
         public boolean addTrackId(String newTrackId) {
             boolean bSuccess = false;
 
-            if (newTrackId != null && !newTrackId.isEmpty() && trackIds.size() < 6) {
+            if (!TextUtils.isEmpty(newTrackId) && trackIds.size() < 6) {
                 if (!trackIds.contains(newTrackId)) {
                     trackIds.add(newTrackId);
                 }
@@ -168,7 +171,7 @@ public class NearbyUser {
         public boolean removeTrackId(String trackId) {
             boolean bSuccess = false;
 
-            if (trackId != null && !trackId.isEmpty() && !trackIds.isEmpty()) {
+            if (!TextUtils.isEmpty(trackId) && !trackIds.isEmpty()) {
                 trackIds.remove(trackId);
 
                 bSuccess = true;

@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -216,7 +217,7 @@ public class SoloArtistBasicInfoFragment extends Fragment implements MediaPlayer
         setTextView(youtubeTextInputEditText, soloArtistViewModel.getYoutubeChannel());
 
         String avatarUrl = soloArtistViewModel.getAvatarUrl();
-        if (avatarUrl != null && !avatarUrl.isEmpty()) {
+        if (!TextUtils.isEmpty(avatarUrl)) {
             setImageURI(soloArtistProfilePictureImageView, avatarUrl);
             setTextView(soloArtistAddEditProfilePictureTextView, R.string.edit_profile_pic);
         } else {
@@ -258,8 +259,8 @@ public class SoloArtistBasicInfoFragment extends Fragment implements MediaPlayer
         validate();
     }
 
-    private void setImageURI(@Nullable SimpleDraweeView view, String uri) {
-        if (view != null) {
+    private void setImageURI(@Nullable SimpleDraweeView view, @Nullable String uri) {
+        if (view != null && uri != null) {
             view.setImageURI(uri);
         }
     }
@@ -463,7 +464,7 @@ public class SoloArtistBasicInfoFragment extends Fragment implements MediaPlayer
 
     private void launchSpotifySearch() {
         String accessToken = soloArtistViewModel.getSpotifyAccessToken();
-        if (accessToken == null || accessToken.isEmpty()) {
+        if (!TextUtils.isEmpty(accessToken)) {
             mSearchSpotifyTrack = true;
             spotifyInitialize();
         } else {
@@ -536,6 +537,7 @@ public class SoloArtistBasicInfoFragment extends Fragment implements MediaPlayer
         disposableList.dispose();
         doUnbindService();
     }
+
 
     @Override
     public void onTrackRemoved(View v, int position) {

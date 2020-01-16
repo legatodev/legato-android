@@ -9,6 +9,7 @@ import android.content.ServiceConnection;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,6 +54,8 @@ import com.legato.music.views.adapters.UserProfileInfoAdapter;
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -244,9 +247,9 @@ public class UserProfileFragment extends BaseFragment {
 
         NearbyUser nearbyUser = new NearbyUser(user, distance);
 
-        if (!nearbyUser.getUsername().isEmpty()) {
+        if (!TextUtils.isEmpty(nearbyUser.getUsername())) {
             setViewText(profileUserNameTextView, nearbyUser.getUsername());
-            if (!nearbyUser.getAvatarUrl().isEmpty()) {
+            if (!TextUtils.isEmpty(nearbyUser.getAvatarUrl())) {
                 profilePhotoImageView.setImageURI(nearbyUser.getAvatarUrl());
             } else {
                 ColorGenerator generator = ColorGenerator.MATERIAL; // or use DEFAULT
@@ -269,7 +272,7 @@ public class UserProfileFragment extends BaseFragment {
                 }
             }
 
-            if (nearbyUser.getDescription() != null && !nearbyUser.getDescription().isEmpty()) {
+            if (!TextUtils.isEmpty(nearbyUser.getDescription())) {
                 userDescriptionTextView.setVisibility(View.VISIBLE);
                 userDescriptionTextView.setText(nearbyUser.getDescription());
             }
@@ -377,7 +380,7 @@ public class UserProfileFragment extends BaseFragment {
 
     private void addSpotifyTracks() {
         String spotifyAccessToken = userProfileViewModel.getSpotifyAccessToken();
-        if (!spotifyAccessToken.isEmpty()) {
+        if (!TextUtils.isEmpty(spotifyAccessToken)) {
             doBindService();
             trackIds.addAll(userProfileViewModel.getSpotifyTrackIds());
             SpotifyApi spotifyApi = new SpotifyApi();
@@ -428,7 +431,7 @@ public class UserProfileFragment extends BaseFragment {
     private void setInstagramOnClick(NearbyUser nearbyUser) {
         if (this.userProfileInstagramView != null && nearbyUser != null) {
             String instagram = nearbyUser.getInstagram();
-            if (instagram != null && !instagram.isEmpty()) {
+            if (!TextUtils.isEmpty(instagram)) {
                 this.userProfileInstagramView.setVisibility(View.VISIBLE);
                 this.userProfileInstagramView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -453,7 +456,7 @@ public class UserProfileFragment extends BaseFragment {
     private void setFacebookOnClick(NearbyUser nearbyUser) {
         if (this.userProfileFacebookView != null && nearbyUser != null) {
             String facebookPageId = nearbyUser.getFacebookPageId();
-            if (facebookPageId != null && !facebookPageId.isEmpty()) {
+            if (!TextUtils.isEmpty(facebookPageId)) {
                 this.userProfileFacebookView.setVisibility(View.VISIBLE);
                 this.userProfileFacebookView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -479,7 +482,7 @@ public class UserProfileFragment extends BaseFragment {
     private void setYoutubeOnClick(NearbyUser nearbyUser) {
         if (this.userProfileYoutubeView != null && nearbyUser != null) {
             String youtube_channel = nearbyUser.getYoutubeChannel();
-            if (youtube_channel != null && !youtube_channel.isEmpty()) {
+            if (!TextUtils.isEmpty(youtube_channel)) {
                 this.userProfileYoutubeView.setVisibility(View.VISIBLE);
                 this.userProfileYoutubeView.setOnClickListener(new View.OnClickListener() {
                     @Override

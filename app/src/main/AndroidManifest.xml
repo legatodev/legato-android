@@ -33,12 +33,6 @@
             android:theme="@style/NoActionBarTheme"
             android:windowSoftInputMode="adjustPan" />
 
-        <activity
-            android:name="com.legato.music.registration.band.BandRegistrationActivity"
-            android:label="@string/title_activity_band_registration_tab"
-            android:theme="@style/NoActionBarTheme"
-            android:windowSoftInputMode="adjustPan" />
-
         <activity android:name="com.legato.music.views.activity.RegistrationActivity"
             android:theme="@style/NoActionBarTheme"/>
 

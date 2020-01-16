@@ -20,10 +20,10 @@ public class GenresViewModel extends ViewModel {
         mNearbyUser = mBaseRepository.getCurrentUser();
     }
 
-    public String getGenres() { return mNearbyUser.getGenres(); }
+    public @Nullable String getGenres() { return mNearbyUser.getGenres(); }
 
     public boolean contains(String item) {
-        return mNearbyUser.getGenres().contains(item);
+        return (mNearbyUser.getGenres() != null) && mNearbyUser.getGenres().contains(item);
     }
 
     public boolean getValid() { return valid; }

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.ServiceConnection;
 import android.media.MediaPlayer;
 import android.os.IBinder;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -68,7 +69,7 @@ public class SearchPresenter implements Search.ActionListener {
 
     @Override
     public void search(@Nullable String searchQuery) {
-        if (searchQuery != null && !searchQuery.isEmpty() && !searchQuery.equals(mCurrentQuery)) {
+        if (!TextUtils.isEmpty(searchQuery) && !searchQuery.equals(mCurrentQuery)) {
             logMessage("query text submit " + searchQuery);
             mCurrentQuery = searchQuery;
             mView.reset();

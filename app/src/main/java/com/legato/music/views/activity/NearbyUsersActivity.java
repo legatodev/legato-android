@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -37,6 +38,8 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.legato.music.viewmodels.NearbyUsersViewModel;
+
+import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -253,7 +256,7 @@ public class NearbyUsersActivity extends AppCompatActivity implements
         mNearbyUsersViewModel.setLocation(location);
 
         String searchRadius = mNearbyUsersViewModel.getSearchRadius();
-        if (!(searchRadius != null && !searchRadius.isEmpty()))
+        if (TextUtils.isEmpty(searchRadius))
             searchRadius = AppConstants.DEFAULT_SEARCH_RADIUS;
 
         mNearbyUsersViewModel.searchNearbyUserByRadius(Integer.parseInt(searchRadius));

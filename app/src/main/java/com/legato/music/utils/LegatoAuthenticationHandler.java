@@ -1,6 +1,7 @@
 package com.legato.music.utils;
 
 import android.os.AsyncTask;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -103,7 +104,7 @@ public class LegatoAuthenticationHandler extends FirebaseAuthenticationHandler {
     }
 
     private void deleteProfilePic(String avatarUrl) {
-        if (avatarUrl != null && !avatarUrl.isEmpty()) {
+        if (!TextUtils.isEmpty(avatarUrl)) {
             FirebaseStorage storage = FirebaseStorage.getInstance();
             try {
                 StorageReference storageRef = storage.getReferenceFromUrl(avatarUrl);

@@ -1,5 +1,7 @@
 package com.legato.music.viewmodels;
 
+import android.text.TextUtils;
+
 import androidx.lifecycle.ViewModel;
 
 import com.legato.music.models.NearbyUser;
@@ -16,7 +18,7 @@ public class RegistrationViewModel extends ViewModel {
     public boolean hasUser() {
         if (mNearbyUser != null) {
             String skills = mNearbyUser.getSkills();
-            if (skills != null && !skills.isEmpty()) {
+            if (!TextUtils.isEmpty(skills)) {
                 return true;
             }
         }

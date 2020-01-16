@@ -201,6 +201,7 @@ public class FilterDialogFragment extends DialogFragment {
         }
 
         String searchRadius = AppConstants.DEFAULT_SEARCH_RADIUS;
+        //TODO: why ChatSDK is being directly called. Breaking MVVM.
         if (ChatSDK.currentUser().metaStringForKey(Keys.searchradius) != null && !ChatSDK.currentUser().metaStringForKey(Keys.searchradius).isEmpty()) {
             searchRadius = ChatSDK.currentUser().metaStringForKey(Keys.searchradius);
         }

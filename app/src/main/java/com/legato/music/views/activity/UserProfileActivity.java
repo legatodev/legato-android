@@ -2,6 +2,7 @@ package com.legato.music.views.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.lifecycle.ViewModelProviders;
@@ -38,10 +39,10 @@ public class UserProfileActivity extends BaseActivity {
 
         @Nullable String userEntityID = getIntent().getStringExtra(Keys.USER_ENTITY_ID);
         if (userProfileViewModel != null) {
-            if (userEntityID != null && !userEntityID.isEmpty()) {
+            if (!TextUtils.isEmpty(userEntityID)) {
                 if (userProfileViewModel.getUserByEntityId(userEntityID) != null) {
                     @Nullable String distance = getIntent().getStringExtra(com.legato.music.utils.Keys.distance);
-                    if (distance != null && !distance.isEmpty()) {
+                    if (!TextUtils.isEmpty(distance)) {
                         userProfileViewModel.setDistance(distance);
                     } else {
                         Log.d(TAG, "Distance not available");
@@ -50,6 +51,8 @@ public class UserProfileActivity extends BaseActivity {
                 } else {
                     Log.e(TAG, "User entity does not exist in View Model");
                 }
+            } else {
+                Log.e(TAG, "User entity id not sent to the activity.");
             }
 
             //TODO: is this the right way to handle it?

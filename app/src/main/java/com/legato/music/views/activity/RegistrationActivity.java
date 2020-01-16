@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.legato.music.R;
-import com.legato.music.registration.band.BandRegistrationActivity;
 import com.legato.music.viewmodels.RegistrationViewModel;
 
 public class RegistrationActivity extends AppCompatActivity {
@@ -33,10 +32,6 @@ public class RegistrationActivity extends AppCompatActivity {
 
     public void onSolo(View view) {
         Intent intent = new Intent(this, SoloRegistrationActivity.class);
-        startActivity(intent);
-    }
-    public void onBand(View view) {
-        Intent intent = new Intent(this, BandRegistrationActivity.class);
         startActivity(intent);
     }
 }

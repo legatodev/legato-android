@@ -4,6 +4,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -86,7 +87,7 @@ public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.On
 
     private void setInstagramOnClick(String instagram) {
         if (this.nearbyUserInstagramView != null && this.nearbyUser != null) {
-            if (instagram != null && !instagram.isEmpty()) {
+            if (!TextUtils.isEmpty(instagram)) {
                 this.nearbyUserInstagramView.setVisibility(View.VISIBLE);
                 this.nearbyUserInstagramView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -110,7 +111,7 @@ public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.On
 
     private void setFacebookOnClick(String facebook) {
         if (this.nearbyUserFacebookView != null && this.nearbyUser != null) {
-            if (facebook != null && !facebook.isEmpty()) {
+            if (!TextUtils.isEmpty(facebook)) {
                 this.nearbyUserFacebookView.setVisibility(View.VISIBLE);
                 this.nearbyUserFacebookView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -134,7 +135,7 @@ public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.On
 
     private void setYoutubeOnClick(String youtube_channel) {
         if (this.nearbyUserYoutubeView != null && this.nearbyUser != null) {
-            if (youtube_channel != null && !youtube_channel.isEmpty()) {
+            if (!TextUtils.isEmpty(youtube_channel)) {
                 this.nearbyUserYoutubeView.setVisibility(View.VISIBLE);
                 this.nearbyUserYoutubeView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -143,8 +144,7 @@ public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.On
                         v.getContext().startActivity(intent);
                     }
                 });
-            }
-            else
+            } else
                 this.nearbyUserYoutubeView.setVisibility(View.INVISIBLE);
         }
     }
@@ -182,7 +182,7 @@ public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.On
         final int TRIM_STRING_LENGTH = 25;
 
         if (this.nearbyUser != null) {
-            if (!this.nearbyUser.getAvatarUrl().isEmpty()) {
+            if (!TextUtils.isEmpty(this.nearbyUser.getAvatarUrl())) {
                 this.nearbyUserPhoto.setImageURI(this.nearbyUser.getAvatarUrl());
             } else {
                 ColorGenerator generator = ColorGenerator.MATERIAL; // or use DEFAULT

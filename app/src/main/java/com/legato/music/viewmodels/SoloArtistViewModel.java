@@ -1,6 +1,7 @@
 package com.legato.music.viewmodels;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -23,6 +24,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import co.chatsdk.core.dao.User;
 
 public class SoloArtistViewModel extends ViewModel {
@@ -40,7 +43,7 @@ public class SoloArtistViewModel extends ViewModel {
         this.nearbyUser = baseRepository.getCurrentUser();
         this.firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        if (nearbyUser.getFacebookPageId().isEmpty() && !nearbyUser.getFacebook().isEmpty()) {
+        if (TextUtils.isEmpty(nearbyUser.getFacebookPageId()) && !TextUtils.isEmpty(nearbyUser.getFacebook())) {
             queryFacebookPageId(nearbyUser.getFacebook());
         }
     }
@@ -63,11 +66,11 @@ public class SoloArtistViewModel extends ViewModel {
         this.previousAvatarURL = previousAvatarURL;
     }
 
-    public String getAvatarUrl() {
+    public @Nullable String getAvatarUrl() {
         String avatarUrl = nearbyUser.getAvatarUrl();
-        if (avatarUrl.isEmpty()) {
+        if (TextUtils.isEmpty(avatarUrl)) {
             String facebookUserId = getFacebookUserId();
-            if (!facebookUserId.isEmpty())
+            if (!TextUtils.isEmpty(facebookUserId))
                 avatarUrl = "https://graph.facebook.com/" + facebookUserId + "/picture?height=500";
         }
 
@@ -91,7 +94,7 @@ public class SoloArtistViewModel extends ViewModel {
     }
 
     public boolean hasSelectedGenres() {
-        return !nearbyUser.getGenres().isEmpty();
+        return !TextUtils.isEmpty(nearbyUser.getGenres());
     }
 
     public String getLookingFor() {
@@ -109,9 +112,7 @@ public class SoloArtistViewModel extends ViewModel {
     public String getFacebook() { return nearbyUser.getFacebook(); }
 
     public String getFacebookPageId() {
-        return (nearbyUser.getFacebookPageId() != null) ?
-                nearbyUser.getFacebookPageId() :
-                "";
+        return nearbyUser.getFacebookPageId();
     }
 
     public LiveData<Boolean> getQueryingFbPageId() {
