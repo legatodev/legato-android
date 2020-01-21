@@ -43,7 +43,7 @@ public class SoloArtistViewModel extends ViewModel {
         this.nearbyUser = baseRepository.getCurrentUser();
         this.firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        if (TextUtils.isEmpty(nearbyUser.getFacebookPageId()) && !TextUtils.isEmpty(nearbyUser.getFacebook())) {
+        if (isNullOrEmpty(nearbyUser.getFacebookPageId()) && !isNullOrEmpty(nearbyUser.getFacebook())) {
             queryFacebookPageId(nearbyUser.getFacebook());
         }
     }
@@ -68,9 +68,9 @@ public class SoloArtistViewModel extends ViewModel {
 
     public @Nullable String getAvatarUrl() {
         String avatarUrl = nearbyUser.getAvatarUrl();
-        if (TextUtils.isEmpty(avatarUrl)) {
+        if (isNullOrEmpty(avatarUrl)) {
             String facebookUserId = getFacebookUserId();
-            if (!TextUtils.isEmpty(facebookUserId))
+            if (!isNullOrEmpty(facebookUserId))
                 avatarUrl = "https://graph.facebook.com/" + facebookUserId + "/picture?height=500";
         }
 
@@ -94,7 +94,7 @@ public class SoloArtistViewModel extends ViewModel {
     }
 
     public boolean hasSelectedGenres() {
-        return !TextUtils.isEmpty(nearbyUser.getGenres());
+        return !isNullOrEmpty(nearbyUser.getGenres());
     }
 
     public String getLookingFor() {
@@ -218,5 +218,11 @@ public class SoloArtistViewModel extends ViewModel {
 
     public void setSpotifyAccessToken(String spotifyAccessToken) {
         baseRepository.setSpotifyAccessToken(spotifyAccessToken);
+    }
+
+    public static boolean isNullOrEmpty(String s) {
+        if(s != null && !s.isEmpty())
+            return false;
+        return true;
     }
 }
