@@ -25,21 +25,19 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.legato.music.AppConstants;
-import com.legato.music.views.fragments.FilterDialogFragment;
-import com.legato.music.models.Filters;
-import com.legato.music.NearbyMessages;
-import com.legato.music.R;
-import com.legato.music.models.NearbyUser;
-import com.legato.music.views.adapters.NearbyUsersAdapter;
-import com.legato.music.messaging.ActiveChatActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.legato.music.AppConstants;
+import com.legato.music.NearbyMessages;
+import com.legato.music.R;
+import com.legato.music.messaging.ActiveChatActivity;
+import com.legato.music.models.Filters;
+import com.legato.music.models.NearbyUser;
 import com.legato.music.viewmodels.NearbyUsersViewModel;
-
-import org.w3c.dom.Text;
+import com.legato.music.views.adapters.NearbyUsersAdapter;
+import com.legato.music.views.fragments.FilterDialogFragment;
 
 import java.util.List;
 
@@ -306,6 +304,8 @@ public class NearbyUsersActivity extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
+
+        getLastLocation();
     }
 
     @Override
