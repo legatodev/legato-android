@@ -6,6 +6,7 @@ import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -17,6 +18,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -90,8 +92,8 @@ public class UserProfileFragment extends BaseFragment {
     protected SimpleDraweeView profilePhotoImageView;
     @BindView(R.id.profileUserAvailabilityImageView)
     protected ImageView profileUserAvailabilityImageView;
-    @BindView(R.id.connectOrRemoveButton)
-    protected Button connectOrRemoveButton;
+    @BindView(R.id.connectButton)
+    protected Button connectButton;
     @BindView(R.id.editProfileButton)
     protected Button editProfileButton;
     @BindView(R.id.userDescription)
@@ -108,9 +110,11 @@ public class UserProfileFragment extends BaseFragment {
     protected RecyclerView mediaRecyclerView;
     @BindView(R.id.mediaGalleryLayout)
     protected View mediaGalleryView;
+    @BindView(R.id.userInfoLayout)
+    protected LinearLayout userInfoLayout;
 
-    @BindView(R.id.addOrRemoveContactImageView)
-    protected ImageView addOrRemoveContactImageView;
+    @BindView(R.id.addOrRemoveContactImageButton)
+    protected Button addOrRemoveContactImageButton;
 
     @BindView(R.id.appVersionTextView)
     protected TextView appVersionTextView;
@@ -191,10 +195,10 @@ public class UserProfileFragment extends BaseFragment {
 
     @OnClick(R.id.deleteAccountButton)
     public void onDeleteAccountClicked(View view) {
-        new AlertDialog.Builder(getContext())
+        AlertDialog deleteDialog = new AlertDialog.Builder(getContext())
                 .setMessage(getContext().getResources().getString(R.string.alert_delete_account))
                 .setIcon(android.R.drawable.ic_dialog_alert)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         showProgressBar(profileProgressBar);
@@ -209,8 +213,15 @@ public class UserProfileFragment extends BaseFragment {
                         deleteUser(firebaseUser, currentUserId);
                     }
                 })
-                .setNegativeButton(android.R.string.cancel, null)
-                .show();
+                .setNegativeButton(android.R.string.cancel, null).create();
+        deleteDialog.setOnShowListener( new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface arg0) {
+                deleteDialog.getButton(AlertDialog.BUTTON_POSITIVE).setBackgroundColor(getResources().getColor(R.color.red));
+                deleteDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.WHITE);
+            }
+        });
+        deleteDialog.show();
     }
 
     @OnClick(R.id.editProfileButton)
@@ -230,15 +241,15 @@ public class UserProfileFragment extends BaseFragment {
 
         boolean isCurrentUser = user.isMe();
 
-        editProfileButton.setVisibility(isCurrentUser ? View.VISIBLE : View.INVISIBLE);
-        logoutButton.setVisibility(isCurrentUser ? View.VISIBLE : View.INVISIBLE);
-        deleteAccountButton.setVisibility(isCurrentUser ? View.VISIBLE : View.INVISIBLE);
-        privacyPolicyCardView.setVisibility(isCurrentUser ? View.VISIBLE : View.INVISIBLE);
+        editProfileButton.setVisibility(isCurrentUser ? View.VISIBLE : View.GONE);
+        logoutButton.setVisibility(isCurrentUser ? View.VISIBLE : View.GONE);
+        deleteAccountButton.setVisibility(isCurrentUser ? View.VISIBLE : View.GONE);
+        privacyPolicyCardView.setVisibility(isCurrentUser ? View.VISIBLE : View.GONE);
 
         setHasOptionsMenu(isCurrentUser);
-        connectOrRemoveButton.setVisibility(isCurrentUser ? View.INVISIBLE : View.VISIBLE);
+        connectButton.setVisibility(isCurrentUser ? View.INVISIBLE : View.VISIBLE);
 
-        connectOrRemoveButton.setOnClickListener(new View.OnClickListener() {
+        connectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startChat();
@@ -273,7 +284,7 @@ public class UserProfileFragment extends BaseFragment {
             }
 
             if (!TextUtils.isEmpty(nearbyUser.getDescription())) {
-                userDescriptionTextView.setVisibility(View.VISIBLE);
+                userInfoLayout.setVisibility(View.VISIBLE);
                 userDescriptionTextView.setText(nearbyUser.getDescription());
             }
 
@@ -287,14 +298,18 @@ public class UserProfileFragment extends BaseFragment {
             if (!isCurrentUser) {
                 userProfileDistanceTextView.setVisibility(View.VISIBLE);
                 userProfileDistanceTextView.setText(nearbyUser.getDistance() + " mi");
+            } else {
+                userProfileDistanceTextView.setVisibility(View.GONE);
             }
 
             userProfileInfoAdapter.notifyData(userProfileViewModel.getProfileInfo());
 
             if (!isCurrentUser) {
-                addOrRemoveContactImageView.setVisibility(View.VISIBLE);
+                addOrRemoveContactImageButton.setVisibility(View.VISIBLE);
                 updateContactButton(userProfileViewModel.isFriend());
-                addOrRemoveContactImageView.setOnClickListener(view -> toggleFriends());
+                addOrRemoveContactImageButton.setOnClickListener(view -> toggleFriends());
+            } else {
+                addOrRemoveContactImageButton.setVisibility(View.GONE);
             }
 
             appVersionTextView.setText("Versiom: "+BuildConfig.VERSION_NAME);
@@ -731,9 +746,9 @@ public class UserProfileFragment extends BaseFragment {
 
     protected void updateContactButton(boolean contact) {
         if (contact) {
-            addOrRemoveContactImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorited));
+            addOrRemoveContactImageButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_favorited, 0, 0, 0);
         } else {
-            addOrRemoveContactImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_not_favorited));
+            addOrRemoveContactImageButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_not_favorited, 0, 0, 0);
         }
     }
 }

@@ -7,11 +7,8 @@
 
     <androidx.cardview.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/nearbyUserCardView"
-        android:layout_width="match_parent"
-        android:layout_height="280dp"
-        android:layout_gravity="center"
-        card_view:cardElevation="@dimen/std_elevation"
-        card_view:cardCornerRadius="@dimen/std_cornerRad">
+        style="@style/legatoCardView"
+        android:layout_height="280dp">
 
         <RelativeLayout
             android:layout_width="match_parent"

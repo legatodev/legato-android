@@ -16,14 +16,11 @@
 
      <androidx.cardview.widget.CardView
          android:id="@+id/filterBar"
-         android:layout_width="match_parent"
-         android:layout_height="wrap_content"
-         android:elevation="@dimen/std_elevation"
+         style="@style/legatoCardView"
          android:foreground="?attr/selectableItemBackground"
          android:background="@color/white"
          android:layout_alignParentTop="true"
-         android:layout_margin="@dimen/std_margin"
-         app:cardCornerRadius="@dimen/std_cornerRad">
+         android:layout_margin="@dimen/std_margin">
 
         <RelativeLayout
             android:layout_width="match_parent"

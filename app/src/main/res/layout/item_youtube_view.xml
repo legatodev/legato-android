@@ -12,7 +12,7 @@
         app:autoPlay="false"
         app:showFullScreenButton="false"
         app:useWebUi="true"
-        android:layout_margin="@dimen/std_marginSmall"/>
+        android:layout_marginRight="@dimen/std_marginSmall"/>
 
     <ImageView
         android:id="@+id/deleteYoutubeVideoImageView"

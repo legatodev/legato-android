@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/profileScrollView"
-        android:layout_margin="@dimen/std_margin">
+        android:layout_margin="@dimen/std_marginSmall">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -19,9 +19,10 @@
 
             <RelativeLayout
                 android:id="@+id/profileInfoLayout"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/skills_card_view_background">
+                android:background="@color/skills_card_view_background"
+                android:layout_marginBottom="@dimen/std_marginSmall">
 
                 <com.facebook.drawee.view.SimpleDraweeView
                     android:id="@+id/profilePhotoImageView"
@@ -40,69 +41,81 @@
                     app:roundingBorderColor="@color/activity_background"
                     app:roundingBorderWidth="2dp" />
 
-                <TextView
-                    android:id="@+id/profileUserNameTextView"
+                <RelativeLayout
+                    android:id="@+id/usernameLinearLayout"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_alignParentTop="true"
+                    android:layout_toEndOf="@id/profilePhotoImageView">
+                    <TextView
+                        android:id="@+id/profileUserNameTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxWidth="180dp"
+                        android:layout_margin="@dimen/std_marginSmall"
+                        android:textColor="@color/activity_background"
+                        android:textSize="@dimen/headerText"
+                        tools:text="Name" />
+
+                    <ImageView
+                        android:id="@+id/profileUserAvailabilityImageView"
+                        style="@style/availability"
+                        android:layout_alignTop="@+id/profileUserNameTextView"
+                        android:layout_marginBottom="@dimen/std_margin"
+                        android:layout_toEndOf="@id/profileUserNameTextView"
+                        app:srcCompat="@drawable/icn_20_online" />
+
+                    <TextView
+                        android:id="@+id/userProfileDistanceTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_margin="@dimen/std_marginSmall"
+                        android:drawableLeft="@drawable/ic_location"
+                        android:textColor="@color/distance"
+                        android:textSize="@dimen/labelText"
+                        android:visibility="visible"
+                        tools:text="Distance" />
+                </RelativeLayout>
+
+                <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_marginStart="@dimen/std_marginSmall"
-                    android:layout_marginTop="@dimen/std_margin"
-                    android:layout_marginEnd="@dimen/std_marginSmall"
-                    android:layout_marginBottom="@dimen/std_marginSmall"
-                    android:layout_toEndOf="@id/profilePhotoImageView"
-                    android:textColor="@color/activity_background"
-                    android:textSize="@dimen/headerText"
-                    tools:text="Name" />
+                    android:orientation="horizontal"
+                    android:layout_below="@+id/usernameLinearLayout"
+                    android:layout_toRightOf="@+id/profilePhotoImageView">
+                    <Button
+                        android:id="@+id/addOrRemoveContactImageButton"
+                        style="@style/stdButton"
+                        android:background="@drawable/rounded_button"
+                        android:drawableLeft="@drawable/ic_not_favorited"
+                        android:contentDescription="@string/add_contacts"
+                        android:text="Add Contact"
+                        android:backgroundTint="@color/white"
+                        android:textColor="@color/black"
+                        android:visibility="visible"/>
 
-                <ImageView
-                    android:id="@+id/profileUserAvailabilityImageView"
-                    style="@style/availability"
-                    android:layout_alignBottom="@+id/profileUserNameTextView"
-                    android:layout_marginBottom="@dimen/std_margin"
-                    android:layout_toEndOf="@id/profileUserNameTextView"
-                    app:srcCompat="@drawable/icn_20_online" />
+                    <Button
+                        android:id="@+id/connectButton"
+                        style="@style/stdButton"
+                        android:background="@drawable/rounded_button"
+                        android:text="@string/connect"
+                        android:textColor="@color/white"
+                        android:visibility="visible"
+                        android:drawableLeft="@drawable/icn_24_chat"
+                        android:layout_toRightOf="@+id/addOrRemoveContactImageButton"/>
 
-                <ImageView
-                    android:id="@+id/addOrRemoveContactImageView"
-                    style="@style/availability"
-                    app:srcCompat="@drawable/ic_not_favorited"
-                    android:contentDescription="@string/add_contacts"
-                    android:layout_alignBottom="@+id/profileUserNameTextView"
-                    android:layout_toEndOf="@id/profileUserAvailabilityImageView"
-                    android:visibility="gone"/>
-
-                <TextView
-                    android:id="@+id/userProfileDistanceTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_margin="@dimen/std_marginSmall"
-                    android:drawableLeft="@drawable/ic_location"
-                    android:textColor="@color/distance"
-                    android:textSize="@dimen/labelText"
-                    tools:text="Distance"
-                    android:visibility="gone"/>
-
-                <Button
-                    android:id="@+id/connectOrRemoveButton"
-                    style="@style/stdButton"
-                    android:layout_alignParentEnd="true"
-                    android:layout_below="@+id/userProfileDistanceTextView"
-                    android:background="@drawable/rounded_button"
-                    android:text="@string/connect"
-                    android:textColor="@color/white"
-                    android:visibility="visible" />
-
-                <Button
-                    android:id="@+id/editProfileButton"
-                    style="@style/stdButton"
-                    android:layout_below="@+id/userProfileDistanceTextView"
-                    android:layout_alignParentEnd="true"
-                    android:background="@drawable/rounded_button"
-                    android:text="@string/edit"
-                    android:textColor="@color/white"
-                    android:visibility="visible" />
+                    <Button
+                        android:id="@+id/editProfileButton"
+                        style="@style/stdButton"
+                        android:background="@drawable/rounded_button"
+                        android:text="@string/edit"
+                        android:textColor="@color/white"
+                        android:visibility="gone"
+                        android:drawableLeft="@drawable/ic_edit_settings"
+                        android:layout_toRightOf="@+id/addOrRemoveContactImageButton" />
+                </RelativeLayout>
 
             </RelativeLayout>
 
@@ -110,20 +123,20 @@
                 android:id="@+id/userInfoLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:layout_below="@id/profileInfoLayout"
-                android:background="@color/skills_card_view_background">
+                android:background="@color/skills_card_view_background"
+                android:visibility="gone"
+                android:layout_marginBottom="@dimen/std_marginSmall"
+                android:padding="@dimen/std_padding">`
 
                 <TextView
                     android:id="@+id/userDescription"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/std_margin"
                     android:lines="4"
                     android:maxLength="@integer/short_description_character_limit"
                     android:text="@string/a_short_description_of_yourself"
-                    android:textColor="@color/black"
-                    android:visibility="gone"/>
+                    android:textColor="@color/black"/>
 
             </LinearLayout>
 
@@ -132,13 +145,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/userInfoLayout"
-                android:background="@color/skills_card_view_background">
+                android:background="@color/skills_card_view_background"
+                android:layout_marginBottom="@dimen/std_marginSmall">
 
                 <TextView
                     android:id="@+id/galleryTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/std_margin"
+                    android:layout_margin="@dimen/std_marginSmall"
                     android:text="Gallery"
                     android:textColor="@color/black"
                     android:textStyle="bold" />
@@ -148,29 +162,32 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/galleryTextView"
-                    android:layout_marginHorizontal="@dimen/std_marginSmall"
                     android:orientation="horizontal" />
 
             </RelativeLayout>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/profileInfoRecyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="fill_parent"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/profileInfoRecyclerCardView"
+                style="@style/legatoCardView"
                 android:layout_below="@id/mediaGalleryLayout"
-                android:background="@color/white"
-                android:divider="@android:color/black"
-                android:transcriptMode="alwaysScroll"
-                tools:listitem="@layout/item_userprofileinfo" />
+                android:layout_marginBottom="@dimen/std_marginSmall">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/profileInfoRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_below="@id/mediaGalleryLayout"
+                    android:background="@color/white"
+                    android:divider="@android:color/black"
+                    android:transcriptMode="alwaysScroll"
+                    tools:listitem="@layout/item_userprofileinfo"
+                    android:layout_marginBottom="@dimen/std_marginSmall" />
+            </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/socialMediaCardView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                app:cardCornerRadius="@dimen/std_cornerRad"
-                android:layout_below="@+id/profileInfoRecyclerView"
-                android:layout_marginVertical="@dimen/std_margin">
+                style="@style/legatoCardView"
+                android:layout_below="@+id/profileInfoRecyclerCardView"
+                android:layout_marginBottom="@dimen/std_marginSmall">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -198,25 +215,19 @@
 
             <Button
                 android:id="@+id/logoutButton"
-                style="@style/stdButton"
+                style="@style/bigButton"
                 android:text="@string/logout"
-                android:textColor="@color/white"
-                android:background="@drawable/rounded_button"
-                android:layout_centerHorizontal="true"
+                android:background="#898989"
                 android:layout_below="@+id/socialMediaCardView"
-                android:padding="@dimen/std_padding"
+                android:layout_marginBottom="@dimen/std_marginSmall"
                 android:visibility="gone"/>
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/privacyPolicyCardView"
-                android:layout_width="match_parent"
-                android:layout_height="160dp"
-                android:layout_gravity="center"
-                fresco:cardElevation="@dimen/std_elevation"
-                app:cardCornerRadius="@dimen/std_cornerRad"
+                style="@style/legatoCardView"
                 android:layout_below="@+id/logoutButton"
                 android:padding="@dimen/std_padding"
-                android:layout_marginBottom="@dimen/std_margin"
+                android:layout_marginBottom="@dimen/std_marginSmall"
                 android:visibility="gone">
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -247,17 +258,12 @@
 
             <Button
                 android:id="@+id/deleteAccountButton"
-                android:layout_width="match_parent"
-                android:layout_height="36dp"
+                style="@style/bigButton"
                 android:text="@string/delete_account"
-                android:textSize="12sp"
-                android:textColor="@color/white"
-                android:layout_centerHorizontal="true"
                 android:layout_below="@+id/privacyPolicyCardView"
-                android:padding="@dimen/std_padding"
                 android:visibility="gone"
                 android:background="@color/red"
-                android:layout_alignParentBottom="true"/>
+                android:layout_marginBottom="@dimen/std_marginSmall"/>
 
         </RelativeLayout>
     </ScrollView>

@@ -7,13 +7,10 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/skillsCardView"
-        android:layout_width="match_parent"
+        style="@style/legatoCardView"
+        app:cardBackgroundColor="@color/skills_card_view_background"
         android:layout_height="112dp"
-        android:layout_gravity="center"
-        android:layout_margin="@dimen/std_margin"
-        app:cardCornerRadius="@dimen/std_cornerRad"
-        app:cardElevation="@dimen/std_elevation"
-        app:cardBackgroundColor="@color/skills_card_view_background">
+        android:layout_margin="@dimen/std_margin">
 
         <RelativeLayout
             android:layout_width="match_parent"

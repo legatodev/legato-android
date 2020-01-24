@@ -9,7 +9,7 @@
         android:orientation="vertical">
 
         <ImageView
-            android:layout_margin="@dimen/std_marginSmall"
+            android:layout_marginRight="@dimen/std_marginSmall"
             android:id="@+id/track_album_cover"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

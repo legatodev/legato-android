@@ -195,7 +195,7 @@ public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.On
             }
 
             if (this.nearbyUser.getUsername() != null)
-                setTextView(this.nearbyUserName, this.nearbyUser.getUsername());
+                setTextView(this.nearbyUserName, getTrimString(this.nearbyUser.getUsername(), TRIM_STRING_LENGTH));
             if (this.nearbyUser.getDistance() != null)
                setTextView(this.nearbyUserDistance, this.nearbyUser.getDistance() + " mi");
             if (this.nearbyUser.getGenres() != null)
@@ -204,7 +204,7 @@ public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.On
                 setTextView(this.nearbyUserSkills, getTrimString(this.nearbyUser.getSkills(),TRIM_STRING_LENGTH));
 
             this.setInstagramOnClick(this.nearbyUser.getInstagram());
-            this.setFacebookOnClick(this.nearbyUser.getFacebook());
+            this.setFacebookOnClick(this.nearbyUser.getFacebookPageId());
             this.setYoutubeOnClick(this.nearbyUser.getYoutubeChannel());
 
             if (nearbyUserAvailabilityImageView != null) {

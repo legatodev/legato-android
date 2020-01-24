@@ -11,12 +11,7 @@
     android:layout_marginBottom="@dimen/std_margin">
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/nearbyUserCardView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        fresco:cardElevation="@dimen/std_elevation"
-        app:cardCornerRadius="@dimen/std_cornerRad">
+        style="@style/legatoCardView">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -24,7 +19,7 @@
 
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/nearbyUserPhotoImageView"
-                style="@style/iconImage"
+                style="@style/thumbnailImage"
                 android:layout_alignParentTop="true"
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
@@ -36,6 +31,7 @@
                 android:id="@+id/nearbyUserNameTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:maxWidth="180dp"
                 android:layout_margin="@dimen/std_margin"
                 android:layout_toEndOf="@id/nearbyUserPhotoImageView"
                 android:textColor="@color/activity_background"
@@ -45,7 +41,7 @@
             <ImageView
                 android:id="@+id/nearbyUserAvailability"
                 style="@style/availability"
-                android:layout_alignBottom="@+id/nearbyUserNameTextView"
+                android:layout_alignTop="@+id/nearbyUserNameTextView"
                 android:layout_marginEnd="@dimen/std_margin"
                 android:layout_toEndOf="@id/nearbyUserNameTextView"
                 app:srcCompat="@drawable/icn_20_online" />
