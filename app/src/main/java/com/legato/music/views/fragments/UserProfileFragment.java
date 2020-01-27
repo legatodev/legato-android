@@ -312,7 +312,8 @@ public class UserProfileFragment extends BaseFragment {
                 addOrRemoveContactImageButton.setVisibility(View.GONE);
             }
 
-            appVersionTextView.setText("Versiom: "+BuildConfig.VERSION_NAME);
+            appVersionTextView.setText(
+                    getResources().getString(R.string.app_version) + ": " + BuildConfig.VERSION_NAME);
         }
     }
 
