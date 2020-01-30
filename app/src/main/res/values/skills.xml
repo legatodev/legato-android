@@ -2,15 +2,37 @@
 <resources>
     <string-array name="skills_array">
         <item>Piano</item>
+        <item>Keyboard</item>
         <item>Guitar</item>
+        <item>Classical Guitar</item>
+        <item>Acoustic Guitar</item>
+        <item>Electric Guitar</item>
+        <item>Bass Guitar</item>
         <item>Flute</item>
+        <item>Trombone</item>
         <item>Trumpet</item>
-        <item>Saxophone Rock</item>
+        <item>Saxophone</item>
+        <item>Clarinet</item>
+        <item>Piccolo</item>
+        <item>Bassoon</item>
+        <item>Oboe</item>
         <item>Drums</item>
-        <item>Bass</item>
+        <item>Percussion</item>
+        <item>Drum Machine</item>
         <item>Harmonica</item>
         <item>Violin</item>
+        <item>Viola</item>
         <item>Cello</item>
+        <item>Double Bass</item>
+        <item>Mandolin</item>
+        <item>Banjo</item>
+        <item>Theremin</item>
+        <item>Vocals</item>
+        <item>Writing</item>
+        <item>Rapper/MC</item>
+    </string-array>
+
+    <string-array name="no_instrument">
         <item>Vocals</item>
         <item>Writing</item>
         <item>Rapper/MC</item>

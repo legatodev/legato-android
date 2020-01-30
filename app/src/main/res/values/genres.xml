@@ -5,13 +5,16 @@
         <item>Rap/Hip-Hop</item>
         <item>Classical</item>
         <item>Jazz</item>
-        <item>Punk Rock</item>
-        <item>Indie Rock</item>
-        <item>Alternative</item>
+        <item>Folk</item>
+        <item>Indie</item>
         <item>Pop</item>
         <item>Metal</item>
         <item>Reggae</item>
         <item>Country</item>
-        <item>Blues</item>
+        <item>Soul</item>
+        <item>Latin</item>
+        <item>Rhythm and Blues</item>
+        <item>Funk</item>
+        <item>Electronic</item>
     </string-array>
 </resources>

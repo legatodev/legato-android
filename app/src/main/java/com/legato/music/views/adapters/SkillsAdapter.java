@@ -24,6 +24,7 @@ import com.legato.music.R;
 import com.legato.music.models.Skill;
 import com.legato.music.utils.SearchableSpinner;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -70,18 +71,21 @@ public class SkillsAdapter extends RecyclerView.Adapter<SkillsAdapter.SkillsHold
     public class SkillsHolder extends RecyclerView.ViewHolder implements Spinner.OnItemSelectedListener, View.OnClickListener {
 
         @BindView(R.id.skillsSpinner1)
-        @Nullable SearchableSpinner mSkillSpinner;
+        SearchableSpinner mSkillSpinner;
         @BindView(R.id.skillLevelSlider1)
-        @Nullable SeekBar mSkillLevelSeekBar;
+        SeekBar mSkillLevelSeekBar;
         @BindView(R.id.skillLevelValueLabel1)
-        @Nullable TextView mSkillLevelValueTextView;
+        TextView mSkillLevelValueTextView;
         @BindView(R.id.deleteSkill)
-        @Nullable ImageButton mDeleteSkillButton;
+        ImageButton mDeleteSkillButton;
         @BindView(R.id.ownsInstrumentSwitch)
-        @Nullable Switch mOwnsInstrumentSwitch;
+        Switch mOwnsInstrumentSwitch;
 
         @BindArray(R.array.skills_array)
-        @Nullable String[] mSkillsArray;
+        String[] mSkillsArray;
+        @BindArray(R.array.no_instrument)
+        String[] no_instrument;
+        private List<String> excludeInstrumentOwned;
 
         public SkillsHolder(Context context, View itemView) {
             super(itemView);
@@ -107,12 +111,16 @@ public class SkillsAdapter extends RecyclerView.Adapter<SkillsAdapter.SkillsHold
                 });
                 mSkillLevelSeekBar.setEnabled(false);
             }
+
             if (mDeleteSkillButton != null) {
                 mDeleteSkillButton.setOnClickListener(this);
             }
+
             if (mSkillSpinner != null) {
                 mSkillSpinner.setOnItemSelectedListener(this);
             }
+
+            this.excludeInstrumentOwned = Arrays.asList(no_instrument);
         }
 
         public void bindSkill(Skill skill) {
@@ -121,11 +129,16 @@ public class SkillsAdapter extends RecyclerView.Adapter<SkillsAdapter.SkillsHold
                     this.mSkillLevelSeekBar.setEnabled(skill.getSkillLevel() > 0);
                     this.mSkillLevelSeekBar.setProgress(skill.getSkillLevel());
                 }
+
                 int indexOfSkill = Arrays.asList(mSkillsArray).indexOf(skill.getSkill());
                 if (mSkillSpinner != null) {
                     this.mSkillSpinner.setSelectionM(indexOfSkill);
                 }
-                if (mOwnsInstrumentSwitch != null) {
+
+                if (excludeInstrumentOwned.contains(skill.getSkill())) {
+                    this.mOwnsInstrumentSwitch.setVisibility(View.INVISIBLE);
+                } else {
+                    this.mOwnsInstrumentSwitch.setVisibility(View.VISIBLE);
                     this.mOwnsInstrumentSwitch.setChecked(skill.getOwnsInstrument());
                 }
             }
@@ -134,10 +147,14 @@ public class SkillsAdapter extends RecyclerView.Adapter<SkillsAdapter.SkillsHold
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             mOnSkillSelectedListener.onSkillSelected(view, position);
-            if (mSkillLevelSeekBar != null) {
-                mSkillLevelSeekBar.setEnabled(true);
+            mSkillLevelSeekBar.setEnabled(true);
+            String skill = Arrays.asList(mSkillsArray).get(position);
+            skills.get(getAdapterPosition()).setSkill(skill);
+            if (excludeInstrumentOwned.contains(skill)) {
+                this.mOwnsInstrumentSwitch.setVisibility(View.INVISIBLE);
+            } else {
+                this.mOwnsInstrumentSwitch.setVisibility(View.VISIBLE);
             }
-            skills.get(getAdapterPosition()).setSkill(Arrays.asList(mSkillsArray).get(position));
         }
 
         @Override

@@ -152,16 +152,9 @@ public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.On
     String getTrimString(String dbString,int trimLength){
         StringBuilder trimString = new StringBuilder();
         int strLength = dbString.length();
-        String[] genre = dbString.split("\\|", -1);
         if(strLength > trimLength){
-            String moreString = " ...";
-            for(int i=0;i<genre.length;i++){
-                int tempLength = trimString.length() + genre[i].length();
-                if(tempLength>trimLength)
-                    break;
-                else
-                    trimString.append(genre[i]+"|");
-            }
+            String moreString = "...";
+            trimString.append(dbString.substring(0, trimLength-3));
             trimString.append(moreString);
             return trimString.toString();
         }

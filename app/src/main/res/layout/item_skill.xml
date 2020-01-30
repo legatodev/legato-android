@@ -60,7 +60,8 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/std_margin"
                 android:text="@string/instrument_owned"
-                android:layout_below="@id/skillLevelSlider1" />
+                android:layout_below="@id/skillLevelSlider1"
+                android:visibility="visible"/>
 
         </RelativeLayout>
         <RelativeLayout
