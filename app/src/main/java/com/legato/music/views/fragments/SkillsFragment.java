@@ -1,6 +1,5 @@
 package com.legato.music.views.fragments;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -18,7 +18,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.legato.music.R;
 import com.legato.music.models.Skill;
+import com.legato.music.repositories.BaseRepository;
 import com.legato.music.viewmodels.SkillsViewModel;
+import com.legato.music.viewmodels.SkillsViewModelFactory;
 import com.legato.music.views.adapters.SkillsAdapter;
 
 import butterknife.BindView;
@@ -47,7 +49,7 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
 
         this.finishClickedListener = (FinishClickedListener) getActivity();
 
-        skillsViewModel = ViewModelProviders.of(requireActivity()).get(SkillsViewModel.class);
+        skillsViewModel = getViewModel();
 
         return view;
     }
@@ -140,5 +142,12 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
 
     public String extractData() {
         return skillsViewModel.extractData(mSkillsRecyclerView, mSkillsAdapter);
+    }
+
+    @NonNull
+    private SkillsViewModel getViewModel() {
+        BaseRepository baseRepository = BaseRepository.getInstance();
+        ViewModelProvider.Factory factory = new SkillsViewModelFactory(baseRepository);
+        return ViewModelProviders.of(requireActivity(), factory).get(SkillsViewModel.class);
     }
 }

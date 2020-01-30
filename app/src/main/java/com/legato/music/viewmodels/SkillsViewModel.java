@@ -21,14 +21,16 @@ import java.util.regex.Pattern;
 public class SkillsViewModel extends ViewModel {
     private static final String TAG = SkillsViewModel.class.getSimpleName();
 
-    private BaseRepository mBaseRepository = BaseRepository.getInstance();
+    private BaseRepository mBaseRepository;
     private NearbyUser nearbyUser;
 
     private ArrayList<Skill> mSkillArrayList = new ArrayList<>();
     private boolean mSkillSelected = false;
     private static final int MAX_SKILLS = 6;
 
-    public SkillsViewModel() {
+    public SkillsViewModel(BaseRepository baseRepository) {
+        mBaseRepository = baseRepository;
+
         nearbyUser = mBaseRepository.getCurrentUser();
     }
 
