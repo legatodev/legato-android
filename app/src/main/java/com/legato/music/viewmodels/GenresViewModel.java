@@ -11,12 +11,13 @@ import com.legato.music.models.NearbyUser;
 import com.legato.music.repositories.BaseRepository;
 
 public class GenresViewModel extends ViewModel {
-    private BaseRepository mBaseRepository = BaseRepository.getInstance();
+    private BaseRepository mBaseRepository;
     private NearbyUser mNearbyUser;
 
     private boolean valid = false;
 
-    public GenresViewModel() {
+    public GenresViewModel(BaseRepository baseRepository) {
+        mBaseRepository = baseRepository;
         mNearbyUser = mBaseRepository.getCurrentUser();
     }
 

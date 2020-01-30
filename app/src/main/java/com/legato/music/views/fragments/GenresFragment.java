@@ -10,11 +10,14 @@ import android.widget.ListView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.legato.music.R;
+import com.legato.music.repositories.BaseRepository;
 import com.legato.music.viewmodels.GenresViewModel;
 import com.legato.music.utils.Keys;
+import com.legato.music.viewmodels.GenresViewModelFactory;
 import com.legato.music.views.activity.SoloRegistrationActivity;
 
 import butterknife.BindView;
@@ -34,7 +37,7 @@ public class GenresFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_genres, container, false);
         ButterKnife.bind(this, view);
 
-        genresViewModel = ViewModelProviders.of(requireActivity()).get(GenresViewModel.class);
+        genresViewModel = getViewModel();
 
         return view;
     }
@@ -81,5 +84,12 @@ public class GenresFragment extends Fragment {
             return genresViewModel.getValid();
 
         return false;
+    }
+
+    @NonNull
+    private GenresViewModel getViewModel() {
+        BaseRepository baseRepository = BaseRepository.getInstance();
+        ViewModelProvider.Factory factory = new GenresViewModelFactory(baseRepository);
+        return ViewModelProviders.of(requireActivity(), factory).get(GenresViewModel.class);
     }
 }
