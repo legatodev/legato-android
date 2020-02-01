@@ -6,10 +6,13 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.legato.music.R;
+import com.legato.music.repositories.BaseRepository;
 import com.legato.music.viewmodels.RegistrationViewModel;
+import com.legato.music.viewmodels.RegistrationViewModelFactory;
 
 public class RegistrationActivity extends AppCompatActivity {
 
@@ -19,7 +22,7 @@ public class RegistrationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        registrationViewModel = ViewModelProviders.of(this).get(RegistrationViewModel.class);
+        registrationViewModel = getViewModel();
 
         if (registrationViewModel.hasUser()) {
             Intent intent = new Intent(this, NearbyUsersActivity.class);
@@ -33,5 +36,12 @@ public class RegistrationActivity extends AppCompatActivity {
     public void onSolo(View view) {
         Intent intent = new Intent(this, SoloRegistrationActivity.class);
         startActivity(intent);
+    }
+
+    @NonNull
+    private RegistrationViewModel getViewModel() {
+        BaseRepository baseRepository = BaseRepository.getInstance();
+        ViewModelProvider.Factory factory = new RegistrationViewModelFactory(baseRepository);
+        return ViewModelProviders.of(this, factory).get(RegistrationViewModel.class);
     }
 }

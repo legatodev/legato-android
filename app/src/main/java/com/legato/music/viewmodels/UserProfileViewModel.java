@@ -20,8 +20,8 @@ public class UserProfileViewModel extends ViewModel {
 
     private boolean startingChat;
 
-    public UserProfileViewModel() {
-        baseRepository = BaseRepository.getInstance();
+    public UserProfileViewModel(BaseRepository baseRepository) {
+        this.baseRepository = baseRepository;
 
         nearbyUser = baseRepository.getCurrentUser();
 

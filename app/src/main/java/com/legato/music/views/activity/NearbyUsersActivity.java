@@ -20,6 +20,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -35,7 +36,9 @@ import com.legato.music.R;
 import com.legato.music.messaging.ActiveChatActivity;
 import com.legato.music.models.Filters;
 import com.legato.music.models.NearbyUser;
+import com.legato.music.repositories.BaseRepository;
 import com.legato.music.viewmodels.NearbyUsersViewModel;
+import com.legato.music.viewmodels.NearbyUsersViewModelFactory;
 import com.legato.music.views.adapters.NearbyUsersAdapter;
 import com.legato.music.views.fragments.FilterDialogFragment;
 
@@ -74,7 +77,7 @@ public class NearbyUsersActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_nearby_users);
         ButterKnife.bind(this);
 
-        mNearbyUsersViewModel = ViewModelProviders.of(this).get(NearbyUsersViewModel.class);
+        mNearbyUsersViewModel = getViewModel();
 
         initRecyclerView();
         if (!isEmailVerified()) {
@@ -312,5 +315,12 @@ public class NearbyUsersActivity extends AppCompatActivity implements
     protected void onStop() {
         super.onStop();
         disposableList.dispose();
+    }
+
+    @NonNull
+    private NearbyUsersViewModel getViewModel() {
+        BaseRepository baseRepository = BaseRepository.getInstance();
+        ViewModelProvider.Factory factory = new NearbyUsersViewModelFactory(baseRepository);
+        return ViewModelProviders.of(this, factory).get(NearbyUsersViewModel.class);
     }
 }

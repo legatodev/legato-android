@@ -38,8 +38,9 @@ public class SoloArtistViewModel extends ViewModel {
 
     MutableLiveData<Boolean> queryingFbPageId = new MutableLiveData<>();
 
-    public SoloArtistViewModel() {
-        this.baseRepository = BaseRepository.getInstance();
+    public SoloArtistViewModel(BaseRepository baseRepository) {
+        this.baseRepository = baseRepository;
+
         this.nearbyUser = baseRepository.getCurrentUser();
         this.firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 

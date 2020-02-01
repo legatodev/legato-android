@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
@@ -22,8 +23,10 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.legato.music.R;
+import com.legato.music.repositories.BaseRepository;
 import com.legato.music.utils.Keys;
 import com.legato.music.viewmodels.SoloArtistViewModel;
+import com.legato.music.viewmodels.SoloArtistViewModelFactory;
 import com.legato.music.views.fragments.GenresFragment;
 import com.legato.music.views.fragments.SkillsFragment;
 import com.legato.music.views.fragments.SoloArtistBasicInfoFragment;
@@ -84,7 +87,7 @@ public class SoloRegistrationActivity extends AppCompatActivity implements Skill
         setContentView(R.layout.activity_solo_registration_tab);
         ButterKnife.bind(this);
 
-        soloArtistViewModel = ViewModelProviders.of(this).get(SoloArtistViewModel.class);
+        soloArtistViewModel = getViewModel();
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -297,5 +300,12 @@ public class SoloRegistrationActivity extends AppCompatActivity implements Skill
                     return "";
             }
         }
+    }
+
+    @androidx.annotation.NonNull
+    private SoloArtistViewModel getViewModel() {
+        BaseRepository baseRepository = BaseRepository.getInstance();
+        ViewModelProvider.Factory factory = new SoloArtistViewModelFactory(baseRepository);
+        return ViewModelProviders.of(this, factory).get(SoloArtistViewModel.class);
     }
 }

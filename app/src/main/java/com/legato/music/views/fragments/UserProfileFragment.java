@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -46,18 +47,18 @@ import com.legato.music.AppConstants;
 import com.legato.music.BuildConfig;
 import com.legato.music.R;
 import com.legato.music.models.NearbyUser;
+import com.legato.music.repositories.BaseRepository;
 import com.legato.music.spotify.Player;
 import com.legato.music.spotify.PlayerService;
 import com.legato.music.utils.LegatoAuthenticationHandler;
 import com.legato.music.viewmodels.UserProfileViewModel;
+import com.legato.music.viewmodels.UserProfileViewModelFactory;
 import com.legato.music.views.activity.SoloRegistrationActivity;
 import com.legato.music.views.adapters.MediaPlayerAdapter;
 import com.legato.music.views.adapters.UserProfileInfoAdapter;
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -176,7 +177,7 @@ public class UserProfileFragment extends BaseFragment {
         mainView = inflater.inflate(R.layout.fragment_user_profile, container, false);
         ButterKnife.bind(this, mainView);
 
-        userProfileViewModel = ViewModelProviders.of(requireActivity()).get(UserProfileViewModel.class);
+        userProfileViewModel = getViewModel();
 
         return mainView;
     }
@@ -751,5 +752,12 @@ public class UserProfileFragment extends BaseFragment {
         } else {
             addOrRemoveContactImageButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_not_favorited, 0, 0, 0);
         }
+    }
+
+    @NonNull
+    private UserProfileViewModel getViewModel() {
+        BaseRepository baseRepository = BaseRepository.getInstance();
+        ViewModelProvider.Factory factory = new UserProfileViewModelFactory(baseRepository);
+        return ViewModelProviders.of(requireActivity(), factory).get(UserProfileViewModel.class);
     }
 }

@@ -5,10 +5,14 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.legato.music.R;
+import com.legato.music.repositories.BaseRepository;
 import com.legato.music.viewmodels.UserProfileViewModel;
+import com.legato.music.viewmodels.UserProfileViewModelFactory;
 import com.legato.music.views.fragments.UserProfileFragment;
 
 import co.chatsdk.core.dao.Keys;
@@ -27,7 +31,7 @@ public class UserProfileActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
 
-        userProfileViewModel = ViewModelProviders.of(this).get(UserProfileViewModel.class);
+        userProfileViewModel = getViewModel();
 
         userProfileFragment = (UserProfileFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.user_profile_fragment);
@@ -77,5 +81,12 @@ public class UserProfileActivity extends BaseActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         userProfileFragment.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @NonNull
+    private UserProfileViewModel getViewModel() {
+        BaseRepository baseRepository = BaseRepository.getInstance();
+        ViewModelProvider.Factory factory = new UserProfileViewModelFactory(baseRepository);
+        return ViewModelProviders.of(this, factory).get(UserProfileViewModel.class);
     }
 }

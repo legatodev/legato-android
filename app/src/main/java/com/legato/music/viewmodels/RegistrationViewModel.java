@@ -8,10 +8,12 @@ import com.legato.music.models.NearbyUser;
 import com.legato.music.repositories.BaseRepository;
 
 public class RegistrationViewModel extends ViewModel {
-    private BaseRepository mBaseRepository = BaseRepository.getInstance();
+    private BaseRepository mBaseRepository;
     private NearbyUser mNearbyUser;
 
-    public RegistrationViewModel() {
+    public RegistrationViewModel(BaseRepository baseRepository) {
+        mBaseRepository = baseRepository;
+
         mNearbyUser = mBaseRepository.getCurrentUser();
     }
 

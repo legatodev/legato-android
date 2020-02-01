@@ -6,12 +6,11 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
+
 import com.legato.music.models.NearbyUser;
 import com.legato.music.repositories.BaseRepository;
 
 import java.util.List;
-
-import co.chatsdk.core.dao.User;
 
 public class NearbyUsersViewModel extends ViewModel {
 
@@ -20,7 +19,9 @@ public class NearbyUsersViewModel extends ViewModel {
     @Nullable
     private Bundle mDialogSavedStateBundle = null;
 
-    public NearbyUsersViewModel(){ mBaseRepository = BaseRepository.getInstance(); }
+    public NearbyUsersViewModel(BaseRepository baseRepository) {
+        mBaseRepository = baseRepository;
+    }
 
     public LiveData<List<NearbyUser>> getNearbyUsers() {
         return mBaseRepository.getNearbyUsers();
