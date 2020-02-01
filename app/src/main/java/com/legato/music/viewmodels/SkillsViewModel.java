@@ -73,7 +73,7 @@ public class SkillsViewModel extends ViewModel {
     }
 
     private String getSkill(String input) {
-        Pattern pattern = Pattern.compile("[\\p{L}]+");
+        Pattern pattern = Pattern.compile("[\\p{L} ]+");
         Matcher matcher = pattern.matcher(input);
         if (matcher.find()) {
             return matcher.group(0);

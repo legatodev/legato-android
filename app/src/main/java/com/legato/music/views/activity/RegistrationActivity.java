@@ -28,6 +28,8 @@ public class RegistrationActivity extends AppCompatActivity {
             Intent intent = new Intent(this, NearbyUsersActivity.class);
             startActivity(intent);
             finish();
+        } else {
+            registrationViewModel.sendVerification();
         }
 
         setContentView(R.layout.activity_registration);

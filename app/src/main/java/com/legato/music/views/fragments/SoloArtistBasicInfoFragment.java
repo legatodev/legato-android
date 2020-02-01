@@ -307,6 +307,7 @@ public class SoloArtistBasicInfoFragment extends Fragment implements MediaPlayer
                     isCheckBoxChecked(startBandCheckBox));
             valid = valid && !displayName.isEmpty();
         }
+
         return valid;
     }
 

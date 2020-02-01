@@ -135,11 +135,9 @@ public class SoloRegistrationActivity extends AppCompatActivity implements Skill
     public void setVisibleTabCount() {
         int countTab = 1;
 
-        if (soloRegistrationTab.isInputValid() ||
-                soloArtistViewModel.getNearbyUser() != null) {
+        if (soloRegistrationTab.isInputValid()) {
             countTab = 2;
-            if (genresTab.isInputValid() ||
-                    soloArtistViewModel.hasSelectedGenres()) {
+            if (genresTab.isInputValid()) {
                 countTab = 3;
             }
         }
