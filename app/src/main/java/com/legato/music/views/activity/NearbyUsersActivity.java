@@ -89,7 +89,6 @@ public class NearbyUsersActivity extends AppCompatActivity implements
             })), HookEvent.WillLogout);
 
             subscribeObservers();
-            getLastLocation();
             initProximityAlert();
         }
     }
