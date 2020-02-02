@@ -139,8 +139,10 @@ public class SkillsViewModel extends ViewModel {
             SkillsAdapter.SkillsHolder holder = (SkillsAdapter.SkillsHolder) recyclerView.findViewHolderForAdapterPosition(i);
             if (holder != null) {
                 Skill skill = holder.getSkill();
-                if (skill != null)
-                    extractedSkillList.add(skill);
+                if (skill != null) {
+                    if (!skill.getSkill().equals("Choose Skill"))
+                        extractedSkillList.add(skill);
+                }
             }
         }
 
