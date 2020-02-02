@@ -10,6 +10,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import co.chatsdk.core.dao.User;
+import co.chatsdk.core.session.ChatSDK;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.annotations.Nullable;
 
@@ -55,8 +56,7 @@ public class NearbyUser {
     }
 
     public @Nullable String getGenres() {
-        String genres = user.metaStringForKey(Keys.genres);
-        return (genres == null) ? "" : genres;
+        return user.metaStringForKey(Keys.genres);
     }
 
     public void setGenres(@Nullable String genres) {
@@ -64,8 +64,7 @@ public class NearbyUser {
     }
 
     public @Nullable String getSkills() {
-        String skills = user.metaStringForKey(Keys.skills);
-        return (skills == null) ? "" : skills;
+        return user.metaStringForKey(Keys.skills);
     }
 
     public void setSkills(@Nullable String skills) {
@@ -73,78 +72,46 @@ public class NearbyUser {
     }
 
     public String getLookingfor() {
-        String lookingFor = this.user.metaStringForKey(Keys.lookingfor);
-        return (lookingFor == null) ? "" : lookingFor;
+        return this.user.metaStringForKey(Keys.lookingfor);
     }
 
     public void setLookingfor(@Nullable String lookingfor) {
         this.user.setMetaString(Keys.lookingfor, lookingfor);
     }
 
-    public String getEntityID() {
-        String entityID = this.user.getEntityID();
-        return (entityID == null) ? "" : entityID;
-    }
+    public String getEntityID() { return this.user.getEntityID(); }
 
-    public String getAvailability() {
-        String availability = this.user.getAvailability();
-        return (availability == null) ? "" : availability;
-    }
+    public String getAvailability() { return this.user.getAvailability(); }
 
-    public String getAvatarUrl() {
-        String avatarUrl = user.getAvatarURL();
-        return (avatarUrl == null) ? "" : avatarUrl;
-    }
+    public String getAvatarUrl() { return user.getAvatarURL(); }
 
     public void setAvatarUrl(String avatarUrl) { user.setAvatarURL(avatarUrl); }
 
-    public String getDescription() {
-        String description = this.user.metaStringForKey(Keys.user_description);
-        return (description == null) ? "" : description;
-    }
+    public String getDescription() { return this.user.metaStringForKey(Keys.user_description); }
 
     public void setDescription(String newDescription) { this.user.setMetaString(Keys.user_description, newDescription); }
 
-    public String getInstagram() {
-        String instagram = this.user.metaStringForKey(Keys.instagram);
-        return (instagram == null) ? "" : instagram;
-    }
+    public String getInstagram() { return this.user.metaStringForKey(Keys.instagram); }
 
-    public String getFacebook() {
-        String facebook = this.user.metaStringForKey(Keys.facebook);
-        return (facebook == null) ? "" : facebook;
-    }
+    public String getFacebook() { return this.user.metaStringForKey(Keys.facebook); }
 
     public void setFacebookPageId(String pageId) {
         this.user.setMetaString(Keys.facebook_page_id, pageId);
     }
 
-    public String getFacebookPageId() {
-        String pageId = this.user.metaStringForKey(Keys.facebook_page_id);
-        return (pageId == null) ? "" : pageId;
-    }
+    public String getFacebookPageId() { return this.user.metaStringForKey(Keys.facebook_page_id); }
 
     public String getYoutubeChannel() {
-        String youtubeChannel = this.user.metaStringForKey(Keys.youtube_channel);
-        return (youtubeChannel == null) ? "" : youtubeChannel;
+        return this.user.metaStringForKey(Keys.youtube_channel);
     }
 
     public boolean isMe() { return user.isMe(); }
 
-    public String getEmail() {
-        String email = user.getEmail();
-        return (email == null) ? "" : email;
-    }
+    public String getEmail() { return user.getEmail(); }
 
-    public String getYoutube() {
-        String youtube = user.metaStringForKey(Keys.youtube);
-        return (youtube == null) ? "" : youtube;
-    }
+    public String getYoutube() { return user.metaStringForKey(Keys.youtube); }
 
-    public String getSpotify() {
-        String spotify = user.metaStringForKey(Keys.spotify_track);
-        return (spotify == null) ? "" : spotify;
-    }
+    public String getSpotify() { return user.metaStringForKey(Keys.spotify_track); }
 
     public MusicSamples getYoutubeSamples() { return youtubeSamples; }
 
