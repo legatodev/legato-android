@@ -8,12 +8,12 @@ import android.widget.Toast;
 import androidx.multidex.MultiDex;
 
 import com.crashlytics.android.Crashlytics;
-import com.legato.music.views.activity.RegistrationActivity;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.legato.music.utils.FirebaseUIModule;
 import com.legato.music.utils.LegatoAuthenticationHandler;
+import com.legato.music.views.activity.RegistrationActivity;
 import com.legato.music.views.activity.UserChatActivity;
 import com.legato.music.views.activity.UserProfileActivity;
 
@@ -23,8 +23,6 @@ import co.chatsdk.core.session.Configuration;
 import co.chatsdk.firebase.FirebaseNetworkAdapter;
 import co.chatsdk.firebase.file_storage.FirebaseFileStorageModule;
 import co.chatsdk.firebase.social_login.FirebaseSocialLoginModule;
-import co.chatsdk.ui.manager.BaseInterfaceAdapter;
-import co.chatsdk.ui.utils.ToastHelper;
 import io.fabric.sdk.android.Fabric;
 import io.reactivex.plugins.RxJavaPlugins;
 
