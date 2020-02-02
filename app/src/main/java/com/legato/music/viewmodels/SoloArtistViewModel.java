@@ -11,8 +11,6 @@ import androidx.lifecycle.ViewModel;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.google.firebase.auth.FacebookAuthProvider;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
 import com.legato.music.AppConstants;
 import com.legato.music.models.NearbyUser;
@@ -32,31 +30,28 @@ public class SoloArtistViewModel extends ViewModel {
     private static final String TAG = SoloArtistViewModel.class.getSimpleName();
 
     private BaseRepository baseRepository;
-    private NearbyUser nearbyUser;
     private String previousAvatarURL = "";
-    private FirebaseUser firebaseUser;
 
     MutableLiveData<Boolean> queryingFbPageId = new MutableLiveData<>();
 
     public SoloArtistViewModel(BaseRepository baseRepository) {
         this.baseRepository = baseRepository;
 
-        this.nearbyUser = baseRepository.getCurrentUser();
-        this.firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        NearbyUser nearbyUser = baseRepository.getCurrentUser();
 
         if (TextUtils.isEmpty(nearbyUser.getFacebookPageId()) && !TextUtils.isEmpty(nearbyUser.getFacebook())) {
             queryFacebookPageId(nearbyUser.getFacebook());
         }
     }
 
-    public NearbyUser getNearbyUser() { return nearbyUser; }
+    public NearbyUser getNearbyUser() { return baseRepository.getCurrentUser(); }
 
     public User getUser() {
-        return nearbyUser.getUser();
+        return baseRepository.getCurrentUser().getUser();
     }
 
     public void setUser(User user) {
-        nearbyUser.setUser(user);
+        baseRepository.getCurrentUser().setUser(user);
     }
 
     public String getPreviousAvatarURL() {
@@ -68,7 +63,7 @@ public class SoloArtistViewModel extends ViewModel {
     }
 
     public @Nullable String getAvatarUrl() {
-        String avatarUrl = nearbyUser.getAvatarUrl();
+        String avatarUrl = baseRepository.getCurrentUser().getAvatarUrl();
         if (TextUtils.isEmpty(avatarUrl)) {
             String facebookUserId = getFacebookUserId();
             if (!TextUtils.isEmpty(facebookUserId))
@@ -83,37 +78,37 @@ public class SoloArtistViewModel extends ViewModel {
     }
 
     public List<String> getYoutubeVideoIds() {
-        return new ArrayList<>(nearbyUser.getYoutubeSamples().getTrackIds());
+        return new ArrayList<>(baseRepository.getCurrentUser().getYoutubeSamples().getTrackIds());
     }
 
     public void resetYoutubeVideoIds() {
-        nearbyUser.getYoutubeSamples().resetTrackIds();
+        baseRepository.getCurrentUser().getYoutubeSamples().resetTrackIds();
     }
 
     public String getYoutubeVideoIdsAsString() {
-        return nearbyUser.getYoutubeSamples().getTrackIdsAsString();
+        return baseRepository.getCurrentUser().getYoutubeSamples().getTrackIdsAsString();
     }
 
     public boolean hasSelectedGenres() {
-        return !TextUtils.isEmpty(nearbyUser.getGenres());
+        return !TextUtils.isEmpty(baseRepository.getCurrentUser().getGenres());
     }
 
     public String getLookingFor() {
-        return nearbyUser.getLookingfor();
+        return baseRepository.getCurrentUser().getLookingfor();
     }
 
-    public String getDescription() { return nearbyUser.getDescription(); }
+    public String getDescription() { return baseRepository.getCurrentUser().getDescription(); }
 
-    public void setDescription(String newDescription) { nearbyUser.setDescription(newDescription); }
+    public void setDescription(String newDescription) { baseRepository.getCurrentUser().setDescription(newDescription); }
 
     public String getInstagram() {
-        return nearbyUser.getInstagram();
+        return baseRepository.getCurrentUser().getInstagram();
     }
 
-    public String getFacebook() { return nearbyUser.getFacebook(); }
+    public String getFacebook() { return baseRepository.getCurrentUser().getFacebook(); }
 
     public String getFacebookPageId() {
-        return nearbyUser.getFacebookPageId();
+        return baseRepository.getCurrentUser().getFacebookPageId();
     }
 
     public LiveData<Boolean> getQueryingFbPageId() {
@@ -122,6 +117,8 @@ public class SoloArtistViewModel extends ViewModel {
 
     public void queryFacebookPageId(String facebookPageTitle) {
         queryingFbPageId.setValue(true);
+
+        NearbyUser nearbyUser = baseRepository.getCurrentUser();
         nearbyUser.setFacebookPageId("");
 
         GraphRequest request = GraphRequest.newGraphPathRequest(
@@ -168,14 +165,14 @@ public class SoloArtistViewModel extends ViewModel {
     }
 
     public String getYoutubeChannel() {
-        return nearbyUser.getYoutubeChannel();
+        return baseRepository.getCurrentUser().getYoutubeChannel();
     }
 
     public String getFacebookUserId() {
         String facebookUserId = "";
 
         // find the Facebook profile and get the user's id
-        for(UserInfo profile : firebaseUser.getProviderData()) {
+        for(UserInfo profile : baseRepository.getFirebaseAuthUser().getProviderData()) {
             // check if the provider id matches "facebook.com"
             if(FacebookAuthProvider.PROVIDER_ID.equals(profile.getProviderId())) {
                 facebookUserId = profile.getUid();
@@ -186,6 +183,8 @@ public class SoloArtistViewModel extends ViewModel {
     }
 
     public boolean addTrackId(String trackId) {
+        NearbyUser nearbyUser = baseRepository.getCurrentUser();
+
         if (trackId.contains(AppConstants.SPOTIFY)) {
             return nearbyUser.getSpotifySamples().addTrackId(trackId);
         } else {
@@ -194,6 +193,8 @@ public class SoloArtistViewModel extends ViewModel {
     }
 
     public boolean removeTrackId(String trackId) {
+        NearbyUser nearbyUser = baseRepository.getCurrentUser();
+
         if (trackId.contains(AppConstants.SPOTIFY)) {
             return nearbyUser.getSpotifySamples().removeTrackId(trackId);
         } else {
@@ -202,15 +203,15 @@ public class SoloArtistViewModel extends ViewModel {
     }
 
     public List<String> getSpotifyTrackIds() {
-        return new ArrayList<>(nearbyUser.getSpotifySamples().getTrackIds());
+        return new ArrayList<>(baseRepository.getCurrentUser().getSpotifySamples().getTrackIds());
     }
 
     public void resetSpotifyTrackIds() {
-        nearbyUser.getSpotifySamples().resetTrackIds();
+        baseRepository.getCurrentUser().getSpotifySamples().resetTrackIds();
     }
 
     public String getSpotifyTrackIdsAsString() {
-        return nearbyUser.getSpotifySamples().getTrackIdsAsString();
+        return baseRepository.getCurrentUser().getSpotifySamples().getTrackIdsAsString();
     }
 
     public String getSpotifyAccessToken() {
