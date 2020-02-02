@@ -30,14 +30,6 @@ public class NearbyUser {
         updateSpotifyTrackIds();
     }
 
-    public NearbyUser(String userId, String distance) {
-        setDistance(distance);
-        setUser(userId);
-
-        updateYoutubeVideoIds();
-        updateSpotifyTrackIds();
-    }
-
     private void updateYoutubeVideoIds() {
         youtubeSamples = new MusicSamples(Keys.youtube);
     }
@@ -124,11 +116,6 @@ public class NearbyUser {
     public MusicSamples getSpotifySamples() { return spotifySamples; }
 
     public User getUser() { return user;}
-
-    //TODO: Why chatsdk being accessed directly?
-    public void setUser(String userId) {
-        this.user = ChatSDK.db().fetchOrCreateEntityWithEntityID(User.class, userId);
-    }
 
     public void setUser(User user) {
         if (user != null)
