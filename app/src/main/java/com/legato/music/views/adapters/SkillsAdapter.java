@@ -164,14 +164,18 @@ public class SkillsAdapter extends RecyclerView.Adapter<SkillsAdapter.SkillsHold
 
         @Nullable
         public Skill getSkill() {
-            if (mSkillSpinner != null &&
-                !TextUtils.isEmpty((String) mSkillSpinner.getSelectedItem()) &&
-                mSkillLevelSeekBar != null &&
-                mOwnsInstrumentSwitch != null) {
 
-                return (new Skill(mSkillSpinner.getSelectedItem().toString(),
-                                                 mSkillLevelSeekBar.getProgress(),
-                                                 mOwnsInstrumentSwitch.isChecked()));
+            if (mSkillSpinner != null) {
+                String skillName = (String) mSkillSpinner.getSelectedItem();
+                if (!skillName.isEmpty() &&
+                    !skillName.equals("Choose Skill") &&
+                    mSkillLevelSeekBar != null &&
+                    mOwnsInstrumentSwitch != null) {
+
+                    return (new Skill(mSkillSpinner.getSelectedItem().toString(),
+                            mSkillLevelSeekBar.getProgress(),
+                            mOwnsInstrumentSwitch.isChecked()));
+                }
             }
             return null;
         }
