@@ -5,6 +5,7 @@ import android.location.Location;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 
+import com.google.firebase.auth.FirebaseUser;
 import com.legato.music.models.NearbyUser;
 
 import java.util.List;
@@ -101,5 +102,8 @@ public class BaseRepository {
 
     public void setSpotifyAccessToken(String accessToken) {
         mSpotifyClient.setSpotifyAccessToken(accessToken);
+    }
+    public FirebaseUser getFirebaseAuthUser() {
+        return mFirebaseClient.getFirebaseUser();
     }
 }
