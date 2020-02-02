@@ -1,21 +1,27 @@
 package com.legato.music.repositories;
 
-import com.legato.music.R;
-import com.legato.music.spotify.SearchPager;
+import android.content.Context;
 
 import androidx.annotation.Nullable;
 
+import com.legato.music.LegatoInterfaceAdapter;
+
+import co.chatsdk.core.dao.DaoCore;
+import co.chatsdk.core.dao.DaoMaster;
+import co.chatsdk.core.dao.DaoSession;
 import co.chatsdk.core.dao.User;
 import co.chatsdk.core.session.ChatSDK;
 import co.chatsdk.core.types.ConnectionType;
-import co.chatsdk.ui.utils.ToastHelper;
+import co.chatsdk.firebase.FirebaseNetworkAdapter;
 import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 
 class ChatSDKClient {
     private static final String TAG = "ChatSDKClient";
 
     @Nullable private static ChatSDKClient instance;
+    private static boolean mLoggedIn = false;
 
     @Nullable private User mCurrentUser;
     @Nullable private String mCurrentUserId;
@@ -25,11 +31,42 @@ class ChatSDKClient {
         mCurrentUserId = ChatSDK.currentUserID();
     }
 
-    public static ChatSDKClient getInstance(){
-        if(instance == null){
+    public static ChatSDKClient getInstance() {
+        if (instance == null) {
             instance = new ChatSDKClient();
         }
         return instance;
+    }
+
+    public void login() {
+        if (!mLoggedIn) {
+            Disposable d = ChatSDK.auth().authenticate()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(() -> {
+                                // Success
+                                mCurrentUser = ChatSDK.currentUser();
+                                mCurrentUserId = ChatSDK.currentUserID();
+                                mLoggedIn = true;
+                            },
+                            ChatSDK::logError
+                    );
+        }
+    }
+
+    public void logout() {
+        if (mLoggedIn) {
+            Disposable d = ChatSDK.auth().logout()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(() -> {
+                                // success
+                                // TODO: Clearing the ChatSDK session somehow
+                                mCurrentUser = null;
+                                mCurrentUserId = "";
+                                mLoggedIn = false;
+                            },
+                            ChatSDK::logError
+                    );
+        }
     }
 
     public User getCurrentUser() {
@@ -94,5 +131,12 @@ class ChatSDKClient {
 
     public boolean isFriend(User user) {
         return ChatSDK.contact().exists(user);
+    }
+
+    public void navToLogin(Context context) {
+        if (ChatSDK.auth().isAuthenticated()) {
+            logout();
+        }
+        ChatSDK.ui().startSplashScreenActivity(context);
     }
 }

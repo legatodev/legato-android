@@ -1,5 +1,6 @@
 package com.legato.music.repositories;
 
+import android.content.Context;
 import android.location.Location;
 
 import androidx.annotation.Nullable;
@@ -12,21 +13,22 @@ import java.util.List;
 
 import co.chatsdk.core.dao.User;
 import io.reactivex.Completable;
-import kaaes.spotify.webapi.android.SpotifyService;
 
 public class BaseRepository {
 
     @Nullable private static BaseRepository instance;
+    private static boolean loggedIn = false;
+
     private GeofireClient mGeofireClient;
     private FirebaseClient mFirebaseClient;
     private ChatSDKClient mChatSDKClient;
     private SpotifyClient mSpotifyClient;
 
-
     public static BaseRepository getInstance(){
         if(instance == null){
             instance = new BaseRepository();
         }
+
         return instance;
     }
 
@@ -36,7 +38,29 @@ public class BaseRepository {
        mChatSDKClient = ChatSDKClient.getInstance();
        mSpotifyClient = SpotifyClient.getInstance();
 
-       mGeofireClient.setUserId(mChatSDKClient.getCurrentUserId());
+        mGeofireClient.setUserId(mChatSDKClient.getCurrentUserId());
+        loggedIn = true;
+    }
+
+    public void login() {
+        if (!loggedIn) {
+            mChatSDKClient.login();
+            mFirebaseClient.login();
+
+            mGeofireClient.setUserId(mChatSDKClient.getCurrentUserId());
+
+            loggedIn = true;
+        }
+    }
+
+    public void logout() {
+        if (loggedIn) {
+            mChatSDKClient.logout();
+            mFirebaseClient.logout();
+            mGeofireClient.setUserId("");
+
+            loggedIn = false;
+        }
     }
 
     public LiveData<List<NearbyUser>> getNearbyUsers(){
@@ -103,6 +127,11 @@ public class BaseRepository {
     public void setSpotifyAccessToken(String accessToken) {
         mSpotifyClient.setSpotifyAccessToken(accessToken);
     }
+
+    public void navToLogin(Context context) {
+        mChatSDKClient.navToLogin(context);
+    }
+
     public FirebaseUser getFirebaseAuthUser() {
         return mFirebaseClient.getFirebaseUser();
     }
