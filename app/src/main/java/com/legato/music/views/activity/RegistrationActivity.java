@@ -46,4 +46,12 @@ public class RegistrationActivity extends AppCompatActivity {
         ViewModelProvider.Factory factory = new RegistrationViewModelFactory(baseRepository);
         return ViewModelProviders.of(this, factory).get(RegistrationViewModel.class);
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        BaseRepository.getInstance().logout();
+        registrationViewModel.navToLogin(getApplicationContext());
+    }
 }
