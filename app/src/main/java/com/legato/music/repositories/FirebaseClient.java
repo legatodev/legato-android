@@ -6,6 +6,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
 
 /*
 Any interaction with FireBase frame should be done by this class
@@ -14,19 +15,23 @@ Any interaction with FireBase frame should be done by this class
 class FirebaseClient {
 
     @Nullable private  static FirebaseClient instance;
+    private static boolean loggedIn = false;
+
     @Nullable private FirebaseDatabase mFirebaseDatabase;
     @Nullable private FirebaseAuth mFirebaseAuth;
+
+    private FirebaseClient(){
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mFirebaseAuth = FirebaseAuth.getInstance();
+
+        loggedIn = true;
+    }
 
     public static FirebaseClient getInstance(){
         if(instance == null){
             instance = new FirebaseClient();
         }
         return instance;
-    }
-
-    private FirebaseClient(){
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mFirebaseAuth = FirebaseAuth.getInstance();
     }
 
     public DatabaseReference getChild(String pathString){
@@ -51,5 +56,36 @@ class FirebaseClient {
         }else{
             FirebaseAuth.getInstance().getCurrentUser().sendEmailVerification();
         }
+    }
+
+    public FirebaseUser getFirebaseUser() {
+        if (mFirebaseAuth != null) {
+            return mFirebaseAuth.getCurrentUser();
+        }
+        else {
+            return FirebaseAuth.getInstance().getCurrentUser();
+        }
+    }
+
+    public void login() {
+        if (!loggedIn) {
+            FirebaseStorage.getInstance().getApp().setAutomaticResourceManagementEnabled(true);
+            mFirebaseDatabase = FirebaseDatabase.getInstance();
+            mFirebaseAuth = FirebaseAuth.getInstance();
+            mFirebaseAuth.getCurrentUser();
+            loggedIn = true;
+        }
+    }
+
+    public void logout() {
+        if (mFirebaseAuth != null) {
+            FirebaseStorage.getInstance().getApp().setAutomaticResourceManagementEnabled(true);
+            mFirebaseAuth.signOut();
+        }
+        else {
+            FirebaseAuth.getInstance().signOut();
+        }
+
+        loggedIn = false;
     }
 }

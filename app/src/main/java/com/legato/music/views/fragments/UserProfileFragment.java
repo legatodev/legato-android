@@ -602,12 +602,11 @@ public class UserProfileFragment extends BaseFragment {
 
     private void logout() {
         showProgressBar(profileProgressBar);
-        disposableList.add(ChatSDK.auth().logout()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(() -> ChatSDK.ui().startSplashScreenActivity(
-                        getActivity().getApplicationContext()),
-                        throwable -> ChatSDK.logError(throwable))
-        );
+
+        BaseRepository.getInstance().logout();
+        userProfileViewModel.navToLogin(getActivity().getApplicationContext());
+
+        getActivity().finish();
     }
 
     @Override

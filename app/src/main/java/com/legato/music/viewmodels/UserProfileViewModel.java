@@ -1,14 +1,14 @@
 package com.legato.music.viewmodels;
 
+import android.content.Context;
+
 import androidx.lifecycle.ViewModel;
 
 import com.legato.music.models.NearbyUser;
 import com.legato.music.models.UserProfileInfo;
 import com.legato.music.repositories.BaseRepository;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import co.chatsdk.core.dao.User;
@@ -102,5 +102,9 @@ public class UserProfileViewModel extends ViewModel {
 
     public void setSpotifyAccessToken(String spotifyAccessToken) {
         baseRepository.setSpotifyAccessToken(spotifyAccessToken);
+    }
+
+    public void navToLogin(Context context) {
+        baseRepository.navToLogin(context);
     }
 }

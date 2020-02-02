@@ -1,5 +1,6 @@
 package com.legato.music.viewmodels;
 
+import android.content.Context;
 import android.text.TextUtils;
 
 import androidx.lifecycle.ViewModel;
@@ -9,18 +10,17 @@ import com.legato.music.repositories.BaseRepository;
 
 public class RegistrationViewModel extends ViewModel {
     private BaseRepository mBaseRepository;
-    private NearbyUser mNearbyUser;
 
     public RegistrationViewModel(BaseRepository baseRepository) {
         mBaseRepository = baseRepository;
-
-        mNearbyUser = mBaseRepository.getCurrentUser();
     }
 
     public boolean hasUser() {
-        if (mNearbyUser != null) {
-            String skills = mNearbyUser.getSkills();
-            if (!TextUtils.isEmpty(skills)) {
+        mBaseRepository.login();
+
+        NearbyUser nearbyUser = mBaseRepository.getCurrentUser();
+        if (nearbyUser != null) {
+            if (!TextUtils.isEmpty(nearbyUser.getSkills())) {
                 return true;
             }
         }
@@ -32,5 +32,9 @@ public class RegistrationViewModel extends ViewModel {
         if (!mBaseRepository.isEmailVerified()) {
             mBaseRepository.sendEmailVerification();
         }
+    }
+
+    public void navToLogin(Context context) {
+        mBaseRepository.navToLogin(context);
     }
 }
