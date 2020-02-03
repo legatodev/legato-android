@@ -8,6 +8,7 @@ import android.widget.Toast;
 import androidx.multidex.MultiDex;
 
 import com.crashlytics.android.Crashlytics;
+import com.legato.music.views.activity.LegatoSplashScreenActivity;
 import com.legato.music.views.activity.RegistrationActivity;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FacebookAuthProvider;
@@ -77,10 +78,11 @@ public class AppObject extends Application {
 
         Fabric.with(context, new Crashlytics());
 
-        FirebaseUIModule.activate(EmailAuthProvider.PROVIDER_ID, GoogleAuthProvider.PROVIDER_ID, FacebookAuthProvider.PROVIDER_ID);
+        ChatSDK.ui().setSplashScreenActivity(LegatoSplashScreenActivity.class);
         ChatSDK.ui().setMainActivity(RegistrationActivity.class);
         ChatSDK.ui().setChatActivity(UserChatActivity.class);
         ChatSDK.ui().setProfileActivity(UserProfileActivity.class);
+        FirebaseUIModule.activate(EmailAuthProvider.PROVIDER_ID, GoogleAuthProvider.PROVIDER_ID, FacebookAuthProvider.PROVIDER_ID);
     }
 
     @Override

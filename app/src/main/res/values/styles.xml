@@ -24,6 +24,10 @@
         <item name="checkboxStyle">@style/legato_checkbox</item>
     </style>
 
+    <style name="SplashScreenTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowBackground">@color/white</item>
+    </style>
+
     <style name="ListFont" parent="@android:style/Widget.ListView">
         <item name="android:textColor">@color/activity_background</item>
     </style>

@@ -29,7 +29,7 @@ public class RegistrationViewModel extends ViewModel {
     }
 
     public void sendVerification() {
-        if (mBaseRepository.isEmailVerified()) {
+        if (!mBaseRepository.isEmailVerified()) {
             mBaseRepository.sendEmailVerification();
         }
     }
