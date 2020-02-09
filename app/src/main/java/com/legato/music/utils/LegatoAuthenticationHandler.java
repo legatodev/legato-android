@@ -4,19 +4,25 @@ import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.facebook.AccessToken;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.EmailAuthProvider;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.HashMap;
+import java.util.List;
 
 import co.chatsdk.core.dao.User;
 import co.chatsdk.core.enums.AuthStatus;
@@ -28,11 +34,12 @@ import co.chatsdk.core.types.AuthKeys;
 import co.chatsdk.core.types.ChatError;
 import co.chatsdk.core.utils.CrashReportingCompletableObserver;
 import co.chatsdk.firebase.FirebaseAuthenticationHandler;
-import co.chatsdk.firebase.FirebaseCoreHandler;
 import co.chatsdk.firebase.FirebasePaths;
 import io.reactivex.Completable;
+import io.reactivex.CompletableEmitter;
 import io.reactivex.Single;
 import io.reactivex.SingleOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.annotations.Nullable;
 import io.reactivex.disposables.Disposable;
@@ -42,18 +49,20 @@ public class LegatoAuthenticationHandler extends FirebaseAuthenticationHandler {
 
     private String TAG = LegatoAuthenticationHandler.class.getSimpleName();
     @Nullable private AccountDetails accountDetails;
+    @Nullable AuthCredential credential = null;
 
     public Completable deleteUser() {
         return Completable.create(
                 emitter-> {
                     final User user = ChatSDK.currentUser();
+                    FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                    getCredential(firebaseUser);
 
                     // Stop listening to user related alerts. (added message or thread.)
                     ChatSDK.events().impl_currentUserOff(user.getEntityID());
 
                     Disposable disposable = ChatSDK.hook().executeHook(HookEvent.WillLogout, new HashMap<>()).concatWith(ChatSDK.core().setUserOffline()).subscribe(()->{
                         deleteUserDetails(ChatSDK.currentUserID());
-                        FirebaseAuth.getInstance().signOut();
 
                         removeLoginInfo(AuthKeys.CurrentUserID);
 
@@ -69,9 +78,10 @@ public class LegatoAuthenticationHandler extends FirebaseAuthenticationHandler {
                             ChatSDK.hook().executeHook(HookEvent.DidLogout, data).subscribe(new CrashReportingCompletableObserver());;
                         }
 
+                        deleteUserAuthentication(firebaseUser, emitter);
                         authenticatedThisSession = false;
 
-                        emitter.onComplete();
+                        //emitter.onComplete();
                     }, emitter::onError);
 
                 }).subscribeOn(Schedulers.single());
@@ -104,7 +114,7 @@ public class LegatoAuthenticationHandler extends FirebaseAuthenticationHandler {
     }
 
     private void deleteProfilePic(String avatarUrl) {
-        if (!TextUtils.isEmpty(avatarUrl)) {
+        if (!TextUtils.isEmpty(avatarUrl) && avatarUrl.contains("https://firebasestorage.googleapis.com")) {
             FirebaseStorage storage = FirebaseStorage.getInstance();
             try {
                 StorageReference storageRef = storage.getReferenceFromUrl(avatarUrl);
@@ -175,5 +185,75 @@ public class LegatoAuthenticationHandler extends FirebaseAuthenticationHandler {
 
     @Nullable public AccountDetails getAccountDetails() {
         return accountDetails;
+    }
+
+    private void getCredential(FirebaseUser firebaseUser) {
+        for (UserInfo profile : firebaseUser.getProviderData()) {
+            // Id of the provider (ex: google.com)
+            String provider = profile.getProviderId();
+            if (FacebookAuthProvider.PROVIDER_ID.equals(provider)) {
+                credential = getFbCredentials();
+                break;
+            } else if (GoogleAuthProvider.PROVIDER_ID.equals(provider))  {
+                credential = getGoogleCredentials();
+                break;
+            } else if (EmailAuthProvider.PROVIDER_ID.equals(provider)) {
+                credential = getEmailCredentials();
+                break;
+            }
+        }
+    }
+
+    private void deleteUserAuthentication(FirebaseUser firebaseUser, CompletableEmitter emitter) {
+        if (credential != null) {
+            firebaseUser.reauthenticate(credential)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Log.d(TAG, "User re-authenticated.");
+                                firebaseUser.delete()
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+                                                    Log.d(TAG, "User deleted");
+                                                } else {
+                                                    Log.e(TAG, "User authentication deletion failed :");
+                                                }
+                                            }
+                                        });
+                            } else {
+                                Log.e(TAG, "User re-authentication failed. Unable to delete account.");
+                            }
+                            emitter.onComplete();
+                        }
+                    });
+        }
+    }
+
+    @Nullable private AuthCredential getEmailCredentials(){
+        AccountDetails accountDetails = this.getAccountDetails();
+        if (accountDetails != null) {
+            return EmailAuthProvider
+                    .getCredential(accountDetails.username, accountDetails.password);
+        }
+
+        return null;
+    }
+
+    @Nullable private AuthCredential getGoogleCredentials() {
+        AccountDetails accountDetails = this.getAccountDetails();
+        if (accountDetails != null) {
+            String token = accountDetails.token;
+            return GoogleAuthProvider.getCredential(token, null);
+        }
+
+        return null;
+    }
+
+    private AuthCredential getFbCredentials() {
+        AccessToken token = AccessToken.getCurrentAccessToken();
+        return FacebookAuthProvider.getCredential(token.getToken());
     }
 }

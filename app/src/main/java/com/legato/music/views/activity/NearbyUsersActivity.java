@@ -116,7 +116,8 @@ public class NearbyUsersActivity extends AppCompatActivity implements
         mNearbyUsersViewModel.getNearbyUsers().observe(this, new Observer<List<NearbyUser>>() {
             @Override
             public void onChanged(@Nullable List<NearbyUser> nearbyUsers) {
-                if (nearbyUsers != null) {
+                if (nearbyUsers != null && !nearbyUsers.isEmpty()) {
+                    //TODO: we need to check for nearbyuser is current user
                     noNearbyUsersTextView.setVisibility(View.GONE);
                     mNearbyUserRecyclerView.setVisibility(View.VISIBLE);
                     mNearbyUsersAdapter.updateNearbyUsers(nearbyUsers);

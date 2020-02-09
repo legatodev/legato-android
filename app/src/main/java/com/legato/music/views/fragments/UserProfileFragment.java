@@ -211,9 +211,7 @@ public class UserProfileFragment extends BaseFragment {
                             ChatSDK.thread().deleteThread(thread);
                         }
 
-                        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-                        String currentUserId = ChatSDK.currentUserID();
-                        deleteUser(firebaseUser, currentUserId);
+                        deleteUser();
                     }
                 })
                 .setNegativeButton(android.R.string.cancel, null).create();
@@ -346,19 +344,19 @@ public class UserProfileFragment extends BaseFragment {
     }
 
     private void spotifyInitialize() {
-            if (userProfileViewModel.getSpotifyAccessToken().isEmpty()) {
-                // Request code will be used to verify if result comes from the login activity. Can be set to any integer.
-                AuthenticationRequest.Builder builder =
-                        new AuthenticationRequest.Builder(getResources().getString(R.string.spotify_client_id), AuthenticationResponse.Type.TOKEN, AppConstants.SPOTIFY_REDIRECT_URI);
+        if (userProfileViewModel.getSpotifyAccessToken().isEmpty()) {
+            // Request code will be used to verify if result comes from the login activity. Can be set to any integer.
+            AuthenticationRequest.Builder builder =
+                    new AuthenticationRequest.Builder(getResources().getString(R.string.spotify_client_id), AuthenticationResponse.Type.TOKEN, AppConstants.SPOTIFY_REDIRECT_URI);
 
-                builder.setShowDialog(true);
-                builder.setScopes(new String[]{"streaming"});
-                AuthenticationRequest request = builder.build();
-                AuthenticationClient.openLoginActivity(getActivity(), REQUEST_CODE, request);
-                initializingSpotify = true;
-            } else {
-                addSpotifyTracks();
-            }
+            builder.setShowDialog(true);
+            builder.setScopes(new String[]{"streaming"});
+            AuthenticationRequest request = builder.build();
+            AuthenticationClient.openLoginActivity(getActivity(), REQUEST_CODE, request);
+            initializingSpotify = true;
+        } else {
+            addSpotifyTracks();
+        }
     }
 
     @Override
@@ -517,78 +515,12 @@ public class UserProfileFragment extends BaseFragment {
         }
     }
 
-    private void deleteUserAuthentication(FirebaseUser firebaseUser) {
-        reauthenticateUser(firebaseUser);
-        firebaseUser.delete()
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            removeProgressBar(profileProgressBar);
-                            ChatSDK.ui().startSplashScreenActivity(
-                                    getActivity().getApplicationContext());
-                        } else {
-                            Log.e(TAG, "User authentication deletion failed :");
-                        }
-                    }
-                });
-    }
-
-    private void reauthenticateUser(FirebaseUser firebaseUser) {
-        AuthCredential credential = null;
-
-        if (FacebookAuthProvider.PROVIDER_ID.equals(firebaseUser.getProviderId())) {
-            credential = getFbCredentials();
-        } else if (GoogleAuthProvider.PROVIDER_ID.equals(firebaseUser.getProviderId()))  {
-            credential = getGoogleCredentials();
-        } else if (EmailAuthProvider.PROVIDER_ID.equals(firebaseUser.getProviderId())) {
-            credential = getEmailCredentials();
-        }
-
-        if (credential != null) {
-            firebaseUser.reauthenticate(credential)
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            Log.d(TAG, "User re-authenticated.");
-                        }
-                    });
-        }
-    }
-
-    @Nullable private AuthCredential getEmailCredentials(){
-        LegatoAuthenticationHandler authHandler = (LegatoAuthenticationHandler) ChatSDK.auth();
-        AccountDetails accountDetails = authHandler.getAccountDetails();
-        if (accountDetails != null) {
-            return EmailAuthProvider
-                    .getCredential(accountDetails.username, accountDetails.password);
-        }
-
-        return null;
-    }
-
-    @Nullable private AuthCredential getGoogleCredentials() {
-        LegatoAuthenticationHandler authHandler = (LegatoAuthenticationHandler) ChatSDK.auth();
-        AccountDetails accountDetails = authHandler.getAccountDetails();
-        if (accountDetails != null) {
-            String token = accountDetails.token;
-            return GoogleAuthProvider.getCredential(token, null);
-        }
-
-        return null;
-    }
-
-    private AuthCredential getFbCredentials() {
-        AccessToken token = AccessToken.getCurrentAccessToken();
-        return FacebookAuthProvider.getCredential(token.getToken());
-    }
-
-    private void deleteUser(FirebaseUser firebaseUser, String currentUserId) {
+    private void deleteUser() {
         LegatoAuthenticationHandler authHandler = (LegatoAuthenticationHandler) ChatSDK.auth();
         disposableList.add(authHandler.deleteUser()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(() -> {
-                            deleteUserAuthentication(firebaseUser);
+                            userProfileViewModel.logout();
                             ChatSDK.ui().startSplashScreenActivity(getContext());
                         },
                         throwable -> {

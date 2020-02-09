@@ -4,6 +4,7 @@ import androidx.annotation.Nullable;
 
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -37,8 +38,20 @@ class FirebaseClient {
             return mFirebaseDatabase.getReference().child(pathString);
     }
 
+    private boolean isEmailVerificationRequired() {
+        for (UserInfo profile : mFirebaseAuth.getCurrentUser().getProviderData()) {
+            // Id of the provider (ex: google.com)
+            String provider = profile.getProviderId();
+            if (EmailAuthProvider.PROVIDER_ID.equals(provider)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public Boolean isEmailVerified(){
-        if (EmailAuthProvider.PROVIDER_ID.equals(mFirebaseAuth.getCurrentUser().getProviderId())) {
+        if (isEmailVerificationRequired()) {
             return mFirebaseAuth.getCurrentUser().isEmailVerified();
         } else {
             return true;
@@ -46,7 +59,7 @@ class FirebaseClient {
     }
 
     public void sendEmailVerification(){
-        if (EmailAuthProvider.PROVIDER_ID.equals(mFirebaseAuth.getCurrentUser().getProviderId())) {
+        if (isEmailVerificationRequired()) {
                 mFirebaseAuth.getCurrentUser().sendEmailVerification();
         }
     }
