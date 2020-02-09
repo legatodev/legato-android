@@ -22,6 +22,8 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.endsWith;
+
 import com.legato.music.R;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -34,7 +36,7 @@ import org.junit.runner.RunWith;
 @LargeTest
 public class NearbyUsersActivityTest extends FireBaseTest {
 
-    private static String VALID_NEARBY_USER_NAME = "Test User";
+    private static String VALID_NEARBY_USER_NAME = "lgtu5000";
 
     @Rule
     public GrantPermissionRule mGrantPermissionRule = GrantPermissionRule.grant("android.permission.ACCESS_FINE_LOCATION");
@@ -55,16 +57,17 @@ public class NearbyUsersActivityTest extends FireBaseTest {
     */
     @Test
     public void nearbyUsersActivityNearbyUserCardTest() {
+
         ActivityScenario.launch(NearbyUsersActivity.class);
 
         //Following assertion checks if there is atleast 1 nearbyUser card.
         try{
-            Thread.sleep(5000);
+            Thread.sleep(10000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        ViewInteraction textView = onView(
+        /*        ViewInteraction textView = onView(
                 allOf(withId(R.id.nearbyUserNameTextView), withText(VALID_NEARBY_USER_NAME),
                         childAtPosition(
                                 childAtPosition(
@@ -72,7 +75,9 @@ public class NearbyUsersActivityTest extends FireBaseTest {
                                         0),
                                 1),
                         isDisplayed()));
-        textView.check(matches(withText(VALID_NEARBY_USER_NAME)));
+        textView.check(matches(withText(VALID_NEARBY_USER_NAME)));*/
+
+        onView(withText(endsWith(VALID_NEARBY_USER_NAME))).check(matches(isDisplayed()));
     }
 
     /*
@@ -81,6 +86,12 @@ public class NearbyUsersActivityTest extends FireBaseTest {
      */
     @Test
     public void nearbyUsersActivityTransitionUserProfileTest() {
+        //Following assertion checks if there is atleast 1 nearbyUser card.
+        try{
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         ActivityScenario.launch(NearbyUsersActivity.class);
 
         ViewInteraction appCompatImageView = onView(

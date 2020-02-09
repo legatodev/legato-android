@@ -19,6 +19,8 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.endsWith;
+
 import com.legato.music.R;
 import com.legato.music.utils.Keys;
 import com.legato.music.views.fragments.UserProfileFragment;
@@ -73,12 +75,12 @@ public class UserProfileActivityTest extends FireBaseTest {
         FragmentScenario.launchInContainer(UserProfileFragment.class);
 
         try{
-            Thread.sleep(3000);
+            Thread.sleep(10000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        ViewInteraction textView5 = onView(
+/*        ViewInteraction textView5 = onView(
                 allOf(withId(R.id.profileUserNameTextView),
                         childAtPosition(
                                 allOf(withId(R.id.profileInfoLayout),
@@ -87,7 +89,9 @@ public class UserProfileActivityTest extends FireBaseTest {
                                                 0)),
                                 1),
                         isDisplayed()));
-        textView5.check(matches(withText(VALID_USERNAME)));
+        textView5.check(matches(withText(VALID_USERNAME)));*/
+
+        onView(withText(endsWith(VALID_USERNAME))).check(matches(isDisplayed()));
 
     }
 
