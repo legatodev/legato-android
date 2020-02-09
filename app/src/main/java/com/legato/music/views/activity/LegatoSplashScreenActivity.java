@@ -14,6 +14,7 @@ import com.legato.music.R;
 
 import co.chatsdk.core.session.ChatSDK;
 import co.chatsdk.ui.login.SplashScreenActivity;
+import io.reactivex.disposables.Disposable;
 
 public class LegatoSplashScreenActivity extends SplashScreenActivity {
 
@@ -26,7 +27,7 @@ public class LegatoSplashScreenActivity extends SplashScreenActivity {
                 Toast.makeText(this, R.string.network_unreachable, Toast.LENGTH_LONG).show();
             } else {
                 startProgressBar();
-                ChatSDK.auth().authenticate().doFinally(() -> stopProgressBar()).subscribe(() -> {
+                Disposable d = ChatSDK.auth().authenticate().doFinally(() -> stopProgressBar()).subscribe(() -> {
                     // Launch the Chat SDK
                     startMainActivity();
                 }, throwable -> {

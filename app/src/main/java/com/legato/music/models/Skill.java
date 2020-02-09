@@ -1,6 +1,9 @@
 package com.legato.music.models;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Comparator;
+import java.util.Locale;
 
 public class Skill {
 
@@ -56,4 +59,14 @@ public class Skill {
         return u1SkillLevel > u2SkillLevel ? -1 :
                u1SkillLevel < u2SkillLevel ? 1 : 0;
     };
+
+    @NotNull
+    @Override
+    public String toString() {
+        return String.format(Locale.getDefault(),
+                "%s(%s) - %d",
+                skill,
+                (ownsInstrument) ? "Yes" : "No",
+                skillLevel);
+    }
 }
