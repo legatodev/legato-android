@@ -52,7 +52,7 @@ class GeofireClient {
         return mGeofireInstance;
     }
 
-    public static void destroyGeofireHelper() {
+    public void destroyInstance() {
         mGeofireInstance = null;
     }
 

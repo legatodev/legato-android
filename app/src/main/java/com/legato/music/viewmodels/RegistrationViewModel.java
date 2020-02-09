@@ -28,6 +28,10 @@ public class RegistrationViewModel extends ViewModel {
         return false;
     }
 
+    public void destroyInstance(){
+        mBaseRepository.destroyInstance();
+    }
+
     public void sendVerification() {
         if (!mBaseRepository.isEmailVerified()) {
             mBaseRepository.sendEmailVerification();

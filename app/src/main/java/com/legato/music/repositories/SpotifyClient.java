@@ -2,25 +2,25 @@ package com.legato.music.repositories;
 
 import androidx.annotation.Nullable;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
 /*
 Any interaction with FireBase frame should be done by this class
 */
 
 class SpotifyClient {
 
-    @Nullable private  static SpotifyClient instance;
+    @Nullable private  static SpotifyClient mSpotifyinstance;
     private String mAccessToken = "";
 
     public static SpotifyClient getInstance(){
-        if(instance == null){
-            instance = new SpotifyClient();
+        if(mSpotifyinstance == null){
+            mSpotifyinstance = new SpotifyClient();
         }
 
-        return instance;
+        return mSpotifyinstance;
+    }
+
+    public void destroyInstance() {
+        mSpotifyinstance = null;
     }
 
     public String getSpotifyAccessToken() {

@@ -103,4 +103,8 @@ public class UserProfileViewModel extends ViewModel {
     public void setSpotifyAccessToken(String spotifyAccessToken) {
         baseRepository.setSpotifyAccessToken(spotifyAccessToken);
     }
+
+    public void logout(){
+        baseRepository.destroyInstance();
+    }
 }

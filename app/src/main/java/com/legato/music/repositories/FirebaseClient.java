@@ -4,7 +4,6 @@ import androidx.annotation.Nullable;
 
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -14,15 +13,19 @@ Any interaction with FireBase frame should be done by this class
 
 class FirebaseClient {
 
-    @Nullable private  static FirebaseClient instance;
+    @Nullable private  static FirebaseClient mFirebaseinstance;
     private FirebaseDatabase mFirebaseDatabase;
     private FirebaseAuth mFirebaseAuth;
 
     public static FirebaseClient getInstance(){
-        if(instance == null){
-            instance = new FirebaseClient();
+        if(mFirebaseinstance == null){
+            mFirebaseinstance = new FirebaseClient();
         }
-        return instance;
+        return mFirebaseinstance;
+    }
+
+    public void destroyInstance() {
+        mFirebaseinstance = null;
     }
 
     private FirebaseClient(){

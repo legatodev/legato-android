@@ -1,38 +1,36 @@
 package com.legato.music.repositories;
 
-import com.legato.music.R;
-import com.legato.music.spotify.SearchPager;
-
 import androidx.annotation.Nullable;
 
 import co.chatsdk.core.dao.User;
 import co.chatsdk.core.session.ChatSDK;
 import co.chatsdk.core.types.ConnectionType;
-import co.chatsdk.ui.utils.ToastHelper;
 import io.reactivex.Completable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 
 class ChatSDKClient {
-    private static final String TAG = "ChatSDKClient";
+    private static final String TAG = ChatSDKClient.class.getName();
 
-    @Nullable private static ChatSDKClient instance;
+    @Nullable private static ChatSDKClient mChatSDKinstance;
 
     @Nullable private User mCurrentUser;
     @Nullable private String mCurrentUserId;
 
-    private ChatSDKClient(){
+    public ChatSDKClient(){
         mCurrentUser = ChatSDK.currentUser();
         mCurrentUserId = ChatSDK.currentUserID();
     }
-
     public static ChatSDKClient getInstance(){
-        if(instance == null){
-            instance = new ChatSDKClient();
+        if(mChatSDKinstance == null){
+            mChatSDKinstance = new ChatSDKClient();
         }
-        return instance;
+        return mChatSDKinstance;
+    }
+    public void destroyInstance(){
+        mChatSDKinstance = null;
     }
 
     public User getCurrentUser() {
+        mCurrentUser = ChatSDK.currentUser();
         if (mCurrentUser != null)
             return mCurrentUser;
         else
@@ -40,10 +38,11 @@ class ChatSDKClient {
     }
 
     public String getCurrentUserId(){
+        mCurrentUserId = ChatSDK.currentUserID();
         if(mCurrentUser != null) {
             return mCurrentUser.getEntityID();
         }else{
-            throw new NullPointerException("Current User Dao not initialized. Check ChatSDKClient instance");
+            throw new NullPointerException("Current User Dao not initialized. Check ChatSDKClient mChatSDKinstance");
         }
     }
 
@@ -61,7 +60,7 @@ class ChatSDKClient {
         if(mCurrentUser != null) {
             mCurrentUser.setMetaString(key, value);
         }else{
-            throw new NullPointerException("Current User Dao not initialized. Check ChatSDKClient instance");
+            throw new NullPointerException("Current User Dao not initialized. Check ChatSDKClient mChatSDKinstance");
         }
     }
 
@@ -69,7 +68,7 @@ class ChatSDKClient {
         if(mCurrentUser != null) {
             return mCurrentUser.metaStringForKey(key);
         }else{
-            throw new NullPointerException("Current User Dao not initialized. Check ChatSDKClient instance");
+            throw new NullPointerException("Current User Dao not initialized. Check ChatSDKClient mChatSDKinstance");
         }
     }
 
@@ -80,7 +79,7 @@ class ChatSDKClient {
                 return proximityAlert.equals("true");
             return false;
         } else {
-            throw new NullPointerException("Current User Dao not initialized. Check ChatSDKClient instance");
+            throw new NullPointerException("Current User Dao not initialized. Check ChatSDKClient mChatSDKinstance");
         }
     }
 

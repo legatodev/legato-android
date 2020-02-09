@@ -82,6 +82,8 @@ import co.chatsdk.ui.utils.ToastHelper;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.annotations.Nullable;
+import io.reactivex.functions.Action;
+import io.reactivex.functions.Consumer;
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
 
@@ -604,9 +606,21 @@ public class UserProfileFragment extends BaseFragment {
         showProgressBar(profileProgressBar);
         disposableList.add(ChatSDK.auth().logout()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(() -> ChatSDK.ui().startSplashScreenActivity(
-                        getActivity().getApplicationContext()),
-                        throwable -> ChatSDK.logError(throwable))
+                .subscribe(
+                        new Action() {
+                            @Override
+                            public void run() throws Exception {
+                                userProfileViewModel.logout();
+                                ChatSDK.ui().startSplashScreenActivity(
+                                        getActivity().getApplicationContext());
+                                Log.d(TAG,"ChatSDK logged out successfully!!");
+                            }
+                        }, new Consumer<Throwable>() {
+                            @Override
+                            public void accept(Throwable throwable) throws Exception {
+                                Log.d(TAG,throwable.toString());
+                            }
+                        })
         );
     }
 

@@ -29,6 +29,21 @@ public class BaseRepository {
         return instance;
     }
 
+    public void destroyInstance(){
+        if(mGeofireClient != null) {
+            mGeofireClient.destroyInstance();
+        }
+        if(mChatSDKClient != null) {
+            mChatSDKClient.destroyInstance();
+        }
+        if(mFirebaseClient != null) {
+            mFirebaseClient.destroyInstance();
+        }
+        if(mSpotifyClient != null) {
+            mSpotifyClient.destroyInstance();
+        }
+    }
+
     private BaseRepository() {
        mGeofireClient = GeofireClient.getInstance();
        mFirebaseClient = FirebaseClient.getInstance();
