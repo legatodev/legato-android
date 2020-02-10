@@ -35,6 +35,7 @@ class GeofireClient {
     @Nullable private Location mCurrentLocation = null;
     private final HashMap<String, NearbyUser> mNearHashMap;
     private MutableLiveData<List<NearbyUser>> mNearbyUsers;
+    private MutableLiveData<Boolean> mQueryExhausted;
 
 
     private GeofireClient() {
@@ -43,6 +44,7 @@ class GeofireClient {
         mGeoFire = new GeoFire(userLocationDatabaseReference);
         mNearHashMap = new HashMap<String, NearbyUser>();
         mNearbyUsers = new MutableLiveData<>();
+        mQueryExhausted = new MutableLiveData<>();
     }
 
     public static GeofireClient getInstance() {
@@ -58,6 +60,10 @@ class GeofireClient {
 
     public LiveData<List<NearbyUser>> getNearbyUsers(){
         return mNearbyUsers;
+    }
+
+    public LiveData<Boolean> isNearbyUsersQueryExhausted(){
+        return mQueryExhausted;
     }
 
     public void setUserId(String userId){
@@ -92,8 +98,10 @@ class GeofireClient {
                         final String distanceTo = df.format(mCurrentLocation.distanceTo(location) / 1000.0);
                         User user = ChatSDK.db().fetchOrCreateEntityWithEntityID(User.class, dataSnapshot.getKey());
                         NearbyUser nearbyUser = new NearbyUser(user,distanceTo);
-                        if (!nearbyUser.isMe())
+                        if (!nearbyUser.isMe()) {
                             mNearHashMap.put(dataSnapshot.getKey(), nearbyUser);
+                            mQueryExhausted.setValue(false);
+                        }
                     }
                 }
                 @Override
@@ -113,6 +121,8 @@ class GeofireClient {
                 public void onGeoQueryReady() {
                     //All initial data has been loaded and events have been fired!
                     mNearbyUsers.postValue(new ArrayList<NearbyUser>(mNearHashMap.values()));
+                    mQueryExhausted.setValue(true);
+
                 }
 
                 @Override

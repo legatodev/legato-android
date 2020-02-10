@@ -88,7 +88,7 @@
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:gravity="center"
-        android:visibility="visible"
+        android:visibility="gone"
         android:text="@string/no_nearby_users_available"
         android:textSize="@dimen/headerText"/>
 

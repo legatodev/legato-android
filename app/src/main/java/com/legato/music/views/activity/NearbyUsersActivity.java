@@ -116,11 +116,34 @@ public class NearbyUsersActivity extends AppCompatActivity implements
         mNearbyUsersViewModel.getNearbyUsers().observe(this, new Observer<List<NearbyUser>>() {
             @Override
             public void onChanged(@Nullable List<NearbyUser> nearbyUsers) {
-                if (nearbyUsers != null && !nearbyUsers.isEmpty()) {
-                    //TODO: we need to check for nearbyuser is current user
-                    noNearbyUsersTextView.setVisibility(View.GONE);
-                    mNearbyUserRecyclerView.setVisibility(View.VISIBLE);
-                    mNearbyUsersAdapter.updateNearbyUsers(nearbyUsers);
+                if (nearbyUsers != null) {
+                    if (nearbyUsers.isEmpty()){
+                        noNearbyUsersTextView.setVisibility(View.VISIBLE);
+                    }else {
+                        mNearbyUserRecyclerView.setVisibility(View.VISIBLE);
+                        mNearbyUsersAdapter.updateNearbyUsers(nearbyUsers);
+                    }
+                } else{
+                    //There is less to none probability that this condition will be executed.
+                    // This will only happen when nearbyUsers object is not initialized in GeoFireClient.
+                    noNearbyUsersTextView.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        mNearbyUsersViewModel.isNearbyUsersQueryExhausted().observe(this, new Observer<Boolean>() {
+            /*
+             * If below call back function is called atleast 1 time,
+             * means there is atleast single nearbyUser record and
+             * there is no reason to show 'noNearbyUsersTextView'.
+             * This is invoked from onDataEntered within GeoFireClient.
+             */
+            @Override
+            public void onChanged(Boolean isNearbyUsersQueryExhausted) {
+                if(isNearbyUsersQueryExhausted) {
+                    removeProgressBar(nearbyUserProgressBar);
+                }else{
+                    showProgressBar(nearbyUserProgressBar);
                 }
             }
         });

@@ -57,6 +57,10 @@ public class BaseRepository {
         return mGeofireClient.getNearbyUsers();
     }
 
+    public LiveData<Boolean> isNearbyUsersQueryExhausted(){
+        return mGeofireClient.isNearbyUsersQueryExhausted();
+    }
+
     public NearbyUser getCurrentUser() {
         User user = mChatSDKClient.getCurrentUser();
 

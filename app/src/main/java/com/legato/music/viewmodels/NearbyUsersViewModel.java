@@ -26,6 +26,9 @@ public class NearbyUsersViewModel extends ViewModel {
     public LiveData<List<NearbyUser>> getNearbyUsers() {
         return mBaseRepository.getNearbyUsers();
     }
+    public LiveData<Boolean> isNearbyUsersQueryExhausted(){
+        return mBaseRepository.isNearbyUsersQueryExhausted();
+    }
 
     public void searchNearbyUserByRadius(double searchRadius){
         mBaseRepository.searchNearbyUserByRadius(searchRadius);
