@@ -54,7 +54,7 @@ public class NearbyMessages {
                     Context context = activity.getApplicationContext();
                     String userEntityID = new String(message.getContent());
                     Intent intent = new Intent(context, UserProfileActivity.class);
-                    intent.putExtra(Keys.USER_ENTITY_ID, userEntityID);
+                    intent.putExtra(Keys.PushKeyUserEntityID, userEntityID);
                     ChatSDK.ui().notificationDisplayHandler().createMessageNotification(
                             context, intent, userEntityID, "Nearby User Found", "Click to see profile");
                 }

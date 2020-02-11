@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -100,7 +101,6 @@ public class SoloArtistBasicInfoFragment extends Fragment implements MediaPlayer
     @Nullable private Player mPlayerBoundService;
     private boolean mSpotifyPlayerBound = false;
     private boolean mSearchSpotifyTrack = false;
-    private boolean initializingSpotify = false;
     private DisposableList disposableList = new DisposableList();
 
     List<String> trackIds = new ArrayList<>();
@@ -390,7 +390,6 @@ public class SoloArtistBasicInfoFragment extends Fragment implements MediaPlayer
                     // Response was successful and contains auth token
                     case TOKEN:
                         // Handle successful response
-                        initializingSpotify = false;
                         soloArtistViewModel.setSpotifyAccessToken(response.getAccessToken());
                         if (mSearchSpotifyTrack)
                         {
@@ -407,7 +406,9 @@ public class SoloArtistBasicInfoFragment extends Fragment implements MediaPlayer
                     // Auth flow returned an error
                     case ERROR:
                         // Handle error response
-                        Log.e(TAG, "Spotify authorization failed."+response.getError());
+                        String errorString = getResources().getText(R.string.spotify_auth_failed)+response.getError();
+                        Log.e(TAG, errorString);
+                        Toast.makeText(getContext(), errorString, Toast.LENGTH_LONG).show();
 
                     // Most likely auth flow was cancelled
                     default:
@@ -465,8 +466,8 @@ public class SoloArtistBasicInfoFragment extends Fragment implements MediaPlayer
 
     private void launchSpotifySearch() {
         String accessToken = soloArtistViewModel.getSpotifyAccessToken();
-        if (!TextUtils.isEmpty(accessToken)) {
-            mSearchSpotifyTrack = true;
+        mSearchSpotifyTrack = true;
+        if (TextUtils.isEmpty(accessToken)) {
             spotifyInitialize();
         } else {
             Intent intent = SpotifySearchActivity.createIntent(getActivity());
@@ -509,7 +510,6 @@ public class SoloArtistBasicInfoFragment extends Fragment implements MediaPlayer
             builder.setScopes(new String[]{"streaming"});
             AuthenticationRequest request = builder.build();
             AuthenticationClient.openLoginActivity(getActivity(), REQUEST_CODE, request);
-            initializingSpotify = true;
         } else {
             addSpotifyTracks();
         }

@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
@@ -180,6 +181,7 @@ public class UserProfileFragment extends BaseFragment {
         ButterKnife.bind(this, mainView);
 
         userProfileViewModel = getViewModel();
+        doBindService();
 
         return mainView;
     }
@@ -378,8 +380,9 @@ public class UserProfileFragment extends BaseFragment {
                     // Auth flow returned an error
                     case ERROR:
                         // Handle error response
-                        Log.e(TAG, "Spotify authorization failed."+response.getError());
-
+                        String errorString = getResources().getText(R.string.spotify_auth_failed)+response.getError();
+                        Log.e(TAG, errorString);
+                        Toast.makeText(getContext(), errorString, Toast.LENGTH_LONG).show();
                         // Most likely auth flow was cancelled
                     default:
                         // Handle other cases
@@ -398,11 +401,11 @@ public class UserProfileFragment extends BaseFragment {
     private void addSpotifyTracks() {
         String spotifyAccessToken = userProfileViewModel.getSpotifyAccessToken();
         if (!TextUtils.isEmpty(spotifyAccessToken)) {
-            doBindService();
             trackIds.addAll(userProfileViewModel.getSpotifyTrackIds());
             SpotifyApi spotifyApi = new SpotifyApi();
             spotifyApi.setAccessToken(spotifyAccessToken);
             SpotifyService spotifyService = spotifyApi.getService();
+            //TODO: this should only be created when mPlayerBoundService has been initialized.
             mediaPlayerAdapter = new MediaPlayerAdapter(
                     trackIds,
                     this.getLifecycle(),
@@ -604,7 +607,7 @@ public class UserProfileFragment extends BaseFragment {
                               @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if (savedInstanceState != null && savedInstanceState.getString(Keys.USER_ENTITY_ID) != null) {
+        if (savedInstanceState != null && savedInstanceState.getString(Keys.PushKeyUserEntityID) != null) {
             disposableList.add(
                     ChatSDK.events().sourceOnMain().filter(
                             NetworkEvent.filterType(
@@ -648,7 +651,7 @@ public class UserProfileFragment extends BaseFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-
+        doUnbindService();
         disposableList.dispose();
     }
 

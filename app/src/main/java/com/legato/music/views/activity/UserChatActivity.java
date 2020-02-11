@@ -36,7 +36,7 @@ public class UserChatActivity extends ChatActivity {
                     Context context = v.getContext();
                     mUserProfileViewModel.getUserByEntityId(user.getEntityID());
                     Intent intent = new Intent(context, UserProfileActivity.class);
-                    intent.putExtra(Keys.USER_ENTITY_ID, user.getEntityID());
+                    intent.putExtra(Keys.PushKeyUserEntityID, user.getEntityID());
                     intent.putExtra(com.legato.music.utils.Keys.distance, mUserProfileViewModel.getDistance());
                     context.startActivity(intent);
                 });

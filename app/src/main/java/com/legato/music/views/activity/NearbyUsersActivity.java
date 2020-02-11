@@ -308,7 +308,7 @@ public class NearbyUsersActivity extends AppCompatActivity implements
     @OnClick(R.id.buttonSettings)
     public void onSettingsClicked() {
         Intent intent = new Intent(this, UserProfileActivity.class);
-        intent.putExtra(Keys.USER_ENTITY_ID, ChatSDK.currentUserID());
+        intent.putExtra(Keys.PushKeyUserEntityID, ChatSDK.currentUserID());
         startActivity(intent);
     }
 

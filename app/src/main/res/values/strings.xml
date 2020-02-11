@@ -117,4 +117,5 @@
     <string name="privacy_policy">Privacy Policy</string>
     <string name="no_nearby_users_available">No nearby users available</string>
     <string name="network_unreachable">Network unreachable. Please check your connection.</string>
+    <string name="spotify_auth_failed">Spotify authentication failed:</string>
 </resources>
