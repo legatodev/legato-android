@@ -64,6 +64,7 @@ import co.chatsdk.core.utils.DisposableList;
 import co.chatsdk.ui.chat.MediaSelector;
 import co.chatsdk.ui.utils.ImagePickerUploader;
 import co.chatsdk.ui.utils.ToastHelper;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
 
@@ -105,6 +106,7 @@ public class SoloArtistBasicInfoFragment extends Fragment implements MediaPlayer
     @Nullable private Player mPlayerBoundService;
     private boolean mSpotifyPlayerBound = false;
     private boolean mSearchSpotifyTrack = false;
+    private String mAvatartUrl = "";
     private DisposableList disposableList = new DisposableList();
 
     List<String> trackIds = new ArrayList<>();
@@ -262,19 +264,21 @@ public class SoloArtistBasicInfoFragment extends Fragment implements MediaPlayer
 
         soloArtistProfilePictureImageView.setOnClickListener(tempView -> {
             if (getActivity() != null) {
-                ImagePickerUploader uploader = new ImagePickerUploader(MediaSelector.CropType.Circle);
-                disposableList.add(uploader.choosePhoto(getActivity()).subscribe((result, throwable) -> {
-                    if (throwable == null) {
-                        File file = new File(result.uri);
-                        soloArtistViewModel.setAvatarUrl(Uri.fromFile(file).toString()); //TODO: as soon as I set the view model the view should update. should not require another function call.
-                        setImageURI(soloArtistProfilePictureImageView, Uri.fromFile(file));
-                        setTextView(soloArtistAddEditProfilePictureTextView, R.string.edit_profile_pic);
-                    } else {
-                        ToastHelper.show(getActivity(), throwable.getLocalizedMessage());
-                    }
-                }));
+                disposableList.add(mediaSelector.startChooseImageActivity(getActivity(), MediaSelector.CropType.Circle)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe((result, throwable) -> {
+                            if (throwable == null) {
+                                File file = (File)result;
+                                setImageURI(soloArtistProfilePictureImageView, Uri.fromFile(file));
+                                setTextView(soloArtistAddEditProfilePictureTextView, R.string.edit_profile_pic);
+                                mAvatartUrl = Uri.fromFile(file).toString();
+                            } else {
+                                ToastHelper.show(getActivity(), throwable.getLocalizedMessage());
+                            }
+                        }));
             }
         });
+
 
         mediaRecyclerView.setHasFixedSize(true);
 
@@ -393,7 +397,7 @@ public class SoloArtistBasicInfoFragment extends Fragment implements MediaPlayer
         basicInfo.put(Keys.proximityalert, Boolean.toString(proximityAlertSwitch.isEnabled()));
 
         basicInfo.put(Keys.youtube, soloArtistViewModel.getYoutubeVideoIdsAsString());
-        basicInfo.put(co.chatsdk.core.dao.Keys.AvatarURL, soloArtistViewModel.getAvatarUrl());
+        basicInfo.put(co.chatsdk.core.dao.Keys.AvatarURL, mAvatartUrl);
 
         return basicInfo;
     }
