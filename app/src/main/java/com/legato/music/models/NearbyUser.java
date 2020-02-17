@@ -2,6 +2,7 @@ package com.legato.music.models;
 
 import android.text.TextUtils;
 
+import com.legato.music.utils.Conversions;
 import com.legato.music.utils.Keys;
 
 import java.util.ArrayList;
@@ -99,9 +100,21 @@ public class NearbyUser {
 
     public void setDescription(String newDescription) { this.user.setMetaString(Keys.user_description, newDescription); }
 
-    public String getInstagram() { return this.user.metaStringForKey(Keys.instagram); }
+    public void setInstagram(String handle) {
+        this.user.setMetaString(
+                Keys.instagram,
+                Conversions.getConvertedSocialMediaHandle(handle));
+    }
 
-    public String getFacebook() { return this.user.metaStringForKey(Keys.facebook); }
+    public String getInstagram() {
+        return Conversions.getConvertedSocialMediaHandle(
+                this.user.metaStringForKey(Keys.instagram));
+    }
+
+    public String getFacebook() {
+        return Conversions.getConvertedSocialMediaHandle(
+                this.user.metaStringForKey(Keys.facebook));
+    }
 
     public void setFacebookPageId(String pageId) {
         this.user.setMetaString(Keys.facebook_page_id, pageId);
@@ -109,8 +122,15 @@ public class NearbyUser {
 
     public String getFacebookPageId() { return this.user.metaStringForKey(Keys.facebook_page_id); }
 
+    public void setYoutubeChannel(String channelName) {
+        this.user.setMetaString(
+                Keys.youtube_channel,
+                Conversions.getConvertedSocialMediaHandle(channelName));
+    }
+
     public String getYoutubeChannel() {
-        return this.user.metaStringForKey(Keys.youtube_channel);
+        return Conversions.getConvertedSocialMediaHandle(
+                this.user.metaStringForKey(Keys.youtube_channel));
     }
 
     public boolean isMe() { return user.isMe(); }

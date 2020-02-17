@@ -6,6 +6,7 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -39,6 +40,7 @@ import com.legato.music.R;
 import com.legato.music.spotify.Player;
 import com.legato.music.spotify.PlayerService;
 import com.legato.music.spotify.SpotifySearchActivity;
+import com.legato.music.utils.Conversions;
 import com.legato.music.utils.Keys;
 import com.legato.music.utils.RequestCodes;
 import com.legato.music.viewmodels.SoloArtistViewModel;
@@ -92,7 +94,9 @@ public class SoloArtistBasicInfoFragment extends Fragment implements MediaPlayer
     @BindView(R.id.mediaRecyclerView) RecyclerView mediaRecyclerView;
     @BindView(R.id.galleryLayout) View galleryView;
     @BindView(R.id.soloArtistProgressBar) ProgressBar progressBar;
+    @BindView(R.id.instagramValidImageView) ImageView instagramValidImageView;
     @BindView(R.id.facebookPageValidImageView) ImageView facebookPageValidImageView;
+    @BindView(R.id.youtubeChannelValidImageView) ImageView youtubeChannelValidImageView;
 
     @NonNull private SoloArtistViewModel soloArtistViewModel;
 
@@ -119,6 +123,9 @@ public class SoloArtistBasicInfoFragment extends Fragment implements MediaPlayer
 
     private MediaSelector mediaSelector;
 
+    private Drawable fail_icon;
+    private Drawable pass_icon;
+
     public SoloArtistBasicInfoFragment() {
         mediaSelector = new MediaSelector();
     }
@@ -138,6 +145,9 @@ public class SoloArtistBasicInfoFragment extends Fragment implements MediaPlayer
 
         soloArtistViewModel = ViewModelProviders.of(requireActivity()).get(SoloArtistViewModel.class);
         observeViewModel();
+
+        fail_icon = getResources().getDrawable(R.drawable.ic_cancel_red_24dp);
+        pass_icon = getResources().getDrawable(R.drawable.ic_check_circle_green_24dp);
 
         return view;
     }
@@ -197,6 +207,19 @@ public class SoloArtistBasicInfoFragment extends Fragment implements MediaPlayer
         });
         setTextView(userDescriptionTextInputEditText, soloArtistViewModel.getDescription());
 
+        instagramTextInputEditText.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                soloArtistViewModel.setInstagram(s.toString());
+            }
+        });
         setTextView(instagramTextInputEditText, soloArtistViewModel.getInstagram());
 
         facebookTextInputEditText.addTextChangedListener(new TextWatcher() {
@@ -214,6 +237,19 @@ public class SoloArtistBasicInfoFragment extends Fragment implements MediaPlayer
         });
         setTextView(facebookTextInputEditText, soloArtistViewModel.getFacebook());
 
+        youtubeTextInputEditText.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                soloArtistViewModel.setYoutubeChannel(s.toString());
+            }
+        });
         setTextView(youtubeTextInputEditText, soloArtistViewModel.getYoutubeChannel());
 
         String avatarUrl = soloArtistViewModel.getAvatarUrl();
@@ -340,15 +376,18 @@ public class SoloArtistBasicInfoFragment extends Fragment implements MediaPlayer
         basicInfo.put(Keys.lookingfor, lookingfor);
 
         String instagram = (instagramTextInputEditText.getText() != null) ?
-                instagramTextInputEditText.getText().toString().trim() : "";
+                Conversions.getConvertedSocialMediaHandle(
+                        instagramTextInputEditText.getText().toString().trim()) : "";
         basicInfo.put(Keys.instagram, instagram);
 
         String facebook = (facebookTextInputEditText.getText() != null) ?
-                facebookTextInputEditText.getText().toString().trim() : "";
+                Conversions.getConvertedSocialMediaHandle(
+                        facebookTextInputEditText.getText().toString().trim()) : "";
         basicInfo.put(Keys.facebook, facebook);
 
         String youtubeChannel = (youtubeTextInputEditText.getText() != null) ?
-                youtubeTextInputEditText.getText().toString().trim() : "";
+                Conversions.getConvertedSocialMediaHandle(
+                        youtubeTextInputEditText.getText().toString().trim()) : "";
         basicInfo.put(Keys.youtube_channel, youtubeChannel);
 
         basicInfo.put(Keys.proximityalert, Boolean.toString(proximityAlertSwitch.isEnabled()));
@@ -548,17 +587,33 @@ public class SoloArtistBasicInfoFragment extends Fragment implements MediaPlayer
     }
 
     private void observeViewModel() {
-        soloArtistViewModel.getQueryingFbPageId().observe(this, (searching) -> {
+        soloArtistViewModel.getIsQueryingApi().observe(this, (searching) -> {
             if (searching) {
                 progressBar.setVisibility(View.VISIBLE);
             }
             else {
                 progressBar.setVisibility(View.GONE);
-                if (soloArtistViewModel.getFacebookPageId().isEmpty()) {
-                    facebookPageValidImageView.setImageDrawable(
-                            getResources().getDrawable(R.drawable.ic_cancel_red_24dp));
+                // Instagram Logic
+                if (TextUtils.isEmpty(soloArtistViewModel.getInstagram())) {
+                    instagramValidImageView.setImageDrawable(fail_icon);
 
-                    if(!facebookTextInputEditText.getText().toString().isEmpty()) {
+                    if(!TextUtils.isEmpty(instagramTextInputEditText.getText().toString())) {
+                        instagramValidImageView.setVisibility(View.VISIBLE);
+                    }
+                    else {
+                        instagramValidImageView.setVisibility(View.INVISIBLE);
+                    }
+                }
+                else {
+                    instagramValidImageView.setImageDrawable(pass_icon);
+                    instagramValidImageView.setVisibility(View.VISIBLE);
+                }
+
+                // Facebook logic
+                if (TextUtils.isEmpty(soloArtistViewModel.getFacebookPageId())) {
+                    facebookPageValidImageView.setImageDrawable(fail_icon);
+
+                    if(!TextUtils.isEmpty(facebookTextInputEditText.getText().toString())) {
                         facebookPageValidImageView.setVisibility(View.VISIBLE);
                     }
                     else {
@@ -566,10 +621,24 @@ public class SoloArtistBasicInfoFragment extends Fragment implements MediaPlayer
                     }
                 }
                 else {
-                    facebookPageValidImageView.setImageDrawable(
-                            getResources().getDrawable(R.drawable.ic_check_circle_green_24dp));
-
+                    facebookPageValidImageView.setImageDrawable(pass_icon);
                     facebookPageValidImageView.setVisibility(View.VISIBLE);
+                }
+
+                // Youtube channel logic
+                if (TextUtils.isEmpty(soloArtistViewModel.getYoutubeChannel())) {
+                    youtubeChannelValidImageView.setImageDrawable(fail_icon);
+
+                    if(!TextUtils.isEmpty(youtubeTextInputEditText.getText().toString())) {
+                        youtubeChannelValidImageView.setVisibility(View.VISIBLE);
+                    }
+                    else {
+                        youtubeChannelValidImageView.setVisibility(View.INVISIBLE);
+                    }
+                }
+                else {
+                    youtubeChannelValidImageView.setImageDrawable(pass_icon);
+                    youtubeChannelValidImageView.setVisibility(View.VISIBLE);
                 }
             }
         });

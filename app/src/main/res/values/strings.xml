@@ -118,4 +118,7 @@
     <string name="no_nearby_users_available">No nearby users available</string>
     <string name="network_unreachable">Network unreachable. Please check your connection.</string>
     <string name="spotify_auth_failed">Spotify authentication failed:</string>
+    <string name="instagram_handle_name">\@HandleName</string>
+    <string name="facebook_page_title">Page Title</string>
+    <string name="youtube_channel_name">AB8cd7efGh57Ijk6lMnopQRs</string>
 </resources>

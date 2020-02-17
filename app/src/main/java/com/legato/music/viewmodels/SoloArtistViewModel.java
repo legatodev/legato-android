@@ -36,7 +36,7 @@ public class SoloArtistViewModel extends ViewModel {
     private String previousAvatarURL = "";
     private FirebaseUser firebaseUser;
 
-    MutableLiveData<Boolean> queryingFbPageId = new MutableLiveData<>();
+    MutableLiveData<Boolean> isQueryingApi = new MutableLiveData<>();
 
     public SoloArtistViewModel(BaseRepository baseRepository) {
         this.baseRepository = baseRepository;
@@ -106,6 +106,10 @@ public class SoloArtistViewModel extends ViewModel {
 
     public void setDescription(String newDescription) { nearbyUser.setDescription(newDescription); }
 
+    public void setInstagram(String handle) {
+        nearbyUser.setInstagram(handle);
+    }
+
     public String getInstagram() {
         return nearbyUser.getInstagram();
     }
@@ -116,12 +120,19 @@ public class SoloArtistViewModel extends ViewModel {
         return nearbyUser.getFacebookPageId();
     }
 
-    public LiveData<Boolean> getQueryingFbPageId() {
-        return queryingFbPageId;
+    public LiveData<Boolean> getIsQueryingApi() {
+        return isQueryingApi;
+    }
+
+    public void queryInstagramHandle(String instagramHandle) {
+        //isQueryingApi.setValue(true);
+        // nearbyUser.setInstagram("");
+
+        // TODO: Need instagram API query logic here.
     }
 
     public void queryFacebookPageId(String facebookPageTitle) {
-        queryingFbPageId.setValue(true);
+        isQueryingApi.setValue(true);
         nearbyUser.setFacebookPageId("");
 
         GraphRequest request = GraphRequest.newGraphPathRequest(
@@ -157,7 +168,7 @@ public class SoloArtistViewModel extends ViewModel {
                     Log.d(TAG, "Unable to find facebook page.\n".concat(e.getMessage()));
                 }
 
-                queryingFbPageId.setValue(false);
+                isQueryingApi.setValue(false);
             });
 
         // Set up the parameters for the API query.
@@ -165,6 +176,17 @@ public class SoloArtistViewModel extends ViewModel {
         parameters.putString("fields", "name,id");
         request.setParameters(parameters);
         request.executeAsync();
+    }
+
+    public void queryYoutubeChannel(String youtubeChannel) {
+        //isQueryingApi.setValue(true);
+        // nearbyUser.setYoutubeChannel("");
+
+        // TODO: Need youtube API query logic here.
+    }
+
+    public void setYoutubeChannel(String youtubeChannelName) {
+        nearbyUser.setYoutubeChannel(youtubeChannelName);
     }
 
     public String getYoutubeChannel() {
