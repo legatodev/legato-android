@@ -23,14 +23,11 @@
         <ImageView
             android:id="@+id/icon_lookingfor"
             style="@style/AppTheme.FilterIcon"
-            android:layout_centerVertical="true"
-            android:tint="@color/greySecondary"
             app:srcCompat="@drawable/ic_lookingfor" />
 
         <Spinner
             android:id="@+id/lookfor"
             style="@style/AppTheme.FilterSpinner"
-            android:layout_centerVertical="true"
             android:layout_toEndOf="@+id/icon_lookingfor"/>
     </RelativeLayout>
 
@@ -41,14 +38,11 @@
         <ImageView
             android:id="@+id/icon_genres"
             style="@style/AppTheme.FilterIcon"
-            android:layout_centerVertical="true"
-            android:tint="@color/greySecondary"
             app:srcCompat="@drawable/ic_genres" />
 
         <Spinner
             android:id="@+id/genres"
             style="@style/AppTheme.FilterSpinner"
-            android:layout_centerVertical="true"
             android:layout_toEndOf="@+id/icon_genres"/>
 
     </RelativeLayout>
@@ -60,14 +54,11 @@
         <ImageView
             android:id="@+id/icon_skills"
             style="@style/AppTheme.FilterIcon"
-            android:layout_centerVertical="true"
-            android:tint="@color/greySecondary"
             app:srcCompat="@drawable/ic_skills" />
 
         <Spinner
             android:id="@+id/skills"
             style="@style/AppTheme.FilterSpinner"
-            android:layout_centerVertical="true"
             android:layout_toEndOf="@+id/icon_skills"/>
 
     </RelativeLayout>
@@ -79,14 +70,11 @@
         <ImageView
             android:id="@+id/icon_sortby"
             style="@style/AppTheme.FilterIcon"
-            android:layout_centerVertical="true"
-            android:tint="@color/greySecondary"
             app:srcCompat="@drawable/ic_sort_white_24px" />
 
         <Spinner
             android:id="@+id/sortby"
             style="@style/AppTheme.FilterSpinner"
-            android:layout_centerVertical="true"
             android:layout_toEndOf="@+id/icon_sortby"/>
 
     </RelativeLayout>

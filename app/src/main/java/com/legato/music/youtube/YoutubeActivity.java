@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.SearchView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -22,13 +23,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.annotations.Nullable;
 
-public class YoutubeActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener, ServerResponseListener {
-
-    @BindView(R.id.yt_video_edt)
-    @Nullable EditText mYtVideoEdt;
-
-    @BindView(R.id.yt_video_btn)
-    @Nullable Button mYtVideoBtn;
+public class YoutubeActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, ServerResponseListener, SearchView.OnQueryTextListener {
 
     @BindView(R.id.yt_video_lsv)
     @Nullable ListView mYtVideoLsv;
@@ -37,6 +32,9 @@ public class YoutubeActivity extends AppCompatActivity implements View.OnClickLi
     @Nullable private ServiceTask mYtServiceTask = null;
     @BindView(R.id.youtubeProgressBar)
     @Nullable ProgressBar mLoadingDialog = null;
+
+    @BindView(R.id.youtube_search_view)
+    SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,28 +49,11 @@ public class YoutubeActivity extends AppCompatActivity implements View.OnClickLi
      * Method that initializes views from the activity's content layout
      */
     private void initializeViews() {
-        if (mYtVideoBtn != null)
-            mYtVideoBtn.setOnClickListener(this);
+        // Setup search field
+        searchView.setOnQueryTextListener(this);
+
         if (mYtVideoLsv != null)
             mYtVideoLsv.setOnItemClickListener(this);
-    }
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.yt_video_btn:
-                if (mYtVideoEdt != null) {
-                    final String keyWord = mYtVideoEdt.getText().toString().trim();
-                    if (keyWord.length() > 0) {
-
-                        // Service to search video
-                        mYtServiceTask = new ServiceTask(SEARCH_VIDEO, getResources().getString(R.string.google_api_key));
-                        mYtServiceTask.setServerResponseListener(this);
-                        mYtServiceTask.execute(new String[]{keyWord});
-                    }
-                }
-                break;
-        }
     }
 
     @Override
@@ -150,5 +131,25 @@ public class YoutubeActivity extends AppCompatActivity implements View.OnClickLi
             progressBar.setVisibility(View.GONE);
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         }
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        final String keyWord = query;
+        if (keyWord.length() > 0) {
+
+            // Service to search video
+            mYtServiceTask = new ServiceTask(SEARCH_VIDEO, getResources().getString(R.string.google_api_key));
+            mYtServiceTask.setServerResponseListener(this);
+            mYtServiceTask.execute(new String[]{keyWord});
+        }
+
+        searchView.clearFocus();
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        return false;
     }
 }

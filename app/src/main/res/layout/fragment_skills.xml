@@ -15,15 +15,11 @@
     <Button
         android:id="@+id/addSkillButton"
         android:background="@drawable/rounded_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_margin="@dimen/std_margin"
-        android:clickable="true"
-        android:focusable="true"
         android:layout_below="@+id/skillsRecyclerView"
         android:text="@string/add_skill"
-        android:textColor="@color/white"/>
+        style="@style/stdButton"/>
 
     <Button
         android:id="@+id/finishSoloRegistrationButton"

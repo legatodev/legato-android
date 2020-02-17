@@ -15,26 +15,11 @@
         android:indeterminate="true"
         android:visibility="gone"/>
 
-    <LinearLayout
-        android:id="@+id/yt_search_layout"
+    <SearchView
+        android:id="@+id/youtube_search_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <EditText
-            android:id="@+id/yt_video_edt"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:inputType="textUri" />
-
-        <Button
-            android:id="@+id/yt_video_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/search" />
-    </LinearLayout>
+        android:iconifiedByDefault="false"/>
 
     <ListView
         android:id="@+id/yt_video_lsv"
@@ -42,6 +27,6 @@
         android:layout_height="wrap_content"
         android:dividerHeight="-1dp"
         android:layout_marginTop="@dimen/std_margin"
-        android:layout_below="@id/yt_search_layout">
+        android:layout_below="@id/youtube_search_view">
     </ListView>
 </RelativeLayout>

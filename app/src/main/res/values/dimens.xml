@@ -5,6 +5,8 @@
           activity_youtube; fragment_skills; fragment_user_profile; item_band_members-->
     <dimen name="std_margin">8dp</dimen>
 
+    <dimen name="std_marginVerySmall">2dp</dimen>
+
     <!-- fragment_solo_artist_basic_info; fragment_user_profile; item_nearbyuser -->
     <dimen name="std_marginSmall">4dp</dimen>
 

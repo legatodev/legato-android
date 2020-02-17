@@ -4,7 +4,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
-        xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/youtube_recycler_item"
         android:layout_width="match_parent"
@@ -12,7 +11,7 @@
         app:autoPlay="false"
         app:showFullScreenButton="false"
         app:useWebUi="true"
-        android:layout_marginRight="@dimen/std_marginSmall"/>
+        android:layout_marginEnd="@dimen/std_marginSmall"/>
 
     <ImageView
         android:id="@+id/deleteYoutubeVideoImageView"

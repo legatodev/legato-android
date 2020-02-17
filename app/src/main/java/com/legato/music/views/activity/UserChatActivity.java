@@ -7,11 +7,14 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.legato.music.repositories.BaseRepository;
 import com.legato.music.viewmodels.NearbyUsersViewModel;
 import com.legato.music.viewmodels.UserProfileViewModel;
+import com.legato.music.viewmodels.UserProfileViewModelFactory;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import co.chatsdk.core.dao.Keys;
 import co.chatsdk.core.dao.User;
@@ -26,7 +29,7 @@ public class UserChatActivity extends ChatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mUserProfileViewModel = ViewModelProviders.of(this).get(UserProfileViewModel.class);
+        mUserProfileViewModel = getViewModel();
 
         if (thread.typeIs(ThreadType.Private1to1)) {
             User currentUser = ChatSDK.currentUser();
@@ -43,5 +46,12 @@ public class UserChatActivity extends ChatActivity {
             }
         }
         }
+    }
+
+    @NonNull
+    private UserProfileViewModel getViewModel() {
+        BaseRepository baseRepository = BaseRepository.getInstance();
+        ViewModelProvider.Factory factory = new UserProfileViewModelFactory(baseRepository);
+        return ViewModelProviders.of(this, factory).get(UserProfileViewModel.class);
     }
 }

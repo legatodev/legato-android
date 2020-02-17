@@ -7,15 +7,11 @@
     android:gravity="center">
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         style="@style/socialMediaBig"
         app:srcCompat="@drawable/ic_spotify_icon"
         android:id="@+id/addSpotifyImageView"/>
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         style="@style/socialMediaBig"
         app:srcCompat="@drawable/ic_youtube_icon"
         android:id="@+id/addYoutubeImageView"/>

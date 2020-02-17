@@ -7,7 +7,7 @@
 
     <ImageView
         android:id="@+id/entity_image"
-        style="@style/thumbnailImage"
+        style="@style/trackThumbnailImage"
         android:contentDescription="@string/cover_art_description"/>
 
     <LinearLayout
