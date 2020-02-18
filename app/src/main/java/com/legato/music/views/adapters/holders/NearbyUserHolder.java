@@ -173,6 +173,7 @@ public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.On
         this.nearbyUser = nearbyUser;
         initializeView();
         final int TRIM_STRING_LENGTH = 25;
+        final int TRIM_NAME_LENGTH = 42;
 
         if (this.nearbyUser != null) {
             if (!TextUtils.isEmpty(this.nearbyUser.getAvatarUrl())) {
@@ -188,7 +189,7 @@ public class NearbyUserHolder extends RecyclerView.ViewHolder implements View.On
             }
 
             if (this.nearbyUser.getUsername() != null)
-                setTextView(this.nearbyUserName, getTrimString(this.nearbyUser.getUsername(), TRIM_STRING_LENGTH));
+                setTextView(this.nearbyUserName, getTrimString(this.nearbyUser.getUsername(), TRIM_NAME_LENGTH));
             if (this.nearbyUser.getDistance() != null)
                setTextView(this.nearbyUserDistance, this.nearbyUser.getDistance() + " mi");
             if (this.nearbyUser.getGenres() != null)
