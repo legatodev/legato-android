@@ -120,9 +120,6 @@ public class UserProfileFragment extends BaseFragment {
     @BindView(R.id.addOrRemoveContactImageButton)
     protected Button addOrRemoveContactImageButton;
 
-    @BindView(R.id.appVersionTextView)
-    protected TextView appVersionTextView;
-
     @BindView(R.id.privacyPolicyButton)
     protected Button privacyPolicyButton;
 
@@ -314,9 +311,6 @@ public class UserProfileFragment extends BaseFragment {
             } else {
                 addOrRemoveContactImageButton.setVisibility(View.GONE);
             }
-
-            appVersionTextView.setText(
-                    getResources().getString(R.string.app_version) + ": " + BuildConfig.VERSION_NAME);
         }
     }
 

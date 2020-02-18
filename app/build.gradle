@@ -6,6 +6,10 @@ apply plugin: 'io.fabric'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
 
+def versionMajor = 1
+def versionMinor = 15
+def versionPatch = 1
+
 android {
     signingConfigs {
     }
@@ -19,8 +23,8 @@ android {
         applicationId "com.legato.music"
         minSdkVersion 17
         targetSdkVersion 28
-        versionCode 14
-        versionName "1.13"
+        versionCode versionMajor * 10000 + versionMinor * 100 + versionPatch
+        versionName "${versionMajor}.${versionMinor}.${versionPatch}"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
@@ -31,6 +35,7 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.debug
+            resValue "string", "app_version", "${defaultConfig.versionName}"
         }
         debug {
             signingConfig signingConfigs.debug
@@ -44,6 +49,8 @@ android {
             buildConfigField "String", "projectId", fireProperties['projectId']
             buildConfigField "String", "databaseUrl", fireProperties['databaseUrl']
 
+            versionNameSuffix ".debug"
+            resValue "string", "app_version", "${defaultConfig.versionName}${versionNameSuffix}"
         }
     }
 

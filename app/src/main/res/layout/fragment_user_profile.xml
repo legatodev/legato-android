@@ -242,7 +242,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/appVersionTextView"
-                        android:layout_gravity="center_horizontal"/>
+                        android:layout_gravity="center_horizontal"
+                        android:text="@string/app_version"/>
 
                     <Button
                         android:layout_width="wrap_content"
