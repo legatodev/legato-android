@@ -108,8 +108,6 @@ public class UserProfileFragment extends BaseFragment {
     protected TextView profileUserNameTextView;
     @BindView(R.id.logoutButton)
     protected Button logoutButton;
-    @BindView(R.id.deleteAccountButton)
-    protected Button deleteAccountButton;
     @BindView(R.id.mediaRecyclerView)
     protected RecyclerView mediaRecyclerView;
     @BindView(R.id.mediaGalleryLayout)
@@ -179,7 +177,6 @@ public class UserProfileFragment extends BaseFragment {
         if (textView != null) textView.setText(text);
     }
 
-    @OnClick(R.id.deleteAccountButton)
     public void onDeleteAccountClicked(View view) {
         AlertDialog deleteDialog = new AlertDialog.Builder(getContext())
                 .setMessage(getContext().getResources().getString(R.string.alert_delete_account))
@@ -227,7 +224,6 @@ public class UserProfileFragment extends BaseFragment {
 
         editProfileButton.setVisibility(isCurrentUser ? View.VISIBLE : View.GONE);
         logoutButton.setVisibility(isCurrentUser ? View.VISIBLE : View.GONE);
-        deleteAccountButton.setVisibility(isCurrentUser ? View.VISIBLE : View.GONE);
         privacyPolicyCardView.setVisibility(isCurrentUser ? View.VISIBLE : View.GONE);
 
         setHasOptionsMenu(isCurrentUser);

@@ -257,15 +257,6 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <Button
-                android:id="@+id/deleteAccountButton"
-                style="@style/bigButton"
-                android:text="@string/delete_account"
-                android:layout_below="@+id/privacyPolicyCardView"
-                android:visibility="gone"
-                android:background="@color/red"
-                android:layout_marginBottom="@dimen/std_marginSmall"/>
-
         </RelativeLayout>
     </ScrollView>
 
