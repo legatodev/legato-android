@@ -23,7 +23,6 @@ public class TrackPlayer implements Player, MediaPlayer.OnCompletionListener {
     private static final String TAG = TrackPlayer.class.getSimpleName();
 
     @Nullable private MediaPlayer mMediaPlayer;
-    @Nullable private String mCurrentTrack;
     @Nullable private SpotifyAppRemote mSpotifyAppRemote;
     private Context mContext;
 
@@ -38,7 +37,6 @@ public class TrackPlayer implements Player, MediaPlayer.OnCompletionListener {
         @Override
         public void onPrepared(MediaPlayer mp) {
             mp.start();
-            mCurrentTrack = mUrl;
         }
     }
 
@@ -64,7 +62,6 @@ public class TrackPlayer implements Player, MediaPlayer.OnCompletionListener {
 
         try {
             createMediaPlayer(url);
-            mCurrentTrack = url;
         } catch (IOException e) {
             Log.e(TAG, "Could not play: " + url, e);
         }
@@ -85,7 +82,6 @@ public class TrackPlayer implements Player, MediaPlayer.OnCompletionListener {
         if (mMediaPlayer != null) {
             mMediaPlayer.release();
             mMediaPlayer = null;
-            mCurrentTrack = null;
         } else if (mSpotifyAppRemote != null) {
             mSpotifyAppRemote.getPlayerApi().pause();
             SpotifyAppRemote.disconnect(mSpotifyAppRemote);

@@ -1,6 +1,11 @@
 package com.legato.music.views.adapters;
 
 
+import android.app.Activity;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.ServiceConnection;
+import android.os.IBinder;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +14,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,6 +25,7 @@ import com.google.common.base.Joiner;
 import com.legato.music.AppConstants;
 import com.legato.music.R;
 import com.legato.music.spotify.Player;
+import com.legato.music.spotify.PlayerService;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
@@ -47,14 +54,19 @@ public class MediaPlayerAdapter extends RecyclerView.Adapter<MediaPlayerAdapter.
     protected Lifecycle lifecycle;
     @Nullable private SpotifyService spotifyService;
     @Nullable private final TrackRemovedListener mOnTrackRemovedListener;
-    @Nullable private Player playerService;
     private boolean editing = false;
     private final int YOUTUBE = 0, SPOTIFY = 1;
+    @Nullable private Player mPlayerBoundService;
+    Context context;
 
-    public MediaPlayerAdapter(List<String> trackIds,
+    @Nullable private ServiceConnection mServiceConnection = null;
+
+    public MediaPlayerAdapter(Context context,
+                              List<String> trackIds,
                               Lifecycle lifecycle,
                               boolean editing,
                               @Nullable TrackRemovedListener onTrackRemovedListener) {
+        this.context = context;
         this.trackIds = trackIds;
         this.lifecycle = lifecycle;
         this.editing = editing;
@@ -62,18 +74,51 @@ public class MediaPlayerAdapter extends RecyclerView.Adapter<MediaPlayerAdapter.
     }
 
     public MediaPlayerAdapter(
+            Context context,
             List<String> trackIds,
             Lifecycle lifecycle,
             @Nullable SpotifyService spotifyService,
-            @Nullable Player playerService,
             boolean editing,
             @Nullable TrackRemovedListener onTrackRemovedListener) {
+        this.context = context;
         this.trackIds = trackIds;
         this.lifecycle = lifecycle;
         this.spotifyService = spotifyService;
-        this.playerService = playerService;
         this.editing = editing;
         this.mOnTrackRemovedListener = onTrackRemovedListener;
+        this.mServiceConnection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                mPlayerBoundService = ((PlayerService.PlayerBinder) service).getService();
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+                mPlayerBoundService = null;
+            }
+        };
+    }
+
+    public void doBindService() {
+        context.bindService(
+                PlayerService.getIntent(context),
+                mServiceConnection,
+                Activity.BIND_AUTO_CREATE);
+    }
+
+    public void doUnbindService() {
+        if (mPlayerBoundService != null) {
+            mPlayerBoundService.pause();
+            context.unbindService(mServiceConnection);
+            mServiceConnection = null;
+        }
+    }
+
+    @Override
+    public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView);
+        if (mPlayerBoundService != null)
+            mPlayerBoundService.release();
     }
 
     @NonNull
@@ -93,7 +138,7 @@ public class MediaPlayerAdapter extends RecyclerView.Adapter<MediaPlayerAdapter.
                     .from(parent.getContext())
                     .inflate(R.layout.item_spotify_track, parent, false);
 
-            return new SpotifyViewHolder(spotifyTrackView, spotifyService, playerService);
+            return new SpotifyViewHolder(spotifyTrackView, spotifyService);
         }
     }
 
@@ -173,9 +218,8 @@ public class MediaPlayerAdapter extends RecyclerView.Adapter<MediaPlayerAdapter.
         private TextView trackTitle;
         private TextView trackArtist;
         @Nullable private SpotifyService mSpotifyService;
-        @Nullable private Player mPlayerService;
 
-        SpotifyViewHolder(FrameLayout view, @Nullable SpotifyService spotifyService, @Nullable Player playerService) {
+        SpotifyViewHolder(FrameLayout view, @Nullable SpotifyService spotifyService) {
             super(view);
             spotifyTrackView = view;
             albumCover = spotifyTrackView.findViewById(R.id.track_album_cover);
@@ -193,7 +237,6 @@ public class MediaPlayerAdapter extends RecyclerView.Adapter<MediaPlayerAdapter.
             }
 
             mSpotifyService = spotifyService;
-            mPlayerService = playerService;
         }
 
         void cueTrack(String track) {
@@ -216,10 +259,11 @@ public class MediaPlayerAdapter extends RecyclerView.Adapter<MediaPlayerAdapter.
                         trackTitle.setText(trackName);
                         trackArtist.setText(artist);
                         spotifyTrackView.setOnClickListener(v -> {
-                            if (mPlayerService != null) {
-                                mPlayerService.playTrack(track);
-                            } else {
-                                Log.e(TAG, "Player not initialized");
+                            if (mPlayerBoundService != null)
+                                mPlayerBoundService.playTrack(track);
+                            else {
+                                Toast.makeText(spotifyTrackView.getContext(), "Spotify Player Service not yet initialized", Toast.LENGTH_SHORT);
+                                Log.e(TAG, "Spotify Player Service not yet initialized");
                             }
                         });
                     }

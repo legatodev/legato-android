@@ -3,6 +3,7 @@ package com.legato.music.views.fragments;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -74,7 +75,6 @@ import co.chatsdk.core.events.EventType;
 import co.chatsdk.core.events.NetworkEvent;
 import co.chatsdk.core.interfaces.ThreadType;
 import co.chatsdk.core.session.ChatSDK;
-import co.chatsdk.core.types.AccountDetails;
 import co.chatsdk.core.types.ConnectionType;
 import co.chatsdk.core.utils.DisposableList;
 import co.chatsdk.ui.main.BaseFragment;
@@ -150,22 +150,7 @@ public class UserProfileFragment extends BaseFragment {
 
     private List<String> trackIds = new ArrayList<>();
 
-    @androidx.annotation.Nullable
-    private Player mPlayerBoundService;
-    private boolean mSpotifyPlayerBound = false;
     private boolean initializingSpotify = false;
-
-    private ServiceConnection mServiceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            mPlayerBoundService = ((PlayerService.PlayerBinder) service).getService();
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            mPlayerBoundService = null;
-        }
-    };
 
     @Override
     public View onCreateView(
@@ -178,7 +163,6 @@ public class UserProfileFragment extends BaseFragment {
         ButterKnife.bind(this, mainView);
 
         userProfileViewModel = getViewModel();
-        doBindService();
 
         return mainView;
     }
@@ -326,6 +310,7 @@ public class UserProfileFragment extends BaseFragment {
                 } else {
                     if (!trackIds.isEmpty()) {
                         mediaPlayerAdapter = new MediaPlayerAdapter(
+                                getContext(),
                                 trackIds,
                                 this.getLifecycle(),
                                 false,
@@ -381,6 +366,7 @@ public class UserProfileFragment extends BaseFragment {
                     default:
                         // Handle other cases
                         mediaPlayerAdapter = new MediaPlayerAdapter(
+                                getContext(),
                                 trackIds,
                                 this.getLifecycle(),
                                 false,
@@ -401,14 +387,15 @@ public class UserProfileFragment extends BaseFragment {
             SpotifyService spotifyService = spotifyApi.getService();
             //TODO: this should only be created when mPlayerBoundService has been initialized.
             mediaPlayerAdapter = new MediaPlayerAdapter(
+                    getContext(),
                     trackIds,
                     this.getLifecycle(),
                     spotifyService,
-                    mPlayerBoundService,
                     false,
                     null);
         } else{
             mediaPlayerAdapter = new MediaPlayerAdapter(
+                    getContext(),
                     trackIds,
                     this.getLifecycle(),
                     false,
@@ -417,22 +404,6 @@ public class UserProfileFragment extends BaseFragment {
 
         mediaRecyclerView.setAdapter(mediaPlayerAdapter);
         mediaGalleryView.setVisibility(View.VISIBLE);
-    }
-
-    private void doBindService() {
-        if (getContext().bindService(
-                PlayerService.getIntent(getContext()),
-                mServiceConnection,
-                Activity.BIND_AUTO_CREATE)) {
-            mSpotifyPlayerBound = true;
-        }
-    }
-
-    private void doUnbindService() {
-        if (mSpotifyPlayerBound) {
-            getContext().unbindService(mServiceConnection);
-            mSpotifyPlayerBound = false;
-        }
     }
 
     @OnClick(R.id.privacyPolicyButton)
@@ -594,6 +565,10 @@ public class UserProfileFragment extends BaseFragment {
         super.onResume();
 
         updateInterface();
+        if (mediaPlayerAdapter != null)
+            mediaPlayerAdapter.doBindService();
+        else
+            Log.e(TAG, "MediaPlayer Adapter is null");
     }
 
     @Override
@@ -643,9 +618,18 @@ public class UserProfileFragment extends BaseFragment {
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+
+        if (mediaPlayerAdapter != null)
+            mediaPlayerAdapter.doUnbindService();
+        else
+            Log.e(TAG, "MediaPlayer Adapter is null");
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
-        doUnbindService();
         disposableList.dispose();
     }
 

@@ -3,6 +3,7 @@ package com.legato.music.views.fragments;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.res.Resources;
@@ -62,7 +63,6 @@ import butterknife.OnClick;
 import co.chatsdk.core.session.ChatSDK;
 import co.chatsdk.core.utils.DisposableList;
 import co.chatsdk.ui.chat.MediaSelector;
-import co.chatsdk.ui.utils.ImagePickerUploader;
 import co.chatsdk.ui.utils.ToastHelper;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import kaaes.spotify.webapi.android.SpotifyApi;
@@ -103,25 +103,11 @@ public class SoloArtistBasicInfoFragment extends Fragment implements MediaPlayer
 
     @Nullable private MediaPlayerAdapter mediaPlayerAdapter;
 
-    @Nullable private Player mPlayerBoundService;
-    private boolean mSpotifyPlayerBound = false;
     private boolean mSearchSpotifyTrack = false;
     private String mAvatartUrl = "";
     private DisposableList disposableList = new DisposableList();
 
     List<String> trackIds = new ArrayList<>();
-
-    private ServiceConnection mServiceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            mPlayerBoundService = ((PlayerService.PlayerBinder) service).getService();
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            mPlayerBoundService = null;
-        }
-    };
 
     private MediaSelector mediaSelector;
 
@@ -141,7 +127,6 @@ public class SoloArtistBasicInfoFragment extends Fragment implements MediaPlayer
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container,
                              Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.fragment_solo_artist_basic_info, container, false);
         ButterKnife.bind(this, view);
 
@@ -297,6 +282,10 @@ public class SoloArtistBasicInfoFragment extends Fragment implements MediaPlayer
         super.onResume();
 
         validate();
+        if (mediaPlayerAdapter != null)
+            mediaPlayerAdapter.doBindService();
+        else
+            Log.e(TAG, "MediaPlayer Adapter is null");
     }
 
     private void setImageURI(@Nullable SimpleDraweeView view, @Nullable String uri) {
@@ -453,10 +442,11 @@ public class SoloArtistBasicInfoFragment extends Fragment implements MediaPlayer
                         Log.e(TAG, errorString);
                         Toast.makeText(getContext(), errorString, Toast.LENGTH_LONG).show();
 
-                    // Most likely auth flow was cancelled
+                        // Most likely auth flow was cancelled
                     default:
                         // Handle other cases
                         mediaPlayerAdapter = new MediaPlayerAdapter(
+                                getContext(),
                                 trackIds,
                                 this.getLifecycle(),
                                 true,
@@ -483,24 +473,24 @@ public class SoloArtistBasicInfoFragment extends Fragment implements MediaPlayer
     private void addSpotifyTracks() {
         String spotifyAccessToken = soloArtistViewModel.getSpotifyAccessToken();
         if (!spotifyAccessToken.isEmpty()) {
-            doBindService();
             trackIds.addAll(soloArtistViewModel.getSpotifyTrackIds());
             SpotifyApi spotifyApi = new SpotifyApi();
             spotifyApi.setAccessToken(spotifyAccessToken);
             SpotifyService spotifyService = spotifyApi.getService();
             mediaPlayerAdapter = new MediaPlayerAdapter(
+                    getContext(),
                     trackIds,
                     this.getLifecycle(),
                     spotifyService,
-                    mPlayerBoundService,
                     true,
                     this);
         } else {
             mediaPlayerAdapter = new MediaPlayerAdapter(
-                trackIds,
-                this.getLifecycle(),
-                true,
-                this);
+                    getContext(),
+                    trackIds,
+                    this.getLifecycle(),
+                    true,
+                    this);
         }
 
         mediaRecyclerView.setAdapter(mediaPlayerAdapter);
@@ -533,6 +523,7 @@ public class SoloArtistBasicInfoFragment extends Fragment implements MediaPlayer
                 spotifyInitialize();
             } else {
                 mediaPlayerAdapter = new MediaPlayerAdapter(
+                        getContext(),
                         trackIds,
                         this.getLifecycle(),
                         true,
@@ -558,30 +549,21 @@ public class SoloArtistBasicInfoFragment extends Fragment implements MediaPlayer
         }
     }
 
-    private void doBindService() {
-        if (getContext().bindService(
-                PlayerService.getIntent(getContext()),
-                mServiceConnection,
-                Activity.BIND_AUTO_CREATE)) {
-            mSpotifyPlayerBound = true;
-        }
-    }
-
-    private void doUnbindService() {
-        if (mSpotifyPlayerBound) {
-            getContext().unbindService(mServiceConnection);
-            mSpotifyPlayerBound = false;
-        }
-    }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
 
         disposableList.dispose();
-        doUnbindService();
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (mediaPlayerAdapter != null)
+            mediaPlayerAdapter.doUnbindService();
+        else
+            Log.e(TAG, "MediaPlayer Adapter is null");
+    }
 
     @Override
     public void onTrackRemoved(View v, int position) {
