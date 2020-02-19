@@ -25,11 +25,13 @@ public class SkillsViewModel extends ViewModel {
     private NearbyUser nearbyUser;
 
     private ArrayList<Skill> mSkillArrayList = new ArrayList<>();
+    private List<String> mNoInstrumentList;
     private boolean mSkillSelected = false;
     private static final int MAX_SKILLS = 6;
 
-    public SkillsViewModel(BaseRepository baseRepository) {
+    public SkillsViewModel(BaseRepository baseRepository, List<String> noInstrumentList) {
         mBaseRepository = baseRepository;
+        mNoInstrumentList = noInstrumentList;
 
         nearbyUser = mBaseRepository.getCurrentUser();
     }
@@ -157,7 +159,13 @@ public class SkillsViewModel extends ViewModel {
             if (skill.getOwnsInstrument()) {
                 ownsInstrument = "Yes";
             }
-            skillString += (skill.getSkill() + "(" + ownsInstrument + ")" + " - " + skill.getSkillLevel() + "|");
+
+            if(mNoInstrumentList.contains(skill.getSkill())) {
+                skillString += (skill.getSkill() + " - " + skill.getSkillLevel() + "|");
+            }
+            else {
+                skillString += (skill.getSkill() + "(" + ownsInstrument + ")" + " - " + skill.getSkillLevel() + "|");
+            }
         }
         return skillString;
     }

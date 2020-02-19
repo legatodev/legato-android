@@ -149,6 +149,7 @@ public class SoloRegistrationActivity extends AppCompatActivity implements Skill
     public void submitData() {
         HashMap<String, String> profileInfo = soloRegistrationTab.extractData();
         profileInfo.put(Keys.genres, genresTab.extractData());
+
         profileInfo.put(Keys.skills, skillsTab.extractData());
 
         if (soloArtistViewModel != null) {

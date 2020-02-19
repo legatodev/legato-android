@@ -23,6 +23,8 @@ import com.legato.music.viewmodels.SkillsViewModel;
 import com.legato.music.viewmodels.SkillsViewModelFactory;
 import com.legato.music.views.adapters.SkillsAdapter;
 
+import java.util.Arrays;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -147,7 +149,9 @@ public class SkillsFragment extends Fragment implements View.OnClickListener, Sk
     @NonNull
     private SkillsViewModel getViewModel() {
         BaseRepository baseRepository = BaseRepository.getInstance();
-        ViewModelProvider.Factory factory = new SkillsViewModelFactory(baseRepository);
+        ViewModelProvider.Factory factory = new SkillsViewModelFactory(
+                baseRepository,
+                Arrays.asList(getResources().getStringArray(R.array.no_instrument)));
         return ViewModelProviders.of(requireActivity(), factory).get(SkillsViewModel.class);
     }
 }
