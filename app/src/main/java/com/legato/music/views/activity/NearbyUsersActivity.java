@@ -330,8 +330,14 @@ public class NearbyUsersActivity extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-
+        mNearbyUsersAdapter.notifyDataSetChanged();
         getLastLocation();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mNearbyUsersAdapter.clearNearbyUsers();
     }
 
     @Override

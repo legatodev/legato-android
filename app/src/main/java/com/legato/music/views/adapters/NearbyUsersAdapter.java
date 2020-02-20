@@ -44,8 +44,12 @@ public class NearbyUsersAdapter extends RecyclerView.Adapter<NearbyUserHolder> {
     }
 
     public void setFilters(Filters filters) {
-
         this.mfilters = filters;
+    }
+
+    public void clearNearbyUsers() {
+        if(mNearbyUsers != null)
+            mNearbyUsers.clear();
     }
 
     public void updateNearbyUsers(List<NearbyUser> nearbyusers){
