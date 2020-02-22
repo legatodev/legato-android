@@ -41,7 +41,7 @@
             <SeekBar
                 android:id="@+id/skillLevelSlider1"
                 style="@style/seekBar"
-                android:max="10"
+                android:max="9"
                 android:layout_toEndOf="@+id/skillLevelLabel1"
                 android:layout_below="@id/skillsSpinner1"/>
 

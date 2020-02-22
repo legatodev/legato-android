@@ -58,6 +58,13 @@ public class SkillsViewModel extends ViewModel {
                 for (int j = 0; j < currentSkillsArray.length; j++) {
                     if (currentSkillsArray[j].contains(skillsArr[i])) {
                         String skillLevel = getSkillLevel(currentSkillsArray[j]);
+                        if(Integer.parseInt(skillLevel) < 1) {
+                            skillLevel = "1";
+                        }
+                        if (Integer.parseInt(skillLevel) > 10) {
+                            skillLevel = "10";
+                        }
+
                         if (!skillLevel.isEmpty()) {
                             String skillString = getSkill(currentSkillsArray[j]);
                             boolean ownsInstrument = getOwnsInstrument(currentSkillsArray[j]);

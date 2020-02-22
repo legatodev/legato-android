@@ -59,6 +59,11 @@ public class SkillsAdapter extends RecyclerView.Adapter<SkillsAdapter.SkillsHold
     @Override
     public void onBindViewHolder(@NonNull SkillsHolder holder, int position) {
         Skill skill = this.skills.get(position);
+
+        // Since we save the skills as a range [1,10], we need to subtract 1 to match the
+        // seek bar progress range limited to [0,9]
+        skill.setSkillLevel(skill.getSkillLevel() - 1);
+
         holder.bindSkill(skill);
     }
 
@@ -94,9 +99,14 @@ public class SkillsAdapter extends RecyclerView.Adapter<SkillsAdapter.SkillsHold
                 mSkillLevelSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                     @Override
                     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                        // The SeekBar progress range is limited to [0,9],
+                        // so we need to add 1 to the view so the user sees [1,10]
+                        progress += 1;
+
                         if (mSkillLevelValueTextView != null) {
                             mSkillLevelValueTextView.setText(progress + "");
                         }
+
                         skills.get(getAdapterPosition()).setSkillLevel(progress);
                     }
 
@@ -169,9 +179,12 @@ public class SkillsAdapter extends RecyclerView.Adapter<SkillsAdapter.SkillsHold
                 mSkillLevelSeekBar != null &&
                 mOwnsInstrumentSwitch != null) {
 
-                return (new Skill(mSkillSpinner.getSelectedItem().toString(),
-                                                 mSkillLevelSeekBar.getProgress(),
-                                                 mOwnsInstrumentSwitch.isChecked()));
+                // Returning the skill levels with range [1,10]
+                return (
+                    new Skill(
+                        mSkillSpinner.getSelectedItem().toString(),
+                        mSkillLevelSeekBar.getProgress() + 1,
+                        mOwnsInstrumentSwitch.isChecked()));
             }
             return null;
         }
