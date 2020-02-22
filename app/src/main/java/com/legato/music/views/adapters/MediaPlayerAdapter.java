@@ -121,7 +121,6 @@ public class MediaPlayerAdapter extends RecyclerView.Adapter<MediaPlayerAdapter.
         if (mPlayerBoundService != null) {
             mPlayerBoundService.pause();
             context.unbindService(mServiceConnection);
-            mServiceConnection = null;
         }
     }
 
