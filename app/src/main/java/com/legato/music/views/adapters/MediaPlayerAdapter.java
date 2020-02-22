@@ -71,6 +71,17 @@ public class MediaPlayerAdapter extends RecyclerView.Adapter<MediaPlayerAdapter.
         this.lifecycle = lifecycle;
         this.editing = editing;
         this.mOnTrackRemovedListener = onTrackRemovedListener;
+        this.mServiceConnection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                mPlayerBoundService = ((PlayerService.PlayerBinder) service).getService();
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+                mPlayerBoundService = null;
+            }
+        };
     }
 
     public MediaPlayerAdapter(
