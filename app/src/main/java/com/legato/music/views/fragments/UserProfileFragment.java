@@ -561,10 +561,6 @@ public class UserProfileFragment extends BaseFragment {
         super.onResume();
 
         updateInterface();
-        if (mediaPlayerAdapter != null)
-            mediaPlayerAdapter.doBindService();
-        else
-            Log.e(TAG, "MediaPlayer Adapter is null");
     }
 
     @Override

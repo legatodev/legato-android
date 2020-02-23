@@ -282,10 +282,6 @@ public class SoloArtistBasicInfoFragment extends Fragment implements MediaPlayer
         super.onResume();
 
         validate();
-        if (mediaPlayerAdapter != null)
-            mediaPlayerAdapter.doBindService();
-        else
-            Log.e(TAG, "MediaPlayer Adapter is null");
     }
 
     private void setImageURI(@Nullable SimpleDraweeView view, @Nullable String uri) {

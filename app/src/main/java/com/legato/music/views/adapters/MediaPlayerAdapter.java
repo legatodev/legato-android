@@ -82,6 +82,8 @@ public class MediaPlayerAdapter extends RecyclerView.Adapter<MediaPlayerAdapter.
                 mPlayerBoundService = null;
             }
         };
+
+        doBindService();
     }
 
     public MediaPlayerAdapter(
@@ -108,6 +110,8 @@ public class MediaPlayerAdapter extends RecyclerView.Adapter<MediaPlayerAdapter.
                 mPlayerBoundService = null;
             }
         };
+
+        doBindService();
     }
 
     public void doBindService() {
@@ -128,7 +132,7 @@ public class MediaPlayerAdapter extends RecyclerView.Adapter<MediaPlayerAdapter.
     public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
         super.onDetachedFromRecyclerView(recyclerView);
         if (mPlayerBoundService != null)
-            mPlayerBoundService.release();
+            mPlayerBoundService.pause();
     }
 
     @NonNull
