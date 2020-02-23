@@ -217,18 +217,22 @@ public class SoloRegistrationActivity extends AppCompatActivity implements Skill
 
     private void deleteProfilePic(String avatarUrl) {
         FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReferenceFromUrl(avatarUrl);
-        storageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                Log.d(TAG, "onSuccess: deleted file");
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                Log.d(TAG, "onFailure: did not delete file");
-            }
-        });
+        try {
+             StorageReference storageRef = storage.getReferenceFromUrl(avatarUrl);
+             storageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    Log.d(TAG, "onSuccess: deleted file");
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    Log.d(TAG, "onFailure: did not delete file");
+                }
+            });
+        }catch (Exception e){
+            Log.e(TAG, "The storage Uri could not be parsed.");
+        }
     }
 
     @Override
