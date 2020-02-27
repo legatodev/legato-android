@@ -54,8 +54,9 @@ public class UserProfileViewModel extends ViewModel {
     }
 
     public NearbyUser getUserByEntityId(String entityId) {
-        nearbyUser.setUser(baseRepository.getUserByEntityId(entityId));
-        nearbyUser.setDistance(baseRepository.getDistanceFromCurrentUser());
+        User user = baseRepository.getUserByEntityId(entityId);
+        nearbyUser.setUser(user);
+        nearbyUser.setDistance(baseRepository.getDistanceFromCurrentUser(user));
 
         return nearbyUser;
     }

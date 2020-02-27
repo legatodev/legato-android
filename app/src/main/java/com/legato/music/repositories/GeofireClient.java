@@ -140,7 +140,7 @@ class GeofireClient {
             return mNearHashMap.get(userEntityId).getDistance();
         }else{
             Log.e(TAG,"User not available in nearbyusers list");
-            return "NA";
+            return ">100";
         }
     }
 }

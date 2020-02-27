@@ -24,8 +24,6 @@ import co.chatsdk.core.session.Configuration;
 import co.chatsdk.firebase.FirebaseNetworkAdapter;
 import co.chatsdk.firebase.file_storage.FirebaseFileStorageModule;
 import co.chatsdk.firebase.social_login.FirebaseSocialLoginModule;
-import co.chatsdk.ui.manager.BaseInterfaceAdapter;
-import co.chatsdk.ui.utils.ToastHelper;
 import io.fabric.sdk.android.Fabric;
 import io.reactivex.plugins.RxJavaPlugins;
 

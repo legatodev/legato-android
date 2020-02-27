@@ -42,6 +42,7 @@ public class UserProfileActivity extends BaseActivity {
         super.onResume();
 
         @Nullable String userEntityID = getIntent().getStringExtra(Keys.PushKeyUserEntityID);
+        if (userEntityID == null) userEntityID = getIntent().getStringExtra(Keys.IntentKeyUserEntityID);
         if (userProfileViewModel != null) {
             if (!TextUtils.isEmpty(userEntityID)) {
                 if (userProfileViewModel.getUserByEntityId(userEntityID) != null) {
