@@ -21,8 +21,6 @@
                 android:id="@+id/nearbyUserPhotoImageView"
                 style="@style/profilePicThumbnailImage"
                 android:layout_centerVertical="true"
-                android:adjustViewBounds="true"
-                android:scaleType="centerCrop"
                 fresco:roundAsCircle="true"
                 fresco:roundingBorderColor="@color/activity_background"
                 fresco:roundingBorderWidth="2dp" />
